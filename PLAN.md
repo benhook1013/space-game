@@ -14,6 +14,7 @@ This is a mobile-first, Codex-driven game development workflow for a 2D space sh
   - Add `.gitignore` for Flutter: https://github.com/github/gitignore/blob/main/Dart.gitignore
 - [ ] Connect Codex to the repo (or copy-paste code via GitHub Mobile / Codespaces)
 - [ ] Optional: Use GitHub Mobile + Replit or Termux for light editing
+- [ ] Add `LICENSE` file (MIT)
 
 ---
 
@@ -51,7 +52,19 @@ This is a mobile-first, Codex-driven game development workflow for a 2D space sh
 
 ---
 
-### 🌐 4. PWA Support (for iOS Install + Offline Mode)
+### 🎨 4. Asset Setup
+
+- [ ] Create core asset folders:
+  - `assets/images`
+  - `assets/audio`
+  - `assets/fonts`
+- [ ] Add placeholder assets if needed for Codex development
+- [ ] `ASSET_GUIDE.md` documenting folder layout, common asset sources and attribution requirements
+- [ ] `ASSET_CREDITS.md` to track third-party asset usage and licensing
+
+---
+
+### 🌐 5. PWA Support (for iOS Install + Offline Mode)
 
 - [ ] Ensure Flutter project is web-enabled (`flutter config --enable-web`)
 - [ ] Prompt Codex:
@@ -67,7 +80,7 @@ This is a mobile-first, Codex-driven game development workflow for a 2D space sh
 
 ---
 
-### 🚀 5. Web Hosting
+### 🚀 6. Web Hosting
 
 - [ ] Deploy PWA build for public access:
   - [ ] GitHub Pages (easiest for public repos)
@@ -78,7 +91,7 @@ This is a mobile-first, Codex-driven game development workflow for a 2D space sh
 
 ---
 
-### 🔁 6. CI/CD Integration (Optional Native Builds)
+### 🔁 7. CI/CD Integration (Optional Native Builds)
 
 - [ ] Set up [Codemagic](https://codemagic.io/) for iOS/Android APKs
   - Link GitHub repo
@@ -92,7 +105,21 @@ This is a mobile-first, Codex-driven game development workflow for a 2D space sh
 
 ---
 
-### 🧩 7. Multiplayer Plan (Future Feature)
+### 🧪 8. Code Formatting & Linting (Codex-Compatible)
+
+- Use Flutter defaults:
+  - `dart format`
+  - `flutter analyze`
+- Include default `.analysis_options.yaml` with no extra rules
+- Avoid additional lint tools or pre-commit hooks
+- GitHub Actions workflow should:
+  - Run `flutter analyze` and `dart format` on PRs
+  - Auto-run `dart format .` and commit the results
+- Enforce PR merge checks via GitHub settings
+
+---
+
+### 🧩 9. Multiplayer Plan (Future Feature)
 
 Design for **host-authoritative co-op multiplayer**:
 
@@ -110,7 +137,7 @@ Design for **host-authoritative co-op multiplayer**:
 
 ---
 
-### 🗄️ 8. Backend Plan (Optional)
+### 🗄️ 10. Backend Plan (Optional)
 
 Choose one:
 
@@ -122,7 +149,7 @@ Choose one:
 
 ---
 
-### 🛠 9. Game Features – Dev Plan
+### 🛠 11. Game Features – Dev Plan
 
 Break into Codex prompts and commits:
 
@@ -145,7 +172,7 @@ Break into Codex prompts and commits:
 
 ---
 
-### 📦 10. Native Deployment (Optional)
+### 📦 12. Native Deployment (Optional)
 
 - [ ] Prompt Codex:
   > Write instructions to publish Flutter game to Google Play and TestFlight using Codemagic.
@@ -156,7 +183,20 @@ Break into Codex prompts and commits:
 
 ---
 
-### 📚 11. Documentation
+### 🧪 13. Testing & QA (Manual-Only, Branch-Based)
+
+- Manual testing only (no automated tests yet)
+- `develop` branch deploys to staging
+- `main` branch deploys to production
+- Use `PLAYTEST_CHECKLIST.md` for each play session
+- Optional `playtest_logs/` to track regressions
+- GitHub Actions or hosting config should:
+  - Auto-deploy `develop` to a test/staging URL
+  - Auto-deploy `main` to production
+
+---
+
+### 📚 14. Documentation
 
 - [ ] `README.md`
   - Prompt Codex:
