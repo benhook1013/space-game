@@ -14,6 +14,7 @@ This is a mobile-first, Codex-driven game development workflow for a 2D space sh
   - Add `.gitignore` for Flutter: https://github.com/github/gitignore/blob/main/Dart.gitignore
 - [ ] Connect Codex to the repo (or copy-paste code via GitHub Mobile / Codespaces)
 - [ ] Optional: Use GitHub Mobile + Replit or Termux for light editing
+- [ ] Add `LICENSE` file (MIT)
 
 ---
 
@@ -48,6 +49,18 @@ This is a mobile-first, Codex-driven game development workflow for a 2D space sh
   - [ ] Store world state in a serializable format (JSON)
   - [ ] Create an `Action` model (e.g. move, shoot, mine) to allow input-based syncing
   - [ ] Modularize tick/update logic into a host-simulatable loop
+
+---
+
+### 🎨 Asset Setup
+
+- [ ] Create core asset folders:
+  - `assets/images`
+  - `assets/audio`
+  - `assets/fonts`
+- [ ] Add placeholder assets if needed for Codex development
+- [ ] `ASSET_GUIDE.md` documenting folder layout, common asset sources and attribution requirements
+- [ ] `ASSET_CREDITS.md` to track third-party asset usage and licensing
 
 ---
 
@@ -89,6 +102,20 @@ This is a mobile-first, Codex-driven game development workflow for a 2D space sh
   - `.github/workflows/build.yaml`
   - Prompt Codex:
     > Create GitHub Action to build Flutter game on push.
+
+---
+
+### 🧪 Code Formatting & Linting (Codex-Compatible)
+
+- Use Flutter defaults:
+  - `dart format`
+  - `flutter analyze`
+- Include default `.analysis_options.yaml` with no extra rules
+- Avoid additional lint tools or pre-commit hooks
+- GitHub Actions workflow should:
+  - Run `flutter analyze` and `dart format` on PRs
+  - Auto-run `dart format .` and commit the results
+- Enforce PR merge checks via GitHub settings
 
 ---
 
@@ -153,6 +180,19 @@ Break into Codex prompts and commits:
   - Google Play Developer ($25 one-time)
   - Apple Developer ($99/year)
   - Signing keys for Codemagic or Fastlane
+
+---
+
+### 🧪 Testing & QA (Manual-Only, Branch-Based)
+
+- Manual testing only (no automated tests yet)
+- `develop` branch deploys to staging
+- `main` branch deploys to production
+- Use `PLAYTEST_CHECKLIST.md` for each play session
+- Optional `playtest_logs/` to track regressions
+- GitHub Actions or hosting config should:
+  - Auto-deploy `develop` to a test/staging URL
+  - Auto-deploy `main` to production
 
 ---
 
