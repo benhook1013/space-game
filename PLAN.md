@@ -12,6 +12,7 @@ This is a mobile-first, Codex-driven game development workflow for a 2D space sh
   - Public (to use GitHub CI for free)
   - Add `README.md`
   - Add `.gitignore` for Flutter: https://github.com/github/gitignore/blob/main/Dart.gitignore
+  - Use FVM with `fvm_config.json` to pin the Flutter SDK version
 - [ ] Connect Codex to the repo (or copy-paste code via GitHub Mobile / Codespaces)
 - [ ] Optional: Use GitHub Mobile + Replit or Termux for light editing
 - [ ] Add `LICENSE` file (MIT)
@@ -203,7 +204,6 @@ Break into Codex prompts and commits:
     > Document the codebase with setup, build, PWA install, and multiplayer design notes.
 - [ ] Inline Dart docstrings and code comments
 - [ ] Keep `DESIGN.md` and `networking.md` updated
-- [ ] Track progress in `CHANGELOG.md` or `progress.md`
 
 ---
 
