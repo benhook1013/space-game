@@ -1,6 +1,8 @@
-# 🚀 Space Miner Game Dev Plan (Mobile, Codex-Based, PWA with Host-Based Multiplayer)
+# 🚀 Space Game Dev Plan (Mobile, Codex-Based, PWA with Host-Based Multiplayer)
 
-This is a mobile-first, Codex-driven game development workflow for a 2D space shooter built using Flutter and Flame. It includes **Progressive Web App (PWA)** support for offline install on iOS, and is future-proofed for **host-authoritative multiplayer co-op** without requiring a central game server.
+This is a mobile-first, Codex-driven workflow for a 2D space shooter built using Flutter and Flame. It includes **Progressive Web App (PWA)** support for offline install on iOS and is future‑proofed for **host-authoritative multiplayer co-op** without requiring a central game server.
+
+_Note: This is a small, single-person project. Keep the scope lean and treat advanced topics like multiplayer or backend sync as long-term goals._
 
 ---
 
@@ -8,14 +10,15 @@ This is a mobile-first, Codex-driven game development workflow for a 2D space sh
 
 ### ⚙️ 1. Project Setup
 
-- [ ] Create GitHub repository (`space-miner` or similar)
+- [x] Create GitHub repository (`space-game`)
   - Public (to use GitHub CI for free)
-  - Add `README.md`
-  - Add `.gitignore` for Flutter: https://github.com/github/gitignore/blob/main/Dart.gitignore
-  - Use FVM with `fvm_config.json` to pin the Flutter SDK version
+  - [x] Add `README.md`
+  - [x] Add `.gitignore` for Flutter: https://github.com/github/gitignore/blob/main/Dart.gitignore
+  - [x] Use FVM with `fvm_config.json` to pin the Flutter SDK version
 - [ ] Connect Codex to the repo (or copy-paste code via GitHub Mobile / Codespaces)
 - [ ] Optional: Use GitHub Mobile + Replit or Termux for light editing
-- [ ] Add `LICENSE` file (MIT)
+- [x] Add `LICENSE` file (MIT)
+- [ ] Run `flutter create .` once the Flutter SDK is installed
 
 ---
 ### 🔢 2. Tooling & Versions
@@ -43,6 +46,15 @@ This is a mobile-first, Codex-driven game development workflow for a 2D space sh
 
 A fun, light-hearted space shooter with cute cartoony style. Casual tone, accessible on both desktop and mobile via PWA.
 
+### 🎯 MVP Scope
+
+Focus on a minimal single-player build before expanding:
+
+- Player movement and shooting
+- One basic enemy type and collision
+- Asteroids to mine for score
+- Local high score saved on device
+
 ---
 
 ### 🧪 5. Basic Project Scaffolding
@@ -53,6 +65,7 @@ A fun, light-hearted space shooter with cute cartoony style. Casual tone, access
   - `main.dart`
   - `game.dart` (extends `FlameGame`)
   - `player.dart`, `enemy.dart`, `bullet.dart`, `asteroid.dart`
+- [ ] Add Flame (and other packages) to `pubspec.yaml` and run `flutter pub get`
 - [ ] Prompt Codex:
   > Create a player spaceship component in Flame that can rotate and move using virtual joystick or touch input.
 - [ ] Future-proof for multiplayer:
@@ -219,24 +232,20 @@ Break into Codex prompts and commits:
 
 ---
 
-### 🧪 17. Testing & QA (Manual-Only, Branch-Based)
+### 🧪 17. Testing & QA (Manual)
 
 - Manual testing only (no automated tests yet)
-- `develop` branch deploys to staging
-- `main` branch deploys to production
 - Use `PLAYTEST_CHECKLIST.md` for each play session
 - Optional `playtest_logs/` to track regressions
-- GitHub Actions or hosting config should:
-  - Auto-deploy `develop` to a test/staging URL
-  - Auto-deploy `main` to production
+- A single `main` branch is fine; create feature branches as needed
+- Hosting or CI can auto-deploy `main` when ready
 
 ---
 
 ### 📚 18. Documentation
 
-- [ ] `README.md`
-  - Prompt Codex:
-    > Document the codebase with setup, build, PWA install, and multiplayer design notes.
+- [x] Initial `README.md`
+  - Update with setup, build, PWA install, and multiplayer design notes as the project evolves
 - [ ] Inline Dart docstrings and code comments
 - [ ] Keep `DESIGN.md` and `networking.md` updated
 
