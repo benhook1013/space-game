@@ -13,8 +13,9 @@ _Note: This is a small, single-person project. Keep the scope lean and treat adv
 - [x] Create GitHub repository (`space-game`)
   - Public (to use GitHub CI for free)
   - [x] Add `README.md`
-  - [x] Add `.gitignore` for Flutter: https://github.com/github/gitignore/blob/main/Dart.gitignore
+- [x] Add `.gitignore` for Flutter: https://github.com/github/gitignore/blob/main/Dart.gitignore
   - [x] Use FVM with `fvm_config.json` to pin the Flutter SDK version
+- [ ] Run `fvm flutter doctor` and `fvm flutter pub get` to verify the toolchain
 - [ ] Connect Codex to the repo (or copy-paste code via GitHub Mobile / Codespaces)
 - [ ] Optional: Use GitHub Mobile + Replit or Termux for light editing
 - [x] Add `LICENSE` file (MIT)
@@ -45,6 +46,12 @@ _Note: This is a small, single-person project. Keep the scope lean and treat adv
 ### 🎮 4. Game Design
 
 A fun, light-hearted space shooter with cute cartoony style. Casual tone, accessible on both desktop and mobile via PWA.
+
+#### 🏗️ Architecture Overview
+
+- `SpaceGame` (`lib/space_game.dart`) extends `FlameGame`
+- Core components live in `lib/components/` (e.g., `player.dart`, `enemy.dart`, `asteroid.dart`, `bullet.dart`)
+- Keep classes small and state serializable to ease future multiplayer features
 
 ### 🎯 MVP Scope
 
@@ -115,9 +122,8 @@ Focus on a minimal single-player build before expanding:
 ### 🚀 8. Web Hosting
 
 - [ ] Deploy PWA build for public access:
-  - [ ] GitHub Pages (easiest for public repos)
-  - [ ] OR Netlify (drag-and-drop / CI-based)
-  - [ ] OR Firebase Hosting (great offline support)
+  - [ ] GitHub Pages (serve `build/web` from `gh-pages` branch via GitHub Actions)
+  - [ ] Optional: itch.io or personal server later
 - [ ] Prompt Codex:
   > Create a GitHub Actions workflow that deploys Flutter web build to GitHub Pages on every push.
 
@@ -159,6 +165,7 @@ Focus on a minimal single-player build before expanding:
   - `flutter analyze`
 - Include default `.analysis_options.yaml` with no extra rules
 - Avoid additional lint tools or pre-commit hooks
+- Run `fvm dart format .` and `fvm flutter analyze` locally before committing
 - GitHub Actions workflow should:
   - Run `flutter analyze` and `dart format` on PRs
   - Auto-run `dart format .` and commit the results
@@ -236,6 +243,7 @@ Break into Codex prompts and commits:
 
 - Manual testing only (no automated tests yet)
 - Use `PLAYTEST_CHECKLIST.md` for each play session
+- Keep `MANUAL_TESTING.md` updated with scenarios and findings
 - Optional `playtest_logs/` to track regressions
 - A single `main` branch is fine; create feature branches as needed
 - Hosting or CI can auto-deploy `main` when ready
