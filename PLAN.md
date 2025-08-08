@@ -1,276 +1,125 @@
-# 🚀 Space Game Dev Plan (Mobile, Codex-Based, PWA with Host-Based Multiplayer)
+# 🚀 Space Game Dev Plan
 
-This is a mobile-first, Codex-driven workflow for a 2D space shooter built using Flutter and Flame. It includes **Progressive Web App (PWA)** support for offline install on iOS and is future‑proofed for **host-authoritative multiplayer co-op** without requiring a central game server.
+Mobile-first 2D space shooter built with **Flutter** and **Flame**.  The goal is a
+playable prototype that installs as a PWA on phones while keeping the codebase
+small and easy for one developer to maintain.  Multiplayer or backend features
+are long‑term ideas, not immediate priorities.
 
-_Note: This is a small, single-person project. Keep the scope lean and treat advanced topics like multiplayer or backend sync as long-term goals._
+Keep this plan lean and update it as progress is made.
 
-Keep this plan lightweight and revisit it as progress is made. Check off tasks when they are done and trim or defer anything that feels unnecessary for a solo developer. Focus on shipping a playable prototype before expanding into optional features.
+## 🎯 Goals
+- Simple offline shooter using Flutter + Flame.
+- PWA install with touch controls.
+- Clean code that one person can follow.
+- Ship quickly and iterate.
 
-## 📋 Goals & Non-Goals
-
-**Goals**
-- Build a simple offline 2D space shooter with Flutter and Flame.
-- Support PWA install and touch controls.
-- Keep the codebase easy to read for one developer.
-- Ship a playable prototype quickly and iterate.
-
-**Non-Goals**
-- No analytics, accounts, or complex backend.
-- Multiplayer and native builds are future ideas only.
-- Avoid heavy tooling or project management overhead.
-- No elaborate asset pipeline; placeholder art and sounds are fine early on.
-- Avoid over-engineering with complex architecture patterns or dependency injection.
+## 🚫 Non‑Goals
+- Analytics, accounts, or complex backend.
+- Multiplayer and native builds (for later).
+- Heavy tooling or asset pipelines.
 
 ---
 
-## ✅ Master Checklist
+## 🛠️ Setup
+1. **Repository**
+   - Public GitHub repo `space-game`.
+   - Include `README.md`, `.gitignore`, `LICENSE`, `fvm_config.json`.
 
-### ⚙️ 1. Project Setup
+2. **Toolchain**
+   - `fvm install` to download the pinned Flutter SDK.
+   - `fvm flutter doctor` and `fvm flutter pub get`.
+   - `fvm flutter create .` when ready.
+   - Verify with `fvm flutter run -d chrome`.
+   - Pin the Flame version in `pubspec.yaml` and run all commands via `fvm`.
 
-- [x] Create GitHub repository (`space-game`)
-  - Public (to use GitHub CI for free)
-  - [x] Add `README.md`
-- [x] Add `.gitignore` for Flutter: https://github.com/github/gitignore/blob/main/Dart.gitignore
-  - [x] Use FVM with `fvm_config.json` to pin the Flutter SDK version
-- [ ] Run `fvm install` to download the pinned Flutter SDK
-- [ ] Run `fvm flutter doctor` and `fvm flutter pub get` to verify the toolchain
-- [ ] Connect Codex to the repo (or copy-paste code via GitHub Mobile / Codespaces)
-- [ ] Optional: Use GitHub Mobile + Replit or Termux for light editing
-- [ ] Set up a preferred lightweight editor (e.g., VS Code with Flutter extensions)
-- [x] Add `LICENSE` file (MIT)
-- [ ] Run `fvm flutter create .` once the Flutter SDK is installed
-- [ ] Verify the generated app runs: `fvm flutter run -d chrome`
-
----
-### 🔢 2. Tooling & Versions
-
-- Pin the Flame version in `pubspec.yaml`, just like Flutter (for stability and Codex compatibility).
-- Ensure all Flutter and Dart commands are run via `fvm` (`fvm use`).
+3. **Editors & Workflow**
+   - Connect Codex or a lightweight editor (VS Code, GitHub Mobile, etc.).
+   - Optional: Replit or Termux for quick edits.
 
 ---
 
-
-### 🧠 3. Design Documents
-
-- [ ] `DESIGN.md`
-  - Prompt Codex:
-    > Write a design document for a 2D space shooter mobile game using Flutter and Flame. The game includes spaceship movement, shooting enemies, mining asteroids, upgrading weapons, and future multiplayer co-op using host-based authority.
-- [ ] `TASKS.md`
-  - Prompt Codex:
-    > Based on the design doc, generate a prioritized list of technical tasks to implement the game, including future-proofing for multiplayer support.
-- [ ] Optional: Break into milestones:
-  - `milestone-1.md`: movement + shooting  
-  - `milestone-2.md`: enemies + collision  
-  - `milestone-3.md`: mining + upgrades  
-  - `milestone-4.md`: local save + networking scaffold
-
-### 🎮 4. Game Design
-
-A fun, light-hearted space shooter with cute cartoony style. Casual tone, accessible on both desktop and mobile via PWA.
-
-#### 🏗️ Architecture Overview
-
-- `SpaceGame` (`lib/space_game.dart`) extends `FlameGame`
-- `GameWidget` hosts the game and uses overlays for menus and HUD elements
-- Core components live in `lib/components/` (e.g., `player.dart`, `enemy.dart`, `asteroid.dart`, `bullet.dart`)
-- Game states: main menu → playing → game over
-- Keep classes small and state serializable to ease future multiplayer features
-- Use straightforward rectangle collision checks; skip heavy physics engines
-
-#### 🔄 Game Flow
-
-- Simple loop: Main menu → gameplay → game over screen
-- Allow quick restart to encourage short play sessions
-
-### 🎯 MVP Scope
-
-Focus on a minimal single-player build before expanding:
-
-- Player movement and shooting
-- One basic enemy type and collision
-- Asteroids to mine for score
-- Local high score saved on device
+## 🧾 Design & Docs
+- `DESIGN.md` – high‑level game overview.
+- `TASKS.md` – prioritized implementation steps.
+- Optional milestones (`milestone-1.md`, …).
+Keep documents short and update them as features land.
 
 ---
 
-### 🧪 5. Basic Project Scaffolding
-
-- [ ] Prompt Codex:
-  > Create a basic Flutter project with Flame integrated for a 2D game.
-- [ ] Files to generate:
-  - `main.dart`
-  - `game.dart` (extends `FlameGame`)
-  - `player.dart`, `enemy.dart`, `bullet.dart`, `asteroid.dart`
-- [ ] Add Flame (and other packages) to `pubspec.yaml` and run `flutter pub get`
-- [ ] Prompt Codex:
-  > Create a player spaceship component in Flame that can rotate and move using virtual joystick or touch input.
-- [ ] Future-proof for multiplayer:
-  - [ ] Use entity UUIDs for all game objects
-  - [ ] Store world state in a serializable format (JSON)
-  - [ ] Create an `Action` model (e.g. move, shoot, mine) to allow input-based syncing
-  - [ ] Modularize tick/update logic into a host-simulatable loop
+## 🏗️ Architecture & Game Flow
+- `SpaceGame` extends `FlameGame` in `lib/space_game.dart`.
+- `GameWidget` hosts the game and overlays menus/HUD.
+- Components live in `lib/components/` (`player.dart`, `enemy.dart`, `asteroid.dart`, `bullet.dart`).
+- Game states: main menu → playing → game over.
+- Keep classes small with UUIDs and JSON‑serializable state for future multiplayer.
+- Model actions (move, shoot, mine) for potential network sync.
+- Loop: menu → gameplay → game over with quick restart.
 
 ---
 
-### 🎨 6. Asset Setup
-
-- [ ] Create core asset folders:
-  - `assets/images`
-  - `assets/audio`
-  - `assets/fonts`
-- [ ] Add placeholder assets if needed for Codex development
-- [ ] Use simple generated shapes or colors as temporary art during early development
-- [ ] `ASSET_GUIDE.md` documenting folder layout, common asset sources and attribution requirements
-- [ ] `ASSET_CREDITS.md` to track third-party asset usage and licensing
+## 🎮 MVP Features
+- Touch/joystick movement and shooting.
+- One enemy type with collision and random spawns.
+- Asteroids to mine for score.
+- Local high score saved on device.
 
 ---
 
-### 🌐 7. PWA Support (for iOS Install + Offline Mode)
-
-- [ ] Ensure Flutter project is web-enabled (`flutter config --enable-web`)
-- [ ] Prompt Codex:
-  > Add PWA support to a Flutter web app, including manifest and service worker for offline use.
-- [ ] Create or customize:
-  - `web/manifest.json`
-  - `web/icons/` (192x192, 512x512 icons)
-  - `web/flutter_service_worker.js` (auto-generated by `flutter build web`)
-- Lock screen orientation to landscape (better gameplay and consistent UI).
-- Add `manifest.json` fields:
-  - "start_url": "/"
-  - "display": "standalone"
-  - "background_color": "#000000"
-  - "theme_color": "#0f0f0f"
-- Use the default `flutter_service_worker.js` for offline caching (no customization planned for now).
-
-- [ ] Test PWA:
-  - Build: `flutter build web`
-  - Host locally: `flutter run -d web-server`
-  - Test on iPhone: Visit IP in Safari and tap **“Add to Home Screen”**
+## 🎨 Assets, PWA & Build
+- Asset folders:
+  - `assets/images/`
+  - `assets/sfx/`
+  - `assets/music/`
+  - `assets/fonts/`
+- Placeholder shapes or colors are fine early; document sources in `ASSET_GUIDE.md` and credit in `ASSET_CREDITS.md`.
+- Enable web: `fvm flutter config --enable-web`.
+- Provide `web/manifest.json` (start_url `/`, display `standalone`, landscape orientation,
+  `background_color` `#000000`, `theme_color` `#0f0f0f`) and icons (192x192, 512x512) in `web/icons/`.
+- Default `flutter_service_worker.js` handles offline caching.
+- Build with `fvm flutter build web` and test with `fvm flutter run -d web-server`.
+- Deploy the PWA via GitHub Pages (`gh-pages` branch).
+- Use a GitHub Actions workflow to publish `build/web` to `gh-pages`.
 
 ---
 
-### 🌍 8. Web Hosting & CI
-
-- [ ] Deploy PWA build for public access via GitHub Pages
-  - [ ] Use GitHub Actions to publish `build/web` to a `gh-pages` branch
-- [ ] Optional: Codemagic or similar service for native builds later
-- Keep things simple: no analytics or crash reporting for now
-
----
-
-### 🧪 9. Code Formatting & Linting (Codex-Compatible)
-
+## ✍️ Code Style
 - Use Flutter defaults:
   - `dart format`
   - `flutter analyze`
-- Include default `.analysis_options.yaml` with no extra rules
-- Avoid additional lint tools or pre-commit hooks
-- Run `fvm dart format .` and `fvm flutter analyze` locally before committing
-- GitHub Actions workflow should run `flutter analyze` and `dart format` on PRs
-- Enforce PR merge checks via GitHub settings
+- Run through `fvm` (`fvm dart format .`, `fvm flutter analyze`).
+- Avoid extra linters or hooks.
 
 ---
 
-### 🧩 10. Multiplayer Plan (Future Feature)
-
-Design for **host-authoritative co-op multiplayer**:
-
-- [ ] Add `networking.md` to outline:
-  - Co-op PvE model with host device simulating world state
-  - Other players connect via WebSocket
-  - Skip WebRTC or NAT traversal — assume same-network play or QR-based join flow.
-  - Plan for a basic JSON-based action protocol (e.g., move, shoot, mine)
-  - Examples of message types will be documented in `multiplayer_protocol.md`.
-  - [ ] `WorldState` model: serializable snapshot of game state
-  - [ ] `GameAction` enum + action handler logic
-  - [ ] Basic WebSocket scaffold in place (even if unused)
-- [ ] Optional: Use Firebase for lobby/discovery only
-- [ ] Prompt Codex:
-  > Create a Flutter WebSocket-based game host that simulates a tick loop and accepts remote player input actions.
+## 🔮 Future Plans
+- **Multiplayer** (`networking.md`): host‑authoritative co‑op via WebSocket with
+  `WorldState` snapshots and `GameAction` messages.
+- **Backend (optional)**: local storage or Firebase sync.
+- **Native deployment (optional)**: Codemagic, Play Store, TestFlight when
+  needed.
+ - Additional features: inventory, upgrades, HUD, menus (main/pause), shop/upgrade UI, sound, save/load.
 
 ---
 
-### 🗄️ 11. Backend Plan (Optional)
-
-Choose one:
-
-- [ ] Offline-only: use local storage or SQLite
-- [ ] Online progression: Firebase (Firestore or Realtime DB)
-  - Prompt Codex:
-    > Generate code for syncing inventory/upgrades to Firebase Firestore.
-- [ ] Custom backend (if needed later): Fly.io or Railway
+## 🧪 Testing & Docs
+- Manual testing only.
+- Use `PLAYTEST_CHECKLIST.md`, `MANUAL_TESTING.md`, and optional `playtest_logs/`.
+- Update `README.md`, `DESIGN.md`, `networking.md` as the project evolves.
 
 ---
 
-### 🛠 12. Game Features – Dev Plan
-
-Break into Codex prompts and commits. Tackle one feature at a time and test manually after each change:
-
-- [ ] Ship movement with rotation + thrust
-- [ ] Touch or joystick controls
-- [ ] Shooting + bullet collisions
-- [ ] Spawn enemies randomly
-- [ ] Asteroids to mine
-- [ ] Inventory system (local or remote)
-- [ ] Weapon upgrade system
-- [ ] HUD for health, ammo, score
-- [ ] Shop or upgrade UI
-- [ ] Sound and music
-- [ ] Save/load game state
-- [ ] Main menu + pause/resume
-- [ ] Multiplayer-ready:
-  - [ ] Entity UUIDs
-  - [ ] Syncable game state
-  - [ ] Serializable actions
+## 📌 Project Management
+- Keep it simple: work from `main` and create feature branches only when needed.
+- Track tasks in `TASKS.md`; skip heavy tools or milestone tracking.
 
 ---
 
-### 📦 13. Native Deployment (Optional)
-
-- Not planned for now; focus on PWA release.
-- [ ] Prompt Codex:
-  > Write instructions to publish Flutter game to Google Play and TestFlight using Codemagic.
-- [ ] Set up:
-  - Google Play Developer ($25 one-time)
-  - Apple Developer ($99/year)
-  - Signing keys for Codemagic or Fastlane
-
----
-
-### 🧪 14. Testing & QA (Manual)
-
-- Manual testing only (no automated tests yet)
-- Use `PLAYTEST_CHECKLIST.md` for each play session
-- Keep `MANUAL_TESTING.md` updated with scenarios and findings
-- Optional `playtest_logs/` to track regressions
-- A single `main` branch is fine; create feature branches as needed
-- Hosting or CI can auto-deploy `main` when ready
-
----
-
-### 📚 15. Documentation
-
-- [x] Initial `README.md`
-  - Update with setup, build, PWA install, and multiplayer design notes as the project evolves
-- [ ] Inline Dart docstrings and code comments
-- [ ] Keep `DESIGN.md` and `networking.md` updated
-
----
-
-### 📌 16. Project Management
-
-- No milestone tracking or GitHub Projects planned.
-- Codex: avoid suggesting complex project planning tools.
-
----
-
-## 🔄 Daily Loop
-
+## 🔁 Daily Loop
 ```text
-1. Use Codex to write code or generate files
-2. Push to GitHub (via app or web)
-3. GitHub CI or Codemagic builds PWA and/or APK
-4. Access public PWA URL and test on iPhone
-5. Install via "Add to Home Screen" for offline play
-6. Continue development from TASKS.md
+1. Use Codex to write code or docs.
+2. Push to GitHub.
+3. CI builds the PWA.
+4. Test on device and install via "Add to Home Screen".
+5. Iterate using TASKS.md.
 ```
+
