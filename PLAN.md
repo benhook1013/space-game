@@ -1,7 +1,7 @@
 # 🚀 Space Game Development Plan
 
-Small mobile‑first 2D shooter built with Flutter and Flame.
-The goal is a lightweight PWA prototype that one developer can iterate on quickly.
+Tiny mobile‑first 2D shooter built with Flutter and Flame.
+Target: an installable PWA that a solo developer can iterate on quickly.
 
 ## 🎯 Goals
 
@@ -16,22 +16,21 @@ The goal is a lightweight PWA prototype that one developer can iterate on quickl
 - Multiplayer or native builds (future work).
 - Large asset pipelines or complex tooling.
 
-## 🛠️ Setup
+## 🛠️ Tooling & Setup
 
 ### Repository
 
 - Public GitHub repo `space-game`.
-- Include `README.md`, `.gitignore`, `LICENSE`, `fvm_config.json`.
+- Contains `README.md`, `.gitignore`, `LICENSE`, `fvm_config.json`.
 
-### Toolchain
+### Flutter & FVM
 
-- `fvm install` to download the pinned Flutter SDK.
-- `fvm flutter doctor` and `fvm flutter pub get`.
-- Initialize with `fvm flutter create .` once ready.
+- `fvm install` to fetch the pinned Flutter SDK.
+- `fvm flutter doctor` then `fvm flutter pub get`.
+- Run `fvm flutter create .` once ready.
 - Enable web: `fvm flutter config --enable-web`.
-- Run with `fvm flutter run -d chrome`.
-- Pin the Flame version in `pubspec.yaml`;
-  run all commands through `fvm`.
+- Run with `fvm flutter run -d chrome` for debug or `-d web-server` for PWA tests.
+- Pin the Flame version in `pubspec.yaml`; always use `fvm` commands.
 
 ### Workflow
 
@@ -44,6 +43,7 @@ The goal is a lightweight PWA prototype that one developer can iterate on quickl
 - `lib/` – game code.
 - `assets/` – images, audio and fonts.
 - `web/` – PWA manifest, icons and service worker.
+- `test/` – placeholder for future automated tests.
 - Root Markdown files for planning and playtest notes.
 
 ## 🧾 Documentation
@@ -59,26 +59,24 @@ The goal is a lightweight PWA prototype that one developer can iterate on quickl
 - `GameWidget` hosts the game and overlays menus/HUD.
 - Components live in `lib/components/`
   (`player.dart`, `enemy.dart`, `asteroid.dart`, `bullet.dart`, etc.).
-- On‑screen joystick for movement and a shoot button.
-- Game states:
-  **menu → playing → game over** with quick restart.
-- Components remain small with UUIDs and JSON‑serializable state
-  for possible future multiplayer or saving.
-- Favor composition over inheritance and keep dependencies minimal.
+- On‑screen joystick for movement and a shoot button;
+  WASD + Space mirror touch controls for desktop testing.
+- Game states: **menu → playing → game over** with quick restart.
+- Keep components small and favor composition over inheritance.
+- If saving is needed later, add simple IDs and JSON‑serializable state.
 - Fixed logical resolution scaled to the device to keep gameplay consistent.
 - `HasCollisionDetection` handles collisions between components.
 - `SpawnController` spawns enemies and asteroids.
-- WASD + Space mirror the touch controls for desktop testing.
+- Aim for 60 FPS; avoid heavy per‑frame allocations.
 
 ## 🎮 MVP Feature Set
 
 - Touch/joystick movement and shooting.
 - One enemy type with collision and random spawns.
 - Asteroids to mine for score or pickups.
-- Player health and simple game over screen.
-- Local high score stored on device
-  (e.g., shared preferences).
-- Basic sound effects with mute toggle.
+- Player health and simple start/game‑over screens.
+- Local high score stored on device (e.g., shared preferences).
+- Basic sound effects using `flame_audio` with mute toggle.
 - Keyboard controls for desktop playtests.
 
 ## 🎨 Assets & PWA
@@ -91,7 +89,8 @@ The goal is a lightweight PWA prototype that one developer can iterate on quickl
 - Placeholder shapes or colors are fine early;
   document sources in `ASSET_GUIDE.md` and
   credit in `ASSET_CREDITS.md`.
-- Prefer CC0 or similarly permissive licenses and keep files small.
+- Prefer CC0 or similarly permissive licenses and keep files small
+  (aim for <5 MB total).
 - Provide `web/manifest.json` with:
   - `start_url` `/`
   - `display` `standalone`
@@ -100,17 +99,17 @@ The goal is a lightweight PWA prototype that one developer can iterate on quickl
   - `theme_color` `#0f0f0f`
 - Include icons (192x192, 512x512) in `web/icons/`.
 - Default `flutter_service_worker.js` handles offline caching.
-- Build with `fvm flutter build web` and test with
+- Build with `fvm flutter build web --release` and test with
   `fvm flutter run -d web-server`.
-- Deploy the PWA via GitHub Pages (`gh-pages` branch)
+- Deploy via GitHub Pages (`gh-pages` branch)
   using a GitHub Actions workflow to publish `build/web`.
 
 ## ✍️ Code Style & Testing
 
 - Format with `fvm dart format .`.
-- Analyze with `fvm flutter analyze`.
-- Lint docs with `markdownlint`.
-- Manual testing only for now.
+- Analyze with `fvm flutter analyze` and fix warnings.
+- Lint docs with `npx markdownlint`.
+- Manual testing only for now; automated tests can live under `test/` later.
 - Use `PLAYTEST_CHECKLIST.md`, `MANUAL_TESTING.md`,
   and optional `playtest_logs/`.
 - Keep commit messages short (e.g., `feat:`, `fix:`, `docs:`).
