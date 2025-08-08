@@ -119,46 +119,16 @@ Focus on a minimal single-player build before expanding:
 
 ---
 
-### 🚀 8. Web Hosting
+### 🌍 8. Web Hosting & CI
 
-- [ ] Deploy PWA build for public access:
-  - [ ] GitHub Pages (serve `build/web` from `gh-pages` branch via GitHub Actions)
-  - [ ] Optional: itch.io or personal server later
-- [ ] Prompt Codex:
-  > Create a GitHub Actions workflow that deploys Flutter web build to GitHub Pages on every push.
-
----
-### 🚀 9. Releases
-
-- Target PWA/Web-first release so players can play on desktop or mobile instantly.
-- No native app stores (Play Store/TestFlight) planned for now.
-- Prioritize hosting help (e.g., GitHub Pages or Netlify) over app publishing.
+- [ ] Deploy PWA build for public access via GitHub Pages
+  - [ ] Use GitHub Actions to publish `build/web` to a `gh-pages` branch
+- [ ] Optional: Codemagic or similar service for native builds later
+- Keep things simple: no analytics or crash reporting for now
 
 ---
 
-
-### 🔁 10. CI/CD Integration (Optional Native Builds)
-
-- [ ] Set up [Codemagic](https://codemagic.io/) for iOS/Android APKs
-  - Link GitHub repo
-  - Choose Flutter template
-- [ ] Prompt Codex:
-  > Create a `codemagic.yaml` to build Flutter game and export Android APK.
-- [ ] Optional GitHub Actions:
-  - `.github/workflows/build.yaml`
-  - Prompt Codex:
-    > Create GitHub Action to build Flutter game on push.
-
----
-### 📊 11. Analytics & DevOps
-
-- No crash reporting or analytics planned.
-- Codex: skip all Sentry/Firebase/metrics suggestions.
-
----
-
-
-### 🧪 12. Code Formatting & Linting (Codex-Compatible)
+### 🧪 9. Code Formatting & Linting (Codex-Compatible)
 
 - Use Flutter defaults:
   - `dart format`
@@ -166,14 +136,12 @@ Focus on a minimal single-player build before expanding:
 - Include default `.analysis_options.yaml` with no extra rules
 - Avoid additional lint tools or pre-commit hooks
 - Run `fvm dart format .` and `fvm flutter analyze` locally before committing
-- GitHub Actions workflow should:
-  - Run `flutter analyze` and `dart format` on PRs
-  - Auto-run `dart format .` and commit the results
+- GitHub Actions workflow should run `flutter analyze` and `dart format` on PRs
 - Enforce PR merge checks via GitHub settings
 
 ---
 
-### 🧩 13. Multiplayer Plan (Future Feature)
+### 🧩 10. Multiplayer Plan (Future Feature)
 
 Design for **host-authoritative co-op multiplayer**:
 
@@ -192,7 +160,7 @@ Design for **host-authoritative co-op multiplayer**:
 
 ---
 
-### 🗄️ 14. Backend Plan (Optional)
+### 🗄️ 11. Backend Plan (Optional)
 
 Choose one:
 
@@ -204,7 +172,7 @@ Choose one:
 
 ---
 
-### 🛠 15. Game Features – Dev Plan
+### 🛠 12. Game Features – Dev Plan
 
 Break into Codex prompts and commits:
 
@@ -227,7 +195,7 @@ Break into Codex prompts and commits:
 
 ---
 
-### 📦 16. Native Deployment (Optional)
+### 📦 13. Native Deployment (Optional)
 
 - Not planned for now; focus on PWA release.
 - [ ] Prompt Codex:
@@ -239,7 +207,7 @@ Break into Codex prompts and commits:
 
 ---
 
-### 🧪 17. Testing & QA (Manual)
+### 🧪 14. Testing & QA (Manual)
 
 - Manual testing only (no automated tests yet)
 - Use `PLAYTEST_CHECKLIST.md` for each play session
@@ -250,7 +218,7 @@ Break into Codex prompts and commits:
 
 ---
 
-### 📚 18. Documentation
+### 📚 15. Documentation
 
 - [x] Initial `README.md`
   - Update with setup, build, PWA install, and multiplayer design notes as the project evolves
@@ -259,7 +227,7 @@ Break into Codex prompts and commits:
 
 ---
 
-### 📌 19. Project Management
+### 📌 16. Project Management
 
 - No milestone tracking or GitHub Projects planned.
 - Codex: avoid suggesting complex project planning tools.
