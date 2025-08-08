@@ -27,6 +27,7 @@ _Note: This is a small, single-person project. Keep the scope lean and treat adv
   - [x] Add `README.md`
 - [x] Add `.gitignore` for Flutter: https://github.com/github/gitignore/blob/main/Dart.gitignore
   - [x] Use FVM with `fvm_config.json` to pin the Flutter SDK version
+- [ ] Run `fvm install` to download the pinned Flutter SDK
 - [ ] Run `fvm flutter doctor` and `fvm flutter pub get` to verify the toolchain
 - [ ] Connect Codex to the repo (or copy-paste code via GitHub Mobile / Codespaces)
 - [ ] Optional: Use GitHub Mobile + Replit or Termux for light editing
@@ -37,6 +38,7 @@ _Note: This is a small, single-person project. Keep the scope lean and treat adv
 ### 🔢 2. Tooling & Versions
 
 - Pin the Flame version in `pubspec.yaml`, just like Flutter (for stability and Codex compatibility).
+- Ensure all Flutter and Dart commands are run via `fvm` (`fvm use`).
 
 ---
 
@@ -62,7 +64,9 @@ A fun, light-hearted space shooter with cute cartoony style. Casual tone, access
 #### 🏗️ Architecture Overview
 
 - `SpaceGame` (`lib/space_game.dart`) extends `FlameGame`
+- `GameWidget` hosts the game and uses overlays for menus and HUD elements
 - Core components live in `lib/components/` (e.g., `player.dart`, `enemy.dart`, `asteroid.dart`, `bullet.dart`)
+- Game states: main menu → playing → game over
 - Keep classes small and state serializable to ease future multiplayer features
 
 ### 🎯 MVP Scope
@@ -102,6 +106,7 @@ Focus on a minimal single-player build before expanding:
   - `assets/audio`
   - `assets/fonts`
 - [ ] Add placeholder assets if needed for Codex development
+- [ ] Use simple generated shapes or colors as temporary art during early development
 - [ ] `ASSET_GUIDE.md` documenting folder layout, common asset sources and attribution requirements
 - [ ] `ASSET_CREDITS.md` to track third-party asset usage and licensing
 
