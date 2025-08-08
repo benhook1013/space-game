@@ -4,7 +4,7 @@ This is a mobile-first, Codex-driven workflow for a 2D space shooter built using
 
 _Note: This is a small, single-person project. Keep the scope lean and treat advanced topics like multiplayer or backend sync as long-term goals._
 
-Keep this plan lightweight and revisit it as progress is made. Check off tasks when they are done and trim or defer anything that feels unnecessary for a solo developer.
+Keep this plan lightweight and revisit it as progress is made. Check off tasks when they are done and trim or defer anything that feels unnecessary for a solo developer. Focus on shipping a playable prototype before expanding into optional features.
 
 ## 📋 Goals & Non-Goals
 
@@ -19,6 +19,7 @@ Keep this plan lightweight and revisit it as progress is made. Check off tasks w
 - Multiplayer and native builds are future ideas only.
 - Avoid heavy tooling or project management overhead.
 - No elaborate asset pipeline; placeholder art and sounds are fine early on.
+- Avoid over-engineering with complex architecture patterns or dependency injection.
 
 ---
 
@@ -35,9 +36,10 @@ Keep this plan lightweight and revisit it as progress is made. Check off tasks w
 - [ ] Run `fvm flutter doctor` and `fvm flutter pub get` to verify the toolchain
 - [ ] Connect Codex to the repo (or copy-paste code via GitHub Mobile / Codespaces)
 - [ ] Optional: Use GitHub Mobile + Replit or Termux for light editing
+- [ ] Set up a preferred lightweight editor (e.g., VS Code with Flutter extensions)
 - [x] Add `LICENSE` file (MIT)
-- [ ] Run `flutter create .` once the Flutter SDK is installed
-- [ ] Verify the generated app runs: `flutter run -d chrome`
+- [ ] Run `fvm flutter create .` once the Flutter SDK is installed
+- [ ] Verify the generated app runs: `fvm flutter run -d chrome`
 
 ---
 ### 🔢 2. Tooling & Versions
@@ -73,6 +75,7 @@ A fun, light-hearted space shooter with cute cartoony style. Casual tone, access
 - Core components live in `lib/components/` (e.g., `player.dart`, `enemy.dart`, `asteroid.dart`, `bullet.dart`)
 - Game states: main menu → playing → game over
 - Keep classes small and state serializable to ease future multiplayer features
+- Use straightforward rectangle collision checks; skip heavy physics engines
 
 #### 🔄 Game Flow
 
