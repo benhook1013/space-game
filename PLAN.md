@@ -35,10 +35,16 @@ The goal is a lightweight PWA prototype that one developer can iterate on quickl
 
 ### Workflow
 
-- Use Codespaces or any lightweight editor
-  (VS Code, GitHub Mobile, Replit).
+- Use Codespaces or any lightweight editor (VS Code, GitHub Mobile, Replit).
 - Work directly on `main`; branch only for larger features.
 - Commit small, frequent changes and push often.
+
+## 📂 Project Structure
+
+- `lib/` – game code.
+- `assets/` – images, audio and fonts.
+- `web/` – PWA manifest, icons and service worker.
+- Root Markdown files for planning and playtest notes.
 
 ## 🧾 Documentation
 
@@ -59,6 +65,10 @@ The goal is a lightweight PWA prototype that one developer can iterate on quickl
 - Components remain small with UUIDs and JSON‑serializable state
   for possible future multiplayer or saving.
 - Favor composition over inheritance and keep dependencies minimal.
+- Fixed logical resolution scaled to the device to keep gameplay consistent.
+- `HasCollisionDetection` handles collisions between components.
+- `SpawnController` spawns enemies and asteroids.
+- WASD + Space mirror the touch controls for desktop testing.
 
 ## 🎮 MVP Feature Set
 
@@ -69,6 +79,7 @@ The goal is a lightweight PWA prototype that one developer can iterate on quickl
 - Local high score stored on device
   (e.g., shared preferences).
 - Basic sound effects with mute toggle.
+- Keyboard controls for desktop playtests.
 
 ## 🎨 Assets & PWA
 
@@ -80,6 +91,7 @@ The goal is a lightweight PWA prototype that one developer can iterate on quickl
 - Placeholder shapes or colors are fine early;
   document sources in `ASSET_GUIDE.md` and
   credit in `ASSET_CREDITS.md`.
+- Prefer CC0 or similarly permissive licenses and keep files small.
 - Provide `web/manifest.json` with:
   - `start_url` `/`
   - `display` `standalone`
@@ -101,6 +113,7 @@ The goal is a lightweight PWA prototype that one developer can iterate on quickl
 - Manual testing only for now.
 - Use `PLAYTEST_CHECKLIST.md`, `MANUAL_TESTING.md`,
   and optional `playtest_logs/`.
+- Keep commit messages short (e.g., `feat:`, `fix:`, `docs:`).
 
 ## 🔮 Future Ideas
 
