@@ -4,6 +4,18 @@ This is a mobile-first, Codex-driven workflow for a 2D space shooter built using
 
 _Note: This is a small, single-person project. Keep the scope lean and treat advanced topics like multiplayer or backend sync as long-term goals._
 
+## 📋 Goals & Non-Goals
+
+**Goals**
+- Build a simple offline 2D space shooter with Flutter and Flame.
+- Support PWA install and touch controls.
+- Keep the codebase easy to read for one developer.
+
+**Non-Goals**
+- No analytics, accounts, or complex backend.
+- Multiplayer and native builds are future ideas only.
+- Avoid heavy tooling or project management overhead.
+
 ---
 
 ## ✅ Master Checklist
@@ -174,7 +186,7 @@ Choose one:
 
 ### 🛠 12. Game Features – Dev Plan
 
-Break into Codex prompts and commits:
+Break into Codex prompts and commits. Tackle one feature at a time and test manually after each change:
 
 - [ ] Ship movement with rotation + thrust
 - [ ] Touch or joystick controls
