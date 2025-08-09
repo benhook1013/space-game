@@ -27,7 +27,8 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 ### Repository
 
 - Public GitHub repo `space-game`
-- Contains `README.md`, `.gitignore`, `LICENSE`, `pubspec.yaml`, `fvm_config.json`
+- Contains `README.md`, `.gitignore`, `LICENSE`,
+  `pubspec.yaml`, `analysis_options.yaml`, `fvm_config.json`
 
 ### Flutter & FVM
 
@@ -50,6 +51,8 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 - `web/` – PWA manifest, icons and service worker
 - `test/` – placeholder for future automated tests
 - `pubspec.yaml` – dependencies and asset declarations
+- `.gitignore` – ignore `build/`, `.dart_tool/` and other generated files
+- `analysis_options.yaml` – enable `flutter_lints` rules
 - `lib/main.dart` – entry point launching `SpaceGame`
 - Root Markdown files for planning, playtests and asset credits
 - `DESIGN.md` for mechanics, `TASKS.md` for backlog, optional `milestone-*.md`
@@ -66,6 +69,7 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 - Favor small composable components over inheritance
 - If saving is needed later, add IDs and JSON‑serializable state
 - Fixed logical resolution scaled to device for consistent gameplay
+- Camera follows the player via `CameraComponent` with a fixed resolution viewport
 - `HasCollisionDetection` for collisions; `SpawnController` for spawns
 - Top‑down view with a simple parallax starfield background
 - Aim for 60 FPS and avoid heavy per‑frame allocations
@@ -108,8 +112,9 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 ## ✍️ Style & Testing
 
 - Format with `fvm dart format .`
-- Analyze with `fvm flutter analyze`
+- Analyze with `fvm flutter analyze` (guided by `analysis_options.yaml`)
 - Lint docs with `npx markdownlint *.md`
+- Once tests exist, run `fvm flutter test`
 - Manual testing for now; automate later under `test/`
 - Use `PLAYTEST_CHECKLIST.md`, `MANUAL_TESTING.md`, and optional `playtest_logs/`
 
