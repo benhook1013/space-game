@@ -21,19 +21,23 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 - Keep the entire project understandable by one person
 - Prefer built‑in Flame and Flutter features over custom frameworks
 - Optimize for quick iteration and avoid unnecessary abstraction
+- Keep dependencies minimal—stick to core Flutter, Flame, and a few small plugins
 
 ## 🛠️ Setup
 
 ### Repository
 
 - Public GitHub repo `space-game`
-- Contains `README.md`, `.gitignore`, `LICENSE`, `AGENTS.md`,
-  `pubspec.yaml`, `.analysis_options.yaml`, `fvm_config.json`
+- Contains `README.md`, `.gitignore`, `LICENSE`, `AGENTS.md`, `fvm_config.json`,
+  `.analysis_options.yaml`
+- `pubspec.yaml` and Flutter source folders are generated after running
+  `fvm flutter create .`
 - `AGENTS.md` captures coding and architecture guidelines
 
 ### Flutter & FVM
 
 - `fvm install` then `fvm use` to fetch and activate the pinned Flutter SDK
+- `fvm flutter create .` once to scaffold the Flutter project
 - Flutter version is defined in `fvm_config.json` (currently `3.32.8`)
 - `fvm flutter doctor` then `fvm flutter pub get`
 - Enable web: `fvm flutter config --enable-web`
@@ -73,10 +77,9 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 - On‑screen joystick and shoot button; WASD + Space mirror touch controls
 - States: **menu → playing → game over** with quick restart
 - Use a `GameState` enum to manage transitions
-- Centralize asset paths in an `Assets` helper that preloads sprites, audio and fonts
-  so gameplay code never references file paths directly
+- Centralize asset paths in an `Assets` helper that preloads sprites, audio and
+  fonts so gameplay code never references file paths directly
 - Favor small composable components over inheritance
-- Use a centralised asset registry; avoid hard-coded file paths
 - Keep Flutter UI widgets separate from game state updates
 - If saving is needed later, add IDs and JSON‑serializable state
 - Fixed logical resolution scaled to device for consistent gameplay
@@ -86,6 +89,8 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 - Aim for 60 FPS and avoid heavy per‑frame allocations
 - Movement and animations should be time‑based using `dt` to stay consistent
   across frame rates
+- Store tunable values like speeds and spawn rates in constants for quick
+  balancing
 
 ## 🎮 MVP
 
