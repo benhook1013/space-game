@@ -22,6 +22,8 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 - Prefer built‑in Flame and Flutter features over custom frameworks
 - Optimize for quick iteration and avoid unnecessary abstraction
 - Keep dependencies minimal—stick to core Flutter, Flame, and a few small plugins
+- Build only the features needed for the current milestone;
+  defer extras until they are actually required
 - Favor readability over micro‑optimisation so future maintenance stays simple
 
 ## 🛠️ Setup
@@ -60,7 +62,7 @@ Target is an offline PWA that a solo developer can iterate on quickly.
   - `game/` – `FlameGame` subclass and core systems
   - `components/` – game entities/components
   - `ui/` – Flutter widgets for menus/HUD
-  - `services/` – storage, audio and other helpers
+  - `services/` – optional helpers such as storage or audio, added only when needed
 - `assets/` – images, audio and fonts
 - `web/` – PWA manifest, icons and service worker
 - `test/` – placeholder for future automated tests
@@ -73,7 +75,7 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 
 ## 🏗️ Architecture
 
-- `SpaceGame` extends `FlameGame` in `lib/space_game.dart`
+- `SpaceGame` extends `FlameGame` in `lib/game/space_game.dart`
 - `GameWidget` hosts the game and overlays menus/HUD
 - Components live in `lib/components/`
   (`player.dart`, `enemy.dart`, `asteroid.dart`, `bullet.dart`…)
@@ -88,7 +90,7 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 - If saving is needed later, add IDs and JSON‑serializable state
 - Fixed logical resolution scaled to device for consistent gameplay
 - Camera follows the player via `CameraComponent` with a fixed resolution viewport
-- `HasCollisionDetection` for collisions; `SpawnController` for spawns
+- Use `HasCollisionDetection` for collisions and a simple timer-based spawner
 - Top‑down view with a simple parallax starfield background
 - Aim for 60 FPS and avoid heavy per‑frame allocations
 - Movement and animations should be time‑based using `dt` to stay consistent
