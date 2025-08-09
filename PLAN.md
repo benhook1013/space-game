@@ -68,6 +68,8 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 - On‑screen joystick and shoot button; WASD + Space mirror touch controls
 - States: **menu → playing → game over** with quick restart
 - Use a `GameState` enum to manage transitions
+- Centralize asset paths in an `Assets` helper that preloads sprites, audio and fonts
+  so gameplay code never references file paths directly
 - Favor small composable components over inheritance
 - If saving is needed later, add IDs and JSON‑serializable state
 - Fixed logical resolution scaled to device for consistent gameplay
@@ -75,6 +77,8 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 - `HasCollisionDetection` for collisions; `SpawnController` for spawns
 - Top‑down view with a simple parallax starfield background
 - Aim for 60 FPS and avoid heavy per‑frame allocations
+- Movement and animations should be time‑based using `dt` to stay consistent
+  across frame rates
 
 ## 🎮 MVP
 
@@ -119,6 +123,7 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 - Once tests exist, run `fvm flutter test`
 - Manual testing for now; automate later under `test/`
 - Use `PLAYTEST_CHECKLIST.md`, `MANUAL_TESTING.md`, and optional `playtest_logs/`
+- Enable Flame's debug mode in dev builds to show bounding boxes and FPS
 
 ## 🔮 Future Ideas
 
