@@ -22,6 +22,7 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 - Prefer built‑in Flame and Flutter features over custom frameworks
 - Optimize for quick iteration and avoid unnecessary abstraction
 - Keep dependencies minimal—stick to core Flutter, Flame, and a few small plugins
+- Favor readability over micro‑optimisation so future maintenance stays simple
 
 ## 🛠️ Setup
 
@@ -32,6 +33,7 @@ Target is an offline PWA that a solo developer can iterate on quickly.
   `.analysis_options.yaml`
 - `pubspec.yaml` and Flutter source folders are generated after running
   `fvm flutter create .`
+- Commit the generated Flutter skeleton so a fresh clone builds immediately
 - `AGENTS.md` captures coding and architecture guidelines
 
 ### Flutter & FVM
@@ -49,6 +51,7 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 - Use Codespaces or any lightweight editor (VS Code, GitHub Mobile, Replit)
 - Work directly on `main`; branch only for larger features
 - Commit small, frequent changes with messages like `feat:`, `fix:`, `docs:`
+- Track to‑dos in a simple `TASKS.md` to keep solo development focused
 
 ## 📂 Structure & Docs
 
@@ -74,6 +77,7 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 - `GameWidget` hosts the game and overlays menus/HUD
 - Components live in `lib/components/`
   (`player.dart`, `enemy.dart`, `asteroid.dart`, `bullet.dart`…)
+- Keep the core `SpaceGame` lean by delegating logic to small helper classes
 - On‑screen joystick and shoot button; WASD + Space mirror touch controls
 - States: **menu → playing → game over** with quick restart
 - Use a `GameState` enum to manage transitions
@@ -130,7 +134,7 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 ## ✍️ Style & Testing
 
 - Format with `fvm dart format .`
-- Analyze with `fvm flutter analyze` (guided by `.analysis_options.yaml`)
+- Analyze with `fvm dart analyze` (guided by `.analysis_options.yaml`)
 - Lint docs with `npx markdownlint *.md`
 - Once tests exist, run `fvm flutter test`
 - Manual testing for now; automate later under `test/`
