@@ -28,11 +28,12 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 
 - Public GitHub repo `space-game`
 - Contains `README.md`, `.gitignore`, `LICENSE`,
-  `pubspec.yaml`, `analysis_options.yaml`, `fvm_config.json`
+  `pubspec.yaml`, `.analysis_options.yaml`, `fvm_config.json`
 
 ### Flutter & FVM
 
 - `fvm install` then `fvm use` to fetch and activate the pinned Flutter SDK
+- Flutter version is defined in `fvm_config.json` (currently `3.32.8`)
 - `fvm flutter doctor` then `fvm flutter pub get`
 - Enable web: `fvm flutter config --enable-web`
 - Run with `fvm flutter run -d chrome` for debug or `-d web-server` for PWA tests
@@ -52,9 +53,10 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 - `test/` – placeholder for future automated tests
 - `pubspec.yaml` – dependencies and asset declarations
 - `.gitignore` – ignore `build/`, `.dart_tool/` and other generated files
-- `analysis_options.yaml` – enable `flutter_lints` rules
+- `.analysis_options.yaml` – enable `flutter_lints` rules
 - `lib/main.dart` – entry point launching `SpaceGame`
 - Root Markdown files for planning, playtests and asset credits
+  (`PLAN.md`, `PLAYTEST_CHECKLIST.md`, `MANUAL_TESTING.md`, `playtest_logs/`)
 - `DESIGN.md` for mechanics, `TASKS.md` for backlog, optional `milestone-*.md`
 
 ## 🏗️ Architecture
@@ -89,7 +91,7 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 
 ### Assets
 
-- `assets/images/`, `assets/sfx/`, `assets/music/`, `assets/fonts/`
+- `assets/images/`, `assets/audio/`, `assets/fonts/`
 - Placeholder shapes or colors are fine early;
   document sources in `ASSET_GUIDE.md` and credit in `ASSET_CREDITS.md`
 - Prefer CC0 or similar licenses and keep total assets <5 MB
@@ -112,7 +114,7 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 ## ✍️ Style & Testing
 
 - Format with `fvm dart format .`
-- Analyze with `fvm flutter analyze` (guided by `analysis_options.yaml`)
+- Analyze with `fvm flutter analyze` (guided by `.analysis_options.yaml`)
 - Lint docs with `npx markdownlint *.md`
 - Once tests exist, run `fvm flutter test`
 - Manual testing for now; automate later under `test/`
