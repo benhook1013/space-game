@@ -27,8 +27,9 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 ### Repository
 
 - Public GitHub repo `space-game`
-- Contains `README.md`, `.gitignore`, `LICENSE`,
+- Contains `README.md`, `.gitignore`, `LICENSE`, `AGENTS.md`,
   `pubspec.yaml`, `.analysis_options.yaml`, `fvm_config.json`
+- `AGENTS.md` captures coding and architecture guidelines
 
 ### Flutter & FVM
 
@@ -47,17 +48,21 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 
 ## 📂 Structure & Docs
 
-- `lib/` – game code
+- `lib/` – source code
+  - `main.dart` – entry point launching `SpaceGame`
+  - `game/` – `FlameGame` subclass and core systems
+  - `components/` – game entities/components
+  - `ui/` – Flutter widgets for menus/HUD
+  - `services/` – storage, audio and other helpers
 - `assets/` – images, audio and fonts
 - `web/` – PWA manifest, icons and service worker
 - `test/` – placeholder for future automated tests
 - `pubspec.yaml` – dependencies and asset declarations
 - `.gitignore` – ignore `build/`, `.dart_tool/` and other generated files
 - `.analysis_options.yaml` – enable `flutter_lints` rules
-- `lib/main.dart` – entry point launching `SpaceGame`
-- Root Markdown files for planning, playtests and asset credits
-  (`PLAN.md`, `PLAYTEST_CHECKLIST.md`, `MANUAL_TESTING.md`, `playtest_logs/`)
-- `DESIGN.md` for mechanics, `TASKS.md` for backlog, optional `milestone-*.md`
+- Root Markdown docs: `AGENTS.md`, `PLAN.md`, `PLAYTEST_CHECKLIST.md`,
+  `MANUAL_TESTING.md`, `ASSET_GUIDE.md`, `ASSET_CREDITS.md`, `playtest_logs/`,
+  plus optional `DESIGN.md`, `TASKS.md`, `milestone-*.md`
 
 ## 🏗️ Architecture
 
@@ -69,6 +74,8 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 - States: **menu → playing → game over** with quick restart
 - Use a `GameState` enum to manage transitions
 - Favor small composable components over inheritance
+- Use a centralised asset registry; avoid hard-coded file paths
+- Keep Flutter UI widgets separate from game state updates
 - If saving is needed later, add IDs and JSON‑serializable state
 - Fixed logical resolution scaled to device for consistent gameplay
 - Camera follows the player via `CameraComponent` with a fixed resolution viewport
@@ -119,6 +126,7 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 - Once tests exist, run `fvm flutter test`
 - Manual testing for now; automate later under `test/`
 - Use `PLAYTEST_CHECKLIST.md`, `MANUAL_TESTING.md`, and optional `playtest_logs/`
+- Follow `AGENTS.md` conventions when contributing
 
 ## 🔮 Future Ideas
 
