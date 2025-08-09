@@ -25,6 +25,10 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 - Build only the features needed for the current milestone;
   defer extras until they are actually required
 - Favor readability over micro‑optimisation so future maintenance stays simple
+- Avoid code generation or heavy frameworks so builds stay fast and debugging
+  remains straightforward
+- Collect tunable values (speeds, spawn rates, etc.) in a small `constants.dart`
+  so balancing is easy and numbers aren't scattered across files
 
 ## 🛠️ Setup
 
@@ -36,10 +40,13 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 - `pubspec.yaml` and Flutter source folders are generated after running
   `fvm flutter create .`
 - Commit the generated Flutter skeleton so a fresh clone builds immediately
+- Include a barebones `pubspec.yaml` with pinned `flame`, `flame_audio`, and
+  `shared_preferences` versions
 - `AGENTS.md` captures coding and architecture guidelines
 
 ### Flutter & FVM
 
+- Install FVM if needed: `dart pub global activate fvm`
 - `fvm install` then `fvm use` to fetch and activate the pinned Flutter SDK
 - `fvm flutter create .` once to scaffold the Flutter project
 - Flutter version is defined in `fvm_config.json` (currently `3.32.8`)
@@ -81,6 +88,8 @@ Target is an offline PWA that a solo developer can iterate on quickly.
   (`player.dart`, `enemy.dart`, `asteroid.dart`, `bullet.dart`…)
 - Keep the core `SpaceGame` lean by delegating logic to small helper classes
 - On‑screen joystick and shoot button; WASD + Space mirror touch controls
+- Use Flame's built-in `JoystickComponent` and `ButtonComponent` for touch input
+- Keyboard support comes from `KeyboardListenerComponent`
 - States: **menu → playing → game over** with quick restart
 - Use a `GameState` enum to manage transitions
 - Centralize asset paths in an `Assets` helper that preloads sprites, audio and
@@ -95,8 +104,6 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 - Aim for 60 FPS and avoid heavy per‑frame allocations
 - Movement and animations should be time‑based using `dt` to stay consistent
   across frame rates
-- Store tunable values like speeds and spawn rates in constants for quick
-  balancing
 
 ## 🎮 MVP
 
@@ -107,6 +114,7 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 - Local high score stored on device (e.g., shared preferences)
 - Basic sound effects using `flame_audio` with mute toggle
 - Keyboard controls for desktop playtests
+- Game works offline after the first load thanks to the service worker
 - Simple parallax starfield background
 
 ## 🎨 Assets & PWA
@@ -130,8 +138,9 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 - Default `flutter_service_worker.js` for offline caching
 - Build with `fvm flutter build web --release`
 - Test with `fvm flutter run -d web-server`
-- Deploy via GitHub Pages (`gh-pages`) using a GitHub Actions workflow  
+- Deploy via GitHub Pages (`gh-pages`) using a GitHub Actions workflow
   to publish `build/web`
+- Update `web/index.html` metadata (title, description) to match the game
 
 ## ✍️ Style & Testing
 
