@@ -16,12 +16,18 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 - Multiplayer or native builds (future work)
 - Large asset pipelines or complex tooling
 
+## 🧭 Design Principles
+
+- Keep the entire project understandable by one person
+- Prefer built‑in Flame and Flutter features over custom frameworks
+- Optimize for quick iteration and avoid unnecessary abstraction
+
 ## 🛠️ Setup
 
 ### Repository
 
 - Public GitHub repo `space-game`
-- Contains `README.md`, `.gitignore`, `LICENSE`, `fvm_config.json`
+- Contains `README.md`, `.gitignore`, `LICENSE`, `pubspec.yaml`, `fvm_config.json`
 
 ### Flutter & FVM
 
@@ -43,6 +49,8 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 - `assets/` – images, audio and fonts
 - `web/` – PWA manifest, icons and service worker
 - `test/` – placeholder for future automated tests
+- `pubspec.yaml` – dependencies and asset declarations
+- `lib/main.dart` – entry point launching `SpaceGame`
 - Root Markdown files for planning, playtests and asset credits
 - `DESIGN.md` for mechanics, `TASKS.md` for backlog, optional `milestone-*.md`
 
@@ -54,10 +62,12 @@ Target is an offline PWA that a solo developer can iterate on quickly.
   (`player.dart`, `enemy.dart`, `asteroid.dart`, `bullet.dart`…)
 - On‑screen joystick and shoot button; WASD + Space mirror touch controls
 - States: **menu → playing → game over** with quick restart
+- Use a `GameState` enum to manage transitions
 - Favor small composable components over inheritance
 - If saving is needed later, add IDs and JSON‑serializable state
 - Fixed logical resolution scaled to device for consistent gameplay
 - `HasCollisionDetection` for collisions; `SpawnController` for spawns
+- Top‑down view with a simple parallax starfield background
 - Aim for 60 FPS and avoid heavy per‑frame allocations
 
 ## 🎮 MVP
@@ -69,6 +79,7 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 - Local high score stored on device (e.g., shared preferences)
 - Basic sound effects using `flame_audio` with mute toggle
 - Keyboard controls for desktop playtests
+- Simple parallax starfield background
 
 ## 🎨 Assets & PWA
 
