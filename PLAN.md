@@ -43,6 +43,7 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 - Include a barebones `pubspec.yaml` with pinned `flame`, `flame_audio`, and
   `shared_preferences` versions
 - `AGENTS.md` captures coding and architecture guidelines
+- Commit `pubspec.lock` so dependency versions stay consistent
 
 ### Flutter & FVM
 
@@ -61,6 +62,7 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 - Work directly on `main`; branch only for larger features
 - Commit small, frequent changes with messages like `feat:`, `fix:`, `docs:`
 - Track to‑dos in a simple `TASKS.md` to keep solo development focused
+- Run `fvm dart format .` and `fvm dart analyze` before committing
 
 ## 📂 Structure & Docs
 
@@ -69,6 +71,7 @@ Target is an offline PWA that a solo developer can iterate on quickly.
   - `game/` – `FlameGame` subclass and core systems
   - `components/` – game entities/components
   - `ui/` – Flutter widgets for menus/HUD
+  - `constants.dart` – central place for tunable values
   - `services/` – optional helpers such as storage or audio, added only when needed
 - `assets/` – images, audio and fonts
 - `web/` – PWA manifest, icons and service worker
@@ -104,12 +107,14 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 - Aim for 60 FPS and avoid heavy per‑frame allocations
 - Movement and animations should be time‑based using `dt` to stay consistent
   across frame rates
+- Rely on Flame's `update`/`render` lifecycle; avoid custom game loops
 
 ## 🎮 MVP
 
 - Touch/joystick movement and shooting
 - One enemy type with collision and random spawns
 - Asteroids to mine for score or pickups
+- Single endless level without progression for now
 - Player health and simple start/game‑over screens
 - Local high score stored on device (e.g., shared preferences)
 - Basic sound effects using `flame_audio` with mute toggle
