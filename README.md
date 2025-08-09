@@ -1,10 +1,17 @@
 # 🚀 Space Miner PWA
 
-**Space Miner** is a mobile-first, Codex-assisted 2D space shooter where players fly around, mine asteroids, blast enemies and upgrade their ship — all built with **Flutter** and **Flame**.
+**Space Miner** is a mobile-first, Codex-assisted 2D space shooter where players
+fly around, mine asteroids, blast enemies and upgrade their ship — all built
+with **Flutter** and **Flame**.
 
-The aim is a light-hearted, cartoony game that runs smoothly on both mobile and desktop browsers using **Progressive Web App (PWA)** technology. You can install it straight from your browser and play offline with no app store required.
+The aim is a light-hearted, cartoony game that runs smoothly on both mobile and
+desktop browsers using **Progressive Web App (PWA)** technology. You can
+install it straight from your browser and play offline with no app store
+required.
 
-Multiplayer is planned as a simple host-authoritative co-op mode where one player simulates the world and others connect over the local network — no dedicated server or NAT traversal.
+Multiplayer is planned as a simple host-authoritative co-op mode where one
+player simulates the world and others connect over the local network — no
+dedicated server or NAT traversal.
 
 ---
 
@@ -15,6 +22,7 @@ Multiplayer is planned as a simple host-authoritative co-op mode where one playe
 - Fully playable on iOS/Android/PC via PWA
 - Fun, casual tone with cartoony visuals
 - Modular game logic built with Flame (pinned for stability)
+- Minimal dependencies to keep the project lightweight
 - Multiplayer-ready architecture (host based, offline first)
 - Simple CI/CD through GitHub Actions
 - Fully open-source and remixable
@@ -50,12 +58,16 @@ PLAYTEST_CHECKLIST.md   # Regression checklist
 playtest_logs/          # Logs from manual play sessions
 ```
 
-Additional docs such as `DESIGN.md`, `TASKS.md` and `networking.md` are planned but not yet created. See [PLAN.md](PLAN.md) for the full roadmap.
+Additional docs such as `DESIGN.md`, `TASKS.md` and `networking.md` are planned
+but not yet created. See [PLAN.md](PLAN.md) for the full roadmap.
 
 ---
 
 ## Flutter Version Management
 
-This repo uses [FVM](https://fvm.app/) to pin the Flutter SDK version. After cloning, run `fvm install` to download the SDK specified in `fvm_config.json`. Use `fvm flutter` in place of the global `flutter` command when building or running the game.
+This repo uses [FVM](https://fvm.app/) to pin the Flutter SDK version. After
+cloning, run `fvm install` to download the SDK specified in `fvm_config.json`.
+Use `fvm flutter` in place of the global `flutter` command when building or
+running the game.
 
 The project is released under the [MIT License](LICENSE).
