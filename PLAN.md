@@ -71,6 +71,7 @@ Target is an offline PWA that a solo developer can iterate on quickly.
   - `game/` – `FlameGame` subclass and core systems
   - `components/` – game entities/components
   - `ui/` – Flutter widgets for menus/HUD
+  - `assets.dart` – central asset registry that preloads sprites, audio and fonts
   - `constants.dart` – central place for tunable values
   - `services/` – optional helpers such as storage or audio, added only when needed
 - `assets/` – images, audio and fonts
@@ -87,6 +88,8 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 
 - `SpaceGame` extends `FlameGame` in `lib/game/space_game.dart`
 - `GameWidget` hosts the game and overlays menus/HUD
+- Use Flame overlays (`overlays` map) for menu and game-over screens so UI code
+  stays separate from the game loop
 - Components live in `lib/components/`
   (`player.dart`, `enemy.dart`, `asteroid.dart`, `bullet.dart`…)
 - Keep the core `SpaceGame` lean by delegating logic to small helper classes
@@ -151,7 +154,7 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 
 - Format with `fvm dart format .`
 - Analyze with `fvm dart analyze` (guided by `.analysis_options.yaml`)
-- Lint docs with `npx markdownlint *.md`
+- Lint docs with `npx markdownlint '**/*.md'`
 - Once tests exist, run `fvm flutter test`
 - Manual testing for now; automate later under `test/`
 - Use `PLAYTEST_CHECKLIST.md`, `MANUAL_TESTING.md`, and optional `playtest_logs/`
@@ -163,7 +166,7 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 - **Multiplayer** (`networking.md`): host‑authoritative co‑op via WebSocket
 - **Backend (optional)**: local storage sync or Firebase
 - **Native deployment (optional)**: Codemagic, Play Store, TestFlight
-- Additional features: inventory, upgrades, HUD, menus, shop UI, sound, save/load
+- Additional features: inventory, upgrades, HUD, menus, shop UI, save/load
 
 ## 🔁 Daily Loop
 
