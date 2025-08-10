@@ -66,6 +66,7 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 - Commit small, frequent changes with messages like `feat:`, `fix:`, `docs:`
 - Track to‑dos in a simple `TASKS.md` to keep solo development focused
 - Run `fvm dart format .` and `fvm dart analyze` before committing
+- After editing docs, run `npx markdownlint '**/*.md'` to keep Markdown tidy
 
 ## 📂 Structure & Docs
 
@@ -86,6 +87,8 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 - Root Markdown docs: `AGENTS.md`, `PLAN.md`, `PLAYTEST_CHECKLIST.md`,
   `MANUAL_TESTING.md`, `ASSET_GUIDE.md`, `ASSET_CREDITS.md`, `playtest_logs/`,
   plus optional `DESIGN.md`, `TASKS.md`, `milestone-*.md`
+- Keep `README.md` and other docs updated as features change and remove any
+  stale sections
 
 ## 🏗️ Architecture
 
@@ -104,6 +107,8 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 - Centralize asset paths in an `Assets` helper that preloads sprites, audio and
   fonts so gameplay code never references file paths directly
 - Favor small composable components over inheritance
+- Components that need to access the game should mix in
+  `HasGameRef<SpaceGame>` instead of using global singletons
 - Keep Flutter UI widgets separate from game state updates
 - If saving is needed later, add IDs and JSON‑serializable state
 - Fixed logical resolution scaled to device for consistent gameplay
@@ -151,6 +156,9 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 - Test with `fvm flutter run -d web-server`
 - Deploy via GitHub Pages (`gh-pages`) using a GitHub Actions workflow
   to publish `build/web`
+- When targeting GitHub Pages, build with
+  `fvm flutter build web --release --base-href /space-game/` so asset paths
+  resolve correctly
 - Update `web/index.html` metadata (title, description) to match the game
 
 ## ✍️ Style & Testing
