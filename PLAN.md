@@ -1,4 +1,4 @@
-# 🚀 Space Game Plan
+# 🚀 Space Miner Plan
 
 Tiny mobile‑first 2D shooter built with Flutter and Flame.
 Target is an offline PWA that a solo developer can iterate on quickly.
@@ -10,6 +10,7 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 - Code and asset base kept tiny and easy to maintain
 - Ship quickly and iterate in small increments
 - Responsive scaling so the same build works on phones, tablets and desktop
+- Solo-friendly workflow with minimal tooling
 
 ## 🚫 Non‑Goals
 
@@ -32,6 +33,8 @@ Target is an offline PWA that a solo developer can iterate on quickly.
   so balancing is easy and numbers aren't scattered across files
 - Prefer composition over inheritance when adding behaviours
 - Pass dependencies through constructors where possible; keep singletons rare
+- Use simple state handling (plain classes or `ValueNotifier`s) instead of
+  heavyweight patterns like BLoC or Redux
 
 ## 🛠️ Setup
 
@@ -47,6 +50,8 @@ Target is an offline PWA that a solo developer can iterate on quickly.
   `shared_preferences` versions
 - `AGENTS.md` captures coding and architecture guidelines
 - Commit `pubspec.lock` so dependency versions stay consistent
+- Add a minimal GitHub Actions workflow that lints, tests and deploys the web
+  build; avoid complex pipelines until needed
 
 ### Flutter & FVM
 
