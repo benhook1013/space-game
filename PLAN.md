@@ -9,6 +9,7 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 - Installable PWA with touch controls
 - Code and asset base kept tiny and easy to maintain
 - Ship quickly and iterate in small increments
+- Responsive scaling so the same build works on phones, tablets and desktop
 
 ## 🚫 Non‑Goals
 
@@ -29,6 +30,8 @@ Target is an offline PWA that a solo developer can iterate on quickly.
   remains straightforward
 - Collect tunable values (speeds, spawn rates, etc.) in a small `constants.dart`
   so balancing is easy and numbers aren't scattered across files
+- Prefer composition over inheritance when adding behaviours
+- Pass dependencies through constructors where possible; keep singletons rare
 
 ## 🛠️ Setup
 
@@ -160,6 +163,7 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 - Use `PLAYTEST_CHECKLIST.md`, `MANUAL_TESTING.md`, and optional `playtest_logs/`
 - Follow `AGENTS.md` conventions when contributing
 - Enable Flame's debug mode in dev builds to show bounding boxes and FPS
+- Add a tiny `log()` helper around `debugPrint` so messages can be silenced in release
 
 ## 🔮 Future Ideas
 
