@@ -55,6 +55,7 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 
 ### Flutter & FVM
 
+- Install the Dart SDK first if it's not already available
 - Install FVM if needed: `dart pub global activate fvm`
 - `fvm install` then `fvm use` to fetch and activate the pinned Flutter SDK
 - `fvm flutter create .` once to scaffold the Flutter project
@@ -121,6 +122,8 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 - Use `HasCollisionDetection` for collisions and a simple timer-based spawner
 - Top‑down view with a simple parallax starfield background
 - Aim for 60 FPS and avoid heavy per‑frame allocations
+- For frequently spawned objects (like bullets or asteroids), consider simple
+  object pools to reduce garbage collection overhead
 - Movement and animations should be time‑based using `dt` to stay consistent
   across frame rates
 - Rely on Flame's `update`/`render` lifecycle; avoid custom game loops
@@ -146,6 +149,8 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 - Placeholder shapes or colors are fine early;
   document sources in `ASSET_GUIDE.md` and credit in `ASSET_CREDITS.md`
 - Prefer CC0 or similar licenses and keep total assets <5 MB
+- Maintain a versioned `assets_manifest.json` to track assets for each release
+  and help with caching
 
 ### PWA & Deployment
 
@@ -172,6 +177,8 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 - Analyze with `fvm dart analyze` (guided by `.analysis_options.yaml`)
 - Lint docs with `npx markdownlint '**/*.md'`
 - Once tests exist, run `fvm flutter test`
+- Use `flutter_test` for widget tests and `flame_test` for component/system tests
+  once tests are added
 - Manual testing for now; automate later under `test/`
 - Use `PLAYTEST_CHECKLIST.md`, `MANUAL_TESTING.md`, and optional `playtest_logs/`
 - Follow `AGENTS.md` conventions when contributing
