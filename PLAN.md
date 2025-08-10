@@ -118,9 +118,12 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 - Keep Flutter UI widgets separate from game state updates
 - If saving is needed later, add IDs and JSON‑serializable state
 - Fixed logical resolution scaled to device for consistent gameplay
-- Camera follows the player via `CameraComponent` with a fixed resolution viewport
-- Use `HasCollisionDetection` for collisions and a simple timer-based spawner
-- Top‑down view with a simple parallax starfield background
+- Camera follows the player via `CameraComponent` and a `FixedResolutionViewport`
+  for consistent scaling across devices
+- Use `HasCollisionDetection` for collisions with simple `CircleHitbox`/`RectangleHitbox`
+  shapes and a timer-based spawner
+- Top‑down view with a simple parallax starfield background using Flame's
+  `ParallaxComponent`
 - Aim for 60 FPS and avoid heavy per‑frame allocations
 - For frequently spawned objects (like bullets or asteroids), consider simple
   object pools to reduce garbage collection overhead
