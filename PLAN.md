@@ -55,10 +55,11 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 
 ### Flutter & FVM
 
-- Install the Dart SDK first if it's not already available
+- FVM manages its own Flutter and Dart SDK; no separate Dart install required
 - Install FVM if needed: `dart pub global activate fvm`
 - `fvm install` then `fvm use` to fetch and activate the pinned Flutter SDK
-- `fvm flutter create .` once to scaffold the Flutter project
+- Run `fvm flutter create .` once to scaffold the Flutter project
+  if the skeleton isn't already committed
 - Flutter version is defined in `fvm_config.json` (currently `3.32.8`)
 - `fvm flutter doctor` then `fvm flutter pub get`
 - Enable web: `fvm flutter config --enable-web`
@@ -144,6 +145,12 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 - Game works offline after the first load thanks to the service worker
 - Simple parallax starfield background
 
+## 🗓️ Milestones
+
+- **Setup** – basic project scaffolding runs in the browser with placeholder assets
+- **Core Loop** – player moves and shoots, one enemy type, basic scoring
+- **Polish** – starfield background, sound effects, and local high score
+
 ## 🎨 Assets & PWA
 
 ### Assets
@@ -202,5 +209,5 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 2. Push to GitHub
 3. CI builds the PWA
 4. Test on device and install via "Add to Home Screen"
-5. Log findings and next steps in `TASKS.md`
+5. Log findings and next steps in `TASKS.md`; update `PLAN.md` if scope changes
 ```
