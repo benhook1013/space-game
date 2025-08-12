@@ -3,6 +3,9 @@
 Source code lives under `lib/`. The folders listed here will be created when
 the Flutter project is scaffolded.
 
+This repo uses FVM, so run `fvm flutter` and `fvm dart` for all commands to use
+the pinned SDK.
+
 ## Top-Level Files
 
 - `main.dart` – entry point launching `SpaceGame` via `GameWidget`.

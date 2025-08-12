@@ -4,6 +4,15 @@ This document summarises the current architecture and design goals for Space Min
 See [PLAN.md](PLAN.md) for the authoritative roadmap and
 [lib/README.md](lib/README.md) for code layout details.
 
+## Design Principles
+
+- Keep the codebase small and understandable for a solo developer.
+- Prefer built-in Flutter and Flame features over custom frameworks.
+- Minimise dependencies and avoid code generation.
+- Collect tunable numbers in `constants.dart` and asset paths in `assets.dart`.
+- Use composition and pass dependencies through constructors; keep singletons rare.
+- Optimise iteration by running all commands through FVM (`fvm flutter`, `fvm dart`).
+
 ## Game Layers
 
 - `SpaceGame` extends `FlameGame`, managing world and scene setup while
