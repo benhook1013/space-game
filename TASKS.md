@@ -1,6 +1,7 @@
 # ✅ Task List
 
-Tracking immediate work to reach the MVP. See [PLAN.md](PLAN.md) for context.
+Tracking immediate work to reach the MVP. See [PLAN.md](PLAN.md) and
+`milestone-*.md` for detailed goals.
 
 ## Setup
 
