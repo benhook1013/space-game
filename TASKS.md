@@ -1,0 +1,27 @@
+# ✅ Task List
+
+Tracking immediate work to reach the MVP. See [PLAN.md](PLAN.md) for context.
+
+## Setup
+
+- [ ] Install FVM and fetch the pinned Flutter SDK.
+- [ ] Scaffold the Flutter project (`fvm flutter create .`) if not already.
+- [ ] Enable web support (`fvm flutter config --enable-web`).
+- [ ] Add Flame, `flame_audio` and `shared_preferences` to `pubspec.yaml`.
+- [ ] Commit generated folders (`lib/`, `web/`, etc.).
+- [ ] Set up GitHub Actions workflow for lint, test and web deploy.
+- [ ] Document placeholder assets and credits.
+
+## Core Loop
+
+- [ ] Player ship moves with joystick or keyboard.
+- [ ] Ship can shoot and destroy a basic enemy type.
+- [ ] Random asteroids spawn and can be mined for score.
+- [ ] Game states: menu → playing → game over with restart.
+- [ ] Parallax starfield renders behind gameplay.
+
+## Polish
+
+- [ ] Sound effects via `flame_audio` with mute toggle.
+- [ ] Local high score using `shared_preferences`.
+- [ ] Simple HUD and menus layered with Flutter.

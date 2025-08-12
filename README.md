@@ -58,8 +58,9 @@ PLAYTEST_CHECKLIST.md   # Regression checklist
 playtest_logs/          # Logs from manual play sessions
 ```
 
-Additional docs such as `DESIGN.md`, `TASKS.md` and `networking.md` are planned
-but not yet created. See [PLAN.md](PLAN.md) for the full roadmap.
+Further docs include `DESIGN.md` for architecture, `TASKS.md` for the backlog and
+`networking.md` for future multiplayer plans. See [PLAN.md](PLAN.md) for the full
+roadmap.
 
 ---
 

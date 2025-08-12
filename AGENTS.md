@@ -88,7 +88,8 @@ lib/
 web/                    # PWA manifest, service worker
 .github/workflows/      # CI/CD configs
 ```
-Other docs: `PLAN.md`, `ASSET_GUIDE.md`, `ASSET_CREDITS.md`, `MANUAL_TESTING.md`, `PLAYTEST_CHECKLIST.md`, `playtest_logs/`.
+Other docs: `PLAN.md`, `DESIGN.md`, `TASKS.md`, `networking.md`, `ASSET_GUIDE.md`,
+`ASSET_CREDITS.md`, `MANUAL_TESTING.md`, `PLAYTEST_CHECKLIST.md`, `playtest_logs/`.
 
 ## 11. Testing & Observability
 - Use `flutter_test` for unit and widget tests; `flame_test` for component/system tests.
