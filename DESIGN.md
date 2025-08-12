@@ -6,12 +6,15 @@ See [PLAN.md](PLAN.md) for the authoritative roadmap and
 
 ## Game Layers
 
-- `SpaceGame` extends `FlameGame` and is embedded in a `GameWidget`.
+- `SpaceGame` extends `FlameGame`, managing world and scene setup while
+  scheduling the game loop tick.
+- It owns small system classes for input, physics/collisions, entity spawners
+  and scoring. Hooks for resource mining, inventory, networking and save/load
+  will slot in later milestones.
 - Flutter overlays handle menus and the HUD so UI stays outside the game loop.
 - A `GameState` enum tracks **menu → playing → game over** transitions.
-- Systems manage input, collisions, spawning and scoring.
-- Assets and tunable constants live in `assets.dart` and `constants.dart` so
-  gameplay code avoids raw paths or magic numbers.
+- Asset paths live in a central `assets.dart` registry and tunable numbers live
+  in `constants.dart` to avoid magic strings or numbers.
 
 ## Components
 

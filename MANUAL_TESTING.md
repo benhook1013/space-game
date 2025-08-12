@@ -1,9 +1,10 @@
 # Manual Testing Strategy
 
-This project uses manual testing until automated tests are added.
+Manual testing fills the gap until automated tests are added.
 
-- The `develop` branch deploys to a staging environment for testing.
-- The `main` branch deploys to production.
-
-Use the [PLAYTEST_CHECKLIST.md](PLAYTEST_CHECKLIST.md) during each round of testing.
-Track issues in `playtest_logs/` as needed.
+- Work primarily on the `main` branch; create short-lived feature branches only
+  when needed.
+- Run the web build locally with `fvm flutter run -d chrome` or `-d web-server`
+  to verify changes.
+- Use the [PLAYTEST_CHECKLIST.md](PLAYTEST_CHECKLIST.md) during each round of
+  testing and log findings in `playtest_logs/`.

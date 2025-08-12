@@ -9,6 +9,8 @@ Tracking immediate work to reach the MVP. See [PLAN.md](PLAN.md) and
 - [ ] Scaffold the Flutter project (`fvm flutter create .`) if not already.
 - [ ] Enable web support (`fvm flutter config --enable-web`).
 - [ ] Add Flame, `flame_audio` and `shared_preferences` to `pubspec.yaml`.
+- [ ] Create placeholder `assets.dart` and `constants.dart` to centralise asset
+      paths and tunable values.
 - [ ] Commit generated folders (`lib/`, `web/`, etc.).
 - [ ] Set up GitHub Actions workflow for lint, test and web deploy.
 - [ ] Document placeholder assets and credits.
