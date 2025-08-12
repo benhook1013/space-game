@@ -10,7 +10,6 @@ See [PLAN.md](PLAN.md) for overall project goals.
 - Random asteroids spawn and can be mined for score.
 - Game states: **menu → playing → game over** with quick restart via overlays
   and a `GameState` enum.
-- Parallax starfield background renders behind gameplay.
 
 ## Design Notes
 

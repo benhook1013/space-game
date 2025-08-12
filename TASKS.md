@@ -19,10 +19,10 @@ Tracking immediate work to reach the MVP. See [PLAN.md](PLAN.md) and
 - [ ] Ship can shoot and destroy a basic enemy type.
 - [ ] Random asteroids spawn and can be mined for score.
 - [ ] Game states: menu → playing → game over with restart.
-- [ ] Parallax starfield renders behind gameplay.
 
 ## Polish
 
+- [ ] Parallax starfield renders behind gameplay.
 - [ ] Sound effects via `flame_audio` with mute toggle.
 - [ ] Local high score using `shared_preferences`.
 - [ ] Simple HUD and menus layered with Flutter.
