@@ -59,9 +59,9 @@ playtest_logs/          # Logs from manual play sessions
 ```
 
 Further docs include `DESIGN.md` for architecture, `TASKS.md` for the backlog,
-`milestone-setup.md` and `milestone-core-loop.md` for milestone goals, and
-`networking.md` for future multiplayer plans. See [PLAN.md](PLAN.md) for the full
-roadmap.
+`milestone-setup.md`, `milestone-core-loop.md` and `milestone-polish.md` for
+milestone goals, and `networking.md` for future multiplayer plans. See
+[PLAN.md](PLAN.md) for the full roadmap.
 
 ---
 

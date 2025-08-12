@@ -53,5 +53,6 @@ See [PLAN.md](PLAN.md) for the authoritative roadmap and
 
 ## Milestones
 
-- See [milestone-setup.md](milestone-setup.md) and
-  [milestone-core-loop.md](milestone-core-loop.md) for upcoming work.
+- See [milestone-setup.md](milestone-setup.md),
+  [milestone-core-loop.md](milestone-core-loop.md) and
+  [milestone-polish.md](milestone-polish.md) for upcoming work.
