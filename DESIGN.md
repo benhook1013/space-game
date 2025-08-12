@@ -1,7 +1,8 @@
 # 🎮 Design Overview
 
 This document summarises the current architecture and design goals for Space Miner.
-See [PLAN.md](PLAN.md) for the authoritative roadmap.
+See [PLAN.md](PLAN.md) for the authoritative roadmap and
+[lib/README.md](lib/README.md) for code layout details.
 
 ## Game Layers
 
@@ -26,6 +27,13 @@ See [PLAN.md](PLAN.md) for the authoritative roadmap.
 - Tunable numbers live in `constants.dart`.
 - Use immutable data objects and pass dependencies via constructors.
 - Local save data will use `shared_preferences` in the MVP.
+
+## Game State Flow
+
+- The game starts in a menu overlay.
+- `SpaceGame` transitions to `playing` when the user taps start.
+- On player death, a game over overlay appears with a restart button.
+- A `GameState` enum tracks the current phase.
 
 ## Input
 
