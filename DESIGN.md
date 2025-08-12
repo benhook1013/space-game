@@ -5,16 +5,21 @@ See [PLAN.md](PLAN.md) for the authoritative roadmap.
 
 ## Game Layers
 
-- `SpaceGame` extends `FlameGame`.
-- The Flame canvas hosts the world; Flutter overlays provide menus and HUD.
-- Systems manage input, collisions, spawning and game state transitions.
-- Assets load through a central `Assets` registry; gameplay code avoids file paths.
+- `SpaceGame` extends `FlameGame` and is embedded in a `GameWidget`.
+- Flutter overlays handle menus and the HUD so UI stays outside the game loop.
+- A `GameState` enum tracks **menu → playing → game over** transitions.
+- Systems manage input, collisions, spawning and scoring.
+- Assets and tunable constants live in `assets.dart` and `constants.dart` so
+  gameplay code avoids raw paths or magic numbers.
 
 ## Components
 
 - Player, enemy, asteroid and bullet components live under `lib/components/`.
 - Components mix in `HasGameRef<SpaceGame>` when they need game context.
-- Use simple hit boxes (`CircleHitbox`, `RectangleHitbox`) and `HasCollisionDetection`.
+- Use simple hit boxes (`CircleHitbox`, `RectangleHitbox`) and
+  `HasCollisionDetection`.
+- Frequently spawned objects (bullets, asteroids) may use small object pools to
+  limit garbage collection.
 
 ## State and Data
 
@@ -37,3 +42,8 @@ See [PLAN.md](PLAN.md) for the authoritative roadmap.
 
 - Web-only Flutter app managed through FVM (`fvm flutter` commands).
 - `web/manifest.json` and the service worker enable installable offline play.
+
+## Milestones
+
+- See [milestone-setup.md](milestone-setup.md) and
+  [milestone-core-loop.md](milestone-core-loop.md) for upcoming work.
