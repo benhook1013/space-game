@@ -14,13 +14,12 @@ the pinned SDK.
 
 ## Folders
 
-- `game/` – `SpaceGame` and global systems such as input handlers,
+- [game/](game/) – `SpaceGame` and global systems such as input handlers,
   collision logic and entity spawners.
-- `components/` – gameplay entities like player, enemy, asteroid and bullet
-  components. Each mixes in `HasGameRef<SpaceGame>` when game context is
-  required.
-- `ui/` – Flutter widgets for menus and HUD displayed using Flame overlays.
-- `services/` – optional helpers for audio, storage (`shared_preferences`) and
-  other utilities added as needed.
+- [components/](components/) – gameplay entities like player, enemy, asteroid
+  and bullet components.
+- [ui/](ui/) – Flutter widgets for menus and HUD displayed using Flame overlays.
+- [services/](services/) – optional helpers for audio, storage
+  (`shared_preferences`) and other utilities added as needed.
 
 See [../PLAN.md](../PLAN.md) for the broader roadmap.
