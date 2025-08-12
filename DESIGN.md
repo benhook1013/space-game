@@ -1,10 +1,12 @@
 # 🎮 Design Overview
 
 This document summarises the current architecture and design goals for Space Miner.
-See [PLAN.md](PLAN.md) for the authoritative roadmap and
-[lib/README.md](lib/README.md) for code layout details. Detailed module docs
-live under [lib/game](lib/game/README.md), [lib/components](lib/components/README.md),
-[lib/ui](lib/ui/README.md) and [lib/services](lib/services/README.md).
+See [PLAN.md](PLAN.md) for the authoritative roadmap. Folder overviews live in
+[lib/README.md](lib/README.md), [assets/README.md](assets/README.md),
+[web/README.md](web/README.md) and [test/README.md](test/README.md). Detailed
+module docs live under [lib/game](lib/game/README.md),
+[lib/components](lib/components/README.md), [lib/ui](lib/ui/README.md) and
+[lib/services](lib/services/README.md).
 
 ## Design Principles
 
