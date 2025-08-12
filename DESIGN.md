@@ -64,6 +64,17 @@ See [PLAN.md](PLAN.md) for the authoritative roadmap and
 - Camera follows the player via `CameraComponent` and `FixedResolutionViewport`.
 - A parallax starfield provides the background.
 
+## Assets
+
+- Art, audio and fonts live under `assets/` with subfolders for images,
+  audio and fonts.
+- Gameplay code references assets through a central `assets.dart` registry;
+  no hard-coded file paths.
+- A versioned `assets_manifest.json` tracks files for each release to help with
+  caching and PWA updates.
+- See [ASSET_GUIDE.md](ASSET_GUIDE.md) for sourcing guidelines and
+  [ASSET_CREDITS.md](ASSET_CREDITS.md) for attribution.
+
 ## PWA & Platform
 
 - Web-only Flutter app managed through FVM (`fvm flutter` commands).
