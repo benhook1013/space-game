@@ -1,8 +1,7 @@
 # 🚀 Space Miner PWA
 
-**Space Miner** is a mobile-first, Codex-assisted 2D space shooter where players
-fly around, mine asteroids, blast enemies and upgrade their ship — all built
-with **Flutter** and **Flame**.
+**Space Miner** is a mobile-first 2D space shooter where players fly around,
+mine asteroids and blast enemies — all built with **Flutter** and **Flame**.
 
 The aim is a light-hearted, cartoony game that runs smoothly on both mobile and
 desktop browsers using **Progressive Web App (PWA)** technology. You can
@@ -29,17 +28,24 @@ dedicated server or NAT traversal.
 
 ---
 
-## 🧩 Key Features (in progress)
+## 🧩 MVP Features
 
-- Player ship with rotation, thrust and shooting
-- Enemies and asteroids with collisions and drops
-- Ship upgrade and resource mining loop
-- Offline save system (JSON or local storage)
-- Planned co-op multiplayer using WebSockets
+- Player ship moves with an on-screen joystick or keyboard
+- Bullets destroy a basic enemy type
+- Asteroids can be mined for score
+- Game states: menu → playing → game over with quick restart
+- Local high score stored with `shared_preferences` (planned)
+- Parallax starfield and simple sound effects (planned)
+- PWA install support with manifest, icons and offline cache
+
+## 🔮 Future Plans
+
+- Optional co-op multiplayer using WebSockets
   - Simple JSON action protocol (`move`, `shoot`, `mine`, etc.)
   - QR-code or local IP connection — no lobby server needed
-- PWA install support with manifest, icons and offline cache
-- Optional native builds may come later (Play Store/TestFlight not planned)
+- Ship upgrades and deeper resource systems
+- Offline save system beyond the high score
+- Native builds (Play Store/TestFlight) if needed later
 
 ---
 

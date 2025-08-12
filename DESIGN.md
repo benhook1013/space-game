@@ -12,6 +12,11 @@ See [PLAN.md](PLAN.md) for the authoritative roadmap and
 - Collect tunable numbers in `constants.dart` and asset paths in `assets.dart`.
 - Use composition and pass dependencies through constructors; keep singletons rare.
 - Optimise iteration by running all commands through FVM (`fvm flutter`, `fvm dart`).
+- Build only the features needed for the current milestone; defer extras until
+  they are actually required.
+- Favour readability and quick iteration over micro-optimisation.
+- Use simple state handling (plain classes or `ValueNotifier`s) instead of heavy
+  patterns like BLoC or Redux.
 
 ## Game Layers
 
@@ -39,6 +44,7 @@ See [PLAN.md](PLAN.md) for the authoritative roadmap and
 - Tunable numbers live in `constants.dart`.
 - Use immutable data objects and pass dependencies via constructors.
 - Local save data will use `shared_preferences` in the MVP.
+- State is kept lightweight using plain classes or `ValueNotifier`s.
 
 ## Game State Flow
 
