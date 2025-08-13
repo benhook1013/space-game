@@ -10,4 +10,17 @@ Core game class and shared systems.
 - Timer-based spawners generate enemies and asteroids.
 - Keep this layer lean and delegate work to components or services.
 
+## Responsibilities
+
+- Load assets via a central registry before starting play.
+- Spawn the player and register component spawners.
+- Maintain `GameState` values (`menu`, `playing`, `gameOver`) and swap
+  overlays accordingly.
+- Route input from joystick, buttons or keyboard to the player component.
+
+## Planned Files
+
+- `space_game.dart` – main game class.
+- `game_state.dart` – enum describing the game's phases.
+
 See [../../PLAN.md](../../PLAN.md) for the broader roadmap.
