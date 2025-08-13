@@ -3,12 +3,12 @@
 Final touches for the MVP, adding background, audio and persistent score.
 See [PLAN.md](PLAN.md) for overall project goals.
 
-## Goals
+## Tasks
 
-- Parallax starfield background renders behind gameplay.
-- Sound effects via `flame_audio` with a mute toggle.
-- Local high score stored on device using `shared_preferences`.
-- Simple HUD and menus layered with Flutter overlays.
+- [ ] Parallax starfield background renders behind gameplay.
+- [ ] Sound effects via `flame_audio` with a mute toggle.
+- [ ] Local high score stored on device using `shared_preferences`.
+- [ ] Simple HUD and menus layered with Flutter overlays.
 
 ## Design Notes
 

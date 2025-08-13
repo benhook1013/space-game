@@ -2,6 +2,8 @@
 
 Tiny mobile‑first 2D shooter built with Flutter and Flame.
 Target is an offline PWA that a solo developer can iterate on quickly.
+See [DESIGN.md](DESIGN.md) for architecture details. Day-to-day work is
+tracked via the milestone docs and consolidated in [TASKS.md](TASKS.md).
 
 ## 🎯 Goals
 
@@ -150,6 +152,12 @@ Target is an offline PWA that a solo developer can iterate on quickly.
 - **Setup** – basic project scaffolding runs in the browser with placeholder assets
 - **Core Loop** – player moves and shoots, one enemy type, basic scoring
 - **Polish** – starfield background, sound effects, and local high score
+
+Detailed tasks for each milestone live in
+[milestone-setup.md](milestone-setup.md),
+[milestone-core-loop.md](milestone-core-loop.md) and
+[milestone-polish.md](milestone-polish.md). The combined backlog is maintained
+in [TASKS.md](TASKS.md).
 
 ## 🎨 Assets & PWA
 
