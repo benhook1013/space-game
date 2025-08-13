@@ -28,6 +28,14 @@ Milestone goals are detailed in [milestone-setup.md](milestone-setup.md),
 - Use simple state handling (plain classes or `ValueNotifier`s) instead of heavy
   patterns like BLoC or Redux.
 
+## Entry Point
+
+- `main.dart` starts the Flutter app using the SDK pinned via FVM.
+- It wraps `SpaceGame` in a `GameWidget`, ensures the PWA manifest loads and
+  preloads assets through `Assets.load()` before play.
+- Run all development commands through FVM (`fvm flutter`, `fvm dart`) to keep
+  the toolchain consistent.
+
 ## Game Layers
 
 - `main.dart` boots the app using `GameWidget`, which hosts `SpaceGame` and
