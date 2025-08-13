@@ -24,6 +24,8 @@ module docs live under [lib/game](lib/game/README.md),
 
 ## Game Layers
 
+- `main.dart` boots the app using `GameWidget`, which hosts `SpaceGame` and
+  exposes an `overlays` map for menus and the HUD.
 - `SpaceGame` extends `FlameGame`, managing world and scene setup while
   scheduling the game loop tick.
 - It owns small system classes for input, physics/collisions, entity spawners
