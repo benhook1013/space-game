@@ -1,7 +1,8 @@
 # 🏁 Milestone: Setup
 
 Initial scaffolding so the game builds in the browser.
-See [PLAN.md](PLAN.md) for the broader roadmap.
+See [PLAN.md](PLAN.md) for the broader roadmap and
+[TASKS.md](TASKS.md) for the consolidated backlog.
 
 ## Tasks
 
