@@ -6,9 +6,11 @@ Tracking immediate work to reach the MVP. See [PLAN.md](PLAN.md) and
 ## Setup
 
 - [ ] Install FVM and fetch the pinned Flutter SDK (version `3.32.8`).
+- [ ] Run `fvm flutter doctor` to verify the environment.
 - [ ] Scaffold the Flutter project (`fvm flutter create .`) if not already.
 - [ ] Enable web support (`fvm flutter config --enable-web`).
 - [ ] Add Flame, `flame_audio` and `shared_preferences` to `pubspec.yaml`.
+- [ ] Run `fvm flutter pub get` to install dependencies.
 - [ ] Create placeholder `assets.dart` and `constants.dart` to centralise asset
       paths and tunable values.
 - [ ] Commit generated folders (`lib/`, `web/`, etc.).
