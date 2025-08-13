@@ -1,7 +1,8 @@
-# GitHub Workflows
+# GitHub Actions Workflows
 
-Continuous integration and deployment.
+CI/CD automation for the project.
 
-- `ci.yml` runs `dart format .` and `flutter analyze` on pull requests.
-- `deploy.yml` builds the web target and publishes to GitHub Pages.
-- Commands should use the pinned SDK via FVM; update workflows if needed to stay aligned with [PLAN.md](../../PLAN.md).
+- `ci.yml` – formats code, runs static analysis and tests.
+- `deploy.yml` – builds the web release and publishes it.
+
+Workflows follow the lightweight pipeline described in [../../PLAN.md](../../PLAN.md).
