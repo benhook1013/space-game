@@ -6,7 +6,7 @@ See [PLAN.md](PLAN.md) for overall project goals and
 
 ## Tasks
 
-- [ ] Player ship moves using an on-screen joystick or keyboard (WASD).
+- [x] Player ship moves using an on-screen joystick or keyboard (WASD).
 - [ ] Ship fires bullets and destroys a basic enemy type on collision.
 - [ ] Random asteroids spawn and can be mined for score.
 - [ ] Game states: **menu → playing → game over** with quick restart via overlays
