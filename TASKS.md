@@ -13,6 +13,7 @@ Tracking immediate work to reach the MVP. See [PLAN.md](PLAN.md) and
 - [ ] Run `fvm flutter pub get` to install dependencies.
 - [ ] Create placeholder `assets.dart` and `constants.dart` to centralise asset
       paths and tunable values.
+- [ ] Add a tiny `log.dart` helper that wraps `debugPrint`.
 - [ ] Commit generated folders (`lib/`, `web/`, etc.).
 - [ ] Set up GitHub Actions workflow for lint, test and web deploy.
 - [ ] Document placeholder assets and credits.

@@ -10,7 +10,13 @@ See [PLAN.md](PLAN.md) for the broader roadmap.
 - [ ] Scaffold the project if needed: `fvm flutter create .`.
 - [ ] Enable web support: `fvm flutter config --enable-web`.
 - [ ] Add `flame`, `flame_audio` and `shared_preferences` to `pubspec.yaml`.
+- [ ] Run `fvm flutter pub get` to install dependencies.
+- [ ] Create placeholder `assets.dart` and `constants.dart` to centralise asset
+      paths and tunable values.
+- [ ] Add a tiny `log.dart` helper that wraps `debugPrint`.
 - [ ] Commit generated folders (`lib/`, `web/`, etc.) and `pubspec.lock`.
+- [ ] Create `assets_manifest.json` to list bundled assets for caching
+      (see `assets_manifest.md`).
 - [ ] Set up a minimal GitHub Actions workflow for lint, test and web deploy.
 - [ ] Document placeholder assets and credits.
 

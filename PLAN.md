@@ -86,6 +86,7 @@ tracked via the milestone docs and consolidated in [TASKS.md](TASKS.md).
   - `ui/` – Flutter widgets for menus/HUD
   - `assets.dart` – central asset registry that preloads sprites, audio and fonts
   - `constants.dart` – central place for tunable values
+  - `log.dart` – tiny `log()` helper wrapping `debugPrint`
   - `services/` – optional helpers such as storage or audio, added only when needed
 - `assets/` – images, audio and fonts
 - `web/` – PWA manifest, icons and service worker
@@ -96,6 +97,9 @@ tracked via the milestone docs and consolidated in [TASKS.md](TASKS.md).
 - Root Markdown docs: `AGENTS.md`, `PLAN.md`, `PLAYTEST_CHECKLIST.md`,
   `MANUAL_TESTING.md`, `ASSET_GUIDE.md`, `ASSET_CREDITS.md`, `playtest_logs/`,
   plus optional `DESIGN.md`, `TASKS.md`, `milestone-*.md`
+- Each of `lib/`, `assets/`, `web/` and `test/` includes a `README.md`
+  describing its contents, with additional design notes in
+  `lib/main.md`, `lib/assets.md`, `lib/constants.md` and `lib/log.md`
 - Keep `README.md` and other docs updated as features change and remove any
   stale sections
 
