@@ -65,7 +65,7 @@ lib/                    # Game source code
   services/             # Optional helpers (see lib/services/README.md)
 web/                    # PWA configuration (see web/README.md)
 test/                   # Automated tests (placeholder) (see test/README.md)
-assets_manifest.json    # List of bundled asset files for caching
+assets_manifest.json    # List of bundled asset files for caching (see assets_manifest.md)
 .github/workflows/      # CI and deployment scripts
 PLAN.md                 # High-level plan and architecture
 ASSET_GUIDE.md          # Asset format guidelines

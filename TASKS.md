@@ -14,7 +14,8 @@ Tracking immediate work to reach the MVP. See [PLAN.md](PLAN.md) and
 - [ ] Commit generated folders (`lib/`, `web/`, etc.).
 - [ ] Set up GitHub Actions workflow for lint, test and web deploy.
 - [ ] Document placeholder assets and credits.
-- [x] Create `assets_manifest.json` to list bundled assets for caching.
+- [x] Create `assets_manifest.json` to list bundled assets for caching
+  (see `assets_manifest.md`).
 
 ## Core Loop
 

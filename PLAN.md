@@ -160,7 +160,7 @@ Target is an offline PWA that a solo developer can iterate on quickly.
   document sources in `ASSET_GUIDE.md` and credit in `ASSET_CREDITS.md`
 - Prefer CC0 or similar licenses and keep total assets <5 MB
 - Maintain a versioned `assets_manifest.json` to track assets for each release
-  and help with caching
+  and help with caching (see `assets_manifest.md`)
 
 ### PWA & Deployment
 
