@@ -8,7 +8,8 @@ the pinned SDK.
 
 ## Top-Level Files
 
-- `main.dart` – entry point launching `SpaceGame` via `GameWidget`.
+- `main.dart` – entry point launching `SpaceGame` via `GameWidget`. See
+  [main.md](main.md) for design notes.
 - `assets.dart` – central registry exposing sprite, audio and font paths with a
   `load()` helper to preload them. Gameplay code references assets through this
   helper rather than hard-coded file paths.

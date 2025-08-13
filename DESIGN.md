@@ -5,7 +5,8 @@ Miner. See [PLAN.md](PLAN.md) for the authoritative roadmap. Folder overviews
 live in [lib/README.md](lib/README.md), [assets/README.md](assets/README.md),
 [web/README.md](web/README.md) and [test/README.md](test/README.md).
 Design notes for the central helper files are in
-[lib/assets.md](lib/assets.md) and [lib/constants.md](lib/constants.md).
+[lib/main.md](lib/main.md), [lib/assets.md](lib/assets.md) and
+[lib/constants.md](lib/constants.md).
 Modules such as `space_game`, components, overlays and services have dedicated
 docs in their respective subfolders.
 Milestone goals are detailed in [milestone-setup.md](milestone-setup.md),
