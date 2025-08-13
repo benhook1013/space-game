@@ -58,6 +58,7 @@ assets/                 # Art, sounds, etc.
 lib/                    # Game source code (coming soon)
 web/                    # PWA configuration
 test/                   # Automated tests (placeholder)
+assets_manifest.json    # List of bundled asset files for caching
 .github/workflows/      # CI and deployment scripts
 PLAN.md                 # High-level plan and architecture
 ASSET_GUIDE.md          # Asset format guidelines
