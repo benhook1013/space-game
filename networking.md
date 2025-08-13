@@ -1,7 +1,8 @@
 # 🌐 Networking (Future)
 
-Multiplayer is not part of the MVP but the design allows a host-authoritative
-model later. See [PLAN.md](PLAN.md) for the high-level roadmap.
+Multiplayer is not part of the MVP but the design allows a
+host-authoritative model later. See [PLAN.md](PLAN.md) for how networking fits
+into the long-term roadmap.
 
 ## Overview
 
