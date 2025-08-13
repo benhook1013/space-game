@@ -35,6 +35,16 @@ Milestone goals are detailed in [milestone-setup.md](milestone-setup.md),
 - Provide a small `log()` helper wrapping `debugPrint` so logs can be silenced
   in release builds.
 
+## Workflow & Tooling
+
+- Run all Flutter and Dart commands through [FVM](https://fvm.app/) to use the
+  pinned SDK version from `fvm_config.json`.
+- Keep commits small and focused on `main`; branch only for larger features.
+- Before committing, format and analyse code with `fvm dart format .` and
+  `fvm dart analyze`.
+- Lint Markdown files with `npx markdownlint '**/*.md'`.
+- See [PLAN.md](PLAN.md) for the full development loop.
+
 ## Entry Point
 
 - `main.dart` starts the Flutter app using the Flutter SDK pinned via FVM (3.32.8).
