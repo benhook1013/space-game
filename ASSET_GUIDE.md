@@ -13,6 +13,8 @@ This project organizes art and audio files under the `assets/` directory.
 - Keep a versioned `assets_manifest.json` at the project root listing all
   bundled assets. Update it whenever files are added or removed so builds and
   service workers can cache the correct resources.
+- Keep total asset size under roughly **5 MB** to ensure fast web downloads,
+  as outlined in [PLAN.md](PLAN.md).
 
 ## Finding assets
 
@@ -32,3 +34,5 @@ Always check the license for each asset and provide credit as required.
 - [Aseprite](https://www.aseprite.org/) for pixel art
 - [Audacity](https://www.audacityteam.org/) for sound editing
 - [Bfxr](https://www.bfxr.net/) for retro sound effects
+
+See [PLAN.md](PLAN.md) for the broader roadmap and asset guidelines.
