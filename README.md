@@ -55,6 +55,7 @@ dedicated server or NAT traversal.
 assets/                 # Art, sounds, etc.
 lib/                    # Game source code (coming soon)
 web/                    # PWA configuration
+test/                   # Automated tests (placeholder)
 .github/workflows/      # CI and deployment scripts
 PLAN.md                 # High-level plan and architecture
 ASSET_GUIDE.md          # Asset format guidelines

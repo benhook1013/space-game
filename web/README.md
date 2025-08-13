@@ -1,9 +1,17 @@
 # web/
 
-PWA configuration and entry-point files.
+PWA configuration and static web files.
 
-- `manifest.json` – PWA manifest with start URL, icons, and theme colours.
-- `icons/` – 192x192 and 512x512 icons referenced by the manifest.
-- `flutter_service_worker.js` – default service worker for offline caching.
+- `manifest.json` defines PWA metadata like `start_url`, `display` and theme
+  colours.
+- `icons/` holds 192x192 and 512x512 app icons.
+- The generated `flutter_service_worker.js` enables offline caching.
 
-See [../PLAN.md](../PLAN.md) for full requirements.
+Build for release with:
+
+```sh
+fvm flutter build web --release
+```
+
+Use `--base-href /space-game/` when targeting GitHub Pages so asset paths
+resolve correctly.
