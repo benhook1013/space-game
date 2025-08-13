@@ -16,13 +16,15 @@ dedicated server or NAT traversal.
 
 ## 🎯 Project Goals
 
-- Mobile- and desktop-friendly 2D space shooter
-- Codex-generated code driven by natural language prompts
-- Fully playable on iOS/Android/PC via PWA
+- Offline play in the browser using Flutter + Flame
+- Installable PWA with touch controls
+- Code and asset base kept tiny and easy to maintain
+- Ship quickly and iterate in small increments
+- Responsive scaling for phones, tablets and desktop
+- Solo-friendly workflow with minimal tooling
 - Fun, casual tone with cartoony visuals
 - Modular game logic built with Flame (pinned for stability)
 - Minimal dependencies to keep the project lightweight
-- Multiplayer-ready architecture (host based, offline first)
 - Simple CI/CD through GitHub Actions
 - Fully open-source and remixable
 
@@ -30,22 +32,22 @@ dedicated server or NAT traversal.
 
 ## 🧩 MVP Features
 
-- Player ship moves with an on-screen joystick or keyboard
-- Bullets destroy a basic enemy type
-- Asteroids can be mined for score
-- Game states: menu → playing → game over with quick restart
-- Local high score stored with `shared_preferences` (planned)
-- Parallax starfield and simple sound effects (planned)
-- PWA install support with manifest, icons and offline cache
+- Touch/joystick movement and shooting
+- One enemy type with collision and random spawns
+- Asteroids to mine for score
+- Single endless level with player health and quick restart
+- Local high score stored on device using `shared_preferences`
+- Basic sound effects with a mute toggle
+- Keyboard controls for desktop playtests
+- Game works offline after the first load
+- Parallax starfield background
 
 ## 🔮 Future Plans
 
-- Optional co-op multiplayer using WebSockets
-  - Simple JSON action protocol (`move`, `shoot`, `mine`, etc.)
-  - QR-code or local IP connection — no lobby server needed
-- Ship upgrades and deeper resource systems
-- Offline save system beyond the high score
+- Co-op multiplayer using WebSockets (host-authoritative)
+- Optional backend for saves or analytics
 - Native builds (Play Store/TestFlight) if needed later
+- Inventory, upgrades, menus, shop UI and save/load
 
 ---
 
