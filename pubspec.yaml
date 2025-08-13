@@ -1,0 +1,27 @@
+name: space_game
+description: Space Miner PWA built with Flutter and Flame
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: '>=3.2.0 <4.0.0'
+  flutter: 3.32.8
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flame: 1.30.1
+  flame_audio: 2.11.8
+  shared_preferences: 2.5.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/audio/
+    - assets/fonts/
