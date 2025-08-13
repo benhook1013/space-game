@@ -7,8 +7,10 @@ See [PLAN.md](PLAN.md) for overall project goals and
 ## Tasks
 
 - [ ] Parallax starfield background renders behind gameplay.
-- [ ] Sound effects via `flame_audio` with a mute toggle.
-- [ ] Local high score stored on device using `shared_preferences`.
+- [ ] Implement `audio_service.dart` wrapping `flame_audio` with a
+      mute toggle.
+- [ ] Implement `storage_service.dart` using `shared_preferences`
+      to persist the local high score.
 - [ ] Simple HUD and menus layered with Flutter overlays.
 
 ## Design Notes
