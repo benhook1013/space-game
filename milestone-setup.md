@@ -5,7 +5,8 @@ See [PLAN.md](PLAN.md) for the broader roadmap.
 
 ## Goals
 
-- Pin the Flutter SDK with FVM (`fvm install` and `fvm use`).
+- Pin the Flutter SDK with FVM (`fvm install` and `fvm use`) targeting version
+  `3.32.8` as specified in `fvm_config.json`.
 - Scaffold the project if needed: `fvm flutter create .`.
 - Enable web support: `fvm flutter config --enable-web`.
 - Add `flame`, `flame_audio` and `shared_preferences` to `pubspec.yaml`.

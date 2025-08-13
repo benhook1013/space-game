@@ -24,6 +24,8 @@ Milestone goals are detailed in [milestone-setup.md](milestone-setup.md),
 - Collect tunable numbers in `constants.dart` and asset paths in `assets.dart`.
 - Use composition and pass dependencies through constructors; keep singletons rare.
 - Optimise iteration by running all commands through FVM (`fvm flutter`, `fvm dart`).
+- Flutter SDK version pinned to `3.32.8` via [`fvm_config.json`](fvm_config.json) for
+  consistent builds.
 - Build only the features needed for the current milestone; defer extras until
   they are actually required.
 - Favour readability and quick iteration over micro-optimisation.
@@ -32,7 +34,7 @@ Milestone goals are detailed in [milestone-setup.md](milestone-setup.md),
 
 ## Entry Point
 
-- `main.dart` starts the Flutter app using the SDK pinned via FVM.
+- `main.dart` starts the Flutter app using the Flutter SDK pinned via FVM (3.32.8).
 - It wraps `SpaceGame` in a `GameWidget`, ensures the PWA manifest loads and
   preloads assets through `Assets.load()` before play.
 - Run all development commands through FVM (`fvm flutter`, `fvm dart`) to keep
