@@ -27,7 +27,7 @@ Core game class and shared systems.
 
 ## Planned Files
 
-- `space_game.dart` – main game class.
-- `game_state.dart` – enum describing the game's phases.
+- [space_game.dart](space_game.md) – main game class.
+- [game_state.dart](game_state.md) – enum describing the game's phases.
 
 See [../../PLAN.md](../../PLAN.md) for the broader roadmap.
