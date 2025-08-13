@@ -5,8 +5,8 @@ Miner. See [PLAN.md](PLAN.md) for the authoritative roadmap. Folder overviews
 live in [lib/README.md](lib/README.md), [assets/README.md](assets/README.md),
 [web/README.md](web/README.md) and [test/README.md](test/README.md).
 Design notes for the central helper files are in
-[lib/main.md](lib/main.md), [lib/assets.md](lib/assets.md) and
-[lib/constants.md](lib/constants.md).
+[lib/main.md](lib/main.md), [lib/assets.md](lib/assets.md),
+[lib/constants.md](lib/constants.md) and [lib/log.md](lib/log.md).
 Modules such as `space_game`, components, overlays and services have dedicated
 docs in their respective subfolders.
 Milestone goals are detailed in [milestone-setup.md](milestone-setup.md),
@@ -25,13 +25,15 @@ Milestone goals are detailed in [milestone-setup.md](milestone-setup.md),
 - Collect tunable numbers in `constants.dart` and asset paths in `assets.dart`.
 - Use composition and pass dependencies through constructors; keep singletons rare.
 - Optimise iteration by running all commands through FVM (`fvm flutter`, `fvm dart`).
-- Flutter SDK version pinned to `3.32.8` via [`fvm_config.json`](fvm_config.json) for
-  consistent builds.
+- Flutter SDK version pinned to `3.32.8` via
+  [`fvm_config.json`](fvm_config.json) for consistent builds.
 - Build only the features needed for the current milestone; defer extras until
   they are actually required.
 - Favour readability and quick iteration over micro-optimisation.
 - Use simple state handling (plain classes or `ValueNotifier`s) instead of heavy
   patterns like BLoC or Redux.
+- Provide a small `log()` helper wrapping `debugPrint` so logs can be silenced
+  in release builds.
 
 ## Entry Point
 
