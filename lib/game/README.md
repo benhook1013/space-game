@@ -9,3 +9,5 @@ Core game class and shared systems.
   consistent logical resolution.
 - Timer-based spawners generate enemies and asteroids.
 - Keep this layer lean and delegate work to components or services.
+
+See [../../PLAN.md](../../PLAN.md) for the broader roadmap.

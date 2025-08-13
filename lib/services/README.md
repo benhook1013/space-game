@@ -7,3 +7,5 @@ Optional helpers for cross-cutting concerns.
 - `storage_service.dart` will store the local high score using
   `shared_preferences` and can expand for save/load later.
 - Keep services lightweight; add them only when a milestone needs them.
+
+See [../../PLAN.md](../../PLAN.md) for the broader roadmap.

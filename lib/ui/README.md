@@ -8,3 +8,5 @@ Flutter overlays and HUD widgets.
 - UI reads and updates game state through simple `ValueNotifier`s or
   callbacks exposed by `SpaceGame`.
 - Keep rendering separate from gameplay logic to simplify testing.
+
+See [../../PLAN.md](../../PLAN.md) for the broader roadmap.

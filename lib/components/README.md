@@ -11,3 +11,5 @@ Gameplay entities and reusable pieces.
   `assets.dart`.
 - Consider small object pools for frequently spawned objects to reduce
   garbage collection.
+
+See [../../PLAN.md](../../PLAN.md) for the broader roadmap.
