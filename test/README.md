@@ -2,5 +2,5 @@
 
 Placeholder for automated tests.
 
-This folder will host `flutter_test` and `flame_test` suites. Run them with
-`fvm flutter test` once tests are added.
+Add unit, widget, and Flame component tests here once the game code exists.
+Use `flutter_test` and `flame_test` as noted in [../PLAN.md](../PLAN.md).
