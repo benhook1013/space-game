@@ -1,7 +1,8 @@
 # ✨ Milestone: Polish
 
 Final touches for the MVP, adding background, audio and persistent score.
-See [PLAN.md](PLAN.md) for overall project goals.
+See [PLAN.md](PLAN.md) for overall project goals and
+[TASKS.md](TASKS.md) for the consolidated backlog.
 
 ## Tasks
 
