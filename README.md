@@ -54,10 +54,17 @@ dedicated server or NAT traversal.
 ## 📁 Project Structure
 
 ```text
-assets/                 # Art, sounds, etc.
-lib/                    # Game source code (coming soon)
-web/                    # PWA configuration
-test/                   # Automated tests (placeholder)
+assets/                 # Art, sound, music (see assets/README.md)
+lib/                    # Game source code
+  main.dart             # App entry launching SpaceGame
+  game/                 # FlameGame subclass & systems (see lib/game/README.md)
+  components/           # Game entities (see lib/components/README.md)
+  ui/                   # Flutter overlays & HUD (see lib/ui/README.md)
+  assets.dart           # Central asset registry
+  constants.dart        # Tunable values for balancing
+  services/             # Optional helpers (see lib/services/README.md)
+web/                    # PWA configuration (see web/README.md)
+test/                   # Automated tests (placeholder) (see test/README.md)
 assets_manifest.json    # List of bundled asset files for caching
 .github/workflows/      # CI and deployment scripts
 PLAN.md                 # High-level plan and architecture
