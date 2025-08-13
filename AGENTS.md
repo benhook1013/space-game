@@ -11,7 +11,9 @@ This repository uses a Flutter + Flame stack to build a PWA space shooter. Follo
 - Never mock or stub data in dev/prod — only in tests or controlled previews.
 - Keep solutions simple; check for existing utilities or components before adding new ones.
 - Avoid duplication in game systems (input handling, rendering, physics).
-- Use [FVM](https://fvm.app/) for Flutter commands (run `fvm install` once; then `fvm flutter`, `fvm dart`).
+- Use the `scripts/flutterw` and `scripts/dartw` wrappers, which bootstrap a
+  pinned Flutter SDK into `.tooling/flutter`. If you prefer,
+  [FVM](https://fvm.app/) is also configured (`fvm flutter`, `fvm dart`).
 
 ## 2. Style and Formatting
 - Follow idiomatic Dart formatting using `dart format`.
