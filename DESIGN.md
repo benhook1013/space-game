@@ -103,7 +103,7 @@ Milestone goals are detailed in [milestone-setup.md](milestone-setup.md),
 - Gameplay code references assets through a central `assets.dart` registry;
   no hard-coded file paths.
 - A versioned `assets_manifest.json` tracks files for each release to help with
-  caching and PWA updates.
+  caching and PWA updates (see `assets_manifest.md`).
 - See [ASSET_GUIDE.md](ASSET_GUIDE.md) for sourcing guidelines and
   [ASSET_CREDITS.md](ASSET_CREDITS.md) for attribution.
 

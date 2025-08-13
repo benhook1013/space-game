@@ -11,8 +11,9 @@ This project organizes art and audio files under the `assets/` directory.
 ## Asset tracking
 
 - Keep a versioned `assets_manifest.json` at the project root listing all
-  bundled assets. Update it whenever files are added or removed so builds and
-  service workers can cache the correct resources.
+  bundled assets (see `assets_manifest.md`). Update it whenever files are
+  added or removed so builds and service workers can cache the correct
+  resources.
 - Keep total asset size under roughly **5 MB** to ensure fast web downloads,
   as outlined in [PLAN.md](PLAN.md).
 

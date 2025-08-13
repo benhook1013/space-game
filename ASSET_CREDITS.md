@@ -9,5 +9,5 @@ required attribution details.
 
 Add more entries as you include assets.
 
-Keep this file in sync with `assets_manifest.json` and follow the sourcing
-rules noted in [PLAN.md](PLAN.md).
+Keep this file in sync with `assets_manifest.json` (see `assets_manifest.md`)
+and follow the sourcing rules noted in [PLAN.md](PLAN.md).

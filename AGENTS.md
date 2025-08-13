@@ -107,7 +107,8 @@ Other docs: `PLAN.md`, `DESIGN.md`, `TASKS.md`, `networking.md`, `ASSET_GUIDE.md
   - Optional: scheduled runs for dependency checks and Lighthouse audits.
 
 ## 13. Asset Management
-- Store versioned asset manifests (`assets_manifest.json`) per release.
+- Store versioned asset manifests (`assets_manifest.json`) per release
+  (see `assets_manifest.md`).
 - Compress textures/audio for web performance.
 - Credit and license all third-party assets in `ASSET_CREDITS.md`.
 
