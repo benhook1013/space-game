@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -euo pipefail
+source "$(dirname "$0")/bootstrap_flutter.sh"
+exec ".tooling/flutter/bin/dart" "$@"

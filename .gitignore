@@ -28,3 +28,11 @@ doc/api/
 .flutter-plugins-dependencies
 # Ignore FVM-managed Flutter SDK
 .fvm/
+
+# Local tooling and caches
+.tooling/
+.pub-cache/
+
+# Platform-specific builds
+android/local.properties
+ios/Pods/

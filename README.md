@@ -83,12 +83,23 @@ milestone goals, and `networking.md` for future multiplayer plans. See
 
 ---
 
-## Flutter Version Management
+## Flutter Tooling
 
-This repo uses [FVM](https://fvm.app/) to pin the Flutter SDK version. After
-cloning, run `fvm install` to download the SDK specified in `fvm_config.json`
-(currently `3.32.8`).
-Use `fvm flutter` in place of the global `flutter` command when building or
-running the game.
+Run `./setup.sh` after cloning to download the pinned Flutter SDK into
+`.tooling/flutter` and add it to your `PATH` for the current shell. The
+repository provides wrapper scripts, `scripts/flutterw` and `scripts/dartw`,
+which bootstrap this SDK on demand and then delegate to the real `flutter` and
+`dart` binaries.
+
+Example:
+
+```bash
+./scripts/flutterw --version
+./scripts/dartw pub get
+```
+
+The project also includes an `fvm_config.json` for those who prefer to use
+[FVM](https://fvm.app/). In that case, run `fvm install` once and then use
+`fvm flutter`/`fvm dart` for subsequent commands.
 
 The project is released under the [MIT License](LICENSE).
