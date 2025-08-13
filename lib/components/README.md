@@ -11,6 +11,8 @@ Gameplay entities and reusable pieces.
   `assets.dart`.
 - Consider small object pools for frequently spawned objects to reduce
   garbage collection.
+- Give components deterministic IDs to support future multiplayer sync.
+- Update movement and timers using the `dt` value for frame-rate independence.
 
 ## Planned Components
 

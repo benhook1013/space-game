@@ -10,9 +10,10 @@ the pinned SDK.
 
 - `main.dart` – entry point launching `SpaceGame` via `GameWidget`.
 - `assets.dart` – central registry exposing sprite, audio and font paths with a
-  `load()` helper to preload them.
+  `load()` helper to preload them. Gameplay code references assets through this
+  helper rather than hard-coded file paths.
 - `constants.dart` – collects tunable values (speeds, spawn rates, dimensions)
-  in one place for easy balancing.
+  in one place for easy balancing so numbers aren't scattered across files.
 
 ## Folders
 

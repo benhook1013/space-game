@@ -48,6 +48,8 @@ Milestone goals are detailed in [milestone-setup.md](milestone-setup.md),
   `HasCollisionDetection`.
 - Frequently spawned objects (bullets, asteroids) may use small object pools to
   limit garbage collection.
+- Give components deterministic IDs for future multiplayer sync and update
+  movement using `dt` to stay frame-rate independent.
 
 ## Services
 
