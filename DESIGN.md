@@ -4,6 +4,8 @@ This document summarises the current architecture and design goals for Space
 Miner. See [PLAN.md](PLAN.md) for the authoritative roadmap. Folder overviews
 live in [lib/README.md](lib/README.md), [assets/README.md](assets/README.md),
 [web/README.md](web/README.md) and [test/README.md](test/README.md).
+Design notes for the central helper files are in
+[lib/assets.md](lib/assets.md) and [lib/constants.md](lib/constants.md).
 Milestone goals are detailed in [milestone-setup.md](milestone-setup.md),
 [milestone-core-loop.md](milestone-core-loop.md) and
 [milestone-polish.md](milestone-polish.md), with the day-to-day backlog in
