@@ -5,7 +5,7 @@ Tracking immediate work to reach the MVP. See [PLAN.md](PLAN.md) and
 
 ## Setup
 
-- [ ] Install FVM and fetch the pinned Flutter SDK.
+- [ ] Install FVM and fetch the pinned Flutter SDK (version `3.32.8`).
 - [ ] Scaffold the Flutter project (`fvm flutter create .`) if not already.
 - [ ] Enable web support (`fvm flutter config --enable-web`).
 - [ ] Add Flame, `flame_audio` and `shared_preferences` to `pubspec.yaml`.

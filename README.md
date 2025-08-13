@@ -85,7 +85,8 @@ milestone goals, and `networking.md` for future multiplayer plans. See
 ## Flutter Version Management
 
 This repo uses [FVM](https://fvm.app/) to pin the Flutter SDK version. After
-cloning, run `fvm install` to download the SDK specified in `fvm_config.json`.
+cloning, run `fvm install` to download the SDK specified in `fvm_config.json`
+(currently `3.32.8`).
 Use `fvm flutter` in place of the global `flutter` command when building or
 running the game.
 
