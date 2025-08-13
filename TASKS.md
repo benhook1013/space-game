@@ -3,7 +3,7 @@
 Tracking immediate work to reach the MVP. See [PLAN.md](PLAN.md) and [DESIGN.md](DESIGN.md)
 for context, and milestone docs (`milestone-*.md`) for detailed goals.
 
-## Setup
+## Setup ([milestone-setup.md](milestone-setup.md))
 
 - [ ] Install FVM and fetch the pinned Flutter SDK (version `3.32.8`).
 - [ ] Run `fvm flutter doctor` to verify the environment.
@@ -20,14 +20,14 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
 - [x] Create `assets_manifest.json` to list bundled assets for caching
   (see `assets_manifest.md`).
 
-## Core Loop
+## Core Loop ([milestone-core-loop.md](milestone-core-loop.md))
 
 - [ ] Player ship moves with joystick or keyboard.
 - [ ] Ship can shoot and destroy a basic enemy type.
 - [ ] Random asteroids spawn and can be mined for score.
 - [ ] Game states: menu → playing → game over with restart.
 
-## Polish
+## Polish ([milestone-polish.md](milestone-polish.md))
 
 - [ ] Parallax starfield renders behind gameplay.
 - [ ] Implement `audio_service.dart` wrapping `flame_audio` with a

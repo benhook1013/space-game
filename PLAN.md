@@ -2,9 +2,9 @@
 
 Tiny mobile‑first 2D shooter built with Flutter and Flame.
 Target is an offline PWA that a solo developer can iterate on quickly.
-See [DESIGN.md](DESIGN.md) for architecture details. Design docs have been
-reviewed and aligned; tasks are broken down in the milestone docs and
-consolidated in [TASKS.md](TASKS.md) to kick off implementation.
+See [DESIGN.md](DESIGN.md) for architecture details. All design docs are now
+in sync, and tasks are broken down in the milestone docs and consolidated in
+[TASKS.md](TASKS.md) so we can start coding.
 
 ## 🎯 Goals
 
