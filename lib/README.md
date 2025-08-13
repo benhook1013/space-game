@@ -9,8 +9,10 @@ the pinned SDK.
 ## Top-Level Files
 
 - `main.dart` – entry point launching `SpaceGame` via `GameWidget`.
-- `assets.dart` – central registry that preloads images, audio and fonts.
-- `constants.dart` – tunable values for speeds, spawn rates and other numbers.
+- `assets.dart` – central registry exposing sprite, audio and font paths with a
+  `load()` helper to preload them.
+- `constants.dart` – collects tunable values (speeds, spawn rates, dimensions)
+  in one place for easy balancing.
 
 ## Folders
 
