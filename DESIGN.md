@@ -1,12 +1,16 @@
 # 🎮 Design Overview
 
-This document summarises the current architecture and design goals for Space Miner.
-See [PLAN.md](PLAN.md) for the authoritative roadmap. Folder overviews live in
-[lib/README.md](lib/README.md), [assets/README.md](assets/README.md),
-[web/README.md](web/README.md) and [test/README.md](test/README.md). Detailed
-module docs live under [lib/game](lib/game/README.md),
-[lib/components](lib/components/README.md), [lib/ui](lib/ui/README.md) and
-[lib/services](lib/services/README.md).
+This document summarises the current architecture and design goals for Space
+Miner. See [PLAN.md](PLAN.md) for the authoritative roadmap. Folder overviews
+live in [lib/README.md](lib/README.md), [assets/README.md](assets/README.md),
+[web/README.md](web/README.md) and [test/README.md](test/README.md).
+Milestone goals are detailed in [milestone-setup.md](milestone-setup.md),
+[milestone-core-loop.md](milestone-core-loop.md) and
+[milestone-polish.md](milestone-polish.md), with the day-to-day backlog in
+[TASKS.md](TASKS.md). Future multiplayer ideas live in
+[networking.md](networking.md). Detailed module docs live under
+[lib/game](lib/game/README.md), [lib/components](lib/components/README.md),
+[lib/ui](lib/ui/README.md) and [lib/services](lib/services/README.md).
 
 ## Design Principles
 
@@ -49,7 +53,8 @@ module docs live under [lib/game](lib/game/README.md),
 
 - Small helpers for cross-cutting concerns live under `lib/services/`.
 - `audio_service.dart` will wrap `flame_audio` and expose a mute toggle.
-- `storage_service.dart` will use `shared_preferences` to persist the local high score and can expand for save/load later.
+- `storage_service.dart` will use `shared_preferences` to persist the local
+  high score and can expand for save/load later.
 - Add services only when needed to keep the project lightweight.
 
 ## State and Data

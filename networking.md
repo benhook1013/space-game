@@ -1,7 +1,7 @@
 # 🌐 Networking (Future)
 
-Multiplayer is not part of the MVP but the design allows a
-host-authoritative model later.
+Multiplayer is not part of the MVP but the design allows a host-authoritative
+model later. See [PLAN.md](PLAN.md) for the high-level roadmap.
 
 ## Overview
 
@@ -14,5 +14,6 @@ host-authoritative model later.
 
 - Reuse the same systems for offline and online play.
 - Keep protocol definitions in a shared module.
+- Abstract the network layer so offline and online use the same code paths.
 
 This document will expand once multiplayer work begins.
