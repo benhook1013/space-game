@@ -45,6 +45,13 @@ module docs live under [lib/game](lib/game/README.md),
 - Frequently spawned objects (bullets, asteroids) may use small object pools to
   limit garbage collection.
 
+## Services
+
+- Small helpers for cross-cutting concerns live under `lib/services/`.
+- `audio_service.dart` will wrap `flame_audio` and expose a mute toggle.
+- `storage_service.dart` will use `shared_preferences` to persist the local high score and can expand for save/load later.
+- Add services only when needed to keep the project lightweight.
+
 ## State and Data
 
 - Tunable numbers live in `constants.dart`.

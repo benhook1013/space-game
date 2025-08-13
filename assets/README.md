@@ -9,5 +9,4 @@ Game art, audio, and fonts.
 See [../ASSET_GUIDE.md](../ASSET_GUIDE.md) for sourcing guidelines and
 [../ASSET_CREDITS.md](../ASSET_CREDITS.md) for attribution.
 
-Track bundled files in `assets_manifest.json` as noted in
-[../PLAN.md](../PLAN.md).
+Track bundled files in [../assets_manifest.json](../assets_manifest.json) as noted in [../PLAN.md](../PLAN.md).
