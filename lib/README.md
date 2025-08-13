@@ -15,6 +15,8 @@ the pinned SDK.
   helper rather than hard-coded file paths.
 - `constants.dart` – collects tunable values (speeds, spawn rates, dimensions)
   in one place for easy balancing so numbers aren't scattered across files.
+- `log.dart` – tiny `log()` wrapper around `debugPrint` so logs can be muted in
+  release builds.
 
 ## Folders
 

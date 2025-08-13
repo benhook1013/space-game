@@ -62,6 +62,7 @@ lib/                    # Game source code
   ui/                   # Flutter overlays & HUD (see lib/ui/README.md)
   assets.dart           # Central asset registry
   constants.dart        # Tunable values for balancing
+  log.dart              # Tiny log() wrapper around debugPrint
   services/             # Optional helpers (see lib/services/README.md)
 web/                    # PWA configuration (see web/README.md)
 test/                   # Automated tests (placeholder) (see test/README.md)
