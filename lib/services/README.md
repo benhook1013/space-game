@@ -8,4 +8,11 @@ Optional helpers for cross-cutting concerns.
   `shared_preferences` and can expand for save/load later.
 - Keep services lightweight; add them only when a milestone needs them.
 
+## Planned Services
+
+- `AudioService` – preloads clips, plays one-shot effects and remembers a
+  mute flag.
+- `StorageService` – loads and saves the high score; may persist settings or
+  future save data.
+
 See [../../PLAN.md](../../PLAN.md) for the broader roadmap.

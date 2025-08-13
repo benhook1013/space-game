@@ -12,4 +12,12 @@ Gameplay entities and reusable pieces.
 - Consider small object pools for frequently spawned objects to reduce
   garbage collection.
 
+## Planned Components
+
+- `PlayerComponent` – moves via joystick or keyboard, fires bullets and tracks
+  health.
+- `EnemyComponent` – drifts toward the player and damages on contact.
+- `AsteroidComponent` – floats randomly; mining yields score pickups.
+- `BulletComponent` – short-lived projectile destroyed on hit or timer.
+
 See [../../PLAN.md](../../PLAN.md) for the broader roadmap.
