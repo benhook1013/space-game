@@ -11,8 +11,8 @@ Flutter overlays and HUD widgets.
 
 ## Planned Overlays
 
-- `MenuOverlay` – start button and basic instructions.
-- `HudOverlay` – shows score, health and a mute toggle.
-- `GameOverOverlay` – displays final score with a restart option.
+- [MenuOverlay](menu_overlay.md) – start button and basic instructions.
+- [HudOverlay](hud_overlay.md) – shows score, health and a mute toggle.
+- [GameOverOverlay](game_over_overlay.md) – displays final score with a restart option.
 
 See [../../PLAN.md](../../PLAN.md) for the broader roadmap.

@@ -10,9 +10,9 @@ Optional helpers for cross-cutting concerns.
 
 ## Planned Services
 
-- `AudioService` – preloads clips, plays one-shot effects and remembers a
-  mute flag.
-- `StorageService` – loads and saves the high score; may persist settings or
-  future save data.
+- [AudioService](audio_service.md) – preloads clips, plays one-shot effects and
+  remembers a mute flag.
+- [StorageService](storage_service.md) – loads and saves the high score; may
+  persist settings or future save data.
 
 See [../../PLAN.md](../../PLAN.md) for the broader roadmap.
