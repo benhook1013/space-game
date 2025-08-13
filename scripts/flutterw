@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+# Ensure Flutter exists and PATH is set for this process
+source "$(dirname "$0")/bootstrap_flutter.sh"
+exec ".tooling/flutter/bin/flutter" "$@"
