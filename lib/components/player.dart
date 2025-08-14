@@ -2,11 +2,13 @@ import 'dart:ui';
 
 import 'package:flame/components.dart';
 import 'package:flame/input.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/services.dart';
 
 import '../assets.dart';
 import '../constants.dart';
 import '../game/space_game.dart';
+import 'bullet.dart';
 
 /// Controllable player ship.
 class PlayerComponent extends SpriteComponent
@@ -19,6 +21,16 @@ class PlayerComponent extends SpriteComponent
 
   /// Direction from keyboard input.
   final Vector2 _keyboardDirection = Vector2.zero();
+
+  /// Fires a bullet from the player's current position.
+  void shoot() {
+    final bullet = BulletComponent(
+      position: position.clone(),
+      direction: Vector2(0, -1),
+    );
+    gameRef.add(bullet);
+    FlameAudio.play(Assets.shootSfx);
+  }
 
   @override
   Future<void> onLoad() async {
@@ -49,6 +61,10 @@ class PlayerComponent extends SpriteComponent
 
   @override
   bool onKeyEvent(RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
+    if (event is RawKeyDownEvent &&
+        event.logicalKey == LogicalKeyboardKey.space) {
+      shoot();
+    }
     _keyboardDirection
       ..setZero()
       ..x +=

@@ -14,14 +14,18 @@ Gameplay entities and reusable pieces.
 - Give components deterministic IDs to support future multiplayer sync.
 - Update movement and timers using the `dt` value for frame-rate independence.
 
-## Planned Components
+## Implemented Components
 
 - [PlayerComponent](player.md) – moves via joystick or keyboard, fires bullets
   and tracks health.
-- [EnemyComponent](enemy.md) – drifts toward the player and damages on contact.
+- [EnemyComponent](enemy.md) – drifts toward the player and is destroyed on
+  bullet impact.
+- [BulletComponent](bullet.md) – short-lived projectile destroyed on hit or
+  when leaving the screen.
+
+## Planned Components
+
 - [AsteroidComponent](asteroid.md) – floats randomly; mining yields score
   pickups.
-- [BulletComponent](bullet.md) – short-lived projectile destroyed on hit or
-  timer.
 
 See [../../PLAN.md](../../PLAN.md) for the broader roadmap.
