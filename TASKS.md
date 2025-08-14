@@ -23,7 +23,7 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
 ## Core Loop ([milestone-core-loop.md](milestone-core-loop.md))
 
 - [x] Player ship moves with joystick or keyboard.
-- [ ] Ship can shoot and destroy a basic enemy type.
+- [x] Ship can shoot and destroy a basic enemy type.
 - [ ] Random asteroids spawn and can be mined for score.
 - [ ] Game states: menu → playing → game over with restart.
 

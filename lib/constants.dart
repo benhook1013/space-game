@@ -12,4 +12,13 @@ class Constants {
 
   /// Bullet travel speed in pixels per second.
   static const double bulletSpeed = 400;
+
+  /// Bullet sprite size in logical pixels.
+  static const double bulletSize = 8;
+
+  /// Enemy movement speed in pixels per second.
+  static const double enemySpeed = 100;
+
+  /// Enemy sprite size in logical pixels.
+  static const double enemySize = 32;
 }
