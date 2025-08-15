@@ -2,10 +2,14 @@
 
 Based on MVP features in [PLAN.md](PLAN.md).
 
+_Update this file whenever a player-facing feature is added or changed._
+
 - [ ] Game loads on mobile and desktop browsers
 - [ ] Touch and keyboard controls move the player
 - [ ] Player can shoot and destroy a basic enemy
-- [ ] Asteroids spawn randomly and can be mined for score
+- [ ] Asteroids spawn randomly and drift across the screen
+- [ ] Shooting an asteroid destroys it and increases the on-screen score
+- [ ] Score resets when restarting the game
 - [ ] Game states transition: menu → playing → game over → restart
 - [ ] Parallax starfield renders behind gameplay
 - [ ] Sound effects play and can be muted

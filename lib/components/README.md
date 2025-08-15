@@ -22,10 +22,11 @@ Gameplay entities and reusable pieces.
   bullet impact.
 - [BulletComponent](bullet.md) – short-lived projectile destroyed on hit or
   when leaving the screen.
+- [AsteroidComponent](asteroid.md) – floats randomly and awards score when
+  destroyed.
 
 ## Planned Components
 
-- [AsteroidComponent](asteroid.md) – floats randomly; mining yields score
-  pickups.
+None at this time.
 
 See [../../PLAN.md](../../PLAN.md) for the broader roadmap.

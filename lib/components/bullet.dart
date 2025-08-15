@@ -5,6 +5,7 @@ import '../assets.dart';
 import '../constants.dart';
 import '../game/space_game.dart';
 import 'enemy.dart';
+import 'asteroid.dart';
 
 /// Short-lived projectile fired by the player.
 class BulletComponent extends SpriteComponent
@@ -40,6 +41,11 @@ class BulletComponent extends SpriteComponent
     if (other is EnemyComponent) {
       other.removeFromParent();
       removeFromParent();
+    }
+    if (other is AsteroidComponent) {
+      other.removeFromParent();
+      removeFromParent();
+      gameRef.addScore(1);
     }
   }
 }
