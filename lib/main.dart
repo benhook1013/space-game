@@ -14,13 +14,13 @@ Future<void> main() async {
   final game = SpaceGame();
   runApp(
     MaterialApp(
-      home: GameWidget(
+      home: GameWidget<SpaceGame>(
         game: game,
         overlayBuilderMap: {
-          MenuOverlay.id: (context, game) => MenuOverlay(game: game),
-          HudOverlay.id: (context, game) => HudOverlay(game: game),
-          GameOverOverlay.id:
-              (context, game) => GameOverOverlay(game: game),
+          MenuOverlay.id: (context, SpaceGame game) => MenuOverlay(game: game),
+          HudOverlay.id: (context, SpaceGame game) => HudOverlay(game: game),
+          GameOverOverlay.id: (context, SpaceGame game) =>
+              GameOverOverlay(game: game),
         },
       ),
     ),
