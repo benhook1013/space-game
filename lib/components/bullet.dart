@@ -9,7 +9,7 @@ import 'asteroid.dart';
 
 /// Short-lived projectile fired by the player.
 class BulletComponent extends SpriteComponent
-    with HasGameRef<SpaceGame>, CollisionCallbacks {
+    with HasGameReference<SpaceGame>, CollisionCallbacks {
   BulletComponent({required Vector2 position, required Vector2 direction})
       : _direction = direction.normalized(),
         super(
@@ -30,13 +30,14 @@ class BulletComponent extends SpriteComponent
   void update(double dt) {
     super.update(dt);
     position += _direction * Constants.bulletSpeed * dt;
-    if (position.y < -size.y || position.y > gameRef.size.y + size.y) {
+    if (position.y < -size.y || position.y > game.size.y + size.y) {
       removeFromParent();
     }
   }
 
   @override
-  void onCollisionStart(Set<Vector2> intersectionPoints, PositionComponent other) {
+  void onCollisionStart(
+      Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollisionStart(intersectionPoints, other);
     if (other is EnemyComponent) {
       other.removeFromParent();
@@ -45,7 +46,7 @@ class BulletComponent extends SpriteComponent
     if (other is AsteroidComponent) {
       other.removeFromParent();
       removeFromParent();
-      gameRef.addScore(1);
+      game.addScore(1);
     }
   }
 }

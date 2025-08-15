@@ -7,7 +7,7 @@ import '../game/space_game.dart';
 
 /// Basic foe that drifts toward the player.
 class EnemyComponent extends SpriteComponent
-    with HasGameRef<SpaceGame>, CollisionCallbacks {
+    with HasGameReference<SpaceGame>, CollisionCallbacks {
   EnemyComponent({Vector2? position})
       : super(
           position: position,
@@ -24,11 +24,11 @@ class EnemyComponent extends SpriteComponent
   @override
   void update(double dt) {
     super.update(dt);
-    final direction = (gameRef.player.position - position).normalized();
+    final direction = (game.player.position - position).normalized();
     position += direction * Constants.enemySpeed * dt;
-    if (position.y > gameRef.size.y + size.y ||
+    if (position.y > game.size.y + size.y ||
         position.x < -size.x ||
-        position.x > gameRef.size.x + size.x) {
+        position.x > game.size.x + size.x) {
       removeFromParent();
     }
   }

@@ -4,7 +4,6 @@ import 'dart:ui';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
-import 'package:flame/timer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart' show EdgeInsets;
 
@@ -28,6 +27,7 @@ class SpaceGame extends FlameGame
   late final Timer _enemySpawnTimer;
   late final Timer _asteroidSpawnTimer;
   final Random _random = Random();
+
   /// Current score exposed to Flutter overlays.
   final ValueNotifier<int> score = ValueNotifier<int>(0);
 
@@ -106,7 +106,9 @@ class SpaceGame extends FlameGame
     state = GameState.playing;
     score.value = 0;
     children.whereType<EnemyComponent>().forEach((e) => e.removeFromParent());
-    children.whereType<AsteroidComponent>().forEach((a) => a.removeFromParent());
+    children
+        .whereType<AsteroidComponent>()
+        .forEach((a) => a.removeFromParent());
     children.whereType<BulletComponent>().forEach((b) => b.removeFromParent());
     player.position = size / 2;
     overlays
