@@ -63,6 +63,7 @@ This repository uses a Flutter + Flame stack to build a PWA space shooter. Follo
 - Use `///` doc comments for public classes/methods; use inline `//` for complex logic.
 - Explain design trade-offs (e.g., frame-based vs time-based updates).
 - Keep `README.md` and `PLAN.md` in sync with architecture changes.
+- Update `PLAYTEST_CHECKLIST.md` whenever new player-facing features land.
 
 ## 8. Performance & Security
 - Use Flame’s built-in FPS/timestep handling to avoid frame-dependent logic.

@@ -21,4 +21,10 @@ class Constants {
 
   /// Enemy sprite size in logical pixels.
   static const double enemySize = 32;
+
+  /// Asteroid movement speed in pixels per second.
+  static const double asteroidSpeed = 50;
+
+  /// Asteroid sprite size in logical pixels.
+  static const double asteroidSize = 24;
 }
