@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/input.dart';
 import 'package:flame_audio/flame_audio.dart';
@@ -8,11 +9,13 @@ import 'package:flutter/services.dart';
 import '../assets.dart';
 import '../constants.dart';
 import '../game/space_game.dart';
+import 'asteroid.dart';
 import 'bullet.dart';
+import 'enemy.dart';
 
 /// Controllable player ship.
 class PlayerComponent extends SpriteComponent
-    with HasGameRef<SpaceGame>, KeyboardHandler {
+    with HasGameRef<SpaceGame>, KeyboardHandler, CollisionCallbacks {
   PlayerComponent({required this.joystick})
     : super(size: Vector2.all(Constants.playerSize), anchor: Anchor.center);
 
@@ -35,6 +38,7 @@ class PlayerComponent extends SpriteComponent
   @override
   Future<void> onLoad() async {
     sprite = await Sprite.load(Assets.player);
+    add(CircleHitbox());
   }
 
   @override
@@ -88,5 +92,16 @@ class PlayerComponent extends SpriteComponent
           ? 1
           : 0;
     return true;
+  }
+
+  @override
+  void onCollisionStart(
+    Set<Vector2> intersectionPoints,
+    PositionComponent other,
+  ) {
+    super.onCollisionStart(intersectionPoints, other);
+    if (other is EnemyComponent || other is AsteroidComponent) {
+      gameRef.gameOver();
+    }
   }
 }
