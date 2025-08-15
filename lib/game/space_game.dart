@@ -5,13 +5,17 @@ import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flame/timer.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart' show EdgeInsets;
 
-import '../assets.dart';
-import '../components/enemy.dart';
 import '../components/asteroid.dart';
+import '../components/enemy.dart';
+import '../components/bullet.dart';
 import '../components/player.dart';
 import '../constants.dart';
+import '../ui/game_over_overlay.dart';
+import '../ui/hud_overlay.dart';
+import '../ui/menu_overlay.dart';
 import 'game_state.dart';
 
 /// Root Flame game handling the core loop.
@@ -24,12 +28,11 @@ class SpaceGame extends FlameGame
   late final Timer _enemySpawnTimer;
   late final Timer _asteroidSpawnTimer;
   final Random _random = Random();
-  int score = 0;
-  late final TextComponent _scoreText;
+  /// Current score exposed to Flutter overlays.
+  final ValueNotifier<int> score = ValueNotifier<int>(0);
 
   @override
   Future<void> onLoad() async {
-    await Assets.load();
     joystick = JoystickComponent(
       knob: CircleComponent(
         radius: 20,
@@ -61,17 +64,11 @@ class SpaceGame extends FlameGame
     );
     add(fireButton);
 
-    _enemySpawnTimer = Timer(2, onTick: _spawnEnemy, repeat: true)..start();
-    _asteroidSpawnTimer =
-        Timer(3, onTick: _spawnAsteroid, repeat: true)..start();
+    _enemySpawnTimer = Timer(2, onTick: _spawnEnemy, repeat: true);
+    _asteroidSpawnTimer = Timer(3, onTick: _spawnAsteroid, repeat: true);
 
-    _scoreText = TextComponent(
-      text: 'Score: 0',
-      position: Vector2.all(10),
-      anchor: Anchor.topLeft,
-      priority: 10,
-    );
-    add(_scoreText);
+    pauseEngine();
+    overlays.add(MenuOverlay.id);
   }
 
   void _spawnEnemy() {
@@ -90,15 +87,47 @@ class SpaceGame extends FlameGame
     );
   }
 
+  /// Adds [value] to the current score.
   void addScore(int value) {
-    score += value;
-    _scoreText.text = 'Score: $score';
+    score.value += value;
   }
 
   @override
   void update(double dt) {
     super.update(dt);
-    _enemySpawnTimer.update(dt);
-    _asteroidSpawnTimer.update(dt);
+    if (state == GameState.playing) {
+      _enemySpawnTimer.update(dt);
+      _asteroidSpawnTimer.update(dt);
+    }
+  }
+
+  /// Starts a new game session.
+  void startGame() {
+    state = GameState.playing;
+    score.value = 0;
+    children.whereType<EnemyComponent>().forEach((e) => e.removeFromParent());
+    children.whereType<AsteroidComponent>().forEach((a) => a.removeFromParent());
+    children.whereType<BulletComponent>().forEach((b) => b.removeFromParent());
+    player.position = size / 2;
+    overlays
+      ..remove(MenuOverlay.id)
+      ..remove(GameOverOverlay.id)
+      ..add(HudOverlay.id);
+    _enemySpawnTimer
+      ..stop()
+      ..start();
+    _asteroidSpawnTimer
+      ..stop()
+      ..start();
+    resumeEngine();
+  }
+
+  /// Transitions to the game over state.
+  void gameOver() {
+    state = GameState.gameOver;
+    overlays
+      ..remove(HudOverlay.id)
+      ..add(GameOverOverlay.id);
+    pauseEngine();
   }
 }

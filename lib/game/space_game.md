@@ -10,5 +10,7 @@ Main FlameGame subclass managing world setup, state transitions and the update l
 - Maintain `GameState` values (`menu`, `playing`, `gameOver`) and toggle overlays.
 - Route joystick, button and keyboard input to the player component.
 - Drive the update cycle while delegating work to components and services.
+- Exposes a `ValueNotifier<int>` for score so Flutter overlays can render HUD
+  values without touching the game loop.
 
 See [../../PLAN.md](../../PLAN.md) for the roadmap.

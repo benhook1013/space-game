@@ -25,7 +25,7 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
 - [x] Player ship moves with joystick or keyboard.
 - [x] Ship can shoot and destroy a basic enemy type.
 - [x] Random asteroids spawn and can be mined for score.
-- [ ] Game states: menu → playing → game over with restart.
+- [x] Game states: menu → playing → game over with restart.
 
 ## Polish ([milestone-polish.md](milestone-polish.md))
 
