@@ -34,4 +34,3 @@ class StorageService {
     await _prefs.setBool(_mutedKey, value);
   }
 }
-
