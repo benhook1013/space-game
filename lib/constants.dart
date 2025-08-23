@@ -28,6 +28,12 @@ class Constants {
   /// Asteroid sprite size in logical pixels.
   static const double asteroidSize = 24;
 
+  /// Score awarded for destroying an enemy.
+  static const int enemyScore = 5;
+
+  /// Score awarded for mining an asteroid.
+  static const int asteroidScore = 1;
+
   /// Number of stars spawned per parallax layer.
   static const int starsPerLayer = 30;
 

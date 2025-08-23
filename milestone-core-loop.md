@@ -9,6 +9,7 @@ See [PLAN.md](PLAN.md) for overall project goals and
 - [x] Player ship moves using an on-screen joystick or keyboard (WASD).
 - [x] Ship fires bullets and destroys a basic enemy type on collision.
 - [x] Random asteroids spawn and can be mined for score.
+- [x] Destroying enemies awards score.
 - [x] Game states: **menu → playing → game over** with quick restart via overlays
       and a `GameState` enum.
 
