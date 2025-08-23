@@ -83,6 +83,27 @@ milestone goals, and `networking.md` for future multiplayer plans. See
 
 ---
 
+## Asset Setup
+
+The repository does not bundle art or audio. Create the following files locally
+under `assets/` before running the game:
+
+- `assets/images/player.png`
+- `assets/images/enemy.png`
+- `assets/images/asteroid.png`
+- `assets/images/bullet.png`
+- `assets/audio/shoot.wav`
+
+Simple placeholders can be generated with common tools. For example:
+
+- ImageMagick: `convert -size 32x32 canvas:red assets/images/player.png`
+- FFmpeg: `ffmpeg -f lavfi -i "sine=frequency=880:duration=0.1" assets/audio/shoot.wav`
+
+Remember to update `assets_manifest.json` and credit any third-party assets in
+`ASSET_CREDITS.md`.
+
+---
+
 ## Flutter Tooling
 
 Run `./setup.sh` after cloning to download the pinned Flutter SDK into

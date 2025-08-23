@@ -9,8 +9,8 @@ import '../game/space_game.dart';
 /// Procedural parallax starfield rendered behind the gameplay.
 class StarfieldComponent extends Component with HasGameReference<SpaceGame> {
   StarfieldComponent({int starsPerLayer = Constants.starsPerLayer})
-    : _starsPerLayer = starsPerLayer,
-      super(priority: -1);
+      : _starsPerLayer = starsPerLayer,
+        super(priority: -1);
 
   final int _starsPerLayer;
   final Random _random = Random();
