@@ -9,12 +9,12 @@ import '../game/space_game.dart';
 class AsteroidComponent extends SpriteComponent
     with HasGameReference<SpaceGame>, CollisionCallbacks {
   AsteroidComponent({required Vector2 position, required Vector2 velocity})
-      : _velocity = velocity,
-        super(
-          position: position,
-          size: Vector2.all(Constants.asteroidSize),
-          anchor: Anchor.center,
-        );
+    : _velocity = velocity,
+      super(
+        position: position,
+        size: Vector2.all(Constants.asteroidSize),
+        anchor: Anchor.center,
+      );
 
   final Vector2 _velocity;
 

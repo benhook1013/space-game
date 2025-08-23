@@ -15,10 +15,7 @@ Future<void> main() async {
   await Assets.load();
   final storage = await StorageService.create();
   final audio = await AudioService.create(storage);
-  final game = SpaceGame(
-    storageService: storage,
-    audioService: audio,
-  );
+  final game = SpaceGame(storageService: storage, audioService: audio);
   runApp(
     MaterialApp(
       home: GameWidget<SpaceGame>(

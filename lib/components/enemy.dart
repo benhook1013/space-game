@@ -9,11 +9,11 @@ import '../game/space_game.dart';
 class EnemyComponent extends SpriteComponent
     with HasGameReference<SpaceGame>, CollisionCallbacks {
   EnemyComponent({Vector2? position})
-      : super(
-          position: position,
-          size: Vector2.all(Constants.enemySize),
-          anchor: Anchor.center,
-        );
+    : super(
+        position: position,
+        size: Vector2.all(Constants.enemySize),
+        anchor: Anchor.center,
+      );
 
   @override
   Future<void> onLoad() async {
