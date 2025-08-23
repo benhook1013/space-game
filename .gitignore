@@ -23,6 +23,8 @@ doc/api/
 *.js_
 *.js.deps
 *.js.map
+# Keep custom service worker
+!web/sw.js
 
 .flutter-plugins
 .flutter-plugins-dependencies
