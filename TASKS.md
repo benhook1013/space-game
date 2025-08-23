@@ -29,9 +29,9 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
 
 ## Polish ([milestone-polish.md](milestone-polish.md))
 
-- [ ] Parallax starfield renders behind gameplay.
+- [x] Parallax starfield renders behind gameplay.
 - [x] Implement `audio_service.dart` wrapping `flame_audio` with a
       mute toggle.
 - [x] Implement `storage_service.dart` using `shared_preferences`
       to persist the local high score.
-- [ ] Simple HUD and menus layered with Flutter overlays.
+- [x] Simple HUD and menus layered with Flutter overlays.

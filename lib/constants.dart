@@ -27,4 +27,15 @@ class Constants {
 
   /// Asteroid sprite size in logical pixels.
   static const double asteroidSize = 24;
+
+  /// Number of stars spawned per parallax layer.
+  static const int starsPerLayer = 30;
+
+  /// Speeds for starfield layers in pixels per second.
+  static const double starSpeedSlow = 10;
+  static const double starSpeedMedium = 20;
+  static const double starSpeedFast = 40;
+
+  /// Maximum star radius in logical pixels.
+  static const double starMaxSize = 2;
 }

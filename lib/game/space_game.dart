@@ -11,6 +11,7 @@ import '../components/asteroid.dart';
 import '../components/enemy.dart';
 import '../components/bullet.dart';
 import '../components/player.dart';
+import '../components/starfield.dart';
 import '../constants.dart';
 import '../services/storage_service.dart';
 import '../services/audio_service.dart';
@@ -46,6 +47,7 @@ class SpaceGame extends FlameGame
 
   @override
   Future<void> onLoad() async {
+    add(StarfieldComponent());
     joystick = JoystickComponent(
       knob: CircleComponent(
         radius: 20,

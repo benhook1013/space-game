@@ -24,6 +24,8 @@ Gameplay entities and reusable pieces.
   when leaving the screen.
 - [AsteroidComponent](asteroid.md) – floats randomly and awards score when
   destroyed.
+- [StarfieldComponent](starfield.md) – procedural three-layer background with
+  parallax motion.
 
 ## Planned Components
 
