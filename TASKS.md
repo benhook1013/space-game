@@ -5,18 +5,18 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
 
 ## Setup ([milestone-setup.md](milestone-setup.md))
 
-- [ ] Install FVM and fetch the pinned Flutter SDK (version `3.32.8`).
-- [ ] Run `fvm flutter doctor` to verify the environment.
-- [ ] Scaffold the Flutter project (`fvm flutter create .`) if not already.
-- [ ] Enable web support (`fvm flutter config --enable-web`).
+- [x] Install FVM and fetch the pinned Flutter SDK (version `3.32.8`).
+- [x] Run `fvm flutter doctor` to verify the environment.
+- [x] Scaffold the Flutter project (`fvm flutter create .`) if not already.
+- [x] Enable web support (`fvm flutter config --enable-web`).
 - [x] Add Flame, `flame_audio` and `shared_preferences` to `pubspec.yaml`.
-- [ ] Run `fvm flutter pub get` to install dependencies.
+- [x] Run `fvm flutter pub get` to install dependencies.
 - [x] Create placeholder `assets.dart` and `constants.dart` to centralise asset
-       paths and tunable values.
+  paths and tunable values.
 - [x] Add a tiny `log.dart` helper that wraps `debugPrint`.
 - [x] Commit generated folders (`lib/`, `web/`, etc.).
-- [ ] Set up GitHub Actions workflow for lint, test and web deploy.
-- [ ] Document placeholder assets and credits.
+- [x] Set up GitHub Actions workflow for lint, test and web deploy.
+- [x] Document placeholder assets and credits.
 - [x] Create `assets_manifest.json` to list bundled assets for caching
   (see `assets_manifest.md`).
 

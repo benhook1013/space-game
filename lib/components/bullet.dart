@@ -11,12 +11,12 @@ import 'asteroid.dart';
 class BulletComponent extends SpriteComponent
     with HasGameReference<SpaceGame>, CollisionCallbacks {
   BulletComponent({required Vector2 position, required Vector2 direction})
-    : _direction = direction.normalized(),
-      super(
-        position: position,
-        size: Vector2.all(Constants.bulletSize),
-        anchor: Anchor.center,
-      );
+      : _direction = direction.normalized(),
+        super(
+          position: position,
+          size: Vector2.all(Constants.bulletSize),
+          anchor: Anchor.center,
+        );
 
   final Vector2 _direction;
 
