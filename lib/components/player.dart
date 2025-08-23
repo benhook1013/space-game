@@ -1,6 +1,5 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/services.dart';
 
 import '../assets.dart';
@@ -29,7 +28,7 @@ class PlayerComponent extends SpriteComponent
       direction: Vector2(0, -1),
     );
     game.add(bullet);
-    FlameAudio.play(Assets.shootSfx);
+    game.audioService.playShoot();
   }
 
   @override

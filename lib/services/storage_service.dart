@@ -16,6 +16,7 @@ class StorageService {
   final SharedPreferences _prefs;
 
   static const _highScoreKey = 'highScore';
+  static const _mutedKey = 'muted';
 
   /// Returns the stored high score or `0` if none exists.
   int getHighScore() => _prefs.getInt(_highScoreKey) ?? 0;
@@ -23,6 +24,14 @@ class StorageService {
   /// Persists a new high score value.
   Future<void> setHighScore(int value) async {
     await _prefs.setInt(_highScoreKey, value);
+  }
+
+  /// Whether audio is muted; defaults to `false` if unset.
+  bool isMuted() => _prefs.getBool(_mutedKey) ?? false;
+
+  /// Persists the mute flag.
+  Future<void> setMuted(bool value) async {
+    await _prefs.setBool(_mutedKey, value);
   }
 }
 

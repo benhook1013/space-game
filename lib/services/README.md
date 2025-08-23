@@ -2,10 +2,10 @@
 
 Optional helpers for cross-cutting concerns.
 
-- `audio_service.dart` will wrap `flame_audio` to play sound effects and
-  handle a mute toggle.
-- `storage_service.dart` stores the local high score using
-  `shared_preferences` and can expand for save/load later.
+- `audio_service.dart` wraps `flame_audio` to play sound effects and
+  handles a mute toggle persisted via `StorageService`.
+- `storage_service.dart` stores the local high score and mute setting using
+  `shared_preferences`.
 - Keep services lightweight; add them only when a milestone needs them.
 
 ## Planned Services
