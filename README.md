@@ -86,10 +86,10 @@ milestone goals, and `networking.md` for future multiplayer plans. See
 ## Flutter Tooling
 
 Run `./setup.sh` after cloning to download the pinned Flutter SDK into
-`.tooling/flutter` and add it to your `PATH` for the current shell. The
-repository provides wrapper scripts for both Unix-like shells and Windows, which
-bootstrap this SDK on demand and then delegate to the real `flutter` and `dart`
-binaries:
+`.tooling/flutter`, install the FVM and Markdown tooling, and add pub global
+binaries to your `PATH`. The repository provides wrapper scripts for both
+Unix-like shells and Windows, which bootstrap this SDK on demand and then
+delegate to the real `flutter` and `dart` binaries:
 
 - Unix shells: `scripts/flutterw`, `scripts/dartw`
 - PowerShell: `scripts\flutterw.ps1`, `scripts\dartw.ps1`

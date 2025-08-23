@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 source "$(dirname "$0")/bootstrap_flutter.sh"
+if [[ "${1-}" == "format" && $# -eq 1 ]]; then
+  set -- "$1" .
+fi
 exec ".tooling/flutter/bin/dart" "$@"
