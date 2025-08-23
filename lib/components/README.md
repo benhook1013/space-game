@@ -19,7 +19,7 @@ Gameplay entities and reusable pieces.
 - [PlayerComponent](player.md) – moves via joystick or keyboard, fires bullets
   and tracks health.
 - [EnemyComponent](enemy.md) – drifts toward the player and is destroyed on
-  bullet impact.
+  bullet impact, awarding score when defeated.
 - [BulletComponent](bullet.md) – short-lived projectile destroyed on hit or
   when leaving the screen.
 - [AsteroidComponent](asteroid.md) – floats randomly and awards score when

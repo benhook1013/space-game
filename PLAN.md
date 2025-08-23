@@ -143,7 +143,7 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
 
 - Touch/joystick movement and shooting
 - One enemy type with collision and random spawns
-- Asteroids to mine for score or pickups
+- Asteroids to mine for score; destroying enemies also grants points
 - Single endless level without progression for now
 - Player health and simple start/game‑over screens
 - Local high score stored on device (e.g., shared preferences)
