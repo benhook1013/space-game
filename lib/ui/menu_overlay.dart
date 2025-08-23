@@ -33,10 +33,7 @@ class MenuOverlay extends StatelessWidget {
                 : const SizedBox.shrink(),
           ),
           const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: game.startGame,
-            child: const Text('Start'),
-          ),
+          ElevatedButton(onPressed: game.startGame, child: const Text('Start')),
         ],
       ),
     );

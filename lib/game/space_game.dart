@@ -121,9 +121,9 @@ class SpaceGame extends FlameGame
     state = GameState.playing;
     score.value = 0;
     children.whereType<EnemyComponent>().forEach((e) => e.removeFromParent());
-    children
-        .whereType<AsteroidComponent>()
-        .forEach((a) => a.removeFromParent());
+    children.whereType<AsteroidComponent>().forEach(
+      (a) => a.removeFromParent(),
+    );
     children.whereType<BulletComponent>().forEach((b) => b.removeFromParent());
     player.position = size / 2;
     overlays
