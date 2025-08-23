@@ -33,6 +33,12 @@ if ! command -v fvm >/dev/null 2>&1; then
   dart pub global activate fvm >/dev/null
 fi
 
+# Ensure the pinned Flutter SDK is available for FVM users.
+if command -v fvm >/dev/null 2>&1 && [ -f "$REPO_ROOT/fvm_config.json" ]; then
+  echo "[setup] Running fvm install"
+  fvm install >/dev/null 2>&1 || echo "[setup] fvm install failed"
+fi
+
 # Install markdownlint CLI for Markdown linting if missing.
 if ! command -v markdownlint >/dev/null 2>&1; then
   echo "[setup] Installing markdownlint-cli"
@@ -60,6 +66,23 @@ if ! command -v google-chrome >/dev/null 2>&1 && \
       echo "[setup] Skipping Chrome install: unsupported OS"
       ;;
   esac
+fi
+
+# Set CHROME_EXECUTABLE so Flutter can find Chromium when Google Chrome isn't installed.
+if ! command -v google-chrome >/dev/null 2>&1; then
+  if command -v chromium-browser >/dev/null 2>&1; then
+    export CHROME_EXECUTABLE=chromium-browser
+    if [ -w "$shell_profile" ] && ! grep -q "CHROME_EXECUTABLE" "$shell_profile" 2>/dev/null; then
+      printf '\nexport CHROME_EXECUTABLE=chromium-browser\n' >> "$shell_profile"
+      echo "[setup] Set CHROME_EXECUTABLE=chromium-browser in $shell_profile"
+    fi
+  elif command -v chromium >/dev/null 2>&1; then
+    export CHROME_EXECUTABLE=chromium
+    if [ -w "$shell_profile" ] && ! grep -q "CHROME_EXECUTABLE" "$shell_profile" 2>/dev/null; then
+      printf '\nexport CHROME_EXECUTABLE=chromium\n' >> "$shell_profile"
+      echo "[setup] Set CHROME_EXECUTABLE=chromium in $shell_profile"
+    fi
+  fi
 fi
 
 echo "[setup] Completed"
