@@ -12,6 +12,7 @@ import '../components/enemy.dart';
 import '../components/bullet.dart';
 import '../components/player.dart';
 import '../constants.dart';
+import '../services/storage_service.dart';
 import '../ui/game_over_overlay.dart';
 import '../ui/hud_overlay.dart';
 import '../ui/menu_overlay.dart';
@@ -20,6 +21,11 @@ import 'game_state.dart';
 /// Root Flame game handling the core loop.
 class SpaceGame extends FlameGame
     with HasKeyboardHandlerComponents, HasCollisionDetection {
+  SpaceGame({required this.storageService});
+
+  /// Handles persistence for the high score.
+  final StorageService storageService;
+
   GameState state = GameState.menu;
   late final PlayerComponent player;
   late final JoystickComponent joystick;
@@ -30,6 +36,9 @@ class SpaceGame extends FlameGame
 
   /// Current score exposed to Flutter overlays.
   final ValueNotifier<int> score = ValueNotifier<int>(0);
+
+  /// Highest score persisted across sessions.
+  final ValueNotifier<int> highScore = ValueNotifier<int>(0);
 
   @override
   Future<void> onLoad() async {
@@ -66,6 +75,8 @@ class SpaceGame extends FlameGame
 
     _enemySpawnTimer = Timer(2, onTick: _spawnEnemy, repeat: true);
     _asteroidSpawnTimer = Timer(3, onTick: _spawnAsteroid, repeat: true);
+
+    highScore.value = storageService.getHighScore();
 
     pauseEngine();
     overlays.add(MenuOverlay.id);
@@ -127,6 +138,10 @@ class SpaceGame extends FlameGame
   /// Transitions to the game over state.
   void gameOver() {
     state = GameState.gameOver;
+    if (score.value > highScore.value) {
+      highScore.value = score.value;
+      storageService.setHighScore(highScore.value);
+    }
     overlays
       ..remove(HudOverlay.id)
       ..add(GameOverOverlay.id);

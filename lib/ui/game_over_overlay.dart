@@ -30,6 +30,14 @@ class GameOverOverlay extends StatelessWidget {
               style: const TextStyle(color: Colors.white),
             ),
           ),
+          const SizedBox(height: 10),
+          ValueListenableBuilder<int>(
+            valueListenable: game.highScore,
+            builder: (context, value, _) => Text(
+              'High Score: $value',
+              style: const TextStyle(color: Colors.white),
+            ),
+          ),
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: game.startGame,
