@@ -4,7 +4,7 @@ Flutter widget shown before gameplay starts.
 
 ## Features
 
-- Displays the game title and basic instructions.
+- Displays the game title and current high score.
 - Start button signals `SpaceGame` to enter the `playing` state.
 - Accesses the game via callbacks or a `ValueNotifier`.
 - Visible when `GameState.menu` is active.

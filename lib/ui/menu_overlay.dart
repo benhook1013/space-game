@@ -23,6 +23,17 @@ class MenuOverlay extends StatelessWidget {
             style: TextStyle(fontSize: 32, color: Colors.white),
           ),
           const SizedBox(height: 20),
+          ValueListenableBuilder<int>(
+            valueListenable: game.highScore,
+            builder: (context, value, _) =>
+                value > 0
+                    ? Text(
+                        'High Score: $value',
+                        style: const TextStyle(color: Colors.white),
+                      )
+                    : const SizedBox.shrink(),
+          ),
+          const SizedBox(height: 20),
           ElevatedButton(
             onPressed: game.startGame,
             child: const Text('Start'),

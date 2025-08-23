@@ -32,6 +32,6 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
 - [ ] Parallax starfield renders behind gameplay.
 - [ ] Implement `audio_service.dart` wrapping `flame_audio` with a
       mute toggle.
-- [ ] Implement `storage_service.dart` using `shared_preferences`
+- [x] Implement `storage_service.dart` using `shared_preferences`
       to persist the local high score.
 - [ ] Simple HUD and menus layered with Flutter overlays.
