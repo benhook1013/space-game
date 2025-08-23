@@ -7,13 +7,18 @@ import 'ui/game_over_overlay.dart';
 import 'ui/hud_overlay.dart';
 import 'ui/menu_overlay.dart';
 import 'services/storage_service.dart';
+import 'services/audio_service.dart';
 
 /// Application entry point.
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Assets.load();
   final storage = await StorageService.create();
-  final game = SpaceGame(storageService: storage);
+  final audio = await AudioService.create(storage);
+  final game = SpaceGame(
+    storageService: storage,
+    audioService: audio,
+  );
   runApp(
     MaterialApp(
       home: GameWidget<SpaceGame>(

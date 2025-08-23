@@ -13,6 +13,7 @@ import '../components/bullet.dart';
 import '../components/player.dart';
 import '../constants.dart';
 import '../services/storage_service.dart';
+import '../services/audio_service.dart';
 import '../ui/game_over_overlay.dart';
 import '../ui/hud_overlay.dart';
 import '../ui/menu_overlay.dart';
@@ -21,10 +22,13 @@ import 'game_state.dart';
 /// Root Flame game handling the core loop.
 class SpaceGame extends FlameGame
     with HasKeyboardHandlerComponents, HasCollisionDetection {
-  SpaceGame({required this.storageService});
+  SpaceGame({required this.storageService, required this.audioService});
 
   /// Handles persistence for the high score.
   final StorageService storageService;
+
+  /// Plays sound effects and handles the mute toggle.
+  final AudioService audioService;
 
   GameState state = GameState.menu;
   late final PlayerComponent player;

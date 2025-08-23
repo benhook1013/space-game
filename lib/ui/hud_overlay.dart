@@ -15,17 +15,32 @@ class HudOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Align(
-        alignment: Alignment.topLeft,
-        child: ValueListenableBuilder<int>(
-          valueListenable: game.score,
-          builder: (context, value, _) => Padding(
-            padding: const EdgeInsets.all(8),
-            child: Text(
-              'Score: $value',
-              style: const TextStyle(color: Colors.white),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            ValueListenableBuilder<int>(
+              valueListenable: game.score,
+              builder: (context, value, _) => Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Text(
+                  'Score: $value',
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ),
             ),
-          ),
+            ValueListenableBuilder<bool>(
+              valueListenable: game.audioService.muted,
+              builder: (context, muted, _) => IconButton(
+                icon: Icon(
+                  muted ? Icons.volume_off : Icons.volume_up,
+                  color: Colors.white,
+                ),
+                onPressed: game.audioService.toggleMute,
+              ),
+            ),
+          ],
         ),
       ),
     );
