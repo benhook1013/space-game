@@ -87,11 +87,23 @@ milestone goals, and `networking.md` for future multiplayer plans. See
 
 Run `./setup.sh` after cloning to download the pinned Flutter SDK into
 `.tooling/flutter` and add it to your `PATH` for the current shell. The
-repository provides wrapper scripts, `scripts/flutterw` and `scripts/dartw`,
-which bootstrap this SDK on demand and then delegate to the real `flutter` and
-`dart` binaries.
+repository provides wrapper scripts for both Unix-like shells and Windows, which
+bootstrap this SDK on demand and then delegate to the real `flutter` and `dart`
+binaries:
 
-Example:
+- Unix shells: `scripts/flutterw`, `scripts/dartw`
+- PowerShell: `scripts\flutterw.ps1`, `scripts\dartw.ps1`
+- Command Prompt: `scripts\flutterw.cmd`, `scripts\dartw.cmd`
+
+To override the default Flutter version, set `FLUTTER_VERSION` before running a
+wrapper. Example:
+
+```powershell
+$env:FLUTTER_VERSION='3.32.8'; scripts\bootstrap_flutter.ps1 -Force
+```
+Use `-Force` to re-download the SDK or `-Quiet` to suppress progress messages.
+
+Examples:
 
 ```bash
 ./scripts/flutterw --version
