@@ -36,6 +36,11 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
       to persist the local high score.
 - [x] Simple HUD and menus layered with Flutter overlays.
 
+## PWA
+
+- [x] Add `web/manifest.json` and placeholder icons for installable PWA.
+- [ ] Review service worker caching strategy.
+
 ## Testing
 
 - [x] Add unit tests for storage and audio services.
