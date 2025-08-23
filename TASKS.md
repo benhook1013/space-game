@@ -35,3 +35,8 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
 - [x] Implement `storage_service.dart` using `shared_preferences`
       to persist the local high score.
 - [x] Simple HUD and menus layered with Flutter overlays.
+
+## PWA
+
+- [x] Add `web/manifest.json` and placeholder icons for installable PWA.
+- [ ] Review service worker caching strategy.
