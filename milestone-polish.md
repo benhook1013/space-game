@@ -6,16 +6,16 @@ See [PLAN.md](PLAN.md) for overall project goals and
 
 ## Tasks
 
-- [ ] Parallax starfield background renders behind gameplay.
+- [x] Parallax starfield background renders behind gameplay.
 - [x] Implement `audio_service.dart` wrapping `flame_audio` with a
       mute toggle.
 - [x] Implement `storage_service.dart` using `shared_preferences`
       to persist the local high score.
-- [ ] Simple HUD and menus layered with Flutter overlays.
+- [x] Simple HUD and menus layered with Flutter overlays.
 
 ## Design Notes
 
-- Use Flame's `ParallaxComponent` for the starfield background.
+- A procedural `StarfieldComponent` supplies the parallax background.
 - Centralise audio assets in `assets.dart` and play them through a small
   audio service.
 - Persist the high score with `shared_preferences` using a lightweight storage
