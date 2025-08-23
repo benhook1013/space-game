@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # === Config ===
-: "${FLUTTER_VERSION:=3.22.2}"   # Pin your version here
+: "${FLUTTER_VERSION:=3.32.8}"   # Pin your version here
 : "${FLUTTER_CHANNEL:=stable}"   # stable | beta
 FLUTTER_DIR=".tooling/flutter"
 
@@ -12,9 +12,10 @@ lower() { echo "$1" | tr '[:upper:]' '[:lower:]'; }
 # If already present, just ensure PATH and exit
 if [ -x "$FLUTTER_DIR/bin/flutter" ]; then
   export PATH="$(pwd)/$FLUTTER_DIR/bin:$PATH"
+  git config --global --add safe.directory "$(pwd)/$FLUTTER_DIR" 2>/dev/null || true
   # Warm up (non-fatal if doctor shows warnings)
   .tooling/flutter/bin/flutter --version >/dev/null 2>&1 || true
-  exit 0
+  return 0 2>/dev/null || exit 0
 fi
 
 echo "Bootstrapping Flutter $FLUTTER_VERSION ($FLUTTER_CHANNEL)…"
@@ -58,6 +59,7 @@ popd >/dev/null
 
 # Put Flutter on PATH for this shell
 export PATH="$(pwd)/$FLUTTER_DIR/bin:$PATH"
+git config --global --add safe.directory "$(pwd)/$FLUTTER_DIR" 2>/dev/null || true
 
 # Non-interactive sanity checks (allow warnings)
 .tooling/flutter/bin/flutter --version
