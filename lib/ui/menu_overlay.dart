@@ -33,6 +33,11 @@ class MenuOverlay extends StatelessWidget {
                 : const SizedBox.shrink(),
           ),
           const SizedBox(height: 20),
+          TextButton(
+            onPressed: () => game.resetHighScore(),
+            child: const Text('Reset High Score'),
+          ),
+          const SizedBox(height: 20),
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [

@@ -289,6 +289,12 @@ class SpaceGame extends FlameGame
     resumeEngine();
   }
 
+  /// Clears the saved high score.
+  Future<void> resetHighScore() async {
+    highScore.value = 0;
+    await storageService.resetHighScore();
+  }
+
   /// Transitions to the game over state.
   void gameOver() {
     state = GameState.gameOver;
