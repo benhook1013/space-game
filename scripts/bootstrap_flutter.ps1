@@ -121,7 +121,7 @@ function Download-With-Http { param([string]$Url,[string]$Dest)
   $req = [System.Net.Http.HttpRequestMessage]::new([System.Net.Http.HttpMethod]::Get, $Url)
   if ($existing -gt 0) { $req.Headers.Range = [System.Net.Http.Headers.RangeHeaderValue]::new($existing, $null) }
 
-  $resp = $client.Send($req, [System.Net.Http.HttpCompletionOption]::ResponseHeadersRead)
+  $resp = $client.SendAsync($req, [System.Net.Http.HttpCompletionOption]::ResponseHeadersRead).GetAwaiter().GetResult()
   if (-not $resp.IsSuccessStatusCode -and $resp.StatusCode -ne 206) { throw "HTTP $($resp.StatusCode) downloading $Url" }
   $total = $resp.Content.Headers.ContentLength
   $in    = $resp.Content.ReadAsStream()
@@ -155,7 +155,7 @@ function Download-With-Ranges { param([string]$Url,[string]$Dest,[int]$Parts=8)
 
   # HEAD to get length
   $req0 = [System.Net.Http.HttpRequestMessage]::new([System.Net.Http.HttpMethod]::Head, $Url)
-  $resp0 = $client.Send($req0)
+  $resp0 = $client.SendAsync($req0).GetAwaiter().GetResult()
   if (-not $resp0.IsSuccessStatusCode) { throw "HEAD HTTP $($resp0.StatusCode)" }
   $len = $resp0.Content.Headers.ContentLength
   if (-not $len) { Say "Server did not return length; falling back to single stream"; $client.Dispose(); return Download-With-Http -Url $Url -Dest $Dest }
@@ -176,7 +176,7 @@ function Download-With-Ranges { param([string]$Url,[string]$Dest,[int]$Parts=8)
       $client.Timeout = [TimeSpan]::FromMinutes(30)
       $req = [System.Net.Http.HttpRequestMessage]::new([System.Net.Http.HttpMethod]::Get, $Url)
       $req.Headers.Range = [System.Net.Http.Headers.RangeHeaderValue]::new($Start, $End)
-      $resp = $client.Send($req, [System.Net.Http.HttpCompletionOption]::ResponseHeadersRead)
+      $resp = $client.SendAsync($req, [System.Net.Http.HttpCompletionOption]::ResponseHeadersRead).GetAwaiter().GetResult()
       if (-not $resp.IsSuccessStatusCode -and $resp.StatusCode -ne 206) { throw "HTTP $($resp.StatusCode)" }
       $in = $resp.Content.ReadAsStream()
       $out=[System.IO.File]::Open($Tmp,[System.IO.FileMode]::Create,[System.IO.FileAccess]::Write,[System.IO.FileShare]::None)
