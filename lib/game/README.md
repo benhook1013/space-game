@@ -18,7 +18,8 @@ Core game class and shared systems.
 ## Responsibilities
 
 - Load assets via a central registry before starting play.
-- Configure the world, including the parallax starfield background.
+- Configure the world, including the parallax starfield background and
+  fixed-resolution camera.
 - Spawn the player and register component spawners.
 - Maintain `GameState` values (`menu`, `playing`, `gameOver`) and swap
   overlays accordingly.
