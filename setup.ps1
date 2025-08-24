@@ -44,9 +44,9 @@ if (-not (Get-Command markdownlint -ErrorAction SilentlyContinue)) {
   try { npm install -g markdownlint-cli | Out-Null } catch { Write-Host "[setup] Failed to install markdownlint-cli" }
 }
 
-if (-not (Get-Command google-chrome -ErrorAction SilentlyContinue) -and \
-    -not (Get-Command chrome -ErrorAction SilentlyContinue) -and \
-    -not (Get-Command chromium -ErrorAction SilentlyContinue) -and \
+if (-not (Get-Command google-chrome -ErrorAction SilentlyContinue) -and `
+    -not (Get-Command chrome -ErrorAction SilentlyContinue) -and `
+    -not (Get-Command chromium -ErrorAction SilentlyContinue) -and `
     -not (Get-Command msedge -ErrorAction SilentlyContinue)) {
   Write-Host "[setup] Installing Chromium"
   if (Get-Command winget -ErrorAction SilentlyContinue) {
