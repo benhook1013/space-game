@@ -13,5 +13,6 @@ Flutter widget shown before gameplay starts.
 - Press `Enter` to start without clicking the button.
 - Help button (or `H` key) lists all controls without starting the game; `Esc`
   closes it.
+- Reset button clears the stored high score.
 
 See [../../PLAN.md](../../PLAN.md) for UI goals.

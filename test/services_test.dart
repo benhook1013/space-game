@@ -15,6 +15,14 @@ void main() {
       await storage.setHighScore(42);
       expect(storage.getHighScore(), 42);
     });
+
+    test('resetHighScore clears value', () async {
+      SharedPreferences.setMockInitialValues({'highScore': 99});
+      final storage = await StorageService.create();
+      expect(storage.getHighScore(), 99);
+      await storage.resetHighScore();
+      expect(storage.getHighScore(), 0);
+    });
   });
 
   group('AudioService', () {
