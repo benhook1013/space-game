@@ -3,7 +3,8 @@ set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "$0")" && pwd)"
 
-log() { echo "[setup] $1"; }
+setup_log() { echo "[setup] $1"; }
+log() { setup_log "$1"; }
 
 # Use sudo when available and needed.
 SUDO=""
@@ -12,7 +13,7 @@ if [ "$(id -u)" -ne 0 ] && command -v sudo >/dev/null 2>&1; then
 fi
 
 log "Bootstrapping Flutter SDK"
-source "$REPO_ROOT/scripts/bootstrap_flutter.sh"
+bash "$REPO_ROOT/scripts/bootstrap_flutter.sh"
 
 # Add pub global binaries to PATH and persist for future shells.
 PUB_CACHE_BIN="$HOME/.pub-cache/bin"
@@ -133,24 +134,24 @@ if [ ${#missing_pkgs[@]} -gt 0 ]; then
         for pkg in "${missing_pkgs[@]}"; do
           brew install "$pkg" || log "brew install $pkg failed"
         done
-      else
-        log "Skipping install: no supported package manager found"
-      fi
-      ;;
-    Darwin*)
-      if command -v brew >/dev/null 2>&1; then
-        for pkg in "${missing_pkgs[@]}"; do
-          brew install "$pkg" || log "brew install $pkg failed"
-        done
-      else
-        log "Skipping install: brew not found"
-      fi
-      ;;
-    *)
-      log "Skipping install: unsupported OS"
-      ;;
-  esac
-fi
+        else
+          log "Skipping install of ${missing_pkgs[*]}: no supported package manager found"
+        fi
+        ;;
+      Darwin*)
+        if command -v brew >/dev/null 2>&1; then
+          for pkg in "${missing_pkgs[@]}"; do
+            brew install "$pkg" || log "brew install $pkg failed"
+          done
+        else
+          log "Skipping install of ${missing_pkgs[*]}: brew not found"
+        fi
+        ;;
+      *)
+        log "Skipping install of ${missing_pkgs[*]}: unsupported OS"
+        ;;
+    esac
+  fi
 
 # Ensure a Chrome-compatible browser exists for Flutter web runs.
 if ! command -v google-chrome >/dev/null 2>&1 && \
