@@ -11,7 +11,7 @@ Flutter overlays and HUD widgets.
 
 ## Overlays
 
-- [MenuOverlay](menu_overlay.md) – start button and basic instructions.
+- [MenuOverlay](menu_overlay.md) – start button, high score and mute toggle.
 - [HudOverlay](hud_overlay.md) – shows score and health with mute and pause buttons.
 - [PauseOverlay](pause_overlay.md) – displayed when the game is paused with
   resume and menu buttons.

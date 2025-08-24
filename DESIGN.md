@@ -99,7 +99,7 @@ Milestone goals are detailed in [milestone-setup.md](milestone-setup.md),
 
 ## Game State Flow
 
-- The game starts in a menu overlay.
+- The game starts in a menu overlay that also exposes a mute toggle.
 - `SpaceGame` transitions to `playing` when the user taps start.
 - Players can pause the game from the HUD or with the Escape key,
   showing a pause overlay with resume and menu options.

@@ -149,6 +149,7 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
 - Player health and simple start/game‑over screens
 - Local high score stored on device (e.g., shared preferences)
 - Basic sound effects using `flame_audio` with mute toggle
+  available on menu and HUD
 - Keyboard controls for desktop playtests
 - Game works offline after the first load thanks to the service worker
 - Simple parallax starfield background
