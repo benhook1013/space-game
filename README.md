@@ -144,4 +144,22 @@ The project also includes an `fvm_config.json` for those who prefer to use
 [FVM](https://fvm.app/). In that case, run `fvm install` once and then use
 `fvm flutter`/`fvm dart` for subsequent commands.
 
+## 🌐 GitHub Pages Deployment
+
+Pushes to `main` and `develop` trigger the [deploy workflow](.github/workflows/deploy.yml),
+which builds the web release and publishes it to GitHub Pages.
+
+- Commits on `main` update the `gh-pages` branch and appear at
+  `https://<your-GitHub-username>.github.io/space-game/`.
+- Commits on `develop` publish to `gh-pages-staging` for preview.
+
+When building locally for GitHub Pages, run:
+
+```bash
+fvm flutter build web --release --base-href /space-game/
+```
+
+Serve the generated `build/web` directory with any static file server (for example
+`python3 -m http.server`) to preview the site before pushing.
+
 The project is released under the [MIT License](LICENSE).
