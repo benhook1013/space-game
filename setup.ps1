@@ -9,6 +9,10 @@ $repoRoot = Resolve-Path $PSScriptRoot
 $pubCacheBin = Join-Path $HOME '.pub-cache/bin'
 $flutterBin = Join-Path $repoRoot '.tooling/flutter/bin'
 
+# Use repo-local cache for FVM.
+$env:FVM_HOME = Join-Path $repoRoot '.fvm'
+New-Item -ItemType Directory -Path $env:FVM_HOME -Force | Out-Null
+
 if ($env:PATH -notlike "*${pubCacheBin}*") {
   $env:PATH = "$pubCacheBin;$env:PATH"
 }
@@ -31,17 +35,21 @@ if (-not (Get-Content $shellProfile | Select-String ([regex]::Escape($flutterBin
 
 if (-not (Get-Command fvm -ErrorAction SilentlyContinue)) {
   Write-Host "[setup] Installing FVM"
-  dart pub global activate fvm | Out-Null
+  dart pub global activate fvm
 }
 
 if ((Get-Command fvm -ErrorAction SilentlyContinue) -and (Test-Path (Join-Path $repoRoot 'fvm_config.json'))) {
   Write-Host "[setup] Running fvm install"
-  try { fvm install | Out-Null } catch { Write-Host "[setup] fvm install failed" }
+  try { fvm install } catch { Write-Host "[setup] fvm install failed" }
 }
 
 if (-not (Get-Command markdownlint -ErrorAction SilentlyContinue)) {
-  Write-Host "[setup] Installing markdownlint-cli"
-  try { npm install -g markdownlint-cli | Out-Null } catch { Write-Host "[setup] Failed to install markdownlint-cli" }
+  if (Get-Command npm -ErrorAction SilentlyContinue) {
+    Write-Host "[setup] Installing markdownlint-cli"
+    try { npm install -g markdownlint-cli } catch { Write-Host "[setup] Failed to install markdownlint-cli" }
+  } else {
+    Write-Host "[setup] npm not found; markdownlint will run via npx"
+  }
 }
 
 if (-not (Get-Command google-chrome -ErrorAction SilentlyContinue) -and \
@@ -56,19 +64,17 @@ if (-not (Get-Command google-chrome -ErrorAction SilentlyContinue) -and \
   }
 }
 
-if (-not (Get-Command google-chrome -ErrorAction SilentlyContinue)) {
-  if (Get-Command chromium -ErrorAction SilentlyContinue) {
-    $env:CHROME_EXECUTABLE = 'chromium'
-    if (-not (Get-Content $shellProfile | Select-String 'CHROME_EXECUTABLE' -Quiet)) {
-      Add-Content $shellProfile "`n" + '$env:CHROME_EXECUTABLE = "chromium"'
-      Write-Host "[setup] Set CHROME_EXECUTABLE=chromium in $shellProfile"
-    }
-  } elseif (Get-Command chrome -ErrorAction SilentlyContinue) {
-    $env:CHROME_EXECUTABLE = 'chrome'
-    if (-not (Get-Content $shellProfile | Select-String 'CHROME_EXECUTABLE' -Quiet)) {
-      Add-Content $shellProfile "`n" + '$env:CHROME_EXECUTABLE = "chrome"'
-      Write-Host "[setup] Set CHROME_EXECUTABLE=chrome in $shellProfile"
-    }
+$chromePath = $null
+if (Get-Command google-chrome -ErrorAction SilentlyContinue) { $chromePath = (Get-Command google-chrome).Source }
+elseif (Get-Command chrome -ErrorAction SilentlyContinue) { $chromePath = (Get-Command chrome).Source }
+elseif (Get-Command chromium -ErrorAction SilentlyContinue) { $chromePath = (Get-Command chromium).Source }
+elseif (Get-Command msedge -ErrorAction SilentlyContinue) { $chromePath = (Get-Command msedge).Source }
+
+if ($chromePath) {
+  $env:CHROME_EXECUTABLE = $chromePath
+  if (-not (Get-Content $shellProfile | Select-String 'CHROME_EXECUTABLE' -Quiet)) {
+    Add-Content $shellProfile "`n" + '$env:CHROME_EXECUTABLE = "' + $chromePath + '"'
+    Write-Host "[setup] Set CHROME_EXECUTABLE=$chromePath in $shellProfile"
   }
 }
 
