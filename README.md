@@ -72,7 +72,7 @@ lib/                    # Game source code
   log.dart              # Tiny log() wrapper around debugPrint
   services/             # Optional helpers (see lib/services/README.md)
 web/                    # PWA configuration (see web/README.md)
-test/                   # Automated tests (placeholder) (see test/README.md)
+test/                   # Automated tests for services and game logic (see test/README.md)
 assets_manifest.json    # List of bundled asset files for caching (see assets_manifest.md)
 .github/workflows/      # CI and deployment scripts
 PLAN.md                 # High-level plan and architecture
