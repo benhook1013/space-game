@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flame/components.dart';
+import 'package:flame/camera.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flutter/foundation.dart';
@@ -47,6 +48,9 @@ class SpaceGame extends FlameGame
 
   @override
   Future<void> onLoad() async {
+    camera.viewport = FixedResolutionViewport(
+      resolution: Vector2(Constants.logicalWidth, Constants.logicalHeight),
+    );
     add(StarfieldComponent());
     joystick = JoystickComponent(
       knob: CircleComponent(
@@ -63,6 +67,7 @@ class SpaceGame extends FlameGame
 
     player = PlayerComponent(joystick: joystick);
     add(player);
+    camera.follow(player);
 
     fireButton = HudButtonComponent(
       button: CircleComponent(

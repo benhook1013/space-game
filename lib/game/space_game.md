@@ -5,7 +5,8 @@ Main FlameGame subclass managing world setup, state transitions and the update l
 ## Responsibilities
 
 - Preload assets via the central registry before entering gameplay.
-- Configure the parallax background, camera and component spawners.
+- Configure the parallax background, set up a fixed-resolution camera that
+  follows the player, and register component spawners.
 - Spawn the player and register enemy or asteroid generators.
 - Maintain `GameState` values (`menu`, `playing`, `gameOver`) and toggle overlays.
 - Route joystick, button and keyboard input to the player component.
