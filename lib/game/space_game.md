@@ -23,5 +23,6 @@ Main FlameGame subclass managing world setup, state transitions and the update l
 - Exposes `ValueNotifier<int>`s for the current score, health and persisted high
   score so Flutter overlays can render values without touching the game loop.
 - Provide access to `AudioService` for playing sound effects and toggling mute.
+- Offers a method to reset the saved high score.
 
 See [../../PLAN.md](../../PLAN.md) for the roadmap.

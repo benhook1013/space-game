@@ -26,6 +26,11 @@ class StorageService {
     await _prefs.setInt(_highScoreKey, value);
   }
 
+  /// Clears the stored high score.
+  Future<void> resetHighScore() async {
+    await _prefs.remove(_highScoreKey);
+  }
+
   /// Whether audio is muted; defaults to `false` if unset.
   bool isMuted() => _prefs.getBool(_mutedKey) ?? false;
 

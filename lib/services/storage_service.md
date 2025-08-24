@@ -13,6 +13,6 @@ Handles local persistence using `shared_preferences`.
 
 Create the service with `await StorageService.create()` and call
 `getHighScore()`/`setHighScore()` or `isMuted()`/`setMuted()` to read or update
-values.
+values. Call `resetHighScore()` to clear the stored high score.
 
 See [../../PLAN.md](../../PLAN.md) for polish goals.
