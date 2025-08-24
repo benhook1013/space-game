@@ -38,10 +38,10 @@ add_path "$FLUTTER_BIN"
 log "Fetching pub dependencies"
 dart pub get || log "dart pub get failed"
 
-# Use repo-local cache for FVM (FVM_HOME is deprecated).
-unset FVM_HOME 2>/dev/null || true
-export FVM_CACHE_PATH="$REPO_ROOT/.fvm"
-mkdir -p "$FVM_CACHE_PATH"
+# Use repo-local cache for FVM.
+export FVM_HOME="$REPO_ROOT/.fvm"
+export FVM_CACHE_PATH="$REPO_ROOT/.fvm_cache"
+mkdir -p "$FVM_HOME" "$FVM_CACHE_PATH"
 
 # Install FVM if missing.
 if ! command -v fvm >/dev/null 2>&1; then
@@ -51,17 +51,29 @@ fi
 
 # Ensure the pinned Flutter SDK is available for FVM users.
 if command -v fvm >/dev/null 2>&1 && [ -f "$REPO_ROOT/fvm_config.json" ]; then
-  log "Running fvm install"
-  if ! fvm install; then
-    if command -v jq >/dev/null 2>&1; then
-      version="$(jq -r '.flutterSdkVersion' "$REPO_ROOT/fvm_config.json")"
+  if command -v jq >/dev/null 2>&1; then
+    version="$(jq -r '.flutterSdkVersion' "$REPO_ROOT/fvm_config.json")"
+  else
+    version="$(grep -oE '[0-9]+\.[0-9]+\.[0-9]+' "$REPO_ROOT/fvm_config.json" | head -n1)"
+  fi
+  version_dir="$FVM_HOME/versions/$version"
+  if [ -e "$version_dir" ]; then
+    if [ -d "$version_dir/.git" ]; then
+      log "FVM version $version already installed"
     else
-      version="$(grep -oE '[0-9]+\.[0-9]+\.[0-9]+' "$REPO_ROOT/fvm_config.json" | head -n1)"
+      log "Removing corrupt FVM version $version"
+      rm -rf "$version_dir"
+      log "Running fvm install"
+      fvm install || log "fvm install failed"
     fi
-    log "fvm install failed; removing existing version $version"
-    fvm remove "$version" || true
-    rm -rf "$FVM_CACHE_PATH/versions/$version"
-    fvm install || log "fvm install failed"
+  else
+    log "Running fvm install"
+    if ! fvm install; then
+      log "fvm install failed; removing existing version $version"
+      fvm remove "$version" || true
+      rm -rf "$version_dir"
+      fvm install || log "fvm install failed"
+    fi
   fi
 fi
 
@@ -100,6 +112,44 @@ if ! command -v markdownlint >/dev/null 2>&1; then
   else
     log "npm not found; markdownlint will run via npx if available"
   fi
+fi
+
+# Ensure ImageMagick and FFmpeg are available for asset tooling.
+missing_pkgs=()
+if ! command -v convert >/dev/null 2>&1; then
+  missing_pkgs+=(imagemagick)
+fi
+if ! command -v ffmpeg >/dev/null 2>&1; then
+  missing_pkgs+=(ffmpeg)
+fi
+if [ ${#missing_pkgs[@]} -gt 0 ]; then
+  log "Installing missing packages: ${missing_pkgs[*]}"
+  case "$(uname -s)" in
+    Linux*)
+      if command -v apt-get >/dev/null 2>&1; then
+        $SUDO apt-get update || true
+        $SUDO apt-get install -y "${missing_pkgs[@]}" || log "Failed to install ${missing_pkgs[*]}"
+      elif command -v brew >/dev/null 2>&1; then
+        for pkg in "${missing_pkgs[@]}"; do
+          brew install "$pkg" || log "brew install $pkg failed"
+        done
+      else
+        log "Skipping install: no supported package manager found"
+      fi
+      ;;
+    Darwin*)
+      if command -v brew >/dev/null 2>&1; then
+        for pkg in "${missing_pkgs[@]}"; do
+          brew install "$pkg" || log "brew install $pkg failed"
+        done
+      else
+        log "Skipping install: brew not found"
+      fi
+      ;;
+    *)
+      log "Skipping install: unsupported OS"
+      ;;
+  esac
 fi
 
 # Ensure a Chrome-compatible browser exists for Flutter web runs.
