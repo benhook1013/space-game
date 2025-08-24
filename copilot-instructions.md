@@ -3,10 +3,12 @@
 This file outlines expectations for automated pull request reviews.
 
 ## Repository Rules
+
 - **Read and follow [`AGENTS.md`](AGENTS.md)** for development guidelines, coding style, and project conventions.
 - Ensure assets and documentation respect the project structure described in `AGENTS.md`.
 
 ## Required Checks
+
 - Format code with `./scripts/dartw format` (or `scripts\\dartw.ps1 format` on
   Windows).
 - Run static analysis with `./scripts/dartw analyze` (or
@@ -15,6 +17,7 @@ This file outlines expectations for automated pull request reviews.
   `scripts\\flutterw.ps1 test` on Windows).
 
 ## Documentation & Testing
+
 - For manual test scenarios, see [`MANUAL_TESTING.md`](MANUAL_TESTING.md) and [`PLAYTEST_CHECKLIST.md`](PLAYTEST_CHECKLIST.md).
 - Consult [`PLAN.md`](PLAN.md), [`DESIGN.md`](DESIGN.md), and [`TASKS.md`](TASKS.md) when verifying that changes align with project goals.
 

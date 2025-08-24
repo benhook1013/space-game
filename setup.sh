@@ -34,9 +34,10 @@ add_path() {
 add_path "$PUB_CACHE_BIN"
 add_path "$FLUTTER_BIN"
 
-# Use repo-local cache for FVM.
-export FVM_HOME="$REPO_ROOT/.fvm"
-mkdir -p "$FVM_HOME"
+# Use repo-local cache for FVM (FVM_HOME is deprecated).
+unset FVM_HOME 2>/dev/null || true
+export FVM_CACHE_PATH="$REPO_ROOT/.fvm"
+mkdir -p "$FVM_CACHE_PATH"
 
 # Install FVM if missing.
 if ! command -v fvm >/dev/null 2>&1; then
@@ -47,7 +48,17 @@ fi
 # Ensure the pinned Flutter SDK is available for FVM users.
 if command -v fvm >/dev/null 2>&1 && [ -f "$REPO_ROOT/fvm_config.json" ]; then
   log "Running fvm install"
-  fvm install || log "fvm install failed"
+  if ! fvm install; then
+    if command -v jq >/dev/null 2>&1; then
+      version="$(jq -r '.flutterSdkVersion' "$REPO_ROOT/fvm_config.json")"
+    else
+      version="$(grep -oE '[0-9]+\.[0-9]+\.[0-9]+' "$REPO_ROOT/fvm_config.json" | head -n1)"
+    fi
+    log "fvm install failed; removing existing version $version"
+    fvm remove "$version" || true
+    rm -rf "$FVM_CACHE_PATH/versions/$version"
+    fvm install || log "fvm install failed"
+  fi
 fi
 
 # Install markdownlint CLI if npm exists and it's not already installed.
