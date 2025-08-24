@@ -38,7 +38,8 @@ dedicated server or NAT traversal.
 - Single endless level with quick restart
 - Player health displayed in the HUD and reduced on collision
 - Local high score stored on device using `shared_preferences`
-- Basic sound effects with a mute toggle accessible from menu, HUD and pause overlay
+- Basic sound effects with a mute toggle on menu, HUD, pause
+  and game over screens
 - Pause, resume or return to the menu via overlays (including game over screen)
 - Keyboard controls for desktop playtests
 - Game works offline after the first load

@@ -13,7 +13,7 @@ _Update this file whenever a player-facing feature is added or changed._
 - [ ] Collisions reduce player health; game over when health reaches zero
 - [ ] Game states transition: menu → playing → paused → game over → restart or menu
 - [ ] Parallax starfield renders behind gameplay
-- [ ] Sound effects play and can be muted from menu, HUD or pause overlay
+- [ ] Sound effects play and can be muted from menu, HUD, pause or game over overlay
 - [ ] Game can be paused, resumed and return to menu (including from game over)
 - [ ] Local high score persists between sessions
 - [ ] PWA installability and offline play after initial load

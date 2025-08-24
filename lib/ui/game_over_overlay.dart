@@ -39,14 +39,30 @@ class GameOverOverlay extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: game.startGame,
-            child: const Text('Restart'),
-          ),
-          const SizedBox(height: 10),
-          ElevatedButton(
-            onPressed: game.returnToMenu,
-            child: const Text('Menu'),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ElevatedButton(
+                onPressed: game.startGame,
+                child: const Text('Restart'),
+              ),
+              const SizedBox(width: 10),
+              ElevatedButton(
+                onPressed: game.returnToMenu,
+                child: const Text('Menu'),
+              ),
+              const SizedBox(width: 10),
+              ValueListenableBuilder<bool>(
+                valueListenable: game.audioService.muted,
+                builder: (context, muted, _) => IconButton(
+                  icon: Icon(
+                    muted ? Icons.volume_off : Icons.volume_up,
+                    color: Colors.white,
+                  ),
+                  onPressed: game.audioService.toggleMute,
+                ),
+              ),
+            ],
           ),
         ],
       ),

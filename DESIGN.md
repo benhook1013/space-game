@@ -104,7 +104,7 @@ Milestone goals are detailed in [milestone-setup.md](milestone-setup.md),
 - Players can pause the game from the HUD or with the Escape key,
   showing a pause overlay with resume, menu and mute buttons.
 - During play the HUD provides score, health, pause and mute controls.
-- On player death, a game over overlay appears with restart and menu buttons.
+- On player death, a game over overlay appears with restart, menu and mute buttons.
 - A `GameState` enum tracks the current phase.
 
 ## Input
