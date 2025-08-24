@@ -111,8 +111,16 @@ class SpaceGame extends FlameGame
     );
     add(fireButton);
 
-    _enemySpawnTimer = Timer(2, onTick: _spawnEnemy, repeat: true);
-    _asteroidSpawnTimer = Timer(3, onTick: _spawnAsteroid, repeat: true);
+    _enemySpawnTimer = Timer(
+      Constants.enemySpawnInterval,
+      onTick: _spawnEnemy,
+      repeat: true,
+    );
+    _asteroidSpawnTimer = Timer(
+      Constants.asteroidSpawnInterval,
+      onTick: _spawnAsteroid,
+      repeat: true,
+    );
 
     highScore.value = storageService.getHighScore();
 
