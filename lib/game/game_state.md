@@ -6,7 +6,7 @@ Enum describing high-level game phases.
 
 - `menu` – initial overlay before play.
 - `playing` – active gameplay loop.
-- `paused` – gameplay halted with a pause overlay.
+- `paused` – gameplay halted with a pause overlay to resume or return to menu.
 - `gameOver` – player died; show restart overlay.
 
 Used by `SpaceGame` to swap overlays and reset state.

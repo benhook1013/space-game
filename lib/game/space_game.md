@@ -12,7 +12,7 @@ Main FlameGame subclass managing world setup, state transitions and the update l
 - Maintain `GameState` values (`menu`, `playing`, `paused`, `gameOver`)
   and toggle overlays.
 - Route joystick, button and keyboard input to the player component.
-- Expose helpers to pause and resume the game loop.
+- Expose helpers to pause, resume or return to the menu.
 - Drive the update cycle while delegating work to components and services.
 - Persist and load the high score through `StorageService`.
 - Exposes `ValueNotifier<int>`s for the current score and persisted high score so

@@ -151,7 +151,7 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
 - Keyboard controls for desktop playtests
 - Game works offline after the first load thanks to the service worker
 - Simple parallax starfield background
-- Pause and resume gameplay via overlay
+- Pause, resume or return to the menu via overlay
 
 ## 🗓️ Milestones
 

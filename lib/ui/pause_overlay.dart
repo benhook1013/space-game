@@ -27,6 +27,11 @@ class PauseOverlay extends StatelessWidget {
             onPressed: game.resumeGame,
             child: const Text('Resume'),
           ),
+          const SizedBox(height: 10),
+          ElevatedButton(
+            onPressed: game.returnToMenu,
+            child: const Text('Menu'),
+          ),
         ],
       ),
     );

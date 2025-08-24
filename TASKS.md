@@ -53,4 +53,4 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
 
 ## Enhancements
 
-- [x] Pause/resume overlay toggled via HUD and Escape key.
+- [x] Pause overlay with resume and menu options, toggled via HUD and Escape key.

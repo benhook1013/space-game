@@ -118,8 +118,9 @@ class SpaceGame extends FlameGame
 
   /// Retrieves a bullet from the pool or creates a new one.
   BulletComponent acquireBullet(Vector2 position, Vector2 direction) {
-    final bullet =
-        _bulletPool.isNotEmpty ? _bulletPool.removeLast() : BulletComponent();
+    final bullet = _bulletPool.isNotEmpty
+        ? _bulletPool.removeLast()
+        : BulletComponent();
     bullet.reset(position, direction);
     return bullet;
   }
@@ -167,14 +168,27 @@ class SpaceGame extends FlameGame
     resumeEngine();
   }
 
+  /// Returns to the main menu without restarting the session.
+  void returnToMenu() {
+    state = GameState.menu;
+    overlays
+      ..remove(HudOverlay.id)
+      ..remove(PauseOverlay.id)
+      ..remove(GameOverOverlay.id)
+      ..add(MenuOverlay.id);
+    _enemySpawnTimer.stop();
+    _asteroidSpawnTimer.stop();
+    pauseEngine();
+  }
+
   /// Starts a new game session.
   void startGame() {
     state = GameState.playing;
     score.value = 0;
     children.whereType<EnemyComponent>().forEach((e) => e.removeFromParent());
     children.whereType<AsteroidComponent>().forEach(
-          (a) => a.removeFromParent(),
-        );
+      (a) => a.removeFromParent(),
+    );
     children.whereType<BulletComponent>().forEach((b) => b.removeFromParent());
     player.position = size / 2;
     overlays
