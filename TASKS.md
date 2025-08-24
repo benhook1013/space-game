@@ -47,6 +47,7 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
 
 - [x] Add unit tests for storage and audio services.
 - [x] Add unit tests verifying bullet, asteroid and enemy pooling reuse.
+- [x] Add unit test ensuring help overlay toggles pause state.
 
 ## Optimisation
 
