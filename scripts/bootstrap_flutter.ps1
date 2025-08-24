@@ -102,7 +102,7 @@ function Download-With-BITS { param([string]$Url,[string]$Dest)
       return
     } catch {
       $attempt++; if ($attempt -ge 3) { throw }
-      Say "BITS retry $attempt…"; Start-Sleep -Seconds (2*$attempt)
+      Say "BITS retry ${attempt}..."; Start-Sleep -Seconds (2*$attempt)
     }
   }
 }
