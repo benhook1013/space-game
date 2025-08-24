@@ -33,6 +33,13 @@ class HudOverlay extends StatelessWidget {
                     ),
                   ),
                   ValueListenableBuilder<int>(
+                    valueListenable: game.highScore,
+                    builder: (context, value, _) => Text(
+                      'High: $value',
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  ValueListenableBuilder<int>(
                     valueListenable: game.health,
                     builder: (context, value, _) => Text(
                       'Health: $value',
@@ -44,9 +51,15 @@ class HudOverlay extends StatelessWidget {
             ),
             Row(
               children: [
+                IconButton(
+                  // Mirrors the H keyboard shortcut.
+                  icon: const Icon(Icons.help_outline, color: Colors.white),
+                  onPressed: game.toggleHelp,
+                ),
                 ValueListenableBuilder<bool>(
                   valueListenable: game.audioService.muted,
                   builder: (context, muted, _) => IconButton(
+                    // Mirrors the `M` keyboard shortcut.
                     icon: Icon(
                       muted ? Icons.volume_off : Icons.volume_up,
                       color: Colors.white,
@@ -55,6 +68,7 @@ class HudOverlay extends StatelessWidget {
                   ),
                 ),
                 IconButton(
+                  // Mirrors the Escape and P keyboard shortcuts.
                   icon: const Icon(Icons.pause, color: Colors.white),
                   onPressed: game.pauseGame,
                 ),

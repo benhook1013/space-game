@@ -76,7 +76,7 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
 - Commit small, frequent changes with messages like `feat:`, `fix:`, `docs:`
 - Track to‑dos in a simple `TASKS.md` to keep solo development focused
 - Run `fvm dart format .` and `fvm dart analyze` before committing
-- After editing docs, run `npx markdownlint '**/*.md'` to keep Markdown tidy
+- After editing docs, run `npx markdownlint-cli '**/*.md'` to keep Markdown tidy
 
 ## 📂 Structure & Docs
 
@@ -146,11 +146,15 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
 - One enemy type with collision and random spawns
 - Asteroids to mine for score; destroying enemies also grants points
 - Single endless level without progression for now
-- Player health and simple start/game‑over screens
+- Player health and high score shown in the HUD with simple start/game‑over screens
 - Local high score stored on device (e.g., shared preferences)
-- Basic sound effects using `flame_audio` with mute toggle
+- Basic sound effects using `flame_audio` with mute toggle (button or `M` key)
   available on menu, HUD, pause and game over overlays
-- Keyboard controls for desktop playtests
+- Keyboard controls for desktop playtests (`WASD`/arrow keys to move, `Space` to
+  shoot, `Escape` or `P` to pause or resume, `M` to mute, `Enter` starts or
+  restarts from the menu or game over, `R` restarts at any time, `Q` returns to
+  the menu from pause or game over, `Esc` also returns to the menu from game over,
+  `H` shows a help overlay that `Esc` also closes)
 - Game works offline after the first load thanks to the service worker
 - Simple parallax starfield background
 - Pause, resume or return to the menu via overlay
@@ -202,7 +206,7 @@ in [TASKS.md](TASKS.md).
 
 - Format with `fvm dart format .`
 - Analyze with `fvm dart analyze` (guided by `.analysis_options.yaml`)
-- Lint docs with `npx markdownlint '**/*.md'`
+- Lint docs with `npx markdownlint-cli '**/*.md'`
 - Once tests exist, run `fvm flutter test`
 - Use `flutter_test` for widget tests and `flame_test` for component/system tests
   once tests are added

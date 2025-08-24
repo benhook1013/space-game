@@ -10,11 +10,17 @@ _Update this file whenever a player-facing feature is added or changed._
 - [ ] Asteroids spawn randomly and drift across the screen
 - [ ] Shooting an asteroid destroys it and increases the on-screen score
 - [ ] Score resets when restarting the game
+- [ ] HUD shows current and high scores during play
 - [ ] Collisions reduce player health; game over when health reaches zero
 - [ ] Game states transition: menu → playing → paused → game over → restart or menu
+- [ ] Enter starts or restarts from the menu or game over; `R` restarts at any time
+- [ ] Escape or `P` key pauses or resumes the game; `Q` returns to the menu from
+      pause or game over, `Esc` also returns to the menu from game over
 - [ ] Parallax starfield renders behind gameplay
-- [ ] Sound effects play and can be muted from menu, HUD, pause or game over overlay
+- [ ] Sound effects play and can be muted from menu, HUD, pause or game over overlay,
+      or via the `M` key
 - [ ] Game can be paused, resumed and return to menu (including from game over)
+- [ ] Pressing `H` shows a help overlay; `Esc` or `H` closes it and resumes play
 - [ ] Local high score persists between sessions
 - [ ] PWA installability and offline play after initial load
 - [ ] Performance acceptable on target devices

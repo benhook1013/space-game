@@ -7,6 +7,7 @@ import 'ui/game_over_overlay.dart';
 import 'ui/hud_overlay.dart';
 import 'ui/menu_overlay.dart';
 import 'ui/pause_overlay.dart';
+import 'ui/help_overlay.dart';
 import 'services/storage_service.dart';
 import 'services/audio_service.dart';
 
@@ -28,6 +29,7 @@ Future<void> main() async {
               PauseOverlay(game: game),
           GameOverOverlay.id: (context, SpaceGame game) =>
               GameOverOverlay(game: game),
+          HelpOverlay.id: (context, SpaceGame game) => HelpOverlay(game: game),
         },
       ),
     ),

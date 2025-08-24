@@ -23,6 +23,7 @@ import '../ui/game_over_overlay.dart';
 import '../ui/hud_overlay.dart';
 import '../ui/menu_overlay.dart';
 import '../ui/pause_overlay.dart';
+import '../ui/help_overlay.dart';
 import 'game_state.dart';
 
 /// Root Flame game handling the core loop.
@@ -57,6 +58,9 @@ class SpaceGame extends FlameGame
 
   /// Pool of reusable bullets.
   final List<BulletComponent> _bulletPool = [];
+
+  /// Tracks whether the game was playing when the help overlay opened.
+  bool _helpWasPlaying = false;
 
   @override
   Future<void> onLoad() async {
@@ -123,9 +127,8 @@ class SpaceGame extends FlameGame
 
   /// Retrieves a bullet from the pool or creates a new one.
   BulletComponent acquireBullet(Vector2 position, Vector2 direction) {
-    final bullet = _bulletPool.isNotEmpty
-        ? _bulletPool.removeLast()
-        : BulletComponent();
+    final bullet =
+        _bulletPool.isNotEmpty ? _bulletPool.removeLast() : BulletComponent();
     bullet.reset(position, direction);
     return bullet;
   }
@@ -133,6 +136,22 @@ class SpaceGame extends FlameGame
   /// Returns [bullet] to the pool for reuse.
   void releaseBullet(BulletComponent bullet) {
     _bulletPool.add(bullet);
+  }
+
+  /// Toggles the help overlay and pauses/resumes if entering from gameplay.
+  void toggleHelp() {
+    if (overlays.isActive(HelpOverlay.id)) {
+      overlays.remove(HelpOverlay.id);
+      if (_helpWasPlaying) {
+        resumeEngine();
+      }
+    } else {
+      _helpWasPlaying = state == GameState.playing;
+      overlays.add(HelpOverlay.id);
+      if (_helpWasPlaying) {
+        pauseEngine();
+      }
+    }
   }
 
   /// Handles player damage and checks for game over.
@@ -204,8 +223,8 @@ class SpaceGame extends FlameGame
     health.value = Constants.playerMaxHealth;
     children.whereType<EnemyComponent>().forEach((e) => e.removeFromParent());
     children.whereType<AsteroidComponent>().forEach(
-      (a) => a.removeFromParent(),
-    );
+          (a) => a.removeFromParent(),
+        );
     children.whereType<BulletComponent>().forEach((b) => b.removeFromParent());
     player.position = size / 2;
     overlays
@@ -241,13 +260,53 @@ class SpaceGame extends FlameGame
     KeyEvent event,
     Set<LogicalKeyboardKey> keysPressed,
   ) {
-    if (event is KeyDownEvent &&
-        event.logicalKey == LogicalKeyboardKey.escape) {
-      if (state == GameState.playing) {
-        pauseGame();
+    if (event is KeyDownEvent) {
+      if (overlays.isActive(HelpOverlay.id) &&
+          (event.logicalKey == LogicalKeyboardKey.escape ||
+              event.logicalKey == LogicalKeyboardKey.keyH)) {
+        toggleHelp();
         return KeyEventResult.handled;
-      } else if (state == GameState.paused) {
-        resumeGame();
+      } else if (event.logicalKey == LogicalKeyboardKey.escape) {
+        if (state == GameState.playing) {
+          pauseGame();
+          return KeyEventResult.handled;
+        } else if (state == GameState.paused) {
+          resumeGame();
+          return KeyEventResult.handled;
+        } else if (state == GameState.gameOver) {
+          returnToMenu();
+          return KeyEventResult.handled;
+        }
+      } else if (event.logicalKey == LogicalKeyboardKey.keyP) {
+        if (state == GameState.playing) {
+          pauseGame();
+          return KeyEventResult.handled;
+        } else if (state == GameState.paused) {
+          resumeGame();
+          return KeyEventResult.handled;
+        }
+      } else if (event.logicalKey == LogicalKeyboardKey.keyM) {
+        audioService.toggleMute();
+        return KeyEventResult.handled;
+      } else if (event.logicalKey == LogicalKeyboardKey.enter) {
+        if (state == GameState.menu || state == GameState.gameOver) {
+          startGame();
+          return KeyEventResult.handled;
+        }
+      } else if (event.logicalKey == LogicalKeyboardKey.keyR) {
+        if (state == GameState.gameOver ||
+            state == GameState.playing ||
+            state == GameState.paused) {
+          startGame();
+          return KeyEventResult.handled;
+        }
+      } else if (event.logicalKey == LogicalKeyboardKey.keyQ) {
+        if (state == GameState.paused || state == GameState.gameOver) {
+          returnToMenu();
+          return KeyEventResult.handled;
+        }
+      } else if (event.logicalKey == LogicalKeyboardKey.keyH) {
+        toggleHelp();
         return KeyEventResult.handled;
       }
     }

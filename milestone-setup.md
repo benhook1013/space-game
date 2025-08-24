@@ -26,4 +26,4 @@ See [PLAN.md](PLAN.md) for the broader roadmap and
 
 - Use `fvm flutter` and `fvm dart` for all commands.
 - Run `fvm dart format .` and `fvm dart analyze` before committing.
-- After editing docs, run `npx markdownlint '**/*.md'`.
+- After editing docs, run `npx markdownlint-cli '**/*.md'`.

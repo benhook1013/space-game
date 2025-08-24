@@ -41,6 +41,12 @@ class MenuOverlay extends StatelessWidget {
                 child: const Text('Start'),
               ),
               const SizedBox(width: 10),
+              ElevatedButton(
+                // Mirrors the H keyboard shortcut.
+                onPressed: game.toggleHelp,
+                child: const Text('Help'),
+              ),
+              const SizedBox(width: 10),
               ValueListenableBuilder<bool>(
                 valueListenable: game.audioService.muted,
                 builder: (context, muted, _) => IconButton(
