@@ -99,7 +99,7 @@ Milestone goals are detailed in [milestone-setup.md](milestone-setup.md),
 - `SpaceGame` transitions to `playing` when the user taps start.
 - Players can pause the game from the HUD or with the Escape key,
   showing a pause overlay with resume and menu options.
-- On player death, a game over overlay appears with a restart button.
+- On player death, a game over overlay appears with restart and menu buttons.
 - A `GameState` enum tracks the current phase.
 
 ## Input

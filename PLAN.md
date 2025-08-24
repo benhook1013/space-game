@@ -116,7 +116,8 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
 - On‑screen joystick and shoot button; WASD + Space mirror touch controls
 - Use Flame's built-in `JoystickComponent` and `ButtonComponent` for touch input
 - Keyboard support comes from `KeyboardListenerComponent`
-- States: **menu → playing → paused → game over** with quick restart
+- States: **menu → playing → paused → game over** with quick restart or
+  return to menu
 - Use a `GameState` enum to manage transitions
 - Centralize asset paths in an `Assets` helper that preloads sprites, audio and
   fonts so gameplay code never references file paths directly

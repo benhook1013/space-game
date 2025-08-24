@@ -38,7 +38,7 @@ dedicated server or NAT traversal.
 - Single endless level with quick restart
 - Local high score stored on device using `shared_preferences`
 - Basic sound effects with a mute toggle
-- Pause, resume or return to the menu via overlay
+- Pause, resume or return to the menu via overlays (including game over screen)
 - Keyboard controls for desktop playtests
 - Game works offline after the first load
 - Parallax starfield background
