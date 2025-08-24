@@ -9,10 +9,13 @@ Flutter overlays and HUD widgets.
   callbacks exposed by `SpaceGame`.
 - Keep rendering separate from gameplay logic to simplify testing.
 
-## Planned Overlays
+## Overlays
 
-- [MenuOverlay](menu_overlay.md) – start button and basic instructions.
-- [HudOverlay](hud_overlay.md) – shows score, health and a mute toggle.
-- [GameOverOverlay](game_over_overlay.md) – displays final score with a restart option.
+- [MenuOverlay](menu_overlay.md) – start button, high score and mute toggle.
+- [HudOverlay](hud_overlay.md) – shows score and health with mute and pause buttons.
+- [PauseOverlay](pause_overlay.md) – displayed when the game is paused with
+  resume, menu and mute buttons.
+- [GameOverOverlay](game_over_overlay.md) – shows final and high scores with
+  restart, menu and mute options.
 
 See [../../PLAN.md](../../PLAN.md) for the broader roadmap.

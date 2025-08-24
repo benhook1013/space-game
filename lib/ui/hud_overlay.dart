@@ -20,25 +20,45 @@ class HudOverlay extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            ValueListenableBuilder<int>(
-              valueListenable: game.score,
-              builder: (context, value, _) => Padding(
-                padding: const EdgeInsets.only(top: 8),
-                child: Text(
-                  'Score: $value',
-                  style: const TextStyle(color: Colors.white),
-                ),
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ValueListenableBuilder<int>(
+                    valueListenable: game.score,
+                    builder: (context, value, _) => Text(
+                      'Score: $value',
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  ValueListenableBuilder<int>(
+                    valueListenable: game.health,
+                    builder: (context, value, _) => Text(
+                      'Health: $value',
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
               ),
             ),
-            ValueListenableBuilder<bool>(
-              valueListenable: game.audioService.muted,
-              builder: (context, muted, _) => IconButton(
-                icon: Icon(
-                  muted ? Icons.volume_off : Icons.volume_up,
-                  color: Colors.white,
+            Row(
+              children: [
+                ValueListenableBuilder<bool>(
+                  valueListenable: game.audioService.muted,
+                  builder: (context, muted, _) => IconButton(
+                    icon: Icon(
+                      muted ? Icons.volume_off : Icons.volume_up,
+                      color: Colors.white,
+                    ),
+                    onPressed: game.audioService.toggleMute,
+                  ),
                 ),
-                onPressed: game.audioService.toggleMute,
-              ),
+                IconButton(
+                  icon: const Icon(Icons.pause, color: Colors.white),
+                  onPressed: game.pauseGame,
+                ),
+              ],
             ),
           ],
         ),

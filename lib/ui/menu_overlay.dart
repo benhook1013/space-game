@@ -33,7 +33,26 @@ class MenuOverlay extends StatelessWidget {
                 : const SizedBox.shrink(),
           ),
           const SizedBox(height: 20),
-          ElevatedButton(onPressed: game.startGame, child: const Text('Start')),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ElevatedButton(
+                onPressed: game.startGame,
+                child: const Text('Start'),
+              ),
+              const SizedBox(width: 10),
+              ValueListenableBuilder<bool>(
+                valueListenable: game.audioService.muted,
+                builder: (context, muted, _) => IconButton(
+                  icon: Icon(
+                    muted ? Icons.volume_off : Icons.volume_up,
+                    color: Colors.white,
+                  ),
+                  onPressed: game.audioService.toggleMute,
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );

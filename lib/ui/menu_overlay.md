@@ -8,5 +8,6 @@ Flutter widget shown before gameplay starts.
 - Start button signals `SpaceGame` to enter the `playing` state.
 - Accesses the game via callbacks or a `ValueNotifier`.
 - Visible when `GameState.menu` is active.
+- Audio mute toggle available before starting the game.
 
 See [../../PLAN.md](../../PLAN.md) for UI goals.

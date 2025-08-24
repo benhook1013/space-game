@@ -4,9 +4,8 @@ Heads-up display shown during play.
 
 ## Features
 
-- Shows current score using a `ValueNotifier` exposed by `SpaceGame`.
-- Provides a mute button bound to `AudioService`.
-- Player health will be added in a later milestone.
+- Shows current score and health using `ValueNotifier`s from `SpaceGame`.
+- Provides mute and pause buttons bound to `AudioService` and `SpaceGame`.
 - Visible only in the `playing` state.
 
 See [../../PLAN.md](../../PLAN.md) for UI goals.

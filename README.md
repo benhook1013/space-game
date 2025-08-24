@@ -35,9 +35,12 @@ dedicated server or NAT traversal.
 - Touch/joystick movement and shooting
 - One enemy type with collision and random spawns
 - Asteroids to mine for score
-- Single endless level with player health and quick restart
+- Single endless level with quick restart
+- Player health displayed in the HUD and reduced on collision
 - Local high score stored on device using `shared_preferences`
-- Basic sound effects with a mute toggle
+- Basic sound effects with a mute toggle on menu, HUD, pause
+  and game over screens
+- Pause, resume or return to the menu via overlays (including game over screen)
 - Keyboard controls for desktop playtests
 - Game works offline after the first load
 - Parallax starfield background

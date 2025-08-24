@@ -116,7 +116,8 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
 - On‑screen joystick and shoot button; WASD + Space mirror touch controls
 - Use Flame's built-in `JoystickComponent` and `ButtonComponent` for touch input
 - Keyboard support comes from `KeyboardListenerComponent`
-- States: **menu → playing → game over** with quick restart
+- States: **menu → playing → paused → game over** with quick restart or
+  return to menu
 - Use a `GameState` enum to manage transitions
 - Centralize asset paths in an `Assets` helper that preloads sprites, audio and
   fonts so gameplay code never references file paths directly
@@ -148,9 +149,11 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
 - Player health and simple start/game‑over screens
 - Local high score stored on device (e.g., shared preferences)
 - Basic sound effects using `flame_audio` with mute toggle
+  available on menu, HUD, pause and game over overlays
 - Keyboard controls for desktop playtests
 - Game works offline after the first load thanks to the service worker
 - Simple parallax starfield background
+- Pause, resume or return to the menu via overlay
 
 ## 🗓️ Milestones
 
