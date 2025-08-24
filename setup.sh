@@ -34,6 +34,10 @@ add_path() {
 add_path "$PUB_CACHE_BIN"
 add_path "$FLUTTER_BIN"
 
+# Ensure Dart/Flutter dependencies are fetched.
+log "Fetching pub dependencies"
+dart pub get || log "dart pub get failed"
+
 # Use repo-local cache for FVM (FVM_HOME is deprecated).
 unset FVM_HOME 2>/dev/null || true
 export FVM_CACHE_PATH="$REPO_ROOT/.fvm"

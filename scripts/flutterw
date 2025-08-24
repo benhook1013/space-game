@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
-# Ensure Flutter exists and PATH is set for this process
+# Preserve original args before sourcing bootstrap script, which consumes positional params.
+args=("$@")
+set --
+# Ensure Flutter exists and PATH is set for this process without seeing user args.
 source "$(dirname "$0")/bootstrap_flutter.sh"
+# Restore original args for the actual flutter invocation.
+set -- "${args[@]}"
 echo "[flutterw] flutter $@"
 exec ".tooling/flutter/bin/flutter" "$@"

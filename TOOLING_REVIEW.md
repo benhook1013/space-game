@@ -11,11 +11,11 @@
 | `./scripts/flutterw run -d web-server` | Manual testing guide suggests web-server target | ⚠️ Launches but warns project isn’t configured for web |
 | `./scripts/flutterw build web --release` | Web README describes release build | ❌ Fails: missing `index.html` |
 | `fvm flutter doctor` / `fvm dart format` | Plan/TASKS show FVM usage | ❌ `fvm` command not found |
-| `npx markdownlint '**/*.md'` | Plan recommends markdownlint after doc edits | ❌ npm cannot determine executable to run |
+| `./scripts/markdownlint.sh '**/*.md'` | Plan recommends markdownlint after doc edits | ✅ Uses local install or `npx --yes` |
 
 ## Notes
 
 - Install FVM or remove FVM-specific instructions if not required.
 - Add web support (`flutter create .`) and `web/index.html` to enable builds/run targets.
 - Provide Chrome or Edge in the environment if Chrome device debugging is desired.
-- Include markdownlint (npm) in setup scripts or adjust documentation.
+- Use `scripts/markdownlint.sh` to lint docs without interactive prompts.

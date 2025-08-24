@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
+# Preserve original args before sourcing bootstrap script to avoid option parsing.
+args=("$@")
+set --
 source "$(dirname "$0")/bootstrap_flutter.sh"
+set -- "${args[@]}"
 if [[ "${1-}" == "format" && $# -eq 1 ]]; then
   set -- "$1" .
 fi
