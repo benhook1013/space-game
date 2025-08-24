@@ -43,13 +43,21 @@ class GameOverOverlay extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               ElevatedButton(
+                // Mirrors the Enter and R keyboard shortcuts.
                 onPressed: game.startGame,
                 child: const Text('Restart'),
               ),
               const SizedBox(width: 10),
               ElevatedButton(
+                // Mirrors the Q and Escape keyboard shortcuts.
                 onPressed: game.returnToMenu,
                 child: const Text('Menu'),
+              ),
+              const SizedBox(width: 10),
+              ElevatedButton(
+                // Mirrors the H keyboard shortcut.
+                onPressed: game.toggleHelp,
+                child: const Text('Help'),
               ),
               const SizedBox(width: 10),
               ValueListenableBuilder<bool>(
@@ -59,6 +67,7 @@ class GameOverOverlay extends StatelessWidget {
                     muted ? Icons.volume_off : Icons.volume_up,
                     color: Colors.white,
                   ),
+                  // Mirrors the M keyboard shortcut.
                   onPressed: game.audioService.toggleMute,
                 ),
               ),

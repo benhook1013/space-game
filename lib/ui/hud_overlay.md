@@ -4,8 +4,12 @@ Heads-up display shown during play.
 
 ## Features
 
-- Shows current score and health using `ValueNotifier`s from `SpaceGame`.
-- Provides mute and pause buttons bound to `AudioService` and `SpaceGame`.
+- Shows current score, high score and health using `ValueNotifier`s from `SpaceGame`.
+- Provides help, mute and pause buttons bound to `SpaceGame` and `AudioService`.
+- `H` opens the help overlay showing controls; `Esc` closes it.
+- `M` key also toggles audio mute.
+- `Escape` or `P` keys also pause or resume.
+- Press `R` to restart the current run without using on-screen buttons.
 - Visible only in the `playing` state.
 
 See [../../PLAN.md](../../PLAN.md) for UI goals.

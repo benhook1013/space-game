@@ -42,7 +42,7 @@ Milestone goals are detailed in [milestone-setup.md](milestone-setup.md),
 - Keep commits small and focused on `main`; branch only for larger features.
 - Before committing, format and analyse code with `fvm dart format .` and
   `fvm dart analyze`.
-- Lint Markdown files with `npx markdownlint '**/*.md'`.
+- Lint Markdown files with `npx markdownlint-cli '**/*.md'`.
 - See [PLAN.md](PLAN.md) for the full development loop.
 
 ## Entry Point
@@ -101,16 +101,20 @@ Milestone goals are detailed in [milestone-setup.md](milestone-setup.md),
 
 - The game starts in a menu overlay that also exposes a mute toggle.
 - `SpaceGame` transitions to `playing` when the user taps start.
-- Players can pause the game from the HUD or with the Escape key,
+- Players can pause the game from the HUD or with the Escape or `P` key,
   showing a pause overlay with resume, menu and mute buttons.
-- During play the HUD provides score, health, pause and mute controls.
+- During play the HUD provides score, high score, health, pause and mute controls.
 - On player death, a game over overlay appears with restart, menu and mute buttons.
+- A help overlay lists controls and can be toggled with the `H` key, pausing the
+  game when opened mid-run. `Esc` also closes it without triggering pause.
 - A `GameState` enum tracks the current phase.
 
 ## Input
 
 - On-screen joystick and fire button mirror keyboard controls (WASD + Space).
 - Input handling stays isolated from rendering for easier testing.
+- `H` toggles a help overlay for quick reference, and `Esc` closes it when
+  visible.
 
 ## Rendering & Camera
 

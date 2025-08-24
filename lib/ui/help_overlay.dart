@@ -1,0 +1,50 @@
+import 'package:flutter/material.dart';
+
+import '../game/space_game.dart';
+
+/// Overlay listing available controls.
+class HelpOverlay extends StatelessWidget {
+  const HelpOverlay({super.key, required this.game});
+
+  /// Reference to the running game.
+  final SpaceGame game;
+
+  /// Overlay identifier used by [GameWidget].
+  static const String id = 'helpOverlay';
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.black54,
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              'Controls',
+              style: TextStyle(fontSize: 24, color: Colors.white),
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              'Move: WASD / Arrow keys\n'
+              'Shoot: Space\n'
+              'Mute: M\n'
+              'Pause/Resume: Esc or P\n'
+              'Start/Restart: Enter\n'
+              'Restart anytime: R\n'
+              'Menu: Q (pause/game over), Esc (game over)\n'
+              'Toggle Help: H or Esc',
+              style: TextStyle(color: Colors.white),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: game.toggleHelp,
+              child: const Text('Close'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

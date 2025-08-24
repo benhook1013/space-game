@@ -53,7 +53,17 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
 
 ## Enhancements
 
-- [x] Pause overlay with resume and menu options, toggled via HUD and Escape key.
+- [x] Pause overlay with resume and menu options, toggled via HUD and Escape or
+      `P` key.
 - [x] Game over overlay offers menu option to return to the title screen.
 - [x] Player health tracked and shown in HUD; game over when depleted.
 - [x] Mute toggle available on menu, HUD, pause and game over overlays.
+- [x] Keyboard shortcut `M` toggles mute.
+- [x] Keyboard shortcut `P` pauses or resumes the game.
+- [x] Keyboard shortcuts: `Enter` starts or restarts from the menu or game over;
+      `R` restarts during play, pause or game over.
+- [x] Keyboard shortcut `Q` returns to the menu from pause or game over.
+- [x] Keyboard shortcut `Esc` returns to the menu from game over.
+- [x] Help overlay lists controls and can be toggled with a button or the `H` key;
+      `Esc` also closes it.
+- [x] HUD displays current and high scores alongside health.
