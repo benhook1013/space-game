@@ -50,3 +50,7 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
 ## Optimisation
 
 - [x] Add bullet object pool to reduce allocations.
+
+## Enhancements
+
+- [x] Pause/resume overlay toggled via HUD and Escape key.

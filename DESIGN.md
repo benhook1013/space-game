@@ -63,7 +63,7 @@ Milestone goals are detailed in [milestone-setup.md](milestone-setup.md),
   and scoring. Hooks for resource mining, inventory, networking and save/load
   will slot in later milestones.
 - Flutter overlays handle menus and the HUD so UI stays outside the game loop.
-- A `GameState` enum tracks **menu → playing → game over** transitions.
+- A `GameState` enum tracks **menu → playing → paused → game over** transitions.
 - Asset paths live in a central `assets.dart` registry and tunable numbers live
   in `constants.dart` to avoid magic strings or numbers.
 
@@ -97,6 +97,8 @@ Milestone goals are detailed in [milestone-setup.md](milestone-setup.md),
 
 - The game starts in a menu overlay.
 - `SpaceGame` transitions to `playing` when the user taps start.
+- Players can pause the game from the HUD or with the Escape key,
+  showing a pause overlay.
 - On player death, a game over overlay appears with a restart button.
 - A `GameState` enum tracks the current phase.
 

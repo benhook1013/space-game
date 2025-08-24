@@ -7,6 +7,9 @@ import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart' show EdgeInsets;
+import 'package:flutter/services.dart'
+    show KeyDownEvent, KeyEvent, LogicalKeyboardKey;
+import 'package:flutter/widgets.dart' show KeyEventResult;
 
 import '../components/asteroid.dart';
 import '../components/enemy.dart';
@@ -19,11 +22,12 @@ import '../services/audio_service.dart';
 import '../ui/game_over_overlay.dart';
 import '../ui/hud_overlay.dart';
 import '../ui/menu_overlay.dart';
+import '../ui/pause_overlay.dart';
 import 'game_state.dart';
 
 /// Root Flame game handling the core loop.
 class SpaceGame extends FlameGame
-    with HasKeyboardHandlerComponents, HasCollisionDetection {
+    with HasKeyboardHandlerComponents, HasCollisionDetection, KeyboardEvents {
   SpaceGame({required this.storageService, required this.audioService});
 
   /// Handles persistence for the high score.
@@ -114,9 +118,8 @@ class SpaceGame extends FlameGame
 
   /// Retrieves a bullet from the pool or creates a new one.
   BulletComponent acquireBullet(Vector2 position, Vector2 direction) {
-    final bullet = _bulletPool.isNotEmpty
-        ? _bulletPool.removeLast()
-        : BulletComponent();
+    final bullet =
+        _bulletPool.isNotEmpty ? _bulletPool.removeLast() : BulletComponent();
     bullet.reset(position, direction);
     return bullet;
   }
@@ -140,19 +143,44 @@ class SpaceGame extends FlameGame
     }
   }
 
+  /// Pauses the game and shows the pause overlay.
+  void pauseGame() {
+    if (state != GameState.playing) {
+      return;
+    }
+    state = GameState.paused;
+    overlays
+      ..remove(HudOverlay.id)
+      ..add(PauseOverlay.id);
+    pauseEngine();
+  }
+
+  /// Resumes the game from a paused state.
+  void resumeGame() {
+    if (state != GameState.paused) {
+      return;
+    }
+    state = GameState.playing;
+    overlays
+      ..remove(PauseOverlay.id)
+      ..add(HudOverlay.id);
+    resumeEngine();
+  }
+
   /// Starts a new game session.
   void startGame() {
     state = GameState.playing;
     score.value = 0;
     children.whereType<EnemyComponent>().forEach((e) => e.removeFromParent());
     children.whereType<AsteroidComponent>().forEach(
-      (a) => a.removeFromParent(),
-    );
+          (a) => a.removeFromParent(),
+        );
     children.whereType<BulletComponent>().forEach((b) => b.removeFromParent());
     player.position = size / 2;
     overlays
       ..remove(MenuOverlay.id)
       ..remove(GameOverOverlay.id)
+      ..remove(PauseOverlay.id)
       ..add(HudOverlay.id);
     _enemySpawnTimer
       ..stop()
@@ -172,7 +200,26 @@ class SpaceGame extends FlameGame
     }
     overlays
       ..remove(HudOverlay.id)
+      ..remove(PauseOverlay.id)
       ..add(GameOverOverlay.id);
     pauseEngine();
+  }
+
+  @override
+  KeyEventResult onKeyEvent(
+    KeyEvent event,
+    Set<LogicalKeyboardKey> keysPressed,
+  ) {
+    if (event is KeyDownEvent &&
+        event.logicalKey == LogicalKeyboardKey.escape) {
+      if (state == GameState.playing) {
+        pauseGame();
+        return KeyEventResult.handled;
+      } else if (state == GameState.paused) {
+        resumeGame();
+        return KeyEventResult.handled;
+      }
+    }
+    return super.onKeyEvent(event, keysPressed);
   }
 }

@@ -5,7 +5,7 @@ Heads-up display shown during play.
 ## Features
 
 - Shows current score using a `ValueNotifier` exposed by `SpaceGame`.
-- Provides a mute button bound to `AudioService`.
+- Provides mute and pause buttons bound to `AudioService` and `SpaceGame`.
 - Player health will be added in a later milestone.
 - Visible only in the `playing` state.
 

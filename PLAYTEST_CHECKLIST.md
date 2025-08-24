@@ -10,9 +10,10 @@ _Update this file whenever a player-facing feature is added or changed._
 - [ ] Asteroids spawn randomly and drift across the screen
 - [ ] Shooting an asteroid destroys it and increases the on-screen score
 - [ ] Score resets when restarting the game
-- [ ] Game states transition: menu → playing → game over → restart
+- [ ] Game states transition: menu → playing → paused → game over → restart
 - [ ] Parallax starfield renders behind gameplay
 - [ ] Sound effects play and can be muted
+- [ ] Game can be paused and resumed
 - [ ] Local high score persists between sessions
 - [ ] PWA installability and offline play after initial load
 - [ ] Performance acceptable on target devices

@@ -35,9 +35,10 @@ dedicated server or NAT traversal.
 - Touch/joystick movement and shooting
 - One enemy type with collision and random spawns
 - Asteroids to mine for score
-- Single endless level with player health and quick restart
+- Single endless level with quick restart
 - Local high score stored on device using `shared_preferences`
 - Basic sound effects with a mute toggle
+- Pause and resume gameplay via overlay
 - Keyboard controls for desktop playtests
 - Game works offline after the first load
 - Parallax starfield background
@@ -122,6 +123,7 @@ wrapper. Example:
 ```powershell
 $env:FLUTTER_VERSION='3.32.8'; scripts\bootstrap_flutter.ps1 -Force
 ```
+
 Use `-Force` to re-download the SDK or `-Quiet` to suppress progress messages.
 
 Examples:

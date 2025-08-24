@@ -30,15 +30,23 @@ class HudOverlay extends StatelessWidget {
                 ),
               ),
             ),
-            ValueListenableBuilder<bool>(
-              valueListenable: game.audioService.muted,
-              builder: (context, muted, _) => IconButton(
-                icon: Icon(
-                  muted ? Icons.volume_off : Icons.volume_up,
-                  color: Colors.white,
+            Row(
+              children: [
+                ValueListenableBuilder<bool>(
+                  valueListenable: game.audioService.muted,
+                  builder: (context, muted, _) => IconButton(
+                    icon: Icon(
+                      muted ? Icons.volume_off : Icons.volume_up,
+                      color: Colors.white,
+                    ),
+                    onPressed: game.audioService.toggleMute,
+                  ),
                 ),
-                onPressed: game.audioService.toggleMute,
-              ),
+                IconButton(
+                  icon: const Icon(Icons.pause, color: Colors.white),
+                  onPressed: game.pauseGame,
+                ),
+              ],
             ),
           ],
         ),

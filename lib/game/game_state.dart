@@ -1,2 +1,2 @@
 /// Simple game lifecycle states.
-enum GameState { menu, playing, gameOver }
+enum GameState { menu, playing, paused, gameOver }
