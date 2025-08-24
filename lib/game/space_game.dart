@@ -59,6 +59,12 @@ class SpaceGame extends FlameGame
   /// Pool of reusable bullets.
   final List<BulletComponent> _bulletPool = [];
 
+  /// Pool of reusable asteroids.
+  final List<AsteroidComponent> _asteroidPool = [];
+
+  /// Pool of reusable enemies.
+  final List<EnemyComponent> _enemyPool = [];
+
   /// Tracks whether the game was playing when the help overlay opened.
   bool _helpWasPlaying = false;
 
@@ -111,16 +117,16 @@ class SpaceGame extends FlameGame
 
   void _spawnEnemy() {
     final x = _random.nextDouble() * size.x;
-    add(EnemyComponent(position: Vector2(x, -Constants.enemySize)));
+    add(acquireEnemy(Vector2(x, -Constants.enemySize)));
   }
 
   void _spawnAsteroid() {
     final x = _random.nextDouble() * size.x;
     final vx = (_random.nextDouble() - 0.5) * Constants.asteroidSpeed;
     add(
-      AsteroidComponent(
-        position: Vector2(x, -Constants.asteroidSize),
-        velocity: Vector2(vx, Constants.asteroidSpeed),
+      acquireAsteroid(
+        Vector2(x, -Constants.asteroidSize),
+        Vector2(vx, Constants.asteroidSpeed),
       ),
     );
   }
@@ -136,6 +142,33 @@ class SpaceGame extends FlameGame
   /// Returns [bullet] to the pool for reuse.
   void releaseBullet(BulletComponent bullet) {
     _bulletPool.add(bullet);
+  }
+
+  /// Retrieves an asteroid from the pool or creates a new one.
+  AsteroidComponent acquireAsteroid(Vector2 position, Vector2 velocity) {
+    final asteroid = _asteroidPool.isNotEmpty
+        ? _asteroidPool.removeLast()
+        : AsteroidComponent();
+    asteroid.reset(position, velocity);
+    return asteroid;
+  }
+
+  /// Returns [asteroid] to the pool for reuse.
+  void releaseAsteroid(AsteroidComponent asteroid) {
+    _asteroidPool.add(asteroid);
+  }
+
+  /// Retrieves an enemy from the pool or creates a new one.
+  EnemyComponent acquireEnemy(Vector2 position) {
+    final enemy =
+        _enemyPool.isNotEmpty ? _enemyPool.removeLast() : EnemyComponent();
+    enemy.reset(position);
+    return enemy;
+  }
+
+  /// Returns [enemy] to the pool for reuse.
+  void releaseEnemy(EnemyComponent enemy) {
+    _enemyPool.add(enemy);
   }
 
   /// Toggles the help overlay and pauses/resumes if entering from gameplay.

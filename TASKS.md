@@ -46,10 +46,11 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
 ## Testing
 
 - [x] Add unit tests for storage and audio services.
+- [x] Add unit tests verifying bullet, asteroid and enemy pooling reuse.
 
 ## Optimisation
 
-- [x] Add bullet object pool to reduce allocations.
+- [x] Add bullet, asteroid and enemy object pools to reduce allocations.
 
 ## Enhancements
 
@@ -67,3 +68,4 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
 - [x] Help overlay lists controls and can be toggled with a button or the `H` key;
       `Esc` also closes it.
 - [x] HUD displays current and high scores alongside health.
+- [x] Limit player fire rate with a brief cooldown.

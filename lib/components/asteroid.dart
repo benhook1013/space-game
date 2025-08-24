@@ -6,17 +6,24 @@ import '../constants.dart';
 import '../game/space_game.dart';
 
 /// Neutral obstacle that can be mined for score.
+///
+/// Instances are pooled by [SpaceGame] to reduce garbage collection. Call
+/// [reset] before adding to the game to initialise position and velocity.
 class AsteroidComponent extends SpriteComponent
     with HasGameReference<SpaceGame>, CollisionCallbacks {
-  AsteroidComponent({required Vector2 position, required Vector2 velocity})
-      : _velocity = velocity,
-        super(
-          position: position,
+  AsteroidComponent()
+      : super(
           size: Vector2.all(Constants.asteroidSize),
           anchor: Anchor.center,
         );
 
-  final Vector2 _velocity;
+  final Vector2 _velocity = Vector2.zero();
+
+  /// Prepares the asteroid for reuse.
+  void reset(Vector2 position, Vector2 velocity) {
+    this.position..setFrom(position);
+    _velocity..setFrom(velocity);
+  }
 
   @override
   Future<void> onLoad() async {
@@ -33,5 +40,11 @@ class AsteroidComponent extends SpriteComponent
         position.x > game.size.x + size.x) {
       removeFromParent();
     }
+  }
+
+  @override
+  void onRemove() {
+    super.onRemove();
+    game.releaseAsteroid(this);
   }
 }

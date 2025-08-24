@@ -6,14 +6,21 @@ import '../constants.dart';
 import '../game/space_game.dart';
 
 /// Basic foe that drifts toward the player.
+///
+/// Instances are pooled by [SpaceGame] to reduce garbage collection. Call
+/// [reset] before adding to the game to initialise position.
 class EnemyComponent extends SpriteComponent
     with HasGameReference<SpaceGame>, CollisionCallbacks {
-  EnemyComponent({Vector2? position})
+  EnemyComponent()
       : super(
-          position: position,
           size: Vector2.all(Constants.enemySize),
           anchor: Anchor.center,
         );
+
+  /// Prepares the enemy for reuse.
+  void reset(Vector2 position) {
+    this.position..setFrom(position);
+  }
 
   @override
   Future<void> onLoad() async {
@@ -31,5 +38,11 @@ class EnemyComponent extends SpriteComponent
         position.x > game.size.x + size.x) {
       removeFromParent();
     }
+  }
+
+  @override
+  void onRemove() {
+    super.onRemove();
+    game.releaseEnemy(this);
   }
 }

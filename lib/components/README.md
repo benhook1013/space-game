@@ -9,15 +9,15 @@ Gameplay entities and reusable pieces.
   `HasCollisionDetection` on the game.
 - Pull tunable values from `constants.dart` and asset references from
   `assets.dart`.
-- Bullet components use a small object pool to reduce garbage collection;
-  consider pooling other frequently spawned objects.
+- Bullet, asteroid and enemy components use small object pools to reduce
+  garbage collection, and unit tests confirm pooled instances are reused.
 - Give components deterministic IDs to support future multiplayer sync.
 - Update movement and timers using the `dt` value for frame-rate independence.
 
 ## Implemented Components
 
 - [PlayerComponent](player.md) – moves via joystick or keyboard, fires bullets
-  and tracks health.
+  with a short cooldown and tracks health.
 - [EnemyComponent](enemy.md) – drifts toward the player and is destroyed on
   bullet impact, awarding score when defeated.
 - [BulletComponent](bullet.md) – short-lived projectile destroyed on hit or

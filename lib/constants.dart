@@ -19,6 +19,9 @@ class Constants {
   /// Bullet sprite size in logical pixels.
   static const double bulletSize = 8;
 
+  /// Minimum time between player shots in seconds.
+  static const double bulletCooldown = 0.2;
+
   /// Enemy movement speed in pixels per second.
   static const double enemySpeed = 100;
 
