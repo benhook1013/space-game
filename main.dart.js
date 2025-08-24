@@ -18837,6 +18837,7 @@ a0=A.alS(A.aqu(),t.mY)
 g=A.am(A.cY(null),null,!1,g)
 a5=new A.bF(q,p,B.fy,B.iK,new A.dy(0,o),new A.dy(0,o),new A.dy(3,o),n,m,l,new A.uj(k,j,new A.yG(o),h,t.bt),f,d,c,b,$,null,null,null,$,!1,!1,$,B.eM,a,!1,a0,A.ai(i),0,new A.bk(g,0,0,e),null,new A.b2([]),new A.b2([]))
 a5.O7(null,null,null,t.us)
+a5.x=!1
 o=new A.n1(a5,A.ar(["menuOverlay",new A.a6n(),"hudOverlay",new A.a6o(),"pauseOverlay",new A.a6p(),"gameOverOverlay",new A.a6q(),"helpOverlay",new A.a6r()],t.N,t.mv),null,t.qQ)
 o.SE(a5)
 if($.aD==null)A.ad8()
