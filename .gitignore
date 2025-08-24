@@ -30,6 +30,7 @@ doc/api/
 .flutter-plugins-dependencies
 # Ignore FVM-managed Flutter SDK
 .fvm/
+.fvm_cache/
 
 # Local tooling and caches
 .tooling/
