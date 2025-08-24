@@ -28,11 +28,17 @@ class Constants {
   /// Enemy sprite size in logical pixels.
   static const double enemySize = 32;
 
+  /// Seconds between enemy spawns.
+  static const double enemySpawnInterval = 2;
+
   /// Asteroid movement speed in pixels per second.
   static const double asteroidSpeed = 50;
 
   /// Asteroid sprite size in logical pixels.
   static const double asteroidSize = 24;
+
+  /// Seconds between asteroid spawns.
+  static const double asteroidSpawnInterval = 3;
 
   /// Score awarded for destroying an enemy.
   static const int enemyScore = 5;
