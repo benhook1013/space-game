@@ -19,4 +19,4 @@ See [PLAN.md](PLAN.md) for overall project goals and
 - Keyboard input uses `KeyboardListenerComponent`.
 - Components mix in `HasGameRef<SpaceGame>` and use simple hit boxes.
 - Timer-based spawners generate enemies and asteroids.
-- Consider small object pools for bullets and asteroids to limit garbage.
+- Consider small object pools for bullets, asteroids and enemies to limit garbage.

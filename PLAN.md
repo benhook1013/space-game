@@ -134,8 +134,8 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
 - Top‑down view with a simple parallax starfield background using Flame's
   `ParallaxComponent`
 - Aim for 60 FPS and avoid heavy per‑frame allocations
-- For frequently spawned objects, bullets already use a simple object pool to
-  reduce garbage collection overhead; consider pooling asteroids
+- For frequently spawned objects, bullets, asteroids and enemies use simple
+  object pools to reduce garbage collection overhead
 - Movement and animations should be time‑based using `dt` to stay consistent
   across frame rates
 - Rely on Flame's `update`/`render` lifecycle; avoid custom game loops
@@ -143,6 +143,7 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
 ## 🎮 MVP
 
 - Touch/joystick movement and shooting
+- Shooting uses a short cooldown to limit fire rate
 - One enemy type with collision and random spawns
 - Asteroids to mine for score; destroying enemies also grants points
 - Single endless level without progression for now
@@ -210,6 +211,7 @@ in [TASKS.md](TASKS.md).
 - Once tests exist, run `fvm flutter test`
 - Use `flutter_test` for widget tests and `flame_test` for component/system tests
   once tests are added
+- Cover object pools with unit tests to ensure instances are reused
 - Manual testing for now; automate later under `test/`
 - Use `PLAYTEST_CHECKLIST.md`, `MANUAL_TESTING.md`, and optional `playtest_logs/`
 - Follow `AGENTS.md` conventions when contributing

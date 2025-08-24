@@ -75,10 +75,11 @@ Milestone goals are detailed in [milestone-setup.md](milestone-setup.md),
 - Components mix in `HasGameRef<SpaceGame>` when they need game context.
 - Use simple hit boxes (`CircleHitbox`, `RectangleHitbox`) and
   `HasCollisionDetection`.
-- Bullets use a small object pool to limit garbage collection; consider similar
-  pools for asteroids.
+- Bullets, asteroids and enemies use small object pools to limit garbage
+  collection, and unit tests verify pooled instances are reused.
 - The player loses health on collision with enemies or asteroids; the game ends
   when health is depleted.
+- Shooting enforces a brief cooldown so the player cannot spam bullets.
 - Give components deterministic IDs for future multiplayer sync and update
   movement using `dt` to stay frame-rate independent.
 
