@@ -41,7 +41,6 @@ if [ -x "$FLUTTER_DIR/bin/flutter" ]; then
     log "Flutter $current_version ($current_channel) already installed"
     export PATH="$(pwd)/$FLUTTER_DIR/bin:$PATH"
     git config --global --add safe.directory "$(pwd)/$FLUTTER_DIR" 2>/dev/null || true
-    # Warm up (non-fatal if doctor shows warnings)
     "$FLUTTER_DIR/bin/flutter" --version >/dev/null 2>&1 || true
     return 0 2>/dev/null || exit 0
   else
@@ -147,7 +146,7 @@ download_ranges() {
 }
 
 extract_with_progress() {
-  python3 <<'PY' "$1" "$QUIET"
+  python3 - "$1" "$QUIET" <<'PY'
 import sys, zipfile, tarfile
 archive = sys.argv[1]
 quiet = sys.argv[2] == 'true'
@@ -196,14 +195,13 @@ rm -f "$dest"
 popd >/dev/null
 log "Flutter SDK installed at $FLUTTER_DIR"
 
-# Put Flutter on PATH for this shell
 export PATH="$(pwd)/$FLUTTER_DIR/bin:$PATH"
 git config --global --add safe.directory "$(pwd)/$FLUTTER_DIR" 2>/dev/null || true
 
-# Non-interactive sanity checks (allow warnings)
 log "Running flutter --version"
 .tooling/flutter/bin/flutter --version
 log "Enabling web support"
 .tooling/flutter/bin/flutter config --enable-web || true
 log "Running flutter doctor"
 .tooling/flutter/bin/flutter doctor -v || true
+log "Flutter bootstrap complete"
