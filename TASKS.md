@@ -70,3 +70,4 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
       `Esc` also closes it.
 - [x] HUD displays current and high scores alongside health.
 - [x] Limit player fire rate with a brief cooldown.
+- [x] Keyboard shortcut `D` toggles debug overlays.

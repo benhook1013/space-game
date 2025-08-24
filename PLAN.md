@@ -215,7 +215,8 @@ in [TASKS.md](TASKS.md).
 - Manual testing for now; automate later under `test/`
 - Use `PLAYTEST_CHECKLIST.md`, `MANUAL_TESTING.md`, and optional `playtest_logs/`
 - Follow `AGENTS.md` conventions when contributing
-- Enable Flame's debug mode in dev builds to show bounding boxes and FPS
+  - Enable Flame's debug mode in dev builds to show bounding boxes and FPS;
+    toggle at runtime with the `D` key
 - Add a tiny `log()` helper around `debugPrint` so messages can be silenced in release
 
 ## 🔮 Future Ideas
