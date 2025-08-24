@@ -23,14 +23,30 @@ class PauseOverlay extends StatelessWidget {
             style: TextStyle(fontSize: 32, color: Colors.white),
           ),
           const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: game.resumeGame,
-            child: const Text('Resume'),
-          ),
-          const SizedBox(height: 10),
-          ElevatedButton(
-            onPressed: game.returnToMenu,
-            child: const Text('Menu'),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ElevatedButton(
+                onPressed: game.resumeGame,
+                child: const Text('Resume'),
+              ),
+              const SizedBox(width: 10),
+              ElevatedButton(
+                onPressed: game.returnToMenu,
+                child: const Text('Menu'),
+              ),
+              const SizedBox(width: 10),
+              ValueListenableBuilder<bool>(
+                valueListenable: game.audioService.muted,
+                builder: (context, muted, _) => IconButton(
+                  icon: Icon(
+                    muted ? Icons.volume_off : Icons.volume_up,
+                    color: Colors.white,
+                  ),
+                  onPressed: game.audioService.toggleMute,
+                ),
+              ),
+            ],
           ),
         ],
       ),

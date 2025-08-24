@@ -102,7 +102,8 @@ Milestone goals are detailed in [milestone-setup.md](milestone-setup.md),
 - The game starts in a menu overlay that also exposes a mute toggle.
 - `SpaceGame` transitions to `playing` when the user taps start.
 - Players can pause the game from the HUD or with the Escape key,
-  showing a pause overlay with resume and menu options.
+  showing a pause overlay with resume, menu and mute buttons.
+- During play the HUD provides score, health, pause and mute controls.
 - On player death, a game over overlay appears with restart and menu buttons.
 - A `GameState` enum tracks the current phase.
 
