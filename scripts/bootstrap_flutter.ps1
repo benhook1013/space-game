@@ -86,6 +86,9 @@ function Write-ProgressLine([string]$activity,[long]$read,[Nullable[long]]$total
 # --- Download strategies ---
 function Download-With-BITS { param([string]$Url,[string]$Dest)
   Say "Using BITS"
+  if (-not (Get-Command Start-BitsTransfer -ErrorAction SilentlyContinue)) {
+    throw "BITS is not available on this system"
+  }
   $attempt=0
   while ($attempt -lt 3) {
     try {
@@ -246,7 +249,14 @@ $destZip = $ARCHIVE
 $ProgressPreferenceBak = $global:ProgressPreference; $global:ProgressPreference = 'Continue'
 try {
   switch ($Downloader) {
-    'bits'   { Download-With-BITS   -Url $URL -Dest $destZip }
+    'bits'   {
+      try { Download-With-BITS -Url $URL -Dest $destZip }
+      catch {
+        Say "BITS download failed: $($_.Exception.Message)"
+        Say "Falling back to HttpClient"
+        Download-With-Http -Url $URL -Dest $destZip
+      }
+    }
     'ranges' { Download-With-Ranges -Url $URL -Dest $destZip }
     default  { Download-With-Http   -Url $URL -Dest $destZip }
   }
