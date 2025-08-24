@@ -27,6 +27,26 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pub-
       - name: Analyze
-        run: ./scripts/flutterw analyze
+        run: |
+          set -o pipefail
+          ./scripts/flutterw analyze | tee analyze.log
+          exit_code=${PIPESTATUS[0]}
+          {
+            echo "### Analyze"
+            echo '```'
+            cat analyze.log
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit $exit_code
       - name: Test
-        run: ./scripts/flutterw test
+        run: |
+          set -o pipefail
+          ./scripts/flutterw test | tee test.log
+          exit_code=${PIPESTATUS[0]}
+          {
+            echo "### Test"
+            echo '```'
+            cat test.log
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit $exit_code
