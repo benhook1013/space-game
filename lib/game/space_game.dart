@@ -29,7 +29,9 @@ import 'game_state.dart';
 /// Root Flame game handling the core loop.
 class SpaceGame extends FlameGame
     with HasKeyboardHandlerComponents, HasCollisionDetection, KeyboardEvents {
-  SpaceGame({required this.storageService, required this.audioService});
+  SpaceGame({required this.storageService, required this.audioService}) {
+    debugMode = kDebugMode;
+  }
 
   /// Handles persistence for the high score.
   final StorageService storageService;
@@ -74,6 +76,9 @@ class SpaceGame extends FlameGame
       resolution: Vector2(Constants.logicalWidth, Constants.logicalHeight),
     );
     add(StarfieldComponent());
+    if (kDebugMode) {
+      add(FpsTextComponent(position: Vector2.all(10)));
+    }
     joystick = JoystickComponent(
       knob: CircleComponent(
         radius: 20,
