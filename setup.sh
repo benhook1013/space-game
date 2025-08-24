@@ -43,6 +43,13 @@ dart pub get || log "dart pub get failed"
 export FVM_HOME="$REPO_ROOT/.fvm"
 export FVM_CACHE_PATH="$REPO_ROOT/.fvm_cache"
 mkdir -p "$FVM_HOME" "$FVM_CACHE_PATH"
+for profile in "$HOME/.bashrc" "$HOME/.zshrc" "$HOME/.profile"; do
+  if [ -w "$profile" ] && ! grep -Fqs "FVM_HOME" "$profile"; then
+    printf '\nexport FVM_HOME="%s"\nexport FVM_CACHE_PATH="%s"\n' \
+      "$FVM_HOME" "$FVM_CACHE_PATH" >> "$profile"
+    log "Persisted FVM env vars in $profile"
+  fi
+done
 
 # Install FVM if missing.
 if ! command -v fvm >/dev/null 2>&1; then
@@ -58,23 +65,21 @@ if command -v fvm >/dev/null 2>&1 && [ -f "$REPO_ROOT/fvm_config.json" ]; then
     version="$(grep -oE '[0-9]+\.[0-9]+\.[0-9]+' "$REPO_ROOT/fvm_config.json" | head -n1)"
   fi
   version_dir="$FVM_HOME/versions/$version"
-  if [ -e "$version_dir" ]; then
-    if [ -d "$version_dir/.git" ]; then
-      log "FVM version $version already installed"
-    else
-      log "Removing corrupt FVM version $version"
-      rm -rf "$version_dir"
-      log "Running fvm install"
-      fvm install || log "fvm install failed"
-    fi
-  else
+  if [ -e "$version_dir" ] && [ ! -d "$version_dir/.git" ]; then
+    log "Removing corrupt FVM version $version"
+    rm -rf "$version_dir"
+  fi
+  if [ ! -e "$version_dir" ]; then
+    log "Linking bootstrapped Flutter to FVM version $version"
+    mkdir -p "$(dirname "$version_dir")"
+    ln -s "$REPO_ROOT/.tooling/flutter" "$version_dir" 2>/dev/null || \
+      cp -R "$REPO_ROOT/.tooling/flutter" "$version_dir"
+  fi
+  if ! fvm --no-print-path flutter --version >/dev/null 2>&1; then
     log "Running fvm install"
-    if ! fvm install; then
-      log "fvm install failed; removing existing version $version"
-      fvm remove "$version" || true
-      rm -rf "$version_dir"
-      fvm install || log "fvm install failed"
-    fi
+    fvm install || log "fvm install failed"
+  else
+    log "FVM version $version ready"
   fi
 fi
 
