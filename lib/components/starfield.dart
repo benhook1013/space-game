@@ -15,7 +15,7 @@ class StarfieldComponent extends Component with HasGameReference<SpaceGame> {
   final int _starsPerLayer;
   final Random _random = Random();
   final List<_Star> _stars = [];
-  final Paint _paint = Paint()..color = const Color(0xffffffff);
+  final Paint _paint = Paint();
 
   @override
   Future<void> onLoad() async {
@@ -34,6 +34,7 @@ class StarfieldComponent extends Component with HasGameReference<SpaceGame> {
 
   List<_Star> _generateLayer(double speed) {
     return List.generate(_starsPerLayer, (_) {
+      final brightness = 128 + _random.nextInt(128);
       return _Star(
         position: Vector2(
           _random.nextDouble() * game.size.x,
@@ -41,6 +42,7 @@ class StarfieldComponent extends Component with HasGameReference<SpaceGame> {
         ),
         speed: speed,
         radius: _random.nextDouble() * Constants.starMaxSize + 1,
+        color: Color.fromARGB(255, brightness, brightness, brightness),
       );
     });
   }
@@ -66,15 +68,22 @@ class StarfieldComponent extends Component with HasGameReference<SpaceGame> {
   @override
   void render(Canvas canvas) {
     for (final star in _stars) {
+      _paint.color = star.color;
       canvas.drawCircle(star.position.toOffset(), star.radius, _paint);
     }
   }
 }
 
 class _Star {
-  _Star({required this.position, required this.speed, required this.radius});
+  _Star({
+    required this.position,
+    required this.speed,
+    required this.radius,
+    required this.color,
+  });
 
   Vector2 position;
   double speed;
   double radius;
+  Color color;
 }
