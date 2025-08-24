@@ -1,6 +1,12 @@
 # test/
 
-Placeholder for automated tests.
+Contains automated tests covering core services and game components.
 
-Add unit, widget, and Flame component tests here once the game code exists.
-Use `flutter_test` and `flame_test` as noted in [../PLAN.md](../PLAN.md).
+Current suites verify:
+
+- Storage and audio services
+- Object pooling for bullets, asteroids and enemies
+- Player shot cooldown logic
+- Help overlay pause behaviour
+
+Tests use `flutter_test` and `flame_test` as noted in [../PLAN.md](../PLAN.md).
