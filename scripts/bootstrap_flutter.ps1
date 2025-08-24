@@ -29,9 +29,13 @@ Say "Ensuring Flutter $FLUTTER_VERSION ($FLUTTER_CHANNEL) in $FLUTTER_DIR"
 if ((Test-Path $flutterBat) -and -not $Force) {
   Say "Existing Flutter installation detected; checking version"
   $versionOutput = & $flutterBat --version
+  $currentVersion = $null
+  $currentChannel = $null
   if ($versionOutput -match 'Flutter\s+([^\s]+)\s+•\s+channel\s+([^\s]+)') {
     $currentVersion = $matches[1]
     $currentChannel = $matches[2]
+  } else {
+    Say "Unable to parse Flutter version from output: $versionOutput"
   }
   if (($currentVersion -eq $FLUTTER_VERSION) -and ($currentChannel -eq $FLUTTER_CHANNEL)) {
     Say "Flutter $currentVersion ($currentChannel) already installed"
@@ -40,7 +44,9 @@ if ((Test-Path $flutterBat) -and -not $Force) {
     Say $versionOutput
     return
   } else {
-    Say "Flutter $currentVersion ($currentChannel) found, but $FLUTTER_VERSION ($FLUTTER_CHANNEL) required"
+    $cv = if ($null -ne $currentVersion) { $currentVersion } else { 'unknown' }
+    $cc = if ($null -ne $currentChannel) { $currentChannel } else { 'unknown' }
+    Say "Flutter $cv ($cc) found, but $FLUTTER_VERSION ($FLUTTER_CHANNEL) required"
     Say "Removing old Flutter installation"
     Remove-Item $FLUTTER_DIR -Recurse -Force
   }
