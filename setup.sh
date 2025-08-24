@@ -34,9 +34,14 @@ add_path() {
 add_path "$PUB_CACHE_BIN"
 add_path "$FLUTTER_BIN"
 
-# Use repo-local cache for FVM.
-export FVM_HOME="$REPO_ROOT/.fvm"
-mkdir -p "$FVM_HOME"
+# Ensure Dart/Flutter dependencies are fetched.
+log "Fetching pub dependencies"
+dart pub get || log "dart pub get failed"
+
+# Use repo-local cache for FVM (FVM_HOME is deprecated).
+unset FVM_HOME 2>/dev/null || true
+export FVM_CACHE_PATH="$REPO_ROOT/.fvm"
+mkdir -p "$FVM_CACHE_PATH"
 
 # Install FVM if missing.
 if ! command -v fvm >/dev/null 2>&1; then
@@ -47,16 +52,53 @@ fi
 # Ensure the pinned Flutter SDK is available for FVM users.
 if command -v fvm >/dev/null 2>&1 && [ -f "$REPO_ROOT/fvm_config.json" ]; then
   log "Running fvm install"
-  fvm install || log "fvm install failed"
+  if ! fvm install; then
+    if command -v jq >/dev/null 2>&1; then
+      version="$(jq -r '.flutterSdkVersion' "$REPO_ROOT/fvm_config.json")"
+    else
+      version="$(grep -oE '[0-9]+\.[0-9]+\.[0-9]+' "$REPO_ROOT/fvm_config.json" | head -n1)"
+    fi
+    log "fvm install failed; removing existing version $version"
+    fvm remove "$version" || true
+    rm -rf "$FVM_CACHE_PATH/versions/$version"
+    fvm install || log "fvm install failed"
+  fi
 fi
 
-# Install markdownlint CLI if npm exists and it's not already installed.
+# Ensure Node.js is available for tooling such as markdownlint.
+if ! command -v npm >/dev/null 2>&1; then
+  log "npm not found; attempting to install Node.js"
+  case "$(uname -s)" in
+    Linux*)
+      if command -v apt-get >/dev/null 2>&1; then
+        $SUDO apt-get update || true
+        $SUDO apt-get install -y nodejs npm || log "Failed to install Node.js via apt-get"
+      elif command -v snap >/dev/null 2>&1; then
+        $SUDO snap install node --classic || log "Failed to install Node.js via snap"
+      else
+        log "Skipping Node.js install: no supported package manager found"
+      fi
+      ;;
+    Darwin*)
+      if command -v brew >/dev/null 2>&1; then
+        brew install node || log "brew install node failed"
+      else
+        log "Skipping Node.js install: brew not found"
+      fi
+      ;;
+    *)
+      log "Skipping Node.js install: unsupported OS"
+      ;;
+  esac
+fi
+
+# Install markdownlint CLI if npm is available and the binary is missing.
 if ! command -v markdownlint >/dev/null 2>&1; then
   if command -v npm >/dev/null 2>&1; then
     log "Installing markdownlint-cli"
     $SUDO npm install -g markdownlint-cli || log "Failed to install markdownlint-cli"
   else
-    log "npm not found; markdownlint will run via npx"
+    log "npm not found; markdownlint will run via npx if available"
   fi
 fi
 
