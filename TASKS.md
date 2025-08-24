@@ -46,3 +46,7 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
 ## Testing
 
 - [x] Add unit tests for storage and audio services.
+
+## Optimisation
+
+- [x] Add bullet object pool to reduce allocations.

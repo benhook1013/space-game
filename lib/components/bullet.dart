@@ -8,17 +8,23 @@ import 'enemy.dart';
 import 'asteroid.dart';
 
 /// Short-lived projectile fired by the player.
+///
+/// Instances are pooled by [SpaceGame] to reduce garbage collection. Call
+/// [reset] before adding to the game to initialise position and direction.
 class BulletComponent extends SpriteComponent
     with HasGameReference<SpaceGame>, CollisionCallbacks {
-  BulletComponent({required Vector2 position, required Vector2 direction})
-    : _direction = direction.normalized(),
-      super(
-        position: position,
-        size: Vector2.all(Constants.bulletSize),
-        anchor: Anchor.center,
-      );
+  BulletComponent()
+    : super(size: Vector2.all(Constants.bulletSize), anchor: Anchor.center);
 
-  final Vector2 _direction;
+  final Vector2 _direction = Vector2.zero();
+
+  /// Prepares the bullet for reuse.
+  void reset(Vector2 position, Vector2 direction) {
+    this.position..setFrom(position);
+    _direction
+      ..setFrom(direction)
+      ..normalize();
+  }
 
   @override
   Future<void> onLoad() async {
@@ -33,6 +39,12 @@ class BulletComponent extends SpriteComponent
     if (position.y < -size.y || position.y > game.size.y + size.y) {
       removeFromParent();
     }
+  }
+
+  @override
+  void onRemove() {
+    super.onRemove();
+    game.releaseBullet(this);
   }
 
   @override

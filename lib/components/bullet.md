@@ -8,7 +8,7 @@ Short-lived projectile fired by the player.
 - Destroyed on impact or after a brief lifetime.
 - Uses sprite from `assets.dart` and speed from `constants.dart`.
 - Awards score on impact using values from `constants.dart`.
-- Consider pooling to reduce allocations.
+- Reused through a simple object pool managed by `SpaceGame`.
 - Uses `RectangleHitbox` or `CircleHitbox` and `HasGameRef<SpaceGame>`.
 
 See [../../PLAN.md](../../PLAN.md) for core loop goals.

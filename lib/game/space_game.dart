@@ -46,6 +46,9 @@ class SpaceGame extends FlameGame
   /// Highest score persisted across sessions.
   final ValueNotifier<int> highScore = ValueNotifier<int>(0);
 
+  /// Pool of reusable bullets.
+  final List<BulletComponent> _bulletPool = [];
+
   @override
   Future<void> onLoad() async {
     camera.viewport = FixedResolutionViewport(
@@ -109,6 +112,20 @@ class SpaceGame extends FlameGame
     );
   }
 
+  /// Retrieves a bullet from the pool or creates a new one.
+  BulletComponent acquireBullet(Vector2 position, Vector2 direction) {
+    final bullet = _bulletPool.isNotEmpty
+        ? _bulletPool.removeLast()
+        : BulletComponent();
+    bullet.reset(position, direction);
+    return bullet;
+  }
+
+  /// Returns [bullet] to the pool for reuse.
+  void releaseBullet(BulletComponent bullet) {
+    _bulletPool.add(bullet);
+  }
+
   /// Adds [value] to the current score.
   void addScore(int value) {
     score.value += value;
@@ -129,8 +146,8 @@ class SpaceGame extends FlameGame
     score.value = 0;
     children.whereType<EnemyComponent>().forEach((e) => e.removeFromParent());
     children.whereType<AsteroidComponent>().forEach(
-          (a) => a.removeFromParent(),
-        );
+      (a) => a.removeFromParent(),
+    );
     children.whereType<BulletComponent>().forEach((b) => b.removeFromParent());
     player.position = size / 2;
     overlays
