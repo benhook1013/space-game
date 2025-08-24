@@ -9,8 +9,8 @@ Gameplay entities and reusable pieces.
   `HasCollisionDetection` on the game.
 - Pull tunable values from `constants.dart` and asset references from
   `assets.dart`.
-- Consider small object pools for frequently spawned objects to reduce
-  garbage collection.
+- Bullet components use a small object pool to reduce garbage collection;
+  consider pooling other frequently spawned objects.
 - Give components deterministic IDs to support future multiplayer sync.
 - Update movement and timers using the `dt` value for frame-rate independence.
 

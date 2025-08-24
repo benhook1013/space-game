@@ -6,14 +6,13 @@ import '../assets.dart';
 import '../constants.dart';
 import '../game/space_game.dart';
 import 'asteroid.dart';
-import 'bullet.dart';
 import 'enemy.dart';
 
 /// Controllable player ship.
 class PlayerComponent extends SpriteComponent
     with HasGameReference<SpaceGame>, KeyboardHandler, CollisionCallbacks {
   PlayerComponent({required this.joystick})
-      : super(size: Vector2.all(Constants.playerSize), anchor: Anchor.center);
+    : super(size: Vector2.all(Constants.playerSize), anchor: Anchor.center);
 
   /// Reference to the on-screen joystick for touch input.
   final JoystickComponent joystick;
@@ -23,10 +22,7 @@ class PlayerComponent extends SpriteComponent
 
   /// Fires a bullet from the player's current position.
   void shoot() {
-    final bullet = BulletComponent(
-      position: position.clone(),
-      direction: Vector2(0, -1),
-    );
+    final bullet = game.acquireBullet(position.clone(), Vector2(0, -1));
     game.add(bullet);
     game.audioService.playShoot();
   }
@@ -46,8 +42,9 @@ class PlayerComponent extends SpriteComponent
   @override
   void update(double dt) {
     super.update(dt);
-    var input =
-        joystick.delta.isZero() ? _keyboardDirection : joystick.relativeDelta;
+    var input = joystick.delta.isZero()
+        ? _keyboardDirection
+        : joystick.relativeDelta;
     if (!input.isZero()) {
       input = input.normalized();
       position += input * Constants.playerSpeed * dt;
@@ -65,19 +62,23 @@ class PlayerComponent extends SpriteComponent
     }
     _keyboardDirection
       ..setZero()
-      ..x += (keysPressed.contains(LogicalKeyboardKey.keyA) ||
+      ..x +=
+          (keysPressed.contains(LogicalKeyboardKey.keyA) ||
               keysPressed.contains(LogicalKeyboardKey.arrowLeft))
           ? -1
           : 0
-      ..x += (keysPressed.contains(LogicalKeyboardKey.keyD) ||
+      ..x +=
+          (keysPressed.contains(LogicalKeyboardKey.keyD) ||
               keysPressed.contains(LogicalKeyboardKey.arrowRight))
           ? 1
           : 0
-      ..y += (keysPressed.contains(LogicalKeyboardKey.keyW) ||
+      ..y +=
+          (keysPressed.contains(LogicalKeyboardKey.keyW) ||
               keysPressed.contains(LogicalKeyboardKey.arrowUp))
           ? -1
           : 0
-      ..y += (keysPressed.contains(LogicalKeyboardKey.keyS) ||
+      ..y +=
+          (keysPressed.contains(LogicalKeyboardKey.keyS) ||
               keysPressed.contains(LogicalKeyboardKey.arrowDown))
           ? 1
           : 0;

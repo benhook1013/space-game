@@ -133,8 +133,8 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
 - Top‑down view with a simple parallax starfield background using Flame's
   `ParallaxComponent`
 - Aim for 60 FPS and avoid heavy per‑frame allocations
-- For frequently spawned objects (like bullets or asteroids), consider simple
-  object pools to reduce garbage collection overhead
+- For frequently spawned objects, bullets already use a simple object pool to
+  reduce garbage collection overhead; consider pooling asteroids
 - Movement and animations should be time‑based using `dt` to stay consistent
   across frame rates
 - Rely on Flame's `update`/`render` lifecycle; avoid custom game loops
