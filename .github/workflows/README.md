@@ -16,4 +16,6 @@ release and deploys `build/web` to GitHub Pages:
 - `develop` → `gh-pages-staging` (preview)
 
 GitHub Pages serves the contents of `gh-pages` at
-`https://<your-GitHub-username>.github.io/space-game/`.
+`https://benhook1013.github.io/space-game/`. The `gh-pages-staging`
+branch is deployed to
+`https://benhook1013.github.io/space-game-staging/` for previews.

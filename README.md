@@ -150,8 +150,9 @@ Pushes to `main` and `develop` trigger the [deploy workflow](.github/workflows/d
 which builds the web release and publishes it to GitHub Pages.
 
 - Commits on `main` update the `gh-pages` branch and appear at
-  `https://<your-GitHub-username>.github.io/space-game/`.
-- Commits on `develop` publish to `gh-pages-staging` for preview.
+  `https://benhook1013.github.io/space-game/`.
+- Commits on `develop` publish to `gh-pages-staging` for preview at
+  `https://benhook1013.github.io/space-game-staging/`.
 
 When building locally for GitHub Pages, run:
 
