@@ -106,10 +106,11 @@ Remember to update `assets_manifest.json` and credit any third-party assets in
 
 ## Flutter Tooling
 
-Run `./setup.sh` after cloning to download the pinned Flutter SDK into
-`.tooling/flutter`, install the FVM and Markdown tooling, and add pub global
-binaries to your `PATH`. The repository provides wrapper scripts for both
-Unix-like shells and Windows, which bootstrap this SDK on demand and then
+Run `./setup.sh` (Unix) or `.\setup.ps1` (PowerShell) after cloning to
+download the pinned Flutter SDK into `.tooling/flutter`, install the FVM and
+Markdown tooling, and add pub global binaries to your `PATH`. The repository
+provides wrapper scripts for both Unix-like shells and Windows, which
+bootstrap this SDK on demand and then
 delegate to the real `flutter` and `dart` binaries:
 
 - Unix shells: `scripts/flutterw`, `scripts/dartw`
@@ -122,6 +123,7 @@ wrapper. Example:
 ```powershell
 $env:FLUTTER_VERSION='3.32.8'; scripts\bootstrap_flutter.ps1 -Force
 ```
+
 Use `-Force` to re-download the SDK or `-Quiet` to suppress progress messages.
 
 Examples:
