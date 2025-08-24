@@ -46,6 +46,7 @@ class SpaceGame extends FlameGame
   late final Timer _enemySpawnTimer;
   late final Timer _asteroidSpawnTimer;
   final Random _random = Random();
+  FpsTextComponent? _fpsText;
 
   /// Current score exposed to Flutter overlays.
   final ValueNotifier<int> score = ValueNotifier<int>(0);
@@ -77,7 +78,8 @@ class SpaceGame extends FlameGame
     );
     add(StarfieldComponent());
     if (kDebugMode) {
-      add(FpsTextComponent(position: Vector2.all(10)));
+      _fpsText = FpsTextComponent(position: Vector2.all(10));
+      await add(_fpsText!);
     }
     joystick = JoystickComponent(
       knob: CircleComponent(
@@ -307,6 +309,18 @@ class SpaceGame extends FlameGame
     pauseEngine();
   }
 
+  /// Toggles debug rendering and FPS overlay.
+  void toggleDebug() {
+    debugMode = !debugMode;
+    if (debugMode) {
+      if (_fpsText != null && !_fpsText!.isMounted) {
+        add(_fpsText!);
+      }
+    } else {
+      _fpsText?.removeFromParent();
+    }
+  }
+
   @override
   KeyEventResult onKeyEvent(
     KeyEvent event,
@@ -359,6 +373,9 @@ class SpaceGame extends FlameGame
         }
       } else if (event.logicalKey == LogicalKeyboardKey.keyH) {
         toggleHelp();
+        return KeyEventResult.handled;
+      } else if (event.logicalKey == LogicalKeyboardKey.keyD) {
+        toggleDebug();
         return KeyEventResult.handled;
       }
     }
