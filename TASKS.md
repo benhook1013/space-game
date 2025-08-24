@@ -55,3 +55,4 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
 
 - [x] Pause overlay with resume and menu options, toggled via HUD and Escape key.
 - [x] Game over overlay offers menu option to return to the title screen.
+- [x] Player health tracked and shown in HUD; game over when depleted.

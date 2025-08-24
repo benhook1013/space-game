@@ -10,6 +10,9 @@ class Constants {
   /// Player sprite size in logical pixels.
   static const double playerSize = 32;
 
+  /// Starting health for the player.
+  static const int playerMaxHealth = 3;
+
   /// Bullet travel speed in pixels per second.
   static const double bulletSpeed = 400;
 

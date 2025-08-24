@@ -64,6 +64,8 @@ Milestone goals are detailed in [milestone-setup.md](milestone-setup.md),
   will slot in later milestones.
 - Flutter overlays handle menus and the HUD so UI stays outside the game loop.
 - A `GameState` enum tracks **menu → playing → paused → game over** transitions.
+- `SpaceGame` exposes `ValueNotifier`s for score, health and high score so
+  overlays can react without touching the game loop.
 - Asset paths live in a central `assets.dart` registry and tunable numbers live
   in `constants.dart` to avoid magic strings or numbers.
 
@@ -75,6 +77,8 @@ Milestone goals are detailed in [milestone-setup.md](milestone-setup.md),
   `HasCollisionDetection`.
 - Bullets use a small object pool to limit garbage collection; consider similar
   pools for asteroids.
+- The player loses health on collision with enemies or asteroids; the game ends
+  when health is depleted.
 - Give components deterministic IDs for future multiplayer sync and update
   movement using `dt` to stay frame-rate independent.
 

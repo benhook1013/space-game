@@ -36,6 +36,7 @@ dedicated server or NAT traversal.
 - One enemy type with collision and random spawns
 - Asteroids to mine for score
 - Single endless level with quick restart
+- Player health displayed in the HUD and reduced on collision
 - Local high score stored on device using `shared_preferences`
 - Basic sound effects with a mute toggle
 - Pause, resume or return to the menu via overlays (including game over screen)

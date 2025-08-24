@@ -20,14 +20,26 @@ class HudOverlay extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            ValueListenableBuilder<int>(
-              valueListenable: game.score,
-              builder: (context, value, _) => Padding(
-                padding: const EdgeInsets.only(top: 8),
-                child: Text(
-                  'Score: $value',
-                  style: const TextStyle(color: Colors.white),
-                ),
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ValueListenableBuilder<int>(
+                    valueListenable: game.score,
+                    builder: (context, value, _) => Text(
+                      'Score: $value',
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  ValueListenableBuilder<int>(
+                    valueListenable: game.health,
+                    builder: (context, value, _) => Text(
+                      'Health: $value',
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
               ),
             ),
             Row(

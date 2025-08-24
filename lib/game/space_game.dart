@@ -50,6 +50,11 @@ class SpaceGame extends FlameGame
   /// Highest score persisted across sessions.
   final ValueNotifier<int> highScore = ValueNotifier<int>(0);
 
+  /// Player health exposed for HUD rendering.
+  final ValueNotifier<int> health = ValueNotifier<int>(
+    Constants.playerMaxHealth,
+  );
+
   /// Pool of reusable bullets.
   final List<BulletComponent> _bulletPool = [];
 
@@ -130,6 +135,17 @@ class SpaceGame extends FlameGame
     _bulletPool.add(bullet);
   }
 
+  /// Handles player damage and checks for game over.
+  void hitPlayer() {
+    if (state != GameState.playing) {
+      return;
+    }
+    health.value -= 1;
+    if (health.value <= 0) {
+      gameOver();
+    }
+  }
+
   /// Adds [value] to the current score.
   void addScore(int value) {
     score.value += value;
@@ -185,6 +201,7 @@ class SpaceGame extends FlameGame
   void startGame() {
     state = GameState.playing;
     score.value = 0;
+    health.value = Constants.playerMaxHealth;
     children.whereType<EnemyComponent>().forEach((e) => e.removeFromParent());
     children.whereType<AsteroidComponent>().forEach(
       (a) => a.removeFromParent(),

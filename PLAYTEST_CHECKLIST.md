@@ -10,6 +10,7 @@ _Update this file whenever a player-facing feature is added or changed._
 - [ ] Asteroids spawn randomly and drift across the screen
 - [ ] Shooting an asteroid destroys it and increases the on-screen score
 - [ ] Score resets when restarting the game
+- [ ] Collisions reduce player health; game over when health reaches zero
 - [ ] Game states transition: menu → playing → paused → game over → restart or menu
 - [ ] Parallax starfield renders behind gameplay
 - [ ] Sound effects play and can be muted

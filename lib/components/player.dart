@@ -92,7 +92,8 @@ class PlayerComponent extends SpriteComponent
   ) {
     super.onCollisionStart(intersectionPoints, other);
     if (other is EnemyComponent || other is AsteroidComponent) {
-      game.gameOver();
+      other.removeFromParent();
+      game.hitPlayer();
     }
   }
 }
