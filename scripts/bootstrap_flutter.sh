@@ -6,19 +6,39 @@ set -euo pipefail
 : "${FLUTTER_CHANNEL:=stable}"   # stable | beta
 FLUTTER_DIR=".tooling/flutter"
 
+log() {
+  echo "[bootstrap_flutter] $1"
+}
+
 # Helper: lowercase
 lower() { echo "$1" | tr '[:upper:]' '[:lower:]'; }
 
-# If already present, just ensure PATH and exit
+log "Ensuring Flutter $FLUTTER_VERSION ($FLUTTER_CHANNEL) in $FLUTTER_DIR"
+
+# If already present, ensure the version/channel match; otherwise upgrade
 if [ -x "$FLUTTER_DIR/bin/flutter" ]; then
-  export PATH="$(pwd)/$FLUTTER_DIR/bin:$PATH"
-  git config --global --add safe.directory "$(pwd)/$FLUTTER_DIR" 2>/dev/null || true
-  # Warm up (non-fatal if doctor shows warnings)
-  .tooling/flutter/bin/flutter --version >/dev/null 2>&1 || true
-  return 0 2>/dev/null || exit 0
+  log "Existing Flutter installation detected; checking version"
+  current_info="$("$FLUTTER_DIR/bin/flutter" --version 2>/dev/null | head -n1 || true)"
+  current_version="$(echo "$current_info" | awk '{print $2}')"
+  current_channel="$(echo "$current_info" | awk '{print $5}')"
+  if [ "$current_version" = "$FLUTTER_VERSION" ] && \
+     [ "$current_channel" = "$FLUTTER_CHANNEL" ]; then
+    log "Flutter $current_version ($current_channel) already installed"
+    export PATH="$(pwd)/$FLUTTER_DIR/bin:$PATH"
+    git config --global --add safe.directory "$(pwd)/$FLUTTER_DIR" 2>/dev/null || true
+    # Warm up (non-fatal if doctor shows warnings)
+    "$FLUTTER_DIR/bin/flutter" --version >/dev/null 2>&1 || true
+    return 0 2>/dev/null || exit 0
+  else
+    log "Flutter $current_version ($current_channel) found, but $FLUTTER_VERSION ($FLUTTER_CHANNEL) required"
+    log "Removing old Flutter installation"
+    rm -rf "$FLUTTER_DIR"
+  fi
+else
+  log "No Flutter installation found"
 fi
 
-echo "Bootstrapping Flutter $FLUTTER_VERSION ($FLUTTER_CHANNEL)…"
+log "Bootstrapping Flutter $FLUTTER_VERSION ($FLUTTER_CHANNEL)"
 mkdir -p .tooling
 pushd .tooling >/dev/null
 
@@ -44,10 +64,10 @@ esac
 
 BASE_URL="https://storage.googleapis.com/flutter_infra_release/releases"
 URL="${BASE_URL}/${FLUTTER_CHANNEL}/$(lower "$OS_SLUG")/${ARCHIVE}"
-echo "Downloading: $URL"
+log "Downloading: $URL"
 curl -fL "$URL" -o "$ARCHIVE"
 
-echo "Extracting…"
+log "Extracting archive"
 if [[ "$ARCHIVE" == *.tar.xz ]]; then
   tar -xJf "$ARCHIVE"
 else
@@ -56,12 +76,16 @@ fi
 rm -f "$ARCHIVE"
 
 popd >/dev/null
+log "Flutter SDK installed at $FLUTTER_DIR"
 
 # Put Flutter on PATH for this shell
 export PATH="$(pwd)/$FLUTTER_DIR/bin:$PATH"
 git config --global --add safe.directory "$(pwd)/$FLUTTER_DIR" 2>/dev/null || true
 
 # Non-interactive sanity checks (allow warnings)
+log "Running flutter --version"
 .tooling/flutter/bin/flutter --version
+log "Enabling web support"
 .tooling/flutter/bin/flutter config --enable-web || true
+log "Running flutter doctor"
 .tooling/flutter/bin/flutter doctor -v || true
