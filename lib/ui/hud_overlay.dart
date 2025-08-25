@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 import '../game/space_game.dart';
@@ -27,23 +28,26 @@ class HudOverlay extends StatelessWidget {
                 children: [
                   ValueListenableBuilder<int>(
                     valueListenable: game.score,
-                    builder: (context, value, _) => Text(
+                    builder: (context, value, _) => AutoSizeText(
                       'Score: $value',
                       style: const TextStyle(color: Colors.white),
+                      maxLines: 1,
                     ),
                   ),
                   ValueListenableBuilder<int>(
                     valueListenable: game.highScore,
-                    builder: (context, value, _) => Text(
+                    builder: (context, value, _) => AutoSizeText(
                       'High: $value',
                       style: const TextStyle(color: Colors.white),
+                      maxLines: 1,
                     ),
                   ),
                   ValueListenableBuilder<int>(
                     valueListenable: game.health,
-                    builder: (context, value, _) => Text(
+                    builder: (context, value, _) => AutoSizeText(
                       'Health: $value',
                       style: const TextStyle(color: Colors.white),
+                      maxLines: 1,
                     ),
                   ),
                 ],

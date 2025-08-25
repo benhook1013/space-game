@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 import '../game/space_game.dart';
@@ -17,45 +18,43 @@ class MenuOverlay extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final shortestSide = constraints.biggest.shortestSide;
-        final titleFontSize = shortestSide * 0.08;
-        final uiFontSize = shortestSide * 0.04;
         final spacing = shortestSide * 0.02;
+        final iconSize = shortestSide * 0.05;
 
         return Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
+              AutoSizeText(
                 'Space Miner',
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontSize: titleFontSize,
-                      color: Colors.white,
-                    ),
+                style: Theme.of(context)
+                    .textTheme
+                    .headlineMedium
+                    ?.copyWith(color: Colors.white),
+                maxLines: 1,
               ),
               SizedBox(height: spacing),
               ValueListenableBuilder<int>(
                 valueListenable: game.highScore,
                 builder: (context, value, _) => value > 0
-                    ? Text(
+                    ? AutoSizeText(
                         'High Score: $value',
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.white,
-                          fontSize: uiFontSize,
                           fontWeight: FontWeight.bold,
                         ),
+                        maxLines: 1,
                       )
                     : const SizedBox.shrink(),
               ),
               SizedBox(height: spacing),
               TextButton(
                 onPressed: () => game.resetHighScore(),
-                style: TextButton.styleFrom(
-                  textStyle: TextStyle(
-                    fontSize: uiFontSize,
-                    fontWeight: FontWeight.bold,
-                  ),
+                child: const AutoSizeText(
+                  'Reset High Score',
+                  maxLines: 1,
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                child: const Text('Reset High Score'),
               ),
               SizedBox(height: spacing),
               Row(
@@ -63,31 +62,27 @@ class MenuOverlay extends StatelessWidget {
                 children: [
                   ElevatedButton(
                     onPressed: game.startGame,
-                    style: ElevatedButton.styleFrom(
-                      textStyle: TextStyle(
-                        fontSize: uiFontSize,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    child: const AutoSizeText(
+                      'Start',
+                      maxLines: 1,
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    child: const Text('Start'),
                   ),
                   SizedBox(width: spacing),
                   ElevatedButton(
                     // Mirrors the H keyboard shortcut.
                     onPressed: game.toggleHelp,
-                    style: ElevatedButton.styleFrom(
-                      textStyle: TextStyle(
-                        fontSize: uiFontSize,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    child: const AutoSizeText(
+                      'Help',
+                      maxLines: 1,
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    child: const Text('Help'),
                   ),
                   SizedBox(width: spacing),
                   ValueListenableBuilder<bool>(
                     valueListenable: game.audioService.muted,
                     builder: (context, muted, _) => IconButton(
-                      iconSize: uiFontSize * 1.2,
+                      iconSize: iconSize,
                       icon: Icon(
                         muted ? Icons.volume_off : Icons.volume_up,
                         color: Colors.white,
