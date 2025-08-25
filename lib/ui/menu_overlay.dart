@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 import '../game/space_game.dart';
@@ -14,93 +15,92 @@ class MenuOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final shortestSide = constraints.biggest.shortestSide;
-        final titleFontSize = shortestSide * 0.08;
-        final uiFontSize = shortestSide * 0.04;
-        final spacing = shortestSide * 0.02;
-
-        return Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Space Miner',
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontSize: titleFontSize,
-                      color: Colors.white,
-                    ),
+    return Center(
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AutoSizeText(
+              'Space Miner',
+              maxLines: 1,
+              textAlign: TextAlign.center,
+              style: Theme.of(context)
+                  .textTheme
+                  .headlineMedium
+                  ?.copyWith(color: Colors.white),
+            ),
+            const SizedBox(height: 20),
+            ValueListenableBuilder<int>(
+              valueListenable: game.highScore,
+              builder: (context, value, _) => value > 0
+                  ? AutoSizeText(
+                      'High Score: $value',
+                      maxLines: 1,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )
+                  : const SizedBox.shrink(),
+            ),
+            const SizedBox(height: 20),
+            TextButton(
+              onPressed: game.resetHighScore,
+              style: TextButton.styleFrom(
+                textStyle: const TextStyle(fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: spacing),
-              ValueListenableBuilder<int>(
-                valueListenable: game.highScore,
-                builder: (context, value, _) => value > 0
-                    ? Text(
-                        'High Score: $value',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: uiFontSize,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      )
-                    : const SizedBox.shrink(),
+              child: const AutoSizeText(
+                'Reset High Score',
+                maxLines: 1,
+                textAlign: TextAlign.center,
               ),
-              SizedBox(height: spacing),
-              TextButton(
-                onPressed: () => game.resetHighScore(),
-                style: TextButton.styleFrom(
-                  textStyle: TextStyle(
-                    fontSize: uiFontSize,
-                    fontWeight: FontWeight.bold,
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ElevatedButton(
+                  onPressed: game.startGame,
+                  style: ElevatedButton.styleFrom(
+                    textStyle: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  child: const AutoSizeText(
+                    'Start',
+                    maxLines: 1,
+                    textAlign: TextAlign.center,
                   ),
                 ),
-                child: const Text('Reset High Score'),
-              ),
-              SizedBox(height: spacing),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ElevatedButton(
-                    onPressed: game.startGame,
-                    style: ElevatedButton.styleFrom(
-                      textStyle: TextStyle(
-                        fontSize: uiFontSize,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    child: const Text('Start'),
+                const SizedBox(width: 10),
+                ElevatedButton(
+                  // Mirrors the H keyboard shortcut.
+                  onPressed: game.toggleHelp,
+                  style: ElevatedButton.styleFrom(
+                    textStyle: const TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(width: spacing),
-                  ElevatedButton(
-                    // Mirrors the H keyboard shortcut.
-                    onPressed: game.toggleHelp,
-                    style: ElevatedButton.styleFrom(
-                      textStyle: TextStyle(
-                        fontSize: uiFontSize,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    child: const Text('Help'),
+                  child: const AutoSizeText(
+                    'Help',
+                    maxLines: 1,
+                    textAlign: TextAlign.center,
                   ),
-                  SizedBox(width: spacing),
-                  ValueListenableBuilder<bool>(
-                    valueListenable: game.audioService.muted,
-                    builder: (context, muted, _) => IconButton(
-                      iconSize: uiFontSize * 1.2,
-                      icon: Icon(
-                        muted ? Icons.volume_off : Icons.volume_up,
-                        color: Colors.white,
-                      ),
-                      onPressed: game.audioService.toggleMute,
+                ),
+                const SizedBox(width: 10),
+                ValueListenableBuilder<bool>(
+                  valueListenable: game.audioService.muted,
+                  builder: (context, muted, _) => IconButton(
+                    icon: Icon(
+                      muted ? Icons.volume_off : Icons.volume_up,
+                      color: Colors.white,
                     ),
+                    onPressed: game.audioService.toggleMute,
                   ),
-                ],
-              ),
-            ],
-          ),
-        );
-      },
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
