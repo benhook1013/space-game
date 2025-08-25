@@ -379,7 +379,7 @@ class SpaceGame extends FlameGame
       } else if (event.logicalKey == LogicalKeyboardKey.keyH) {
         toggleHelp();
         return KeyEventResult.handled;
-      } else if (event.logicalKey == LogicalKeyboardKey.keyD) {
+      } else if (event.logicalKey == LogicalKeyboardKey.f1) {
         toggleDebug();
         return KeyEventResult.handled;
       }
