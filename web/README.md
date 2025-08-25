@@ -8,6 +8,8 @@ PWA configuration and static web files.
 - `index.html` bootstraps the Flutter app and registers `sw.js`.
 - `sw.js` precaches assets listed in `assets_manifest.json` and provides a
   simple cache-first strategy.
+- `assets_manifest.json` is copied here from the project root so the service
+  worker can fetch it at runtime. Keep both copies in sync when assets change.
 - See [../PLAN.md](../PLAN.md) for PWA goals and deployment guidelines.
 
 Build for release with:
