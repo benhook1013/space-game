@@ -12,13 +12,28 @@ permissions:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    env:
+      PUB_CACHE: ~/.pub-cache
     steps:
       - uses: actions/checkout@v5
-      - uses: subosito/flutter-action@v2
+      - name: Cache Flutter SDK
+        uses: actions/cache@v4
         with:
-          channel: stable
+          path: .tooling/flutter
+          key: ${{ runner.os }}-flutter-${{ hashFiles('scripts/bootstrap_flutter.sh') }}
+          restore-keys: |
+            ${{ runner.os }}-flutter-
+      - name: Cache pub packages
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.PUB_CACHE }}
+          key: ${{ runner.os }}-pub-${{ hashFiles('pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pub-
+      - name: Install dependencies
+        run: ./scripts/flutterw pub get
       - name: Build web
-        run: flutter build web --release --base-href "/space-game/"
+        run: ./scripts/flutterw build web --release --base-href "/space-game/"
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
