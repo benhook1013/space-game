@@ -19531,9 +19531,9 @@ var $async$xV=A.x(function(a,b){if(a===1)return A.y(b,r)
 while(true)switch(s){case 0:q=$.a6K()
 p=t.s
 s=2
-return A.D(A.hB(new A.ad(A.c(["assets/images/player.png","assets/images/enemy.png","assets/images/asteroid.png","assets/images/bullet.png"],p),q.gxO(),t.f_),t.CP),$async$xV)
+return A.D(A.hB(new A.ad(A.c(["player.png","enemy.png","asteroid.png","bullet.png"],p),q.gxO(),t.f_),t.CP),$async$xV)
 case 2:s=3
-return A.D($.a9I().xP(A.c(["assets/audio/shoot.wav"],p)),$async$xV)
+return A.D($.a9I().xP(A.c(["shoot.wav"],p)),$async$xV)
 case 3:return A.z(null,r)}})
 return A.A($async$xV,r)}},B={}
 var w=[A,J,B]
@@ -56260,7 +56260,7 @@ A.fK.prototype={
 aL(){var s=0,r=A.B(t.H),q=this
 var $async$aL=A.x(function(a,b){if(a===1)return A.y(b,r)
 while(true)switch(s){case 0:s=2
-return A.D(A.nZ("assets/images/asteroid.png"),$async$aL)
+return A.D(A.nZ("asteroid.png"),$async$aL)
 case 2:q.p2=b
 q.pI()
 q.bJ(A.Mp())
@@ -56286,7 +56286,7 @@ A.iJ.prototype={
 aL(){var s=0,r=A.B(t.H),q=this
 var $async$aL=A.x(function(a,b){if(a===1)return A.y(b,r)
 while(true)switch(s){case 0:s=2
-return A.D(A.nZ("assets/images/bullet.png"),$async$aL)
+return A.D(A.nZ("bullet.png"),$async$aL)
 case 2:q.p2=b
 q.pI()
 q.bJ(A.Mp())
@@ -56317,7 +56317,7 @@ A.fQ.prototype={
 aL(){var s=0,r=A.B(t.H),q=this
 var $async$aL=A.x(function(a,b){if(a===1)return A.y(b,r)
 while(true)switch(s){case 0:s=2
-return A.D(A.nZ("assets/images/enemy.png"),$async$aL)
+return A.D(A.nZ("enemy.png"),$async$aL)
 case 2:q.p2=b
 q.pI()
 q.bJ(A.Mp())
@@ -56375,7 +56375,7 @@ j.bo=0.2},
 aL(){var s=0,r=A.B(t.H),q=this
 var $async$aL=A.x(function(a,b){if(a===1)return A.y(b,r)
 while(true)switch(s){case 0:s=2
-return A.D(A.nZ("assets/images/player.png"),$async$aL)
+return A.D(A.nZ("player.png"),$async$aL)
 case 2:q.p2=b
 q.pI()
 q.bJ(A.Mp())
@@ -56783,7 +56783,7 @@ return A.D(q.a.oA(p.a),$async$o8)
 case 2:return A.z(null,r)}})
 return A.A($async$o8,r)},
 a1k(){if(this.b.a)return
-A.qV("assets/audio/shoot.wav",1,B.cN,B.DB,null)}}
+A.qV("shoot.wav",1,B.cN,B.DB,null)}}
 A.D3.prototype={
 ox(a){return this.Ko(a)},
 Ko(a){var s=0,r=A.B(t.H),q=this
