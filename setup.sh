@@ -35,6 +35,19 @@ add_path() {
 add_path "$PUB_CACHE_BIN"
 add_path "$FLUTTER_BIN"
 
+# Clear npm proxy variables that can emit warnings in environments without an
+# actual proxy. Leave the standard HTTP(S)_PROXY values intact so network
+# access still works behind lab proxies.
+if [ -n "${npm_config_http_proxy:-}" ] || [ -n "${npm_config_https_proxy:-}" ]; then
+  unset npm_config_http_proxy npm_config_https_proxy
+  for profile in "$HOME/.bashrc" "$HOME/.zshrc" "$HOME/.profile"; do
+    if [ -w "$profile" ] && ! grep -Fqs 'npm_config_http_proxy' "$profile"; then
+      printf '\nunset npm_config_http_proxy npm_config_https_proxy\n' >> "$profile"
+      log "Unset npm proxy vars in $profile"
+    fi
+  done
+fi
+
 # Ensure Dart/Flutter dependencies are fetched.
 log "Fetching pub dependencies"
 dart pub get || log "dart pub get failed"
@@ -195,9 +208,24 @@ if ! command -v google-chrome >/dev/null 2>&1 && \
   esac
 fi
 
+# Install Xvfb for headless Chrome runs.
+if ! command -v xvfb-run >/dev/null 2>&1; then
+  case "$(uname -s)" in
+    Linux*)
+      if command -v apt-get >/dev/null 2>&1; then
+        $SUDO apt-get update || true
+        $SUDO apt-get install -y xvfb || log "Failed to install xvfb"
+      fi
+      ;;
+  esac
+fi
+
 # Set CHROME_EXECUTABLE to the resolved browser path.
 chrome_path="$(command -v google-chrome 2>/dev/null || command -v chromium-browser 2>/dev/null || command -v chromium 2>/dev/null || true)"
 if [ -n "$chrome_path" ]; then
+  if command -v xvfb-run >/dev/null 2>&1; then
+    chrome_path="$REPO_ROOT/scripts/chrome-headless.sh"
+  fi
   export CHROME_EXECUTABLE="$chrome_path"
   for profile in "$HOME/.bashrc" "$HOME/.zshrc" "$HOME/.profile"; do
     if [ -w "$profile" ] && ! grep -q "CHROME_EXECUTABLE" "$profile"; then
