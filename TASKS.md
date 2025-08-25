@@ -40,8 +40,8 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
 ## PWA
 
 - [x] Add `web/manifest.json` and placeholder icons for installable PWA.
-- [x] Review service worker caching strategy and add custom `sw.js` for
-      cache-first asset handling.
+- [x] Review service worker caching strategy and use Flutter's default
+      `flutter_service_worker.js` for cache-first asset handling.
 
 ## Testing
 

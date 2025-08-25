@@ -193,8 +193,7 @@ in [TASKS.md](TASKS.md).
   - `background_color` `#000000`
   - `theme_color` `#0f0f0f`
 - Icons 192x192 and 512x512 in `web/icons/`
-- Custom `sw.js` precaches assets listed in `assets_manifest.json` and
-  handles runtime caching
+- Rely on Flutter's generated `flutter_service_worker.js` for offline caching
 - Build with `fvm flutter build web --release`
 - Test with `fvm flutter run -d web-server`
 - Deploy via GitHub Pages (`gh-pages`) using a GitHub Actions workflow

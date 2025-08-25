@@ -18,7 +18,7 @@ jobs:
         with:
           channel: stable
       - name: Build web
-        run: flutter build web --release
+        run: flutter build web --release --base-href /space-game/
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
