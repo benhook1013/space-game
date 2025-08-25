@@ -1,7 +1,7 @@
 {
   "name": "Space Miner",
   "short_name": "SpaceMiner",
-  "start_url": "/",
+  "start_url": "/space-game/",
   "display": "standalone",
   "orientation": "landscape",
   "background_color": "#000000",
