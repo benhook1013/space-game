@@ -15,61 +15,86 @@ class PauseOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          AutoSizeText(
-            'Paused',
-            style: Theme.of(context)
-                .textTheme
-                .headlineMedium
-                ?.copyWith(color: Colors.white),
-            maxLines: 1,
-          ),
-          const SizedBox(height: 20),
-          Row(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final shortestSide = constraints.biggest.shortestSide;
+        final spacing = shortestSide * 0.02;
+        final iconSize = shortestSide * 0.05;
+
+        return Center(
+          child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              ElevatedButton(
-                // Mirrors the Escape and P keyboard shortcuts.
-                onPressed: game.resumeGame,
-                child: const AutoSizeText('Resume', maxLines: 1),
+              AutoSizeText(
+                'Paused',
+                style: Theme.of(context)
+                    .textTheme
+                    .headlineMedium
+                    ?.copyWith(color: Colors.white),
+                maxLines: 1,
               ),
-              const SizedBox(width: 10),
-              ElevatedButton(
-                // Mirrors the R keyboard shortcut.
-                onPressed: game.startGame,
-                child: const AutoSizeText('Restart', maxLines: 1),
-              ),
-              const SizedBox(width: 10),
-              ElevatedButton(
-                // Mirrors the Q keyboard shortcut.
-                onPressed: game.returnToMenu,
-                child: const AutoSizeText('Menu', maxLines: 1),
-              ),
-              const SizedBox(width: 10),
-              ElevatedButton(
-                // Mirrors the H keyboard shortcut.
-                onPressed: game.toggleHelp,
-                child: const AutoSizeText('Help', maxLines: 1),
-              ),
-              const SizedBox(width: 10),
-              ValueListenableBuilder<bool>(
-                valueListenable: game.audioService.muted,
-                builder: (context, muted, _) => IconButton(
-                  icon: Icon(
-                    muted ? Icons.volume_off : Icons.volume_up,
-                    color: Colors.white,
+              SizedBox(height: spacing),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ElevatedButton(
+                    // Mirrors the Escape and P keyboard shortcuts.
+                    onPressed: game.resumeGame,
+                    child: const AutoSizeText(
+                      'Resume',
+                      maxLines: 1,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
                   ),
-                  // Mirrors the M keyboard shortcut.
-                  onPressed: game.audioService.toggleMute,
-                ),
+                  SizedBox(width: spacing),
+                  ElevatedButton(
+                    // Mirrors the R keyboard shortcut.
+                    onPressed: game.startGame,
+                    child: const AutoSizeText(
+                      'Restart',
+                      maxLines: 1,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  SizedBox(width: spacing),
+                  ElevatedButton(
+                    // Mirrors the Q keyboard shortcut.
+                    onPressed: game.returnToMenu,
+                    child: const AutoSizeText(
+                      'Menu',
+                      maxLines: 1,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  SizedBox(width: spacing),
+                  ElevatedButton(
+                    // Mirrors the H keyboard shortcut.
+                    onPressed: game.toggleHelp,
+                    child: const AutoSizeText(
+                      'Help',
+                      maxLines: 1,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  SizedBox(width: spacing),
+                  ValueListenableBuilder<bool>(
+                    valueListenable: game.audioService.muted,
+                    builder: (context, muted, _) => IconButton(
+                      iconSize: iconSize,
+                      icon: Icon(
+                        muted ? Icons.volume_off : Icons.volume_up,
+                        color: Colors.white,
+                      ),
+                      // Mirrors the M keyboard shortcut.
+                      onPressed: game.audioService.toggleMute,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
