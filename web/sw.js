@@ -1,10 +1,10 @@
 const CACHE_NAME = 'space-game-cache-v1';
 const CORE_ASSETS = [
-  '/',
+  './',
   'index.html',
   'manifest.json',
   'assets_manifest.json',
-  'flutter.js',
+  'flutter_bootstrap.js',
   'main.dart.js',
 ];
 
