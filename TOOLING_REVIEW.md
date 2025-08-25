@@ -4,18 +4,16 @@
 | --- | --- | --- |
 | `./scripts/flutterw --version` | README.md – example wrapper usage | ✅ Reports Flutter 3.32.8 |
 | `./scripts/dartw pub get` | README.md – example wrapper usage | ✅ Resolves dependencies successfully |
-| `./scripts/dartw format` | Copilot instructions require running format | ⚠️ Runs but flags two unformatted files |
+| `./scripts/dartw format` | Copilot instructions require running format | ✅ Formats code with no pending changes |
 | `./scripts/dartw analyze` | Copilot instructions require static analysis | ✅ No issues found |
-| `./scripts/flutterw test` | Copilot instructions require tests | ❌ Fails: no `*_test.dart` files in `test/` |
-| `./scripts/flutterw run -d chrome` | Manual testing guide suggests Chrome target | ❌ No Chrome device found |
-| `./scripts/flutterw run -d web-server` | Manual testing guide suggests web-server target | ⚠️ Launches but warns project isn’t configured for web |
-| `./scripts/flutterw build web --release` | Web README describes release build | ❌ Fails: missing `index.html` |
-| `fvm flutter doctor` / `fvm dart format` | Plan/TASKS show FVM usage | ❌ `fvm` command not found |
+| `./scripts/flutterw test` | Copilot instructions require tests | ✅ All tests passed |
+| `./scripts/flutterw run -d chrome` | Manual testing guide suggests Chrome target | ⚠️ Requires headless wrapper; may hang without display |
+| `./scripts/flutterw run -d web-server` | Manual testing guide suggests web-server target | ✅ Serves app locally |
+| `./scripts/flutterw build web --release` | Web README describes release build | ✅ Builds to `build/web` |
+| `fvm flutter doctor` / `fvm dart format` | Plan/TASKS show FVM usage | ✅ FVM available |
+| `npm --version` | Setup script ensures Node.js | ✅ 11.4.2 without proxy warnings |
 | `./scripts/markdownlint.sh '**/*.md'` | Plan recommends markdownlint after doc edits | ✅ Uses local install or `npx --yes` |
 
 ## Notes
 
-- Install FVM or remove FVM-specific instructions if not required.
-- Add web support (`flutter create .`) and `web/index.html` to enable builds/run targets.
-- Provide Chrome or Edge in the environment if Chrome device debugging is desired.
-- Use `scripts/markdownlint.sh` to lint docs without interactive prompts.
+- Headless Chrome wrapper is provided but may still fail on some CI runners; use `-d web-server` as a fallback.
