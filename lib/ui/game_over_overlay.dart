@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 import '../game/space_game.dart';
@@ -18,27 +19,30 @@ class GameOverOverlay extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
+          AutoSizeText(
             'Game Over',
             style: Theme.of(context)
                 .textTheme
                 .headlineMedium
                 ?.copyWith(color: Colors.white),
+            maxLines: 1,
           ),
           const SizedBox(height: 20),
           ValueListenableBuilder<int>(
             valueListenable: game.score,
-            builder: (context, value, _) => Text(
+            builder: (context, value, _) => AutoSizeText(
               'Final Score: $value',
               style: const TextStyle(color: Colors.white),
+              maxLines: 1,
             ),
           ),
           const SizedBox(height: 10),
           ValueListenableBuilder<int>(
             valueListenable: game.highScore,
-            builder: (context, value, _) => Text(
+            builder: (context, value, _) => AutoSizeText(
               'High Score: $value',
               style: const TextStyle(color: Colors.white),
+              maxLines: 1,
             ),
           ),
           const SizedBox(height: 20),
@@ -48,19 +52,19 @@ class GameOverOverlay extends StatelessWidget {
               ElevatedButton(
                 // Mirrors the Enter and R keyboard shortcuts.
                 onPressed: game.startGame,
-                child: const Text('Restart'),
+                child: const AutoSizeText('Restart', maxLines: 1),
               ),
               const SizedBox(width: 10),
               ElevatedButton(
                 // Mirrors the Q and Escape keyboard shortcuts.
                 onPressed: game.returnToMenu,
-                child: const Text('Menu'),
+                child: const AutoSizeText('Menu', maxLines: 1),
               ),
               const SizedBox(width: 10),
               ElevatedButton(
                 // Mirrors the H keyboard shortcut.
                 onPressed: game.toggleHelp,
-                child: const Text('Help'),
+                child: const AutoSizeText('Help', maxLines: 1),
               ),
               const SizedBox(width: 10),
               ValueListenableBuilder<bool>(

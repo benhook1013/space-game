@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 import '../game/space_game.dart';
@@ -18,12 +19,13 @@ class PauseOverlay extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
+          AutoSizeText(
             'Paused',
             style: Theme.of(context)
                 .textTheme
                 .headlineMedium
                 ?.copyWith(color: Colors.white),
+            maxLines: 1,
           ),
           const SizedBox(height: 20),
           Row(
@@ -32,25 +34,25 @@ class PauseOverlay extends StatelessWidget {
               ElevatedButton(
                 // Mirrors the Escape and P keyboard shortcuts.
                 onPressed: game.resumeGame,
-                child: const Text('Resume'),
+                child: const AutoSizeText('Resume', maxLines: 1),
               ),
               const SizedBox(width: 10),
               ElevatedButton(
                 // Mirrors the R keyboard shortcut.
                 onPressed: game.startGame,
-                child: const Text('Restart'),
+                child: const AutoSizeText('Restart', maxLines: 1),
               ),
               const SizedBox(width: 10),
               ElevatedButton(
                 // Mirrors the Q keyboard shortcut.
                 onPressed: game.returnToMenu,
-                child: const Text('Menu'),
+                child: const AutoSizeText('Menu', maxLines: 1),
               ),
               const SizedBox(width: 10),
               ElevatedButton(
                 // Mirrors the H keyboard shortcut.
                 onPressed: game.toggleHelp,
-                child: const Text('Help'),
+                child: const AutoSizeText('Help', maxLines: 1),
               ),
               const SizedBox(width: 10),
               ValueListenableBuilder<bool>(
