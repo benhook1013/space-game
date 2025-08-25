@@ -22,20 +22,24 @@ self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(async (cache) => {
       await cacheAssets(cache, CORE_ASSETS);
-      try {
-        const response = await fetch("assets_manifest.json");
-        const manifest = await response.json();
-        const assetList = [
-          ...(manifest.images || []),
-          ...(manifest.audio || []),
-          ...(manifest.fonts || []),
-        ];
-        await cacheAssets(cache, assetList);
-      } catch (err) {
-        console.error("Asset manifest fetch failed", err);
-      }
     }),
   );
+
+  // Cache additional assets after activation so the install step finishes quickly.
+  caches.open(CACHE_NAME).then(async (cache) => {
+    try {
+      const response = await fetch("assets_manifest.json");
+      const manifest = await response.json();
+      const assetList = [
+        ...(manifest.images || []),
+        ...(manifest.audio || []),
+        ...(manifest.fonts || []),
+      ];
+      await cacheAssets(cache, assetList);
+    } catch (err) {
+      console.error("Asset manifest fetch failed", err);
+    }
+  });
 });
 
 self.addEventListener("activate", (event) => {
