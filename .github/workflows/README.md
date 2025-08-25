@@ -5,6 +5,9 @@ CI/CD automation for the project.
 - `ci.yml` – formats code, runs static analysis and tests.
 - `deploy.yml` – builds the web release and publishes it.
 
+Both workflows use concurrency groups to cancel in-progress runs when new
+commits arrive.
+
 Workflows follow the lightweight pipeline described in [../../PLAN.md](../../PLAN.md).
 
 ### GitHub Pages Deployment
