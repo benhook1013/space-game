@@ -11,7 +11,7 @@ jobs:
   analyze-and-test:
     runs-on: ubuntu-latest
     env:
-      PUB_CACHE: ~/.pub-cache
+      PUB_CACHE: ${{ env.HOME }}/.pub-cache
     steps:
       - uses: actions/checkout@v5
         with:
@@ -30,6 +30,8 @@ jobs:
           key: ${{ runner.os }}-pub-${{ hashFiles('pubspec.lock') }}
           restore-keys: |
             ${{ runner.os }}-pub-
+      - name: Install dependencies
+        run: mkdir -p $PUB_CACHE && ./scripts/flutterw pub get
       - name: Analyze
         run: |
           set -o pipefail

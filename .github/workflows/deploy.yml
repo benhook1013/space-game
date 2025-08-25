@@ -17,7 +17,7 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     env:
-      PUB_CACHE: ~/.pub-cache
+      PUB_CACHE: ${{ env.HOME }}/.pub-cache
     steps:
       - uses: actions/checkout@v5
       - name: Cache Flutter SDK
@@ -35,7 +35,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pub-
       - name: Install dependencies
-        run: ./scripts/flutterw pub get
+        run: mkdir -p $PUB_CACHE && ./scripts/flutterw pub get
       - name: Build web
         run: ./scripts/flutterw build web --release --base-href "/space-game/"
       - name: Deploy to GitHub Pages
