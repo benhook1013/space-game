@@ -14,5 +14,6 @@ Flutter widget shown before gameplay starts.
 - Help button (or `H` key) lists all controls without starting the game; `Esc`
   closes it.
 - Reset button clears the stored high score.
+- Responsive layout scales fonts, spacing, and icons relative to screen size.
 
 See [../../PLAN.md](../../PLAN.md) for UI goals.
