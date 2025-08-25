@@ -42,6 +42,7 @@ if [ -x "$FLUTTER_DIR/bin/flutter" ]; then
     export PATH="$(pwd)/$FLUTTER_DIR/bin:$PATH"
     git config --global --add safe.directory "$(pwd)/$FLUTTER_DIR" 2>/dev/null || true
     "$FLUTTER_DIR/bin/flutter" --version >/dev/null 2>&1 || true
+    "$FLUTTER_DIR/bin/flutter" config --enable-web >/dev/null 2>&1 || true
     return 0 2>/dev/null || exit 0
   else
     log "Flutter $current_version ($current_channel) found, but $FLUTTER_VERSION ($FLUTTER_CHANNEL) required"
@@ -199,9 +200,11 @@ export PATH="$(pwd)/$FLUTTER_DIR/bin:$PATH"
 git config --global --add safe.directory "$(pwd)/$FLUTTER_DIR" 2>/dev/null || true
 
 log "Running flutter --version"
-.tooling/flutter/bin/flutter --version
+.tooling/flutter/bin/flutter --version || true
 log "Enabling web support"
 .tooling/flutter/bin/flutter config --enable-web || true
-log "Running flutter doctor"
-.tooling/flutter/bin/flutter doctor -v || true
+if [ "${SKIP_DOCTOR:-}" != "1" ]; then
+  log "Running flutter doctor"
+  .tooling/flutter/bin/flutter doctor -v || true
+fi
 log "Flutter bootstrap complete"

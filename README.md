@@ -113,36 +113,34 @@ Remember to update `assets_manifest.json` and credit any third-party assets in
 
 ## Flutter Tooling
 
-Run `./setup.sh` (Unix) or `.\setup.ps1` (PowerShell) after cloning to
-download the pinned Flutter SDK into `.tooling/flutter`, install the FVM and
-Markdown tooling, and add pub global binaries to your `PATH`. The repository
-provides wrapper scripts for both Unix-like shells and Windows, which
-bootstrap this SDK on demand and then
-delegate to the real `flutter` and `dart` binaries:
+Run `./setup.sh` (Unix) or `.\\setup.ps1` (PowerShell) after cloning to
+download the pinned Flutter SDK into `.tooling/flutter`. Wrapper scripts in
+`scripts/` use this SDK automatically:
 
 - Unix shells: `scripts/flutterw`, `scripts/dartw`
-- PowerShell: `scripts\flutterw.ps1`, `scripts\dartw.ps1`
-- Command Prompt: `scripts\flutterw.cmd`, `scripts\dartw.cmd`
-
-To override the default Flutter version, set `FLUTTER_VERSION` before running a
-wrapper. Example:
-
-```powershell
-$env:FLUTTER_VERSION='3.32.8'; scripts\bootstrap_flutter.ps1 -Force
-```
-
-Use `-Force` to re-download the SDK or `-Quiet` to suppress progress messages.
+- PowerShell: `scripts\\flutterw.ps1`, `scripts\\dartw.ps1`
+- Command Prompt: `scripts\\flutterw.cmd`, `scripts\\dartw.cmd`
 
 Examples:
 
 ```bash
 ./scripts/flutterw --version
 ./scripts/dartw pub get
+./scripts/flutterw run -d web-server
 ```
 
-The project also includes an `fvm_config.json` for those who prefer to use
-[FVM](https://fvm.app/). In that case, run `fvm install` once and then use
+The repo also includes an `fvm_config.json` for those who prefer
+[FVM](https://fvm.app/); run `fvm install` once and then use
 `fvm flutter`/`fvm dart` for subsequent commands.
+
+Android or desktop toolchains aren’t required for PWA development. If you need
+native targets, install those toolchains separately.
+
+For Markdown linting, run:
+
+```bash
+npx --yes markdownlint-cli '**/*.md'
+```
 
 ## 🌐 GitHub Pages Deployment
 
