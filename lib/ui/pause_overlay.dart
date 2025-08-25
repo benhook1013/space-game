@@ -18,9 +18,12 @@ class PauseOverlay extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text(
+          Text(
             'Paused',
-            style: TextStyle(fontSize: 32, color: Colors.white),
+            style: Theme.of(context)
+                .textTheme
+                .headlineMedium
+                ?.copyWith(color: Colors.white),
           ),
           const SizedBox(height: 20),
           Row(

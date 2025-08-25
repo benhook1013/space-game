@@ -20,9 +20,12 @@ class HelpOverlay extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
+            Text(
               'Controls',
-              style: TextStyle(fontSize: 24, color: Colors.white),
+              style: Theme.of(context)
+                  .textTheme
+                  .headlineSmall
+                  ?.copyWith(color: Colors.white),
             ),
             const SizedBox(height: 20),
             const Text(
