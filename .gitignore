@@ -25,6 +25,7 @@ doc/api/
 *.js.map
 # Keep custom service worker
 !web/sw.js
+!web/segmenter_polyfill.js
 
 .flutter-plugins
 .flutter-plugins-dependencies
