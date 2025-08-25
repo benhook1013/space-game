@@ -11,7 +11,7 @@ jobs:
   analyze-and-test:
     runs-on: ubuntu-latest
     env:
-      PUB_CACHE: ${{ env.HOME }}/.pub-cache
+      PUB_CACHE: ${{ github.workspace }}/.pub-cache
     steps:
       - uses: actions/checkout@v5
         with:
