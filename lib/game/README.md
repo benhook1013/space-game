@@ -6,8 +6,8 @@ Core game class and shared systems.
 - Owns helpers for world/scene management, input, collisions, spawners and
   scoring.
 - Tracks state transitions with a `GameState` enum and manages overlays.
-- Uses `CameraComponent` with a `FixedResolutionViewport` to keep a
-  consistent logical resolution.
+- Uses the default camera viewport so the game fills the available
+  browser window.
 - Timer-based spawners generate enemies and asteroids.
 - Input uses Flame's `JoystickComponent`, `ButtonComponent` and
   `KeyboardListenerComponent`.
@@ -19,7 +19,7 @@ Core game class and shared systems.
 
 - Load assets via a central registry before starting play.
 - Configure the world, including the parallax starfield background and
-  fixed-resolution camera.
+  camera.
 - Spawn the player and register component spawners.
 - Maintain `GameState` values (`menu`, `playing`, `gameOver`) and swap
   overlays accordingly.

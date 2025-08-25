@@ -2,7 +2,6 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flame/components.dart';
-import 'package:flame/camera.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flutter/foundation.dart';
@@ -78,9 +77,6 @@ class SpaceGame extends FlameGame
 
   @override
   Future<void> onLoad() async {
-    camera.viewport = FixedResolutionViewport(
-      resolution: Vector2(Constants.logicalWidth, Constants.logicalHeight),
-    );
     add(StarfieldComponent());
     if (kDebugMode) {
       _fpsText = FpsTextComponent(position: Vector2.all(10));
