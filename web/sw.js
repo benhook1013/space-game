@@ -10,10 +10,11 @@ const CORE_ASSETS = [
 
 async function cacheAssets(cache, assets) {
   for (const asset of assets) {
+    const url = asset.startsWith("assets/") ? `assets/${asset}` : asset;
     try {
-      await cache.add(asset);
+      await cache.add(url);
     } catch (err) {
-      console.warn(`Failed to cache ${asset}`, err);
+      console.warn(`Failed to cache ${url}`, err);
     }
   }
 }
