@@ -27,8 +27,13 @@ import '../ui/help_overlay.dart';
 import 'game_state.dart';
 
 /// Root Flame game handling the core loop.
+///
+/// [HasKeyboardHandlerComponents] already exposes [KeyboardEvents] and
+/// propagates key presses to child components like the player. Mixing in the
+/// standalone [KeyboardEvents] here would prevent that propagation, so it is
+/// intentionally omitted.
 class SpaceGame extends FlameGame
-    with HasKeyboardHandlerComponents, HasCollisionDetection, KeyboardEvents {
+    with HasKeyboardHandlerComponents, HasCollisionDetection {
   SpaceGame({required this.storageService, required this.audioService}) {
     debugMode = kDebugMode;
   }

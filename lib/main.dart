@@ -22,6 +22,9 @@ Future<void> main() async {
     MaterialApp(
       home: GameWidget<SpaceGame>(
         game: game,
+        // Automatically request keyboard focus so web players can use WASD
+        // without tapping the canvas first.
+        autofocus: true,
         overlayBuilderMap: {
           MenuOverlay.id: (context, SpaceGame game) => MenuOverlay(game: game),
           HudOverlay.id: (context, SpaceGame game) => HudOverlay(game: game),
