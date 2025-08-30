@@ -81,6 +81,9 @@ class Constants {
   /// Score awarded for mining an asteroid.
   static const int asteroidScore = 1;
 
+  /// Minerals gained for each hit on an asteroid.
+  static const int asteroidMinerals = 1;
+
   /// Number of stars spawned per parallax layer.
   static const int starsPerLayer = 30;
 

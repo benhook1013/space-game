@@ -61,6 +61,9 @@ class SpaceGame extends FlameGame
   /// Highest score persisted across sessions.
   final ValueNotifier<int> highScore = ValueNotifier<int>(0);
 
+  /// Minerals collected from asteroids.
+  final ValueNotifier<int> minerals = ValueNotifier<int>(0);
+
   /// Player health exposed for HUD rendering.
   final ValueNotifier<int> health = ValueNotifier<int>(
     Constants.playerMaxHealth,
@@ -238,6 +241,11 @@ class SpaceGame extends FlameGame
     score.value += value;
   }
 
+  /// Adds [value] to the current mineral count.
+  void addMinerals(int value) {
+    minerals.value += value;
+  }
+
   @override
   void update(double dt) {
     super.update(dt);
@@ -288,6 +296,7 @@ class SpaceGame extends FlameGame
   void startGame() {
     state = GameState.playing;
     score.value = 0;
+    minerals.value = 0;
     health.value = Constants.playerMaxHealth;
     children.whereType<EnemyComponent>().forEach((e) => e.removeFromParent());
     children.whereType<AsteroidComponent>().forEach(

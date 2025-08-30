@@ -39,7 +39,8 @@ dedicated server or NAT traversal.
   foe
 - Asteroids can be mined for mineral drops using an auto-targeting laser
 - Single endless level with quick restart
-- Player health and high score displayed in the HUD; health drops on collision
+- Player health, minerals and high score displayed in the HUD; health drops on
+  collision and minerals increase when damaging asteroids
 - Local high score stored on device using `shared_preferences`
 - Basic sound effects with a mute toggle on menu, HUD, pause and game over
   screens, plus an `M` key shortcut

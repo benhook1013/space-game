@@ -4,7 +4,8 @@ Heads-up display shown during play.
 
 ## Features
 
-- Shows current score, high score and health using `ValueNotifier`s from `SpaceGame`.
+- Shows current score, high score, minerals and health using `ValueNotifier`s from
+  `SpaceGame`.
 - Provides auto-aim radius toggle, help, mute and pause buttons bound to
   `SpaceGame` and `AudioService`.
 - Icon sizes scale with screen size for better usability on different devices.
