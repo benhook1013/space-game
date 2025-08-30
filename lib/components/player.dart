@@ -33,6 +33,9 @@ class PlayerComponent extends SpriteComponent
   /// Angle the ship should currently rotate towards.
   double _targetAngle = 0;
 
+  /// Accumulates time between auto-aim updates when stationary.
+  double _autoAimTimer = 0;
+
   /// Resets the player to its default orientation and clears input state.
   void reset() {
     position = game.size / 2;
@@ -47,7 +50,9 @@ class PlayerComponent extends SpriteComponent
     if (_shootCooldown > 0) {
       return;
     }
-    final bullet = game.acquireBullet(position.clone(), Vector2(0, -1));
+    final direction =
+        Vector2(math.cos(angle - math.pi / 2), math.sin(angle - math.pi / 2));
+    final bullet = game.acquireBullet(position.clone(), direction);
     game.add(bullet);
     game.audioService.playShoot();
     _shootCooldown = Constants.bulletCooldown;
@@ -81,6 +86,18 @@ class PlayerComponent extends SpriteComponent
         game.size - Vector2.all(size.x / 2),
       );
       _targetAngle = math.atan2(input.y, input.x) + math.pi / 2;
+      _autoAimTimer = 0;
+    } else {
+      _autoAimTimer += dt;
+      if (_autoAimTimer >= Constants.playerAutoAimInterval) {
+        _autoAimTimer = 0;
+        final target = _findClosestEnemy();
+        if (target != null) {
+          _targetAngle = math.atan2(target.position.y - position.y,
+                  target.position.x - position.x) +
+              math.pi / 2;
+        }
+      }
     }
 
     final rotationDelta = _normalizeAngle(_targetAngle - angle);
@@ -138,5 +155,19 @@ class PlayerComponent extends SpriteComponent
       a -= math.pi * 2;
     }
     return a;
+  }
+
+  EnemyComponent? _findClosestEnemy() {
+    EnemyComponent? closest;
+    var closestDistance = Constants.playerAutoAimRange;
+    final enemies = game.children.whereType<EnemyComponent>().toList();
+    for (final enemy in enemies) {
+      final distance = enemy.position.distanceTo(position);
+      if (distance <= closestDistance) {
+        closest = enemy;
+        closestDistance = distance;
+      }
+    }
+    return closest;
   }
 }

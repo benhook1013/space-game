@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 
@@ -24,6 +26,7 @@ class BulletComponent extends SpriteComponent
     _direction
       ..setFrom(direction)
       ..normalize();
+    angle = math.atan2(_direction.y, _direction.x) + math.pi / 2;
   }
 
   @override
@@ -36,7 +39,10 @@ class BulletComponent extends SpriteComponent
   void update(double dt) {
     super.update(dt);
     position += _direction * Constants.bulletSpeed * dt;
-    if (position.y < -size.y || position.y > game.size.y + size.y) {
+    if (position.y < -size.y ||
+        position.y > game.size.y + size.y ||
+        position.x < -size.x ||
+        position.x > game.size.x + size.x) {
       removeFromParent();
     }
   }
