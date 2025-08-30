@@ -210,6 +210,7 @@ class SpaceGame extends FlameGame
     }
     health.value -= 1;
     if (health.value <= 0) {
+      player.removeFromParent();
       gameOver();
     }
   }
@@ -275,6 +276,10 @@ class SpaceGame extends FlameGame
           (a) => a.removeFromParent(),
         );
     children.whereType<BulletComponent>().forEach((b) => b.removeFromParent());
+    if (!player.isMounted) {
+      add(player);
+      camera.follow(player);
+    }
     player.reset();
     overlays
       ..remove(MenuOverlay.id)
