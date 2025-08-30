@@ -17,41 +17,39 @@ class HudOverlay extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
+        padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ValueListenableBuilder<int>(
-                    valueListenable: game.score,
-                    builder: (context, value, _) => AutoSizeText(
-                      'Score: $value',
-                      style: const TextStyle(color: Colors.white),
-                      maxLines: 1,
-                    ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ValueListenableBuilder<int>(
+                  valueListenable: game.score,
+                  builder: (context, value, _) => AutoSizeText(
+                    'Score: $value',
+                    style: const TextStyle(color: Colors.white),
+                    maxLines: 1,
                   ),
-                  ValueListenableBuilder<int>(
-                    valueListenable: game.highScore,
-                    builder: (context, value, _) => AutoSizeText(
-                      'High: $value',
-                      style: const TextStyle(color: Colors.white),
-                      maxLines: 1,
-                    ),
+                ),
+                ValueListenableBuilder<int>(
+                  valueListenable: game.highScore,
+                  builder: (context, value, _) => AutoSizeText(
+                    'High: $value',
+                    style: const TextStyle(color: Colors.white),
+                    maxLines: 1,
                   ),
-                  ValueListenableBuilder<int>(
-                    valueListenable: game.health,
-                    builder: (context, value, _) => AutoSizeText(
-                      'Health: $value',
-                      style: const TextStyle(color: Colors.white),
-                      maxLines: 1,
-                    ),
+                ),
+                ValueListenableBuilder<int>(
+                  valueListenable: game.health,
+                  builder: (context, value, _) => AutoSizeText(
+                    'Health: $value',
+                    style: const TextStyle(color: Colors.white),
+                    maxLines: 1,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
             Row(
               children: [
