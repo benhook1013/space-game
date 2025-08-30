@@ -14,7 +14,12 @@ import 'enemy.dart';
 class PlayerComponent extends SpriteComponent
     with HasGameReference<SpaceGame>, KeyboardHandler, CollisionCallbacks {
   PlayerComponent({required this.joystick})
-      : super(size: Vector2.all(Constants.playerSize), anchor: Anchor.center);
+      : super(
+          size: Vector2.all(
+            Constants.playerSize * Constants.playerScale,
+          ),
+          anchor: Anchor.center,
+        );
 
   /// Reference to the on-screen joystick for touch input.
   final JoystickComponent joystick;

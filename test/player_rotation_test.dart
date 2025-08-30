@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:space_game/components/player.dart';
+import 'package:space_game/constants.dart';
 import 'package:space_game/game/space_game.dart';
 import 'package:space_game/services/audio_service.dart';
 import 'package:space_game/services/storage_service.dart';
@@ -28,7 +29,9 @@ class _TestGame extends SpaceGame {
     );
     player = _TestPlayer(joystick: joystick);
     add(player);
-    onGameResize(Vector2.all(100));
+    onGameResize(
+      Vector2.all(Constants.playerSize * Constants.playerScale * 2),
+    );
   }
 }
 
