@@ -124,7 +124,10 @@ function Download-With-Http { param([string]$Url,[string]$Dest)
   $resp = $client.SendAsync($req, [System.Net.Http.HttpCompletionOption]::ResponseHeadersRead).GetAwaiter().GetResult()
   if (-not $resp.IsSuccessStatusCode -and $resp.StatusCode -ne 206) { throw "HTTP $($resp.StatusCode) downloading $Url" }
   $total = $resp.Content.Headers.ContentLength
-  $in    = $resp.Content.ReadAsStream()
+  # PowerShell 5's HttpContent lacks a synchronous ReadAsStream method.
+  # ReadAsStreamAsync() is available across .NET versions, so synchronously
+  # wait for the stream to accommodate older runtimes.
+  $in    = $resp.Content.ReadAsStreamAsync().GetAwaiter().GetResult()
   $outMode = if ($existing -gt 0) {[System.IO.FileMode]::Append} else {[System.IO.FileMode]::Create}
   $out  = [System.IO.File]::Open($tmp, $outMode, [System.IO.FileAccess]::Write, [System.IO.FileShare]::None)
 
@@ -178,7 +181,8 @@ function Download-With-Ranges { param([string]$Url,[string]$Dest,[int]$Parts=8)
       $req.Headers.Range = [System.Net.Http.Headers.RangeHeaderValue]::new($Start, $End)
       $resp = $client.SendAsync($req, [System.Net.Http.HttpCompletionOption]::ResponseHeadersRead).GetAwaiter().GetResult()
       if (-not $resp.IsSuccessStatusCode -and $resp.StatusCode -ne 206) { throw "HTTP $($resp.StatusCode)" }
-      $in = $resp.Content.ReadAsStream()
+      # Use ReadAsStreamAsync() for compatibility with older .NET/PowerShell versions
+      $in = $resp.Content.ReadAsStreamAsync().GetAwaiter().GetResult()
       $out=[System.IO.File]::Open($Tmp,[System.IO.FileMode]::Create,[System.IO.FileAccess]::Write,[System.IO.FileShare]::None)
       try {
         $buf = New-Object byte[] (64KB)
