@@ -7,10 +7,11 @@ on:
       - main
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: deploy
   cancel-in-progress: true
 
 permissions:
+  actions: write
   contents: write
 
 jobs:
@@ -20,6 +21,23 @@ jobs:
       PUB_CACHE: ${{ github.workspace }}/.pub-cache
     steps:
       - uses: actions/checkout@v5
+      - name: Cancel in-progress preview deploys
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const runs = await github.rest.actions.listWorkflowRuns({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'deploy-preview.yml',
+              status: 'in_progress'
+            });
+            for (const run of runs.data.workflow_runs) {
+              await github.rest.actions.cancelWorkflowRun({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                run_id: run.id
+              });
+            }
       - name: Cache Flutter SDK
         uses: actions/cache@v4
         with:
@@ -43,3 +61,4 @@ jobs:
         with:
           branch: ${{ github.ref == 'refs/heads/main' && 'gh-pages' || 'gh-pages-staging' }}
           folder: build/web
+          clean: false
