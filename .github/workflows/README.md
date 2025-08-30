@@ -4,8 +4,9 @@ CI/CD automation for the project.
 
 - `ci.yml` – formats code, runs static analysis and tests.
 - `deploy.yml` – builds the web release and publishes it.
+- `deploy-preview.yml` – manually builds the current branch and publishes it to a branch-specific preview path.
 
-Both workflows use concurrency groups to cancel in-progress runs when new
+All workflows use concurrency groups to cancel in-progress runs when new
 commits arrive.
 
 Workflows follow the lightweight pipeline described in [../../PLAN.md](../../PLAN.md).
@@ -17,6 +18,8 @@ release and deploys `build/web` to GitHub Pages:
 
 - `main` → `gh-pages` (live site)
 - `develop` → `gh-pages-staging` (preview)
+
+`deploy-preview.yml` can be run manually to build the current branch and publish it under `previews/<branch>` on `gh-pages`.
 
 GitHub Pages serves the contents of `gh-pages` at
 `https://benhook1013.github.io/space-game/`. The `gh-pages-staging`
