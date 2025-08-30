@@ -22,7 +22,6 @@ class Assets {
     'asteroids/asteroid3.png',
     'asteroids/asteroid4.png',
     'asteroids/asteroid5.png',
-    'asteroids/asteroid6.png',
   ];
   static const String bullet = 'bullet.png';
 
