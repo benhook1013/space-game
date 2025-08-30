@@ -58372,7 +58372,7 @@ r.pu(B.v,l,l,l,l,l,0,l,l,l,l,i,l)}k=r.ax.d
 k.bE(s)
 k.Y()
 r.ad.a4(j)
-j=$.pV().a.k(0,B.jJ[$.aaQ().lJ(6)]).a
+j=$.pV().a.k(0,B.jJ[$.aaQ().lJ(5)]).a
 j.toString
 r.p2=A.a_c(j,l,l)
 r.q7()
@@ -61835,7 +61835,7 @@ B.ys=new A.eR(5)
 B.yt=new A.eR(7)
 B.jk=new A.eR(8)
 B.jI=A.b(s([B.yp,B.yq,B.yr,B.z,B.Z,B.ys,B.jj,B.yt,B.jk]),A.a9("r<eR>"))
-B.jJ=A.b(s(["asteroids/asteroid1.png","asteroids/asteroid2.png","asteroids/asteroid3.png","asteroids/asteroid4.png","asteroids/asteroid5.png","asteroids/asteroid6.png"]),t.s)
+B.jJ=A.b(s(["asteroids/asteroid1.png","asteroids/asteroid2.png","asteroids/asteroid3.png","asteroids/asteroid4.png","asteroids/asteroid5.png"]),t.s)
 B.ct=A.b(s([B.b5,B.aE,B.d_,B.d0,B.d1]),t.QP)
 B.bM=new A.eo(0,"controlModifier")
 B.bN=new A.eo(1,"shiftModifier")
