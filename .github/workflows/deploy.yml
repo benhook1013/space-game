@@ -16,6 +16,7 @@ permissions:
 
 jobs:
   build-and-deploy:
+    name: Page Build and Deploy
     runs-on: ubuntu-latest
     env:
       PUB_CACHE: ${{ github.workspace }}/.pub-cache

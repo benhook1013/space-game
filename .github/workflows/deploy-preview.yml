@@ -10,6 +10,7 @@ permissions:
 
 jobs:
   build-and-deploy:
+    name: Preview Build and Deploy
     runs-on: ubuntu-latest
     environment:
       name: preview
