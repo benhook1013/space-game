@@ -60,14 +60,12 @@ class BulletComponent extends SpriteComponent
   ) {
     super.onCollisionStart(intersectionPoints, other);
     if (other is EnemyComponent) {
-      other.removeFromParent();
+      other.takeDamage(Constants.bulletDamage);
       removeFromParent();
-      game.addScore(Constants.enemyScore);
     }
     if (other is AsteroidComponent) {
-      other.removeFromParent();
+      other.takeDamage(Constants.bulletDamage);
       removeFromParent();
-      game.addScore(Constants.asteroidScore);
     }
   }
 }

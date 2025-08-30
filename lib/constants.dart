@@ -18,6 +18,15 @@ class Constants {
   /// Seconds between auto-aim direction updates when stationary.
   static const double playerAutoAimInterval = 0.2;
 
+  /// Maximum distance to auto-mine asteroids, in pixels.
+  static const double playerMiningRange = playerAutoAimRange;
+
+  /// Damage dealt by each mining laser pulse.
+  static const int miningPulseDamage = 1;
+
+  /// Seconds between mining laser pulses.
+  static const double miningPulseInterval = 0.5;
+
   /// Starting health for the player.
   static const int playerMaxHealth = 3;
 
@@ -29,6 +38,9 @@ class Constants {
 
   /// Minimum time between player shots in seconds.
   static const double bulletCooldown = 0.2;
+
+  /// Damage dealt by player bullets.
+  static const int bulletDamage = 1;
 
   /// Enemy movement speed in pixels per second.
   static const double enemySpeed = 100;
@@ -42,6 +54,9 @@ class Constants {
   /// Seconds between enemy spawns.
   static const double enemySpawnInterval = 2;
 
+  /// Maximum health for an enemy.
+  static const int enemyMaxHealth = 1;
+
   /// Asteroid movement speed in pixels per second.
   static const double asteroidSpeed = 50;
 
@@ -50,6 +65,12 @@ class Constants {
 
   /// Scale applied to the asteroid sprite size.
   static const double asteroidScale = 3;
+
+  /// Minimum health for an asteroid.
+  static const int asteroidMinHealth = 4;
+
+  /// Maximum health for an asteroid.
+  static const int asteroidMaxHealth = 6;
 
   /// Seconds between asteroid spawns.
   static const double asteroidSpawnInterval = 3;

@@ -18,12 +18,14 @@ Gameplay entities and reusable pieces.
 
 - [PlayerComponent](player.md) – moves via joystick or keyboard, fires bullets
   with a short cooldown and tracks health.
-- [EnemyComponent](enemy.md) – drifts toward the player and is destroyed on
-  bullet impact, awarding score when defeated.
-- [BulletComponent](bullet.md) – short-lived projectile destroyed on hit or
-  when leaving the screen.
-- [AsteroidComponent](asteroid.md) – floats randomly and awards score when
-  destroyed.
+- [EnemyComponent](enemy.md) – drifts toward the player with a single health
+  point and awards score when defeated.
+- [BulletComponent](bullet.md) – short-lived projectile that deals one damage
+  and is destroyed on hit or when leaving the screen.
+- [AsteroidComponent](asteroid.md) – floats randomly, requires four to six
+  damage pulses, and awards score on each hit.
+- [MiningLaserComponent](mining_laser.md) – auto-targets and mines nearby
+  asteroids with a widening pulse beam.
 - [StarfieldComponent](starfield.md) – procedural three-layer background with
   parallax motion.
 
