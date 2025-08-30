@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../game/space_game.dart';
 import 'game_text.dart';
+import 'responsive.dart';
 
 /// Overlay displayed when the player dies.
 class GameOverOverlay extends StatelessWidget {
@@ -19,7 +20,7 @@ class GameOverOverlay extends StatelessWidget {
       builder: (context, constraints) {
         final shortestSide = constraints.biggest.shortestSide;
         final spacing = shortestSide * 0.02;
-        final iconSize = shortestSide * 0.05;
+        final iconSize = responsiveIconSize(constraints);
 
         return Center(
           child: Column(

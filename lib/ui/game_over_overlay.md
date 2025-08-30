@@ -6,6 +6,7 @@ Flutter widget shown when the player dies.
 
 - Displays final score and the persisted high score.
 - Tapping restart resets `SpaceGame` to the `playing` state.
+- Icon sizes scale with screen size for consistency across devices.
 - Press `Enter` or `R` to restart without clicking the button.
 - Menu button returns to the title screen.
 - Press `Q` or `Esc` to return to the menu without clicking the button.

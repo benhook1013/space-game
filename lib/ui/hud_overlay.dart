@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../game/space_game.dart';
 import 'game_text.dart';
+import 'responsive.dart';
 
 /// Simple heads-up display shown during play.
 class HudOverlay extends StatelessWidget {
@@ -15,6 +16,7 @@ class HudOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final iconSize = responsiveIconSizeFromContext(context);
     return SafeArea(
       child: Align(
         alignment: Alignment.topCenter,
@@ -56,10 +58,12 @@ class HudOverlay extends StatelessWidget {
               Row(
                 children: [
                   IconButton(
+                    iconSize: iconSize,
                     icon: const Icon(Icons.gps_fixed, color: Colors.white),
                     onPressed: game.toggleAutoAimRadius,
                   ),
                   IconButton(
+                    iconSize: iconSize,
                     // Mirrors the H keyboard shortcut.
                     icon: const Icon(Icons.help_outline,
                         color: GameText.defaultColor),
@@ -68,6 +72,7 @@ class HudOverlay extends StatelessWidget {
                   ValueListenableBuilder<bool>(
                     valueListenable: game.audioService.muted,
                     builder: (context, muted, _) => IconButton(
+                      iconSize: iconSize,
                       // Mirrors the `M` keyboard shortcut.
                       icon: Icon(
                         muted ? Icons.volume_off : Icons.volume_up,
@@ -77,6 +82,7 @@ class HudOverlay extends StatelessWidget {
                     ),
                   ),
                   IconButton(
+                    iconSize: iconSize,
                     // Mirrors the Escape and P keyboard shortcuts.
                     icon: const Icon(Icons.pause, color: GameText.defaultColor),
                     onPressed: game.pauseGame,
