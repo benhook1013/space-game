@@ -58655,7 +58655,7 @@ A.nz.prototype={
 U(a){return A.t6(new A.Ra(this))}}
 A.Ra.prototype={
 $2(a,b){var s=null,r=new A.T(A.a4(1/0,b.a,b.b),A.a4(1/0,b.c,b.d)).gdl()*0.02
-return A.a8C(A.z9(A.zz(A.b([A.i_("Controls",1,A.aG(a).ok.f),A.cX(s,r,s),B.yy,A.cX(s,r,s),A.hU(B.yz,this.a.c.goB())],t.F),B.ae,B.aK),s,s),B.x,s,s,s)},
+return A.a8C(A.z9(A.zz(A.b([A.i_("Controls",1,A.aG(a).ok.f),A.cX(s,r,s),B.yA,A.cX(s,r,s),A.hU(B.yy,this.a.c.goB())],t.F),B.ae,B.aK),s,s),B.x,s,s,s)},
 $S:421}
 A.nB.prototype={
 U(a){var s=null,r=A.a7V(A.yW(A.h9(a,s,t.w).w.a),24),q=this.c,p=t.S,o=t.F
@@ -58677,7 +58677,7 @@ A.nX.prototype={
 U(a){return A.t6(new A.Vr(this))}}
 A.Vr.prototype={
 $2(a,b){var s=null,r=new A.T(A.a4(1/0,b.a,b.b),A.a4(1/0,b.c,b.d)).gdl(),q=r*0.02,p=A.a7V(b,24),o=this.a,n=o.c,m=t.S,l=t.F
-return A.z9(A.zz(A.b([A.i_("Space Miner",1,A.aG(a).ok.e),A.cX(s,q,s),A.hv(new A.Vn(),n.b2,m),A.cX(s,q,s),new A.E2(new A.Vo(o),s,s,s,s,s,s,!1,s,!0,s,B.yA,s),A.cX(s,q,s),A.hv(new A.Vp(o,q,r),n.bq,m),A.cX(s,q,s),A.uq(A.b([A.hU(B.yx,n.gtO()),A.cX(s,s,q),A.hU(B.fx,n.goB()),A.cX(s,s,q),A.hv(new A.Vq(o,p),n.ai.b,t.y)],l),B.ae,B.aA,B.aK)],l),B.ae,B.aK),s,s)},
+return A.z9(A.zz(A.b([A.i_("Space Miner",1,A.aG(a).ok.e),A.cX(s,q,s),A.hv(new A.Vn(),n.b2,m),A.cX(s,q,s),new A.E2(new A.Vo(o),s,s,s,s,s,s,!1,s,!0,s,B.yz,s),A.cX(s,q,s),A.hv(new A.Vp(o,q,r),n.bq,m),A.cX(s,q,s),A.uq(A.b([A.hU(B.yx,n.gtO()),A.cX(s,s,q),A.hU(B.fx,n.goB()),A.cX(s,s,q),A.hv(new A.Vq(o,p),n.ai.b,t.y)],l),B.ae,B.aA,B.aK)],l),B.ae,B.aK),s,s)},
 $S:59}
 A.Vn.prototype={
 $3(a,b,c){return b>0?A.i_("High Score: "+b,1,B.ax):B.ek},
@@ -61699,11 +61699,11 @@ B.ax=new A.p(!0,null,null,null,null,null,null,B.jj,null,null,null,null,null,null
 B.jm=new A.dY("Menu",B.ax,1,null,null)
 B.yw=new A.dY("Resume",B.ax,1,null,null)
 B.yx=new A.dY("Start",B.ax,1,null,null)
-B.el=new A.iA(2,"center")
-B.yy=new A.dY("Move: WASD / Arrow keys\nShoot: Space\nMute: M\nAuto-aim Radius: HUD button\nPause/Resume: Esc or P\nStart/Restart: Enter\nRestart anytime: R\nMenu: Q (pause/game over), Esc (game over)\nToggle Help: H or Esc",null,null,B.el,null)
 B.jn=new A.dY("Restart",B.ax,1,null,null)
-B.yz=new A.dY("Close",B.ax,1,null,null)
-B.yA=new A.dY("Reset High Score",B.ax,1,null,null)
+B.yy=new A.dY("Close",B.ax,1,null,null)
+B.yz=new A.dY("Reset High Score",B.ax,1,null,null)
+B.el=new A.iA(2,"center")
+B.yA=new A.dY("Move: WASD / Arrow keys\nShoot: Space\nMute: M\nToggle Debug: F1\nAuto-aim Radius: HUD button\nPause/Resume: Esc or P\nStart/Restart: Enter\nRestart anytime: R\nMenu: Q (pause/game over), Esc (game over)\nToggle Help: H or Esc",null,null,B.el,null)
 B.fx=new A.dY("Help",B.ax,1,null,null)
 B.b_=new A.AL(0,"accepted")
 B.a5=new A.AL(1,"rejected")
