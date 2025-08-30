@@ -1,0 +1,12 @@
+{
+  "images": [
+    "assets/images/asteroid.png",
+    "assets/images/bullet.png",
+    "assets/images/enemy.png",
+    "assets/images/player.png"
+  ],
+  "audio": [
+    "assets/audio/shoot.wav"
+  ],
+  "fonts": []
+}
