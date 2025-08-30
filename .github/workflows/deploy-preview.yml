@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: preview
-      url: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/previews/${{ github.ref_name }}/
+      url: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/previews/pr-${{ github.event.pull_request.number }}/
     env:
       PUB_CACHE: ${{ github.workspace }}/.pub-cache
     steps:
@@ -39,11 +39,11 @@ jobs:
       - name: Install dependencies
         run: mkdir -p $PUB_CACHE && ./scripts/flutterw pub get
       - name: Build web
-        run: ./scripts/flutterw build web --release --base-href "/${{ github.event.repository.name }}/previews/${{ github.ref_name }}/"
+        run: ./scripts/flutterw build web --release --base-href "/${{ github.event.repository.name }}/previews/pr-${{ github.event.pull_request.number }}/"
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
           folder: build/web
-          target-folder: previews/${{ github.ref_name }}
+          target-folder: previews/pr-${{ github.event.pull_request.number }}
           clean: false
