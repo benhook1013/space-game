@@ -1,7 +1,7 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 import '../game/space_game.dart';
+import 'game_text.dart';
 
 /// Start screen shown before gameplay begins.
 class MenuOverlay extends StatelessWidget {
@@ -25,32 +25,26 @@ class MenuOverlay extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              AutoSizeText(
+              GameText(
                 'Space Miner',
-                style: Theme.of(context)
-                    .textTheme
-                    .headlineMedium
-                    ?.copyWith(color: Colors.white),
+                style: Theme.of(context).textTheme.headlineMedium,
                 maxLines: 1,
               ),
               SizedBox(height: spacing),
               ValueListenableBuilder<int>(
                 valueListenable: game.highScore,
                 builder: (context, value, _) => value > 0
-                    ? AutoSizeText(
+                    ? GameText(
                         'High Score: $value',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
                         maxLines: 1,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       )
                     : const SizedBox.shrink(),
               ),
               SizedBox(height: spacing),
               TextButton(
                 onPressed: () => game.resetHighScore(),
-                child: const AutoSizeText(
+                child: const GameText(
                   'Reset High Score',
                   maxLines: 1,
                   style: TextStyle(fontWeight: FontWeight.bold),
@@ -62,7 +56,7 @@ class MenuOverlay extends StatelessWidget {
                 children: [
                   ElevatedButton(
                     onPressed: game.startGame,
-                    child: const AutoSizeText(
+                    child: const GameText(
                       'Start',
                       maxLines: 1,
                       style: TextStyle(fontWeight: FontWeight.bold),
@@ -72,7 +66,7 @@ class MenuOverlay extends StatelessWidget {
                   ElevatedButton(
                     // Mirrors the H keyboard shortcut.
                     onPressed: game.toggleHelp,
-                    child: const AutoSizeText(
+                    child: const GameText(
                       'Help',
                       maxLines: 1,
                       style: TextStyle(fontWeight: FontWeight.bold),
