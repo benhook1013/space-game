@@ -1,0 +1,44 @@
+name: Deploy Preview
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    env:
+      PUB_CACHE: ${{ github.workspace }}/.pub-cache
+    steps:
+      - uses: actions/checkout@v5
+      - name: Cache Flutter SDK
+        uses: actions/cache@v4
+        with:
+          path: .tooling/flutter
+          key: ${{ runner.os }}-flutter-${{ hashFiles('scripts/bootstrap_flutter.sh') }}
+          restore-keys: |
+            ${{ runner.os }}-flutter-
+      - name: Cache pub packages
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.PUB_CACHE }}
+          key: ${{ runner.os }}-pub-${{ hashFiles('pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pub-
+      - name: Install dependencies
+        run: mkdir -p $PUB_CACHE && ./scripts/flutterw pub get
+      - name: Build web
+        run: ./scripts/flutterw build web --release --base-href "/${{ github.event.repository.name }}/previews/${{ github.ref_name }}/"
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: build/web
+          target-folder: previews/${{ github.ref_name }}
+          clean: false
