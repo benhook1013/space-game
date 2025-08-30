@@ -6,7 +6,7 @@ required attribution details.
 | Asset | Source | License | Attribution |
 |-------|--------|---------|-------------|
 | _Example sprite_ | [Kenney](https://kenney.nl/) | CC0 | None required |
-| `player.png` placeholder | Generated via Python | CC0 | None required |
+| `player.png` player ship | Created with PixelLab (user-provided) | Unknown | None provided |
 | `enemy.png` placeholder | Generated via Python | CC0 | None required |
 | `asteroid.png` placeholder | Generated via Python | CC0 | None required |
 | `bullet.png` placeholder | Generated via Python | CC0 | None required |
