@@ -1,6 +1,7 @@
 name: Deploy Preview
 
 on:
+  pull_request:
   workflow_dispatch:
 
 concurrency:
@@ -9,10 +10,14 @@ concurrency:
 
 permissions:
   contents: write
+  deployments: write
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: preview
+      url: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/previews/${{ github.ref_name }}/
     env:
       PUB_CACHE: ${{ github.workspace }}/.pub-cache
     steps:
