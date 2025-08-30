@@ -28,6 +28,15 @@ class PlayerComponent extends SpriteComponent
   /// Angle the ship should currently rotate towards.
   double _targetAngle = 0;
 
+  /// Resets the player to its default orientation and clears input state.
+  void reset() {
+    position = game.size / 2;
+    angle = 0;
+    _targetAngle = 0;
+    _shootCooldown = 0;
+    _keyboardDirection.setZero();
+  }
+
   /// Fires a bullet from the player's current position.
   void shoot() {
     if (_shootCooldown > 0) {
