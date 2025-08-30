@@ -10,7 +10,13 @@ class Constants {
   static const double playerSize = 32;
 
   /// Scale applied to the player sprite size.
-  static const double playerScale = 4;
+  static const double playerScale = 3;
+
+  /// Maximum distance to auto-aim enemies when stationary, in pixels.
+  static const double playerAutoAimRange = 300;
+
+  /// Seconds between auto-aim direction updates when stationary.
+  static const double playerAutoAimInterval = 0.2;
 
   /// Starting health for the player.
   static const int playerMaxHealth = 3;

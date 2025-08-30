@@ -6,8 +6,9 @@ Controllable ship for the player.
 
 - Moves via on-screen joystick or WASD keys.
 - Fires `BulletComponent`s with a short cooldown when the shoot button or space
-  bar is pressed.
+  bar is pressed, in the direction the ship is facing.
 - Colliding with enemies or asteroids reduces health via `SpaceGame.hitPlayer`.
+- When stationary, periodically rotates to face the nearest enemy within range.
 - Pulls sprites from `assets.dart` and tuning values from `constants.dart`.
 - Uses `CircleHitbox` and `HasGameRef<SpaceGame>`.
 
