@@ -45,10 +45,10 @@ dedicated server or NAT traversal.
   screens, plus an `M` key shortcut
 - Pause, resume or return to the menu via overlays (including game over screen)
 - Keyboard controls for desktop playtests (`WASD`/arrow keys to move, `Space` to
-  shoot, `Escape` or `P` to pause or resume, `M` to mute, `Enter` starts or
-  restarts from the menu or game over, `R` restarts at any time, `Q` returns to
-  the menu from pause or game over, `Esc` also returns to the menu from game over,
-  `H` shows a help overlay that `Esc` also closes)
+  shoot, `Escape` or `P` to pause or resume, `M` to mute, `F1` toggles debug
+  overlays, `Enter` starts or restarts from the menu or game over, `R` restarts at
+  any time, `Q` returns to the menu from pause or game over, `Esc` also returns to
+  the menu from game over, `H` shows a help overlay that `Esc` also closes)
 - Game works offline after the first load
 - Parallax starfield background
 
