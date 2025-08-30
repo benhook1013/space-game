@@ -80,7 +80,7 @@ class PauseOverlay extends StatelessWidget {
                       iconSize: iconSize,
                       icon: Icon(
                         muted ? Icons.volume_off : Icons.volume_up,
-                        color: Colors.white,
+                        color: GameText.defaultColor,
                       ),
                       // Mirrors the M keyboard shortcut.
                       onPressed: game.audioService.toggleMute,

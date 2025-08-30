@@ -57,7 +57,8 @@ class HudOverlay extends StatelessWidget {
                 children: [
                   IconButton(
                     // Mirrors the H keyboard shortcut.
-                    icon: const Icon(Icons.help_outline, color: Colors.white),
+                    icon: const Icon(Icons.help_outline,
+                        color: GameText.defaultColor),
                     onPressed: game.toggleHelp,
                   ),
                   ValueListenableBuilder<bool>(
@@ -66,14 +67,14 @@ class HudOverlay extends StatelessWidget {
                       // Mirrors the `M` keyboard shortcut.
                       icon: Icon(
                         muted ? Icons.volume_off : Icons.volume_up,
-                        color: Colors.white,
+                        color: GameText.defaultColor,
                       ),
                       onPressed: game.audioService.toggleMute,
                     ),
                   ),
                   IconButton(
                     // Mirrors the Escape and P keyboard shortcuts.
-                    icon: const Icon(Icons.pause, color: Colors.white),
+                    icon: const Icon(Icons.pause, color: GameText.defaultColor),
                     onPressed: game.pauseGame,
                   ),
                 ],
