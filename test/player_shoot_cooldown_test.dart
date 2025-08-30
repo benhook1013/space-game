@@ -47,7 +47,9 @@ class _TestGame extends SpaceGame {
     );
     player = _TestPlayer(joystick: joystick);
     add(player);
-    onGameResize(Vector2.all(100));
+    onGameResize(
+      Vector2.all(Constants.playerSize * Constants.playerScale * 2),
+    );
   }
 }
 

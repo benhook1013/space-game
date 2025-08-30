@@ -6,8 +6,11 @@ class Constants {
   /// Player rotation speed in radians per second.
   static const double playerRotationSpeed = 10;
 
-  /// Player sprite size in logical pixels.
+  /// Base player sprite size in logical pixels.
   static const double playerSize = 32;
+
+  /// Scale applied to the player sprite size.
+  static const double playerScale = 4;
 
   /// Starting health for the player.
   static const int playerMaxHealth = 3;
