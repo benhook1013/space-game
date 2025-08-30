@@ -165,10 +165,10 @@ packages:
     dependency: "direct main"
     description:
       name: flame_audio
-      sha256: c03d1cfb952805a14b5a2793181009a1510ab28c8d0d69cd150cefd17053c489
+      sha256: "7c85f2975fcf8a385d47c225f63da97801ee150bc7ed7bf448f826403d5cef9f"
       url: "https://pub.dev"
     source: hosted
-    version: "2.11.8"
+    version: "2.11.10"
   flutter:
     dependency: "direct main"
     description: flutter
