@@ -16,6 +16,7 @@ import '../components/bullet.dart';
 import '../assets.dart';
 import '../components/player.dart';
 import '../components/starfield.dart';
+import '../components/mining_laser.dart';
 import '../constants.dart';
 import '../services/storage_service.dart';
 import '../services/audio_service.dart';
@@ -46,6 +47,7 @@ class SpaceGame extends FlameGame
 
   GameState state = GameState.menu;
   late final PlayerComponent player;
+  late final MiningLaserComponent miningLaser;
   late final JoystickComponent joystick;
   late final HudButtonComponent fireButton;
   late final Timer _enemySpawnTimer;
@@ -109,6 +111,8 @@ class SpaceGame extends FlameGame
         PlayerComponent(joystick: joystick, spritePath: selectedPlayerSprite);
     add(player);
     camera.follow(player);
+    miningLaser = MiningLaserComponent(player: player);
+    add(miningLaser);
 
     fireButton = HudButtonComponent(
       button: CircleComponent(

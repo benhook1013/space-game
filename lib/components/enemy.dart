@@ -20,10 +20,13 @@ class EnemyComponent extends SpriteComponent
           anchor: Anchor.center,
         );
 
+  int _health = Constants.enemyMaxHealth;
+
   /// Prepares the enemy for reuse.
   void reset(Vector2 position) {
     this.position.setFrom(position);
     sprite = Sprite(Flame.images.fromCache(Assets.randomEnemy()));
+    _health = Constants.enemyMaxHealth;
   }
 
   @override
@@ -47,5 +50,14 @@ class EnemyComponent extends SpriteComponent
   void onRemove() {
     super.onRemove();
     game.releaseEnemy(this);
+  }
+
+  /// Reduces health by [amount] and removes the enemy when depleted.
+  void takeDamage(int amount) {
+    _health -= amount;
+    if (_health <= 0 && !isRemoving) {
+      game.addScore(Constants.enemyScore);
+      removeFromParent();
+    }
   }
 }

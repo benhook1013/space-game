@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
@@ -21,12 +23,17 @@ class AsteroidComponent extends SpriteComponent
         );
 
   final Vector2 _velocity = Vector2.zero();
+  static final _rand = math.Random();
+  int _health = Constants.asteroidMaxHealth;
 
   /// Prepares the asteroid for reuse.
   void reset(Vector2 position, Vector2 velocity) {
     this.position..setFrom(position);
     _velocity..setFrom(velocity);
     sprite = Sprite(Flame.images.fromCache(Assets.randomAsteroid()));
+    _health = Constants.asteroidMinHealth +
+        _rand.nextInt(
+            Constants.asteroidMaxHealth - Constants.asteroidMinHealth + 1);
   }
 
   @override
@@ -49,5 +56,14 @@ class AsteroidComponent extends SpriteComponent
   void onRemove() {
     super.onRemove();
     game.releaseAsteroid(this);
+  }
+
+  /// Reduces health by [amount] and removes the asteroid when depleted.
+  void takeDamage(int amount) {
+    _health -= amount;
+    game.addScore(Constants.asteroidScore);
+    if (_health <= 0 && !isRemoving) {
+      removeFromParent();
+    }
   }
 }
