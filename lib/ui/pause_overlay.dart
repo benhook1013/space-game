@@ -1,7 +1,7 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 import '../game/space_game.dart';
+import 'game_text.dart';
 
 /// Overlay shown when the game is paused.
 class PauseOverlay extends StatelessWidget {
@@ -25,12 +25,9 @@ class PauseOverlay extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              AutoSizeText(
+              GameText(
                 'Paused',
-                style: Theme.of(context)
-                    .textTheme
-                    .headlineMedium
-                    ?.copyWith(color: Colors.white),
+                style: Theme.of(context).textTheme.headlineMedium,
                 maxLines: 1,
               ),
               SizedBox(height: spacing),
@@ -40,7 +37,7 @@ class PauseOverlay extends StatelessWidget {
                   ElevatedButton(
                     // Mirrors the Escape and P keyboard shortcuts.
                     onPressed: game.resumeGame,
-                    child: const AutoSizeText(
+                    child: const GameText(
                       'Resume',
                       maxLines: 1,
                       style: TextStyle(fontWeight: FontWeight.bold),
@@ -50,7 +47,7 @@ class PauseOverlay extends StatelessWidget {
                   ElevatedButton(
                     // Mirrors the R keyboard shortcut.
                     onPressed: game.startGame,
-                    child: const AutoSizeText(
+                    child: const GameText(
                       'Restart',
                       maxLines: 1,
                       style: TextStyle(fontWeight: FontWeight.bold),
@@ -60,7 +57,7 @@ class PauseOverlay extends StatelessWidget {
                   ElevatedButton(
                     // Mirrors the Q keyboard shortcut.
                     onPressed: game.returnToMenu,
-                    child: const AutoSizeText(
+                    child: const GameText(
                       'Menu',
                       maxLines: 1,
                       style: TextStyle(fontWeight: FontWeight.bold),
@@ -70,7 +67,7 @@ class PauseOverlay extends StatelessWidget {
                   ElevatedButton(
                     // Mirrors the H keyboard shortcut.
                     onPressed: game.toggleHelp,
-                    child: const AutoSizeText(
+                    child: const GameText(
                       'Help',
                       maxLines: 1,
                       style: TextStyle(fontWeight: FontWeight.bold),

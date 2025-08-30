@@ -1,7 +1,7 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 import '../game/space_game.dart';
+import 'game_text.dart';
 
 /// Simple heads-up display shown during play.
 class HudOverlay extends StatelessWidget {
@@ -31,25 +31,22 @@ class HudOverlay extends StatelessWidget {
                   children: [
                     ValueListenableBuilder<int>(
                       valueListenable: game.score,
-                      builder: (context, value, _) => AutoSizeText(
+                      builder: (context, value, _) => GameText(
                         'Score: $value',
-                        style: const TextStyle(color: Colors.white),
                         maxLines: 1,
                       ),
                     ),
                     ValueListenableBuilder<int>(
                       valueListenable: game.highScore,
-                      builder: (context, value, _) => AutoSizeText(
+                      builder: (context, value, _) => GameText(
                         'High: $value',
-                        style: const TextStyle(color: Colors.white),
                         maxLines: 1,
                       ),
                     ),
                     ValueListenableBuilder<int>(
                       valueListenable: game.health,
-                      builder: (context, value, _) => AutoSizeText(
+                      builder: (context, value, _) => GameText(
                         'Health: $value',
-                        style: const TextStyle(color: Colors.white),
                         maxLines: 1,
                       ),
                     ),

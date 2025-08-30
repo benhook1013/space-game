@@ -1,7 +1,7 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 import '../game/space_game.dart';
+import 'game_text.dart';
 
 /// Overlay listing available controls.
 class HelpOverlay extends StatelessWidget {
@@ -26,16 +26,13 @@ class HelpOverlay extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                AutoSizeText(
+                GameText(
                   'Controls',
-                  style: Theme.of(context)
-                      .textTheme
-                      .headlineSmall
-                      ?.copyWith(color: Colors.white),
+                  style: Theme.of(context).textTheme.headlineSmall,
                   maxLines: 1,
                 ),
                 SizedBox(height: spacing),
-                const AutoSizeText(
+                const GameText(
                   'Move: WASD / Arrow keys\n'
                   'Shoot: Space\n'
                   'Mute: M\n'
@@ -44,13 +41,12 @@ class HelpOverlay extends StatelessWidget {
                   'Restart anytime: R\n'
                   'Menu: Q (pause/game over), Esc (game over)\n'
                   'Toggle Help: H or Esc',
-                  style: TextStyle(color: Colors.white),
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: spacing),
                 ElevatedButton(
                   onPressed: game.toggleHelp,
-                  child: const AutoSizeText(
+                  child: const GameText(
                     'Close',
                     maxLines: 1,
                     style: TextStyle(fontWeight: FontWeight.bold),
