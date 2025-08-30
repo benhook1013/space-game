@@ -2,7 +2,10 @@
   "images": [
     "assets/images/asteroid.png",
     "assets/images/bullet.png",
-    "assets/images/enemy.png",
+    "assets/images/enemies/enemy1.png",
+    "assets/images/enemies/enemy2.png",
+    "assets/images/enemies/enemy3.png",
+    "assets/images/enemies/enemy4.png",
     "assets/images/player.png"
   ],
   "audio": [
