@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../game/space_game.dart';
+import '../assets.dart';
 import 'game_text.dart';
 
 /// Start screen shown before gameplay begins.
@@ -48,6 +49,35 @@ class MenuOverlay extends StatelessWidget {
                   'Reset High Score',
                   maxLines: 1,
                   style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              SizedBox(height: spacing),
+              ValueListenableBuilder<int>(
+                valueListenable: game.selectedPlayerIndex,
+                builder: (context, selected, _) => Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    for (var i = 0; i < Assets.players.length; i++)
+                      GestureDetector(
+                        onTap: () => game.selectPlayer(i),
+                        child: Container(
+                          margin: EdgeInsets.all(spacing),
+                          padding: EdgeInsets.all(spacing / 2),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: selected == i
+                                  ? Colors.white
+                                  : Colors.transparent,
+                              width: 2,
+                            ),
+                          ),
+                          child: Image.asset(
+                            'assets/images/${Assets.players[i]}',
+                            width: shortestSide * 0.1,
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
               ),
               SizedBox(height: spacing),

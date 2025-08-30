@@ -26,5 +26,7 @@ flutter:
   assets:
     - assets/images/
     - assets/images/enemies/
+    - assets/images/players/
+    - assets/images/asteroids/
     - assets/audio/
     - assets/fonts/

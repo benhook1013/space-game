@@ -1,5 +1,6 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame/flame.dart';
 
 import '../assets.dart';
 import '../constants.dart';
@@ -23,11 +24,11 @@ class AsteroidComponent extends SpriteComponent
   void reset(Vector2 position, Vector2 velocity) {
     this.position..setFrom(position);
     _velocity..setFrom(velocity);
+    sprite = Sprite(Flame.images.fromCache(Assets.randomAsteroid()));
   }
 
   @override
   Future<void> onLoad() async {
-    sprite = await Sprite.load(Assets.asteroid);
     add(CircleHitbox());
   }
 

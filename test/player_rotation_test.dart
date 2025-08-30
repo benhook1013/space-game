@@ -11,7 +11,8 @@ import 'package:space_game/services/audio_service.dart';
 import 'package:space_game/services/storage_service.dart';
 
 class _TestPlayer extends PlayerComponent {
-  _TestPlayer({required super.joystick});
+  _TestPlayer({required super.joystick})
+      : super(spritePath: 'players/player1.png');
 
   @override
   Future<void> onLoad() async {}

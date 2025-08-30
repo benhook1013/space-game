@@ -1,11 +1,13 @@
 import 'dart:math' as math;
 
 import 'package:flame/components.dart';
+import 'package:flame/flame.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:space_game/components/enemy.dart';
 import 'package:space_game/components/player.dart';
+import 'package:space_game/assets.dart';
 import 'package:space_game/constants.dart';
 import 'package:space_game/game/space_game.dart';
 import 'package:space_game/services/audio_service.dart';
@@ -17,7 +19,8 @@ class _TestEnemy extends EnemyComponent {
 }
 
 class _TestPlayer extends PlayerComponent {
-  _TestPlayer({required super.joystick});
+  _TestPlayer({required super.joystick})
+      : super(spritePath: 'players/player1.png');
 
   @override
   Future<void> onLoad() async {}
@@ -46,6 +49,7 @@ void main() {
 
   test('player auto-aims nearest enemy when stationary', () async {
     SharedPreferences.setMockInitialValues({});
+    await Flame.images.loadAll([...Assets.players, ...Assets.enemies]);
     final storage = await StorageService.create();
     final audio = await AudioService.create(storage);
     final game = _TestGame(storage: storage, audio: audio);

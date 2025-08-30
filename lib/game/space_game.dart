@@ -13,6 +13,7 @@ import 'package:flutter/widgets.dart' show KeyEventResult;
 import '../components/asteroid.dart';
 import '../components/enemy.dart';
 import '../components/bullet.dart';
+import '../assets.dart';
 import '../components/player.dart';
 import '../components/starfield.dart';
 import '../constants.dart';
@@ -63,6 +64,15 @@ class SpaceGame extends FlameGame
     Constants.playerMaxHealth,
   );
 
+  /// Selected player sprite index for menu selection.
+  final ValueNotifier<int> selectedPlayerIndex = ValueNotifier<int>(0);
+
+  String get selectedPlayerSprite => Assets.players[selectedPlayerIndex.value];
+
+  void selectPlayer(int index) {
+    selectedPlayerIndex.value = index.clamp(0, Assets.players.length - 1);
+  }
+
   /// Pool of reusable bullets.
   final List<BulletComponent> _bulletPool = [];
 
@@ -95,7 +105,8 @@ class SpaceGame extends FlameGame
     );
     add(joystick);
 
-    player = PlayerComponent(joystick: joystick);
+    player =
+        PlayerComponent(joystick: joystick, spritePath: selectedPlayerSprite);
     add(player);
     camera.follow(player);
 
@@ -280,6 +291,7 @@ class SpaceGame extends FlameGame
       add(player);
       camera.follow(player);
     }
+    player.setSprite(selectedPlayerSprite);
     player.reset();
     overlays
       ..remove(MenuOverlay.id)

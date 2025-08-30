@@ -1,12 +1,18 @@
 {
   "images": [
-    "assets/images/asteroid.png",
+    "assets/images/asteroids/asteroid1.png",
+    "assets/images/asteroids/asteroid2.png",
+    "assets/images/asteroids/asteroid3.png",
+    "assets/images/asteroids/asteroid4.png",
+    "assets/images/asteroids/asteroid5.png",
+    "assets/images/asteroids/asteroid6.png",
     "assets/images/bullet.png",
     "assets/images/enemies/enemy1.png",
     "assets/images/enemies/enemy2.png",
     "assets/images/enemies/enemy3.png",
     "assets/images/enemies/enemy4.png",
-    "assets/images/player.png"
+    "assets/images/players/player1.png",
+    "assets/images/players/player2.png"
   ],
   "audio": [
     "assets/audio/shoot.wav"
