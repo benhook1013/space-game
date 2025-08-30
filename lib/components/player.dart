@@ -2,9 +2,9 @@ import 'dart:math' as math;
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame/flame.dart';
 import 'package:flutter/services.dart';
 
-import '../assets.dart';
 import '../constants.dart';
 import '../game/space_game.dart';
 import 'asteroid.dart';
@@ -13,8 +13,9 @@ import 'enemy.dart';
 /// Controllable player ship.
 class PlayerComponent extends SpriteComponent
     with HasGameReference<SpaceGame>, KeyboardHandler, CollisionCallbacks {
-  PlayerComponent({required this.joystick})
-      : super(
+  PlayerComponent({required this.joystick, required String spritePath})
+      : _spritePath = spritePath,
+        super(
           size: Vector2.all(
             Constants.playerSize * Constants.playerScale,
           ),
@@ -23,6 +24,8 @@ class PlayerComponent extends SpriteComponent
 
   /// Reference to the on-screen joystick for touch input.
   final JoystickComponent joystick;
+
+  String _spritePath;
 
   /// Direction from keyboard input.
   final Vector2 _keyboardDirection = Vector2.zero();
@@ -35,6 +38,12 @@ class PlayerComponent extends SpriteComponent
 
   /// Accumulates time between auto-aim updates when stationary.
   double _autoAimTimer = 0;
+
+  /// Sets the current sprite for the player.
+  void setSprite(String path) {
+    _spritePath = path;
+    sprite = Sprite(Flame.images.fromCache(_spritePath));
+  }
 
   /// Resets the player to its default orientation and clears input state.
   void reset() {
@@ -60,7 +69,7 @@ class PlayerComponent extends SpriteComponent
 
   @override
   Future<void> onLoad() async {
-    sprite = await Sprite.load(Assets.player);
+    setSprite(_spritePath);
     add(CircleHitbox());
   }
 

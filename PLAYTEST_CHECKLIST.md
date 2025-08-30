@@ -10,11 +10,13 @@ _Update this file whenever a player-facing feature is added or changed._
 - [ ] Bullets travel in the direction the ship is facing
 - [ ] When stationary, the ship rotates toward the nearest enemy within range
 - [ ] Asteroids spawn randomly and drift across the screen
+- [ ] Enemies and asteroids show varied sprites
 - [ ] Shooting an asteroid destroys it and increases the on-screen score
 - [ ] Score resets when restarting the game
 - [ ] HUD shows current and high scores during play
 - [ ] Collisions reduce player health; game over when health reaches zero
 - [ ] Game states transition: menu → playing → paused → game over → restart or menu
+- [ ] Player can choose a ship from the menu before starting
 - [ ] Enter starts or restarts from the menu or game over; `R` restarts at any time
 - [ ] Escape or `P` key pauses or resumes the game; `Q` returns to the menu from
       pause or game over, `Esc` also returns to the menu from game over
