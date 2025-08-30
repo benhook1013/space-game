@@ -221,7 +221,6 @@ class SpaceGame extends FlameGame
     }
     health.value -= 1;
     if (health.value <= 0) {
-      player.removeFromParent();
       gameOver();
     }
   }
