@@ -33,8 +33,11 @@ class Constants {
   /// Enemy movement speed in pixels per second.
   static const double enemySpeed = 100;
 
-  /// Enemy sprite size in logical pixels.
+  /// Base enemy sprite size in logical pixels.
   static const double enemySize = 32;
+
+  /// Scale applied to the enemy sprite size.
+  static const double enemyScale = 3;
 
   /// Seconds between enemy spawns.
   static const double enemySpawnInterval = 2;
@@ -42,8 +45,11 @@ class Constants {
   /// Asteroid movement speed in pixels per second.
   static const double asteroidSpeed = 50;
 
-  /// Asteroid sprite size in logical pixels.
+  /// Base asteroid sprite size in logical pixels.
   static const double asteroidSize = 24;
+
+  /// Scale applied to the asteroid sprite size.
+  static const double asteroidScale = 3;
 
   /// Seconds between asteroid spawns.
   static const double asteroidSpawnInterval = 3;
