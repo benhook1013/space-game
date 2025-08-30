@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'dart:math' as math;
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
@@ -48,6 +49,7 @@ class EnemyComponent extends SpriteComponent
   void update(double dt) {
     super.update(dt);
     final direction = (game.player.position - position).normalized();
+    angle = math.atan2(direction.y, direction.x) + math.pi / 2;
     position += direction * Constants.enemySpeed * dt;
     if (position.y > game.size.y + size.y ||
         position.x < -size.x ||

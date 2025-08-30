@@ -36,6 +36,7 @@ class HelpOverlay extends StatelessWidget {
                   'Move: WASD / Arrow keys\n'
                   'Shoot: Space\n'
                   'Mute: M\n'
+                  'Toggle Debug: F1\n'
                   'Auto-aim Radius: HUD button\n'
                   'Pause/Resume: Esc or P\n'
                   'Start/Restart: Enter\n'
