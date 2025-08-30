@@ -1,0 +1,49 @@
+import 'package:flame/components.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter/widgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:space_game/game/space_game.dart';
+import 'package:space_game/services/audio_service.dart';
+import 'package:space_game/services/storage_service.dart';
+import 'package:space_game/ui/game_over_overlay.dart';
+import 'package:space_game/ui/hud_overlay.dart';
+import 'package:space_game/ui/menu_overlay.dart';
+import 'package:space_game/ui/pause_overlay.dart';
+
+void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  test('player orientation resets on game start', () async {
+    SharedPreferences.setMockInitialValues({});
+    final storage = await StorageService.create();
+    final audio = await AudioService.create(storage);
+    final game = SpaceGame(storageService: storage, audioService: audio);
+    game.overlays.addEntry(MenuOverlay.id, (_, __) => const SizedBox());
+    game.overlays.addEntry(HudOverlay.id, (_, __) => const SizedBox());
+    game.overlays.addEntry(PauseOverlay.id, (_, __) => const SizedBox());
+    game.overlays.addEntry(GameOverOverlay.id, (_, __) => const SizedBox());
+    await game.onLoad();
+    game.onGameResize(Vector2.all(100));
+
+    // Set a non-zero orientation.
+    game.joystick.delta.setValues(1, 0);
+    game.player.update(0.1);
+    expect(game.player.angle, greaterThan(0));
+    // Move the player away from center.
+    game.player.position.setValues(20, 20);
+
+    // Clear input before restarting.
+    game.joystick.delta.setZero();
+
+    // Starting a new game should reset orientation and position.
+    game.startGame();
+    expect(game.player.angle, 0);
+    expect(game.player.position, Vector2.all(50));
+
+    // After update with no input, angle and position should remain unchanged.
+    game.player.update(0.1);
+    expect(game.player.angle, 0);
+    expect(game.player.position, Vector2.all(50));
+  });
+}

@@ -275,7 +275,7 @@ class SpaceGame extends FlameGame
           (a) => a.removeFromParent(),
         );
     children.whereType<BulletComponent>().forEach((b) => b.removeFromParent());
-    player.position = size / 2;
+    player.reset();
     overlays
       ..remove(MenuOverlay.id)
       ..remove(GameOverOverlay.id)
