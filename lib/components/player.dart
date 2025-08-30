@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/services.dart';
@@ -22,6 +24,9 @@ class PlayerComponent extends SpriteComponent
 
   /// Remaining cooldown time before another shot can fire.
   double _shootCooldown = 0;
+
+  /// Angle the ship should currently rotate towards.
+  double _targetAngle = 0;
 
   /// Fires a bullet from the player's current position.
   void shoot() {
@@ -61,6 +66,15 @@ class PlayerComponent extends SpriteComponent
         Vector2.all(size.x / 2),
         game.size - Vector2.all(size.x / 2),
       );
+      _targetAngle = math.atan2(input.y, input.x) + math.pi / 2;
+    }
+
+    final rotationDelta = _normalizeAngle(_targetAngle - angle);
+    final maxDelta = Constants.playerRotationSpeed * dt;
+    if (rotationDelta.abs() <= maxDelta) {
+      angle = _targetAngle;
+    } else {
+      angle += maxDelta * rotationDelta.sign;
     }
   }
 
@@ -100,5 +114,15 @@ class PlayerComponent extends SpriteComponent
       other.removeFromParent();
       game.hitPlayer();
     }
+  }
+
+  double _normalizeAngle(double a) {
+    while (a <= -math.pi) {
+      a += math.pi * 2;
+    }
+    while (a > math.pi) {
+      a -= math.pi * 2;
+    }
+    return a;
   }
 }
