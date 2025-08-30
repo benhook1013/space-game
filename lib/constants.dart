@@ -3,6 +3,9 @@ class Constants {
   /// Player movement speed in pixels per second.
   static const double playerSpeed = 200;
 
+  /// Player rotation speed in radians per second.
+  static const double playerRotationSpeed = 10;
+
   /// Player sprite size in logical pixels.
   static const double playerSize = 32;
 
