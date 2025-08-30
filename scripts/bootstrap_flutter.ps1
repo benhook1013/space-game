@@ -3,8 +3,8 @@
 param(
   [switch]$Force,
   [switch]$Quiet,
-  [ValidateSet('bits','http','ranges')]
-  [string]$Downloader = 'bits'
+  [ValidateSet('http','ranges')]
+  [string]$Downloader = 'http'
 )
 
 function Say([string]$Message) {
@@ -85,32 +85,6 @@ function Write-ProgressLine([string]$activity,[long]$read,[Nullable[long]]$total
 }
 
 # --- Download strategies ---
-function Download-With-BITS { param([string]$Url,[string]$Dest)
-  Say "Using BITS"
-  if (-not (Get-Command Start-BitsTransfer -ErrorAction SilentlyContinue)) {
-    throw "BITS is not available on this system"
-  }
-  $attempt=0
-  while ($attempt -lt 3) {
-    try {
-      $job = Start-BitsTransfer -Source $Url -Destination $Dest -Description "Flutter SDK" -DisplayName "Flutter SDK" -Priority Foreground -Asynchronous
-      do {
-        $info = Get-BitsTransfer -Id $job.Id
-        $total = $info.BytesTotal
-        $read  = $info.BytesTransferred
-        Write-ProgressLine "Downloading Flutter (BITS)" $read $total ([double](New-TimeSpan -Start $info.CreationTime -End (Get-Date)).TotalSeconds)
-        Start-Sleep -Milliseconds 200
-      } while ($info.JobState -eq 'Transferring' -or $info.JobState -eq 'Connecting')
-      Complete-BitsTransfer -BitsJob $job
-      Write-Progress -Activity "Downloading Flutter (BITS)" -Completed
-      return
-    } catch {
-      $attempt++; if ($attempt -ge 3) { throw }
-      Say "BITS retry ${attempt}..."; Start-Sleep -Seconds (2*$attempt)
-    }
-  }
-}
-
 function Download-With-Http { param([string]$Url,[string]$Dest)
   Say "Using HttpClient (streaming)"
   Add-Type -AssemblyName System.Net.Http
@@ -254,14 +228,6 @@ $destZip = $ARCHIVE
 $ProgressPreferenceBak = $global:ProgressPreference; $global:ProgressPreference = 'Continue'
 try {
   switch ($Downloader) {
-    'bits'   {
-      try { Download-With-BITS -Url $URL -Dest $destZip }
-      catch {
-        Say "BITS download failed: $($_.Exception.Message)"
-        Say "Falling back to HttpClient"
-        Download-With-Http -Url $URL -Dest $destZip
-      }
-    }
     'ranges' { Download-With-Ranges -Url $URL -Dest $destZip }
     default  { Download-With-Http   -Url $URL -Dest $destZip }
   }
