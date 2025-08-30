@@ -17,6 +17,14 @@ Milestone goals are detailed in [milestone-setup.md](milestone-setup.md),
 [lib/game](lib/game/README.md), [lib/components](lib/components/README.md),
 [lib/ui](lib/ui/README.md) and [lib/services](lib/services/README.md).
 
+## Game Concept
+
+Space Miner focuses on hunting asteroids for mineral pickups while timed enemy
+groups add bursts of combat. The ship mounts an auto-firing mining laser that
+locks onto nearby rocks and a primary cannon that automatically targets the
+closest enemy. Minerals gathered during play will later fund a wide upgrade
+tree spanning weapons and ship systems.
+
 ## Design Principles
 
 - Keep the codebase small and understandable for a solo developer.

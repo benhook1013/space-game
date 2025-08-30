@@ -17,6 +17,10 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
 - Solo-friendly workflow with minimal tooling
 - Core loop focused on mining asteroids for minerals while fending off enemy
   groups
+- Auto-firing mining laser targets asteroids while the main cannon locks onto
+  the closest enemy
+- Minerals feed a broad upgrade tree for weapons and ship systems in later
+  milestones
 
 ## 🚫 Non‑Goals
 
@@ -231,8 +235,8 @@ in [TASKS.md](TASKS.md).
 - **Multiplayer** (`networking.md`): host‑authoritative co‑op via WebSocket
 - **Backend (optional)**: local storage sync or Firebase
 - **Native deployment (optional)**: Codemagic, Play Store, TestFlight
-- Additional features: inventory, mineral-based upgrades, HUD, menus, shop UI,
-  save/load
+- Additional features: inventory, extensive mineral-based upgrade tree for
+  weapons and ship systems, HUD, menus, shop UI, save/load
 
 ## 🔁 Daily Loop
 

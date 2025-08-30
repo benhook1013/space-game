@@ -20,3 +20,11 @@ See [PLAN.md](PLAN.md) for overall project goals and
 - Components mix in `HasGameRef<SpaceGame>` and use simple hit boxes.
 - Timer-based spawners generate enemies and asteroids.
 - Consider small object pools for bullets, asteroids and enemies to limit garbage.
+
+## Next Steps
+
+- Spawn enemy groups in timed waves.
+- Equip the player with an auto-firing mining laser for nearby asteroids.
+- Drop minerals from mined asteroids and track the currency.
+- Auto-aim the main weapon at the closest enemy.
+- Outline a mineral-based upgrade system for weapons and ship systems.
