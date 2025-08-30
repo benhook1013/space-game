@@ -21,10 +21,10 @@ Flutter overlays and HUD widgets.
   restart (button or `Enter`/`R`), menu, help and mute options.
 - [HelpOverlay](help_overlay.md) – lists all controls; toggled with `H` and
   pauses gameplay when opened mid-run; `Esc` also closes it.
-- The `M` key toggles mute in any overlay; `Enter` starts or restarts from the
-  menu or game over; `R` restarts at any time; `Escape` or `P` pauses or
-  resumes; `Q` returns to the menu from pause or game over and `Esc` also returns
-  to the menu from game over; `H` shows or hides the help overlay, and `Esc` also
-  closes it when visible.
+- The `M` key toggles mute in any overlay; `F1` toggles debug overlays;
+  `Enter` starts or restarts from the menu or game over; `R` restarts at any
+  time; `Escape` or `P` pauses or resumes; `Q` returns to the menu from pause
+  or game over and `Esc` also returns to the menu from game over; `H` shows or
+  hides the help overlay, and `Esc` also closes it when visible.
 
 See [../../PLAN.md](../../PLAN.md) for the broader roadmap.
