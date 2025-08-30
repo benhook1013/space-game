@@ -2,6 +2,8 @@
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
+Push-Location $PSScriptRoot
+try {
 Write-Host "[setup] Bootstrapping Flutter SDK"
 & "$PSScriptRoot/scripts/bootstrap_flutter.ps1"
 
@@ -123,3 +125,6 @@ if ($chromePath) {
 }
 
 Write-Host "[setup] Completed"
+} finally {
+  Pop-Location
+}

@@ -57,6 +57,7 @@ if ((Test-Path $flutterBat) -and -not $Force) {
 Say "Bootstrapping Flutter $FLUTTER_VERSION ($FLUTTER_CHANNEL)"
 New-Item -ItemType Directory -Force -Path '.tooling' | Out-Null
 Push-Location '.tooling'
+try {
 # --- Config & URL (keeps your env overrides) ---
 $BASE_URL  = if ($env:FLUTTER_DOWNLOAD_MIRROR) { $env:FLUTTER_DOWNLOAD_MIRROR.TrimEnd('/') } else { 'https://storage.googleapis.com/flutter_infra_release/releases' }
 $ARCHIVE   = "flutter_windows_${FLUTTER_VERSION}-${FLUTTER_CHANNEL}.zip"
@@ -278,8 +279,9 @@ try {
   $global:ProgressPreference = $ProgressPreferenceBak
 }
 Remove-Item $destZip -Force
-
-Pop-Location
+} finally {
+  Pop-Location
+}
 Say "Flutter SDK installed at $FLUTTER_DIR"
 
 # Put Flutter on PATH for this session
