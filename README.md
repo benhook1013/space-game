@@ -98,14 +98,14 @@ milestone goals, and `networking.md` for future multiplayer plans. See
 The repository includes a default player sprite (`assets/images/player.png`).
 Create the remaining assets locally under `assets/` before running the game:
 
-- `assets/images/enemy.png`
+- Enemy sprites in `assets/images/enemies/`
 - `assets/images/asteroid.png`
 - `assets/images/bullet.png`
 - `assets/audio/shoot.wav`
 
 Simple placeholders can be generated with common tools. For example:
 
-- ImageMagick: `convert -size 32x32 canvas:red assets/images/enemy.png`
+- ImageMagick: `convert -size 32x32 canvas:red assets/images/enemies/enemy1.png`
 - FFmpeg: `ffmpeg -f lavfi -i "sine=frequency=880:duration=0.1" assets/audio/shoot.wav`
 
 Remember to update `assets_manifest.json` and credit any third-party assets in

@@ -1,5 +1,6 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame/flame.dart';
 
 import '../assets.dart';
 import '../constants.dart';
@@ -19,12 +20,12 @@ class EnemyComponent extends SpriteComponent
 
   /// Prepares the enemy for reuse.
   void reset(Vector2 position) {
-    this.position..setFrom(position);
+    this.position.setFrom(position);
+    sprite = Sprite(Flame.images.fromCache(Assets.randomEnemy()));
   }
 
   @override
   Future<void> onLoad() async {
-    sprite = await Sprite.load(Assets.enemy);
     add(CircleHitbox());
   }
 
