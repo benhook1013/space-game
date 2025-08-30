@@ -72,3 +72,12 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
 - [x] Limit player fire rate with a brief cooldown.
 - [x] Keyboard shortcut `F1` toggles debug overlays.
 - [x] Menu includes button to reset the high score.
+
+## Next Steps
+
+- [ ] Spawn enemy groups on a timer.
+- [ ] Add a mining laser that automatically targets and fires at nearby
+      asteroids.
+- [ ] Drop mineral pickups from asteroids and track the player's total.
+- [ ] Auto-aim the primary weapon at the closest enemy.
+- [ ] Draft an upgrade system that spends minerals on weapons and ship systems.
