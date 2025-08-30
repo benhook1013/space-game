@@ -337,12 +337,26 @@ class SpaceGame extends FlameGame
   /// Toggles debug rendering and FPS overlay.
   void toggleDebug() {
     debugMode = !debugMode;
+
+    // Propagate the new debug mode to all existing components so built-in
+    // debug visuals like hitboxes update immediately.
+    for (final child in children) {
+      _applyDebugMode(child, debugMode);
+    }
+
     if (debugMode) {
       if (_fpsText != null && !_fpsText!.isMounted) {
         add(_fpsText!);
       }
     } else {
       _fpsText?.removeFromParent();
+    }
+  }
+
+  void _applyDebugMode(Component component, bool enabled) {
+    component.debugMode = enabled;
+    for (final child in component.children) {
+      _applyDebugMode(child, enabled);
     }
   }
 
