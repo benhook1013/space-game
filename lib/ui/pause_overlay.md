@@ -5,6 +5,7 @@ Overlay displayed when the game is paused.
 ## Features
 
 - Shows a "Paused" label with resume, restart, menu and mute buttons.
+- Icon sizes scale with screen size for consistency across devices.
 - Triggered from the HUD pause button or the Escape or `P` key.
 - Visible only while the game state is `paused`.
 - Press `R` to restart without using the button.
