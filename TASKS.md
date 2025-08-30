@@ -80,4 +80,5 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
       asteroids.
 - [ ] Drop mineral pickups from asteroids and track the player's total.
 - [ ] Auto-aim the primary weapon at the closest enemy.
-- [ ] Draft an upgrade system that spends minerals on weapons and ship systems.
+- [ ] Design a broad upgrade system where minerals purchase new weapon and ship
+      upgrades.
