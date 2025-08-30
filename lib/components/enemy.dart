@@ -14,7 +14,9 @@ class EnemyComponent extends SpriteComponent
     with HasGameReference<SpaceGame>, CollisionCallbacks {
   EnemyComponent()
       : super(
-          size: Vector2.all(Constants.enemySize),
+          size: Vector2.all(
+            Constants.enemySize * Constants.enemyScale,
+          ),
           anchor: Anchor.center,
         );
 

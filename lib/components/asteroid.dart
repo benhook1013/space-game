@@ -14,7 +14,9 @@ class AsteroidComponent extends SpriteComponent
     with HasGameReference<SpaceGame>, CollisionCallbacks {
   AsteroidComponent()
       : super(
-          size: Vector2.all(Constants.asteroidSize),
+          size: Vector2.all(
+            Constants.asteroidSize * Constants.asteroidScale,
+          ),
           anchor: Anchor.center,
         );
 

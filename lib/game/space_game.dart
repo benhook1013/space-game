@@ -144,7 +144,11 @@ class SpaceGame extends FlameGame
 
   void _spawnEnemy() {
     final x = _random.nextDouble() * size.x;
-    add(acquireEnemy(Vector2(x, -Constants.enemySize)));
+    add(
+      acquireEnemy(
+        Vector2(x, -Constants.enemySize * Constants.enemyScale),
+      ),
+    );
   }
 
   void _spawnAsteroid() {
@@ -152,7 +156,7 @@ class SpaceGame extends FlameGame
     final vx = (_random.nextDouble() - 0.5) * Constants.asteroidSpeed;
     add(
       acquireAsteroid(
-        Vector2(x, -Constants.asteroidSize),
+        Vector2(x, -Constants.asteroidSize * Constants.asteroidScale),
         Vector2(vx, Constants.asteroidSpeed),
       ),
     );
