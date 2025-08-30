@@ -72,8 +72,8 @@ tree spanning weapons and ship systems.
   will slot in later milestones.
 - Flutter overlays handle menus and the HUD so UI stays outside the game loop.
 - A `GameState` enum tracks **menu → playing → paused → game over** transitions.
-- `SpaceGame` exposes `ValueNotifier`s for score, health and high score so
-  overlays can react without touching the game loop.
+- `SpaceGame` exposes `ValueNotifier`s for score, minerals, health and high
+  score so overlays can react without touching the game loop.
 - Asset paths live in a central `assets.dart` registry and tunable numbers live
   in `constants.dart` to avoid magic strings or numbers.
 
@@ -84,7 +84,7 @@ tree spanning weapons and ship systems.
 - Use simple hit boxes (`CircleHitbox`, `RectangleHitbox`) and
   `HasCollisionDetection`.
 - An `EnemySpawner` system releases groups of enemies at timed intervals.
-- Asteroids drop mineral pickups when destroyed.
+- Damaging asteroids awards mineral pickups each time.
 - The player mounts two weapons: an auto-firing mining laser that targets
   asteroids in range and a primary cannon that locks onto the nearest enemy.
 - Bullets, asteroids and enemies use small object pools to limit garbage
@@ -126,7 +126,8 @@ tree spanning weapons and ship systems.
 - `SpaceGame` transitions to `playing` when the user taps start.
 - Players can pause the game from the HUD or with the Escape or `P` key,
   showing a pause overlay with resume, menu and mute buttons.
-- During play the HUD provides score, high score, health, pause and mute controls.
+- During play the HUD provides score, minerals, high score, health, pause and
+  mute controls.
 - On player death, a game over overlay appears with restart, menu and mute buttons.
 - A help overlay lists controls and can be toggled with the `H` key, pausing the
   game when opened mid-run. `Esc` also closes it without triggering pause.

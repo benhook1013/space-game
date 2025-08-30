@@ -13,8 +13,10 @@ _Update this file whenever a player-facing feature is added or changed._
 - [ ] Asteroids spawn randomly and drift across the screen
 - [ ] Enemies and asteroids show varied sprites
 - [ ] Shooting an asteroid destroys it and increases the on-screen score
+- [ ] Damaging an asteroid increases the on-screen minerals
 - [ ] Score resets when restarting the game
-- [ ] HUD shows current and high scores during play
+- [ ] Minerals reset when restarting the game
+- [ ] HUD shows current score, minerals and high score during play
 - [ ] Collisions reduce player health; game over when health reaches zero
 - [ ] Game states transition: menu → playing → paused → game over → restart or menu
 - [ ] Player can choose a ship from the menu before starting

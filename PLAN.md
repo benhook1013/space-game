@@ -157,7 +157,8 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
 - Asteroids drop minerals when mined with an auto-targeting laser; destroying
   enemies also grants points
 - Single endless level without progression for now
-- Player health and high score shown in the HUD with simple start/game‑over screens
+- Player health, minerals and high score shown in the HUD with simple
+  start/game‑over screens
 - Local high score stored on device (e.g., shared preferences)
 - Menu offers a reset button to clear the high score
 - Basic sound effects using `flame_audio` with mute toggle (button or `M` key)

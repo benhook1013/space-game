@@ -46,6 +46,13 @@ class HudOverlay extends StatelessWidget {
                       ),
                     ),
                     ValueListenableBuilder<int>(
+                      valueListenable: game.minerals,
+                      builder: (context, value, _) => GameText(
+                        'Minerals: $value',
+                        maxLines: 1,
+                      ),
+                    ),
+                    ValueListenableBuilder<int>(
                       valueListenable: game.health,
                       builder: (context, value, _) => GameText(
                         'Health: $value',

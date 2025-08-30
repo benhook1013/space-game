@@ -10,7 +10,7 @@ import '../assets.dart';
 import '../constants.dart';
 import '../game/space_game.dart';
 
-/// Neutral obstacle that can be mined for score.
+/// Neutral obstacle that can be mined for score and minerals.
 ///
 /// Instances are pooled by [SpaceGame] to reduce garbage collection. Call
 /// [reset] before adding to the game to initialise position and velocity.
@@ -85,6 +85,7 @@ class AsteroidComponent extends SpriteComponent
   void takeDamage(int amount) {
     _health -= amount;
     game.addScore(Constants.asteroidScore);
+    game.addMinerals(Constants.asteroidMinerals);
     if (_health <= 0 && !isRemoving) {
       removeFromParent();
     }
