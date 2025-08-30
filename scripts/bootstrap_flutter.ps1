@@ -122,7 +122,12 @@ function Download-With-Http { param([string]$Url,[string]$Dest)
     Write-Progress -Activity "Downloading Flutter" -Completed
   } finally { $out.Dispose(); $in.Dispose(); $client.Dispose() }
 
-  Move-Item -Force $tmp $Dest
+  if (Test-Path $tmp) {
+    Move-Item -Force $tmp $Dest
+  } else {
+    Say "HttpClient download failed, falling back to Invoke-WebRequest"
+    Invoke-WebRequest -Uri $Url -OutFile $Dest -UseBasicParsing
+  }
 }
 
 function Download-With-Ranges { param([string]$Url,[string]$Dest,[int]$Parts=8)
