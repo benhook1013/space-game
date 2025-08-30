@@ -343,6 +343,11 @@ class SpaceGame extends FlameGame
     }
   }
 
+  /// Toggles rendering of the player's auto-aim radius.
+  void toggleAutoAimRadius() {
+    player.toggleAutoAimRadius();
+  }
+
   @override
   KeyEventResult onKeyEvent(
     KeyEvent event,
