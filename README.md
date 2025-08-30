@@ -1,7 +1,9 @@
 # 🚀 Space Miner PWA
 
-**Space Miner** is a mobile-first 2D space shooter where players fly around,
-mine asteroids and blast enemies — all built with **Flutter** and **Flame**.
+**Space Miner** is a mobile-first 2D space miner where players hunt for
+asteroids to harvest minerals while fending off periodic enemy waves — all
+built with **Flutter** and **Flame**. The ship sports an auto-firing mining
+laser for rocks and a main cannon that locks onto the closest threat.
 
 The aim is a light-hearted, cartoony game that runs smoothly on both mobile and
 desktop browsers using **Progressive Web App (PWA)** technology. You can
@@ -33,13 +35,14 @@ dedicated server or NAT traversal.
 ## 🧩 MVP Features
 
 - Touch/joystick movement and shooting
-- One enemy type with collision and random spawns
-- Asteroids to mine for score
+- Enemy groups spawn periodically and the main weapon auto-aims at the closest
+  foe
+- Asteroids can be mined for mineral drops using an auto-targeting laser
 - Single endless level with quick restart
 - Player health and high score displayed in the HUD; health drops on collision
 - Local high score stored on device using `shared_preferences`
-- Basic sound effects with a mute toggle on menu, HUD, pause
-  and game over screens, plus an `M` key shortcut
+- Basic sound effects with a mute toggle on menu, HUD, pause and game over
+  screens, plus an `M` key shortcut
 - Pause, resume or return to the menu via overlays (including game over screen)
 - Keyboard controls for desktop playtests (`WASD`/arrow keys to move, `Space` to
   shoot, `Escape` or `P` to pause or resume, `M` to mute, `Enter` starts or
@@ -54,7 +57,7 @@ dedicated server or NAT traversal.
 - Co-op multiplayer using WebSockets (host-authoritative)
 - Optional backend for saves or analytics
 - Native builds (Play Store/TestFlight) if needed later
-- Inventory, upgrades, menus, shop UI and save/load
+- Inventory, mineral-based upgrades, menus, shop UI and save/load
 
 ---
 

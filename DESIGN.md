@@ -75,6 +75,10 @@ Milestone goals are detailed in [milestone-setup.md](milestone-setup.md),
 - Components mix in `HasGameRef<SpaceGame>` when they need game context.
 - Use simple hit boxes (`CircleHitbox`, `RectangleHitbox`) and
   `HasCollisionDetection`.
+- An `EnemySpawner` system releases groups of enemies at timed intervals.
+- Asteroids drop mineral pickups when destroyed.
+- The player mounts two weapons: an auto-firing mining laser that targets
+  asteroids in range and a primary cannon that locks onto the nearest enemy.
 - Bullets, asteroids and enemies use small object pools to limit garbage
   collection, and unit tests verify pooled instances are reused.
 - The player loses health on collision with enemies or asteroids; the game ends
@@ -97,9 +101,19 @@ Milestone goals are detailed in [milestone-setup.md](milestone-setup.md),
 - Use immutable data objects and pass dependencies via constructors.
 - Local save data will use `shared_preferences` in the MVP.
 - State is kept lightweight using plain classes or `ValueNotifier`s.
+- Track a mineral currency for mined resources and persist purchased upgrades.
+
+## Upgrades
+
+- Minerals earned from asteroids will fund weapon and ship upgrades in later
+  milestones.
+- Design upgrades to modify mining efficiency, combat power and utility systems
+  without bloating the core game loop.
 
 ## Game State Flow
 
+- Play centres on searching for asteroids to mine while surviving periodic enemy
+  waves.
 - The game starts in a menu overlay that also exposes a mute toggle.
 - `SpaceGame` transitions to `playing` when the user taps start.
 - Players can pause the game from the HUD or with the Escape or `P` key,

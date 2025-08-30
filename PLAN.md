@@ -1,6 +1,7 @@
 # 🚀 Space Miner Plan
 
-Tiny mobile‑first 2D shooter built with Flutter and Flame.
+Tiny mobile‑first 2D space miner built with Flutter and Flame. Players harvest
+minerals from asteroids while periodic enemy waves keep the action moving.
 Target is an offline PWA that a solo developer can iterate on quickly.
 See [DESIGN.md](DESIGN.md) for architecture details. All design docs are now
 in sync, and tasks are broken down in the milestone docs and consolidated in
@@ -14,6 +15,8 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
 - Ship quickly and iterate in small increments
 - Responsive scaling so the same build works on phones, tablets and desktop
 - Solo-friendly workflow with minimal tooling
+- Core loop focused on mining asteroids for minerals while fending off enemy
+  groups
 
 ## 🚫 Non‑Goals
 
@@ -113,6 +116,8 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
 - Components live in `lib/components/`
   (`player.dart`, `enemy.dart`, `asteroid.dart`, `bullet.dart`…)
 - Keep the core `SpaceGame` lean by delegating logic to small helper classes
+- An `EnemySpawner` emits groups on a timer, and the player mounts an auto-fire
+  mining laser plus a primary cannon that targets the nearest enemy.
 - On‑screen joystick and shoot button; WASD + Space mirror touch controls
 - Use Flame's built-in `JoystickComponent` and `ButtonComponent` for touch input
 - Keyboard support comes from `KeyboardListenerComponent`
@@ -144,8 +149,9 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
 
 - Touch/joystick movement and shooting
 - Shooting uses a short cooldown to limit fire rate
-- One enemy type with collision and random spawns
-- Asteroids to mine for score; destroying enemies also grants points
+- Enemy groups spawn periodically; the main weapon auto-aims at the closest foe
+- Asteroids drop minerals when mined with an auto-targeting laser; destroying
+  enemies also grants points
 - Single endless level without progression for now
 - Player health and high score shown in the HUD with simple start/game‑over screens
 - Local high score stored on device (e.g., shared preferences)
@@ -225,7 +231,8 @@ in [TASKS.md](TASKS.md).
 - **Multiplayer** (`networking.md`): host‑authoritative co‑op via WebSocket
 - **Backend (optional)**: local storage sync or Firebase
 - **Native deployment (optional)**: Codemagic, Play Store, TestFlight
-- Additional features: inventory, upgrades, HUD, menus, shop UI, save/load
+- Additional features: inventory, mineral-based upgrades, HUD, menus, shop UI,
+  save/load
 
 ## 🔁 Daily Loop
 
