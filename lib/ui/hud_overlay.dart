@@ -56,6 +56,10 @@ class HudOverlay extends StatelessWidget {
               Row(
                 children: [
                   IconButton(
+                    icon: const Icon(Icons.gps_fixed, color: Colors.white),
+                    onPressed: game.toggleAutoAimRadius,
+                  ),
+                  IconButton(
                     // Mirrors the H keyboard shortcut.
                     icon: const Icon(Icons.help_outline, color: Colors.white),
                     onPressed: game.toggleHelp,

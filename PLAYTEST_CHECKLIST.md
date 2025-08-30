@@ -9,6 +9,7 @@ _Update this file whenever a player-facing feature is added or changed._
 - [ ] Player can shoot and destroy a basic enemy
 - [ ] Bullets travel in the direction the ship is facing
 - [ ] When stationary, the ship rotates toward the nearest enemy within range
+- [ ] HUD button toggles auto-aim radius display
 - [ ] Asteroids spawn randomly and drift across the screen
 - [ ] Enemies and asteroids show varied sprites
 - [ ] Shooting an asteroid destroys it and increases the on-screen score

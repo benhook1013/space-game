@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'dart:ui';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
@@ -39,6 +40,14 @@ class PlayerComponent extends SpriteComponent
   /// Accumulates time between auto-aim updates when stationary.
   double _autoAimTimer = 0;
 
+  /// Whether to render the auto-aim radius around the player.
+  bool showAutoAimRadius = false;
+
+  /// Paint used when drawing the auto-aim radius.
+  final Paint _autoAimPaint = Paint()
+    ..color = const Color(0x66ffffff)
+    ..style = PaintingStyle.stroke;
+
   /// Sets the current sprite for the player.
   void setSprite(String path) {
     _spritePath = path;
@@ -52,6 +61,11 @@ class PlayerComponent extends SpriteComponent
     _targetAngle = 0;
     _shootCooldown = 0;
     _keyboardDirection.setZero();
+  }
+
+  /// Toggles visibility of the auto-aim radius.
+  void toggleAutoAimRadius() {
+    showAutoAimRadius = !showAutoAimRadius;
   }
 
   /// Fires a bullet from the player's current position.
@@ -115,6 +129,18 @@ class PlayerComponent extends SpriteComponent
       angle = _targetAngle;
     } else {
       angle += maxDelta * rotationDelta.sign;
+    }
+  }
+
+  @override
+  void render(Canvas canvas) {
+    super.render(canvas);
+    if (showAutoAimRadius) {
+      canvas.drawCircle(
+        Offset(size.x / 2, size.y / 2),
+        Constants.playerAutoAimRange,
+        _autoAimPaint,
+      );
     }
   }
 
