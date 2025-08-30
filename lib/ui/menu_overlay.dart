@@ -66,7 +66,7 @@ class MenuOverlay extends StatelessWidget {
                           decoration: BoxDecoration(
                             border: Border.all(
                               color: selected == i
-                                  ? Colors.white
+                                  ? GameText.defaultColor
                                   : Colors.transparent,
                               width: 2,
                             ),
@@ -109,7 +109,7 @@ class MenuOverlay extends StatelessWidget {
                       iconSize: iconSize,
                       icon: Icon(
                         muted ? Icons.volume_off : Icons.volume_up,
-                        color: Colors.white,
+                        color: GameText.defaultColor,
                       ),
                       onPressed: game.audioService.toggleMute,
                     ),

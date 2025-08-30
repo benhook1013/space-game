@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 /// Displays text using a consistent style across game overlays.
 ///
-/// Defaults to white text with a modest font size but can be customised
+/// Defaults to yellow text with a modest font size but can be customised
 /// via [style], [maxLines] and [textAlign].
 class GameText extends StatelessWidget {
   const GameText(
@@ -12,6 +12,7 @@ class GameText extends StatelessWidget {
     this.style,
     this.maxLines,
     this.textAlign,
+    this.color,
   });
 
   /// String to display.
@@ -26,16 +27,21 @@ class GameText extends StatelessWidget {
   /// Alignment of the text within its bounds.
   final TextAlign? textAlign;
 
+  /// Explicit colour override for the text.
+  final Color? color;
+
+  /// Base colour used for in-game text.
+  static const Color defaultColor = Colors.yellow;
+
   static const _baseStyle = TextStyle(
-    color: Colors.white,
+    color: defaultColor,
     fontSize: 18,
   );
 
   @override
   Widget build(BuildContext context) {
-    final mergedStyle = style == null
-        ? _baseStyle
-        : _baseStyle.merge(style).copyWith(color: style?.color ?? Colors.white);
+    final mergedStyle =
+        _baseStyle.merge(style).copyWith(color: color ?? defaultColor);
     return AutoSizeText(
       data,
       maxLines: maxLines,
