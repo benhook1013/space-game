@@ -95,11 +95,12 @@ milestone goals, and `networking.md` for future multiplayer plans. See
 
 ## Asset Setup
 
-The repository includes a default player sprite (`assets/images/player.png`).
+The repository includes placeholder sprites for players, enemies and asteroids.
 Create the remaining assets locally under `assets/` before running the game:
 
+- Player sprites in `assets/images/players/` (e.g., `player1.png`)
 - Enemy sprites in `assets/images/enemies/`
-- `assets/images/asteroid.png`
+- Asteroid sprites in `assets/images/asteroids/`
 - `assets/images/bullet.png`
 - `assets/audio/shoot.wav`
 

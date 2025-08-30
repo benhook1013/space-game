@@ -6,9 +6,9 @@ required attribution details.
 | Asset | Source | License | Attribution |
 |-------|--------|---------|-------------|
 | _Example sprite_ | [Kenney](https://kenney.nl/) | CC0 | None required |
-| `player.png` player ship | Created with PixelLab (user-provided) | Unknown | None provided |
+| Player sprites in `assets/images/players/` | Created with PixelLab (user-provided) | Unknown | None provided |
 | Enemy sprites in `assets/images/enemies/` | Created with PixelLab (user-provided) | Unknown | None provided |
-| `asteroid.png` placeholder | Generated via Python | CC0 | None required |
+| Asteroid sprites in `assets/images/asteroids/` | Created with PixelLab (user-provided) | Unknown | None provided |
 | `bullet.png` placeholder | Generated via Python | CC0 | None required |
 | `shoot.wav` placeholder sound | Generated via Python | CC0 | None required |
 
