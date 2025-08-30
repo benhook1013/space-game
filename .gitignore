@@ -40,3 +40,4 @@ doc/api/
 # Platform-specific builds
 android/local.properties
 ios/Pods/
+/flutter_windows_3.32.8-stable.zip.partial
