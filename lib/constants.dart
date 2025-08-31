@@ -30,6 +30,9 @@ class Constants {
   /// Starting health for the player.
   static const int playerMaxHealth = 3;
 
+  /// Seconds that the player sprite flashes red after taking damage.
+  static const double playerDamageFlashDuration = 0.2;
+
   /// Bullet travel speed in pixels per second.
   static const double bulletSpeed = 400;
 

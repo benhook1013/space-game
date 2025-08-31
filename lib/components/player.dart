@@ -53,6 +53,12 @@ class PlayerComponent extends SpriteComponent
     ..color = const Color(0x66ffffff)
     ..style = PaintingStyle.stroke;
 
+  static const Color _normalColor = Color(0xffffffff);
+  static const Color _damageColor = Color(0xffff0000);
+
+  /// Remaining time for the damage flash effect.
+  double _damageFlashTime = 0;
+
   /// Sets the current sprite for the player.
   void setSprite(String path) {
     _spritePath = path;
@@ -73,6 +79,12 @@ class PlayerComponent extends SpriteComponent
     showAutoAimRadius = !showAutoAimRadius;
   }
 
+  /// Triggers a short red flash to indicate damage taken.
+  void flashDamage() {
+    _damageFlashTime = Constants.playerDamageFlashDuration;
+    paint.color = _damageColor;
+  }
+
   /// Fires a bullet from the player's current position.
   void shoot() {
     if (_shootCooldown > 0) {
@@ -89,6 +101,7 @@ class PlayerComponent extends SpriteComponent
   @override
   Future<void> onLoad() async {
     setSprite(_spritePath);
+    paint.color = _normalColor;
     add(CircleHitbox());
     keyDispatcher.register(LogicalKeyboardKey.space, onDown: shoot);
   }
@@ -102,6 +115,12 @@ class PlayerComponent extends SpriteComponent
   @override
   void update(double dt) {
     super.update(dt);
+    if (_damageFlashTime > 0) {
+      _damageFlashTime -= dt;
+      if (_damageFlashTime <= 0) {
+        paint.color = _normalColor;
+      }
+    }
     _keyboardDirection
       ..setZero()
       ..x += (keyDispatcher.isPressed(LogicalKeyboardKey.keyA) ||
