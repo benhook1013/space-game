@@ -23,7 +23,8 @@ Gameplay entities and reusable pieces.
 - [BulletComponent](bullet.md) – short-lived projectile that deals one damage
   and is destroyed on hit or when leaving the screen.
 - [AsteroidComponent](asteroid.md) – floats randomly, requires four to six
-  damage pulses, and awards score and minerals on each hit.
+  damage pulses, and awards score on each hit while only mining laser hits
+  grant minerals.
 - [MiningLaserComponent](mining_laser.md) – auto-targets and mines nearby
   asteroids with a widening pulse beam.
 - [StarfieldComponent](starfield.md) – procedural three-layer background with

@@ -13,7 +13,7 @@ _Update this file whenever a player-facing feature is added or changed._
 - [ ] Asteroids spawn randomly and drift across the screen
 - [ ] Enemies and asteroids show varied sprites
 - [ ] Shooting an asteroid destroys it and increases the on-screen score
-- [ ] Damaging an asteroid increases the on-screen minerals
+- [ ] Mining an asteroid increases the on-screen minerals
 - [ ] Score resets when restarting the game
 - [ ] Minerals reset when restarting the game
 - [ ] HUD shows current score, minerals and high score during play

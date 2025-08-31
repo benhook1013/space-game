@@ -9,7 +9,7 @@ Short-lived projectile fired by the player.
 - Removed on impact or when it exits the screen.
 - Deals one damage to enemies and asteroids.
 - Uses sprite from `assets.dart` and speed from `constants.dart`.
-- Awards score and minerals on asteroid hits using values from `constants.dart`.
+- Awards score on asteroid hits using values from `constants.dart`.
 - Reused through a simple object pool managed by `SpaceGame`.
 - Uses a `CircleHitbox` and `HasGameRef<SpaceGame>`.
 

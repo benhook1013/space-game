@@ -84,7 +84,7 @@ tree spanning weapons and ship systems.
 - Use simple hit boxes (`CircleHitbox`, `RectangleHitbox`) and
   `HasCollisionDetection`.
 - An `EnemySpawner` system releases groups of enemies at timed intervals.
-- Damaging asteroids awards mineral pickups each time.
+- Mining asteroids with the laser awards mineral pickups each time.
 - The player mounts two weapons: an auto-firing mining laser that targets
   asteroids in range and a primary cannon that locks onto the nearest enemy.
 - Bullets, asteroids and enemies use small object pools to limit garbage
