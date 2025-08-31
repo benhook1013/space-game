@@ -6,9 +6,10 @@ Heads-up display shown during play.
 
 - Shows current score, high score, minerals and health using `ValueNotifier`s from
   `SpaceGame`.
-- Provides auto-aim radius toggle, help, mute and pause buttons bound to
-  `SpaceGame` and `AudioService`.
+- Provides auto-aim radius toggle, upgrades, help, mute and pause buttons bound
+  to `SpaceGame` and `AudioService`.
 - Icon sizes scale with screen size for better usability on different devices.
+- `U` opens the upgrades overlay; `Esc` closes it.
 - `H` opens the help overlay showing controls; `Esc` closes it.
 - `M` key also toggles audio mute.
 - `Escape` or `P` keys also pause or resume.

@@ -25,6 +25,7 @@ import '../ui/hud_overlay.dart';
 import '../ui/menu_overlay.dart';
 import '../ui/pause_overlay.dart';
 import '../ui/help_overlay.dart';
+import '../ui/upgrades_overlay.dart';
 import 'game_state.dart';
 
 /// Root Flame game handling the core loop.
@@ -209,6 +210,25 @@ class SpaceGame extends FlameGame
     _enemyPool.add(enemy);
   }
 
+  /// Toggles the upgrades overlay and pauses/resumes the game.
+  void toggleUpgrades() {
+    if (overlays.isActive(UpgradesOverlay.id)) {
+      overlays.remove(UpgradesOverlay.id);
+      state = GameState.playing;
+      overlays.add(HudOverlay.id);
+      resumeEngine();
+    } else {
+      if (state != GameState.playing) {
+        return;
+      }
+      state = GameState.upgrades;
+      overlays
+        ..remove(HudOverlay.id)
+        ..add(UpgradesOverlay.id);
+      pauseEngine();
+    }
+  }
+
   /// Toggles the help overlay and pauses/resumes if entering from gameplay.
   void toggleHelp() {
     if (overlays.isActive(HelpOverlay.id)) {
@@ -380,7 +400,12 @@ class SpaceGame extends FlameGame
     Set<LogicalKeyboardKey> keysPressed,
   ) {
     if (event is KeyDownEvent) {
-      if (overlays.isActive(HelpOverlay.id) &&
+      if (overlays.isActive(UpgradesOverlay.id) &&
+          (event.logicalKey == LogicalKeyboardKey.escape ||
+              event.logicalKey == LogicalKeyboardKey.keyU)) {
+        toggleUpgrades();
+        return KeyEventResult.handled;
+      } else if (overlays.isActive(HelpOverlay.id) &&
           (event.logicalKey == LogicalKeyboardKey.escape ||
               event.logicalKey == LogicalKeyboardKey.keyH)) {
         toggleHelp();
@@ -426,6 +451,9 @@ class SpaceGame extends FlameGame
         }
       } else if (event.logicalKey == LogicalKeyboardKey.keyH) {
         toggleHelp();
+        return KeyEventResult.handled;
+      } else if (event.logicalKey == LogicalKeyboardKey.keyU) {
+        toggleUpgrades();
         return KeyEventResult.handled;
       } else if (event.logicalKey == LogicalKeyboardKey.f1) {
         toggleDebug();

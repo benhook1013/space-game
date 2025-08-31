@@ -8,6 +8,7 @@ import 'ui/hud_overlay.dart';
 import 'ui/menu_overlay.dart';
 import 'ui/pause_overlay.dart';
 import 'ui/help_overlay.dart';
+import 'ui/upgrades_overlay.dart';
 import 'services/storage_service.dart';
 import 'services/audio_service.dart';
 
@@ -33,6 +34,8 @@ Future<void> main() async {
           GameOverOverlay.id: (context, SpaceGame game) =>
               GameOverOverlay(game: game),
           HelpOverlay.id: (context, SpaceGame game) => HelpOverlay(game: game),
+          UpgradesOverlay.id: (context, SpaceGame game) =>
+              UpgradesOverlay(game: game),
         },
       ),
     ),
