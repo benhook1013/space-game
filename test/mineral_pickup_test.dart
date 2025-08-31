@@ -38,7 +38,9 @@ class _TestGame extends SpaceGame {
     player = _TestPlayer(joystick: joystick, keyDispatcher: keyDispatcher);
     add(player);
     onGameResize(
-      Vector2.all(Constants.playerSize * Constants.playerScale * 2),
+      Vector2.all(Constants.playerSize *
+          (Constants.spriteScale + Constants.playerScale) *
+          2),
     );
   }
 }
@@ -46,7 +48,7 @@ class _TestGame extends SpaceGame {
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('destroying asteroid drops mineral pickup', () async {
+  test('each asteroid damage drops a nearby mineral', () async {
     SharedPreferences.setMockInitialValues({});
     await Flame.images
         .loadAll([...Assets.asteroids, Assets.mineralIcon, ...Assets.players]);
@@ -58,10 +60,21 @@ void main() {
     final asteroid = game.acquireAsteroid(Vector2.zero(), Vector2.zero());
     await game.add(asteroid);
     game.update(0);
-    asteroid.takeDamage(Constants.asteroidMaxHealth);
-    game.update(0);
+    final origin = asteroid.position.clone();
+
+    var hits = 0;
+    while (asteroid.parent != null && hits < 10) {
+      asteroid.takeDamage(1);
+      game.update(0);
+      hits++;
+    }
     await game.ready();
-    expect(game.mineralPickups.length, 1);
+    expect(game.mineralPickups.length, hits);
+    for (final mineral in game.mineralPickups) {
+      final offset = mineral.position - origin;
+      expect(offset.length, greaterThan(0));
+      expect(offset.length, lessThanOrEqualTo(Constants.mineralDropRadius));
+    }
   });
 
   test('collecting mineral increases total', () async {

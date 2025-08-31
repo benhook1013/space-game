@@ -18,7 +18,8 @@ class EnemyComponent extends SpriteComponent
   EnemyComponent()
       : super(
           size: Vector2.all(
-            Constants.enemySize * Constants.enemyScale,
+            Constants.enemySize *
+                (Constants.spriteScale + Constants.enemyScale),
           ),
           anchor: Anchor.center,
         );

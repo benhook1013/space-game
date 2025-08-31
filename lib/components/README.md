@@ -26,11 +26,11 @@ Gameplay entities and reusable pieces.
 - [BulletComponent](bullet.md) – short-lived projectile that deals one damage
   and is destroyed on hit or when leaving the screen.
 - [AsteroidComponent](asteroid.md) – floats randomly, requires four to six
-  damage pulses and drops a mineral pickup on destruction.
+  damage pulses and drops a mineral pickup for each point of damage.
 - [MiningLaserComponent](mining_laser.md) – auto-targets and mines nearby
   asteroids with a widening pulse beam.
-- [MineralComponent](mineral.md) – collectible dropped by destroyed asteroids
-  that increases the player's mineral total when picked up.
+- [MineralComponent](mineral.md) – collectible dropped whenever an asteroid is
+  damaged that increases the player's mineral total when picked up.
 - [MineralMagnetComponent](mineral_magnet.md) – blue aura that follows the
   player and draws nearby mineral pickups toward the ship.
 - [Starfield](starfield.md) – parallax background built with Flame's

@@ -24,7 +24,8 @@ class PlayerComponent extends SpriteComponent
       : _spritePath = spritePath,
         super(
           size: Vector2.all(
-            Constants.playerSize * Constants.playerScale,
+            Constants.playerSize *
+                (Constants.spriteScale + Constants.playerScale),
           ),
           anchor: Anchor.center,
         );
@@ -161,23 +162,19 @@ class PlayerComponent extends SpriteComponent
       );
       _targetAngle = math.atan2(input.y, input.x) + math.pi / 2;
     } else {
-      _autoAimTimer += dt;
-      if (_autoAimTimer >= Constants.playerAutoAimInterval) {
-        _autoAimTimer = 0;
-        final enemies = game.enemies.isNotEmpty
-            ? game.enemies
-            : game.children.whereType<EnemyComponent>();
-        final target = enemies.findClosest(
-          position,
-          Constants.playerAutoAimRange,
-        );
-        if (target != null) {
-          _targetAngle = math.atan2(
-                target.position.y - position.y,
-                target.position.x - position.x,
-              ) +
-              math.pi / 2;
-        }
+      final enemies = game.enemies.isNotEmpty
+          ? game.enemies
+          : game.children.whereType<EnemyComponent>();
+      final target = enemies.findClosest(
+        position,
+        Constants.playerAutoAimRange,
+      );
+      if (target != null) {
+        _targetAngle = math.atan2(
+              target.position.y - position.y,
+              target.position.x - position.x,
+            ) +
+            math.pi / 2;
       }
     }
     final rotationDelta = _normalizeAngle(_targetAngle - angle);

@@ -18,7 +18,8 @@ class AsteroidComponent extends SpriteComponent
   AsteroidComponent()
       : super(
           size: Vector2.all(
-            Constants.asteroidSize * Constants.asteroidScale,
+            Constants.asteroidSize *
+                (Constants.spriteScale + Constants.asteroidScale),
           ),
           anchor: Anchor.center,
         );
@@ -73,10 +74,20 @@ class AsteroidComponent extends SpriteComponent
     game.releaseAsteroid(this);
   }
 
-  /// Reduces health by [amount] and removes the asteroid when depleted.
+  /// Reduces health by [amount], dropping minerals for each point of damage
+  /// and removing the asteroid when depleted.
   void takeDamage(int amount) {
+    final damage = math.min(amount, _health);
     _health -= amount;
-    game.addScore(Constants.asteroidScore);
+    for (var i = 0; i < damage; i++) {
+      final angle = _rand.nextDouble() * math.pi * 2;
+      final distance = _rand.nextDouble() * Constants.mineralDropRadius;
+      final offset = Vector2(math.cos(angle), math.sin(angle))..scale(distance);
+      final mineral = game.acquireMineral(position + offset);
+      game.mineralPickups.add(mineral);
+      game.add(mineral);
+      game.addScore(Constants.asteroidScore);
+    }
     if (_health <= 0 && !isRemoving) {
       final mineral = game.acquireMineral(position.clone());
       game.mineralPickups.add(mineral);

@@ -13,7 +13,10 @@ class MineralComponent extends SpriteComponent
     with HasGameReference<SpaceGame>, CollisionCallbacks {
   MineralComponent()
       : super(
-          size: Vector2.all(Constants.mineralSize),
+          size: Vector2.all(
+            Constants.mineralSize *
+                (Constants.spriteScale + Constants.mineralScale),
+          ),
           anchor: Anchor.center,
         );
 

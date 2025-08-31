@@ -33,7 +33,9 @@ class _TestGame extends SpaceGame {
     mineralMagnet = MineralMagnetComponent(player: player);
     add(mineralMagnet);
     onGameResize(
-      Vector2.all(Constants.playerSize * Constants.playerScale * 2),
+      Vector2.all(Constants.playerSize *
+          (Constants.spriteScale + Constants.playerScale) *
+          2),
     );
   }
 }
