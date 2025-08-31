@@ -3,7 +3,7 @@
 Gameplay entities and reusable pieces.
 
 - Includes player, enemy, asteroid and bullet components.
-- Each extends a Flame component and mixes in `HasGameRef<SpaceGame>`
+- Each extends a Flame component and mixes in `HasGameReference<SpaceGame>`
   when it needs game context.
 - Use simple hit boxes like `CircleHitbox` or `RectangleHitbox` with
   `HasCollisionDetection` on the game.

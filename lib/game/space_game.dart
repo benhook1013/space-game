@@ -12,7 +12,6 @@ import '../components/enemy.dart';
 import '../components/bullet.dart';
 import '../assets.dart';
 import '../components/player.dart';
-import '../components/starfield.dart';
 import '../components/mining_laser.dart';
 import '../components/enemy_spawner.dart';
 import '../components/asteroid_spawner.dart';
@@ -20,7 +19,6 @@ import '../game/key_dispatcher.dart';
 import '../game/game_state_machine.dart';
 import '../services/score_service.dart';
 import '../services/overlay_service.dart';
-import '../constants.dart';
 import '../services/storage_service.dart';
 import '../services/audio_service.dart';
 import '../ui/help_overlay.dart';
@@ -92,7 +90,6 @@ class SpaceGame extends FlameGame
 
   /// Tracks whether the game was playing when the help overlay opened.
   bool _helpWasPlaying = false;
-  ParallaxComponent? _starfield;
 
   @override
   Future<void> onLoad() async {

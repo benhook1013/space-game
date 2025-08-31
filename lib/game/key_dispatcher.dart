@@ -1,5 +1,4 @@
 import 'package:flame/components.dart';
-import 'package:flame/input.dart';
 import 'package:flutter/services.dart';
 
 /// Maps keyboard keys to callbacks and tracks pressed state.

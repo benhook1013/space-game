@@ -132,7 +132,7 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
   fonts so gameplay code never references file paths directly
 - Favor small composable components over inheritance
 - Components that need to access the game should mix in
-  `HasGameRef<SpaceGame>` instead of using global singletons
+  `HasGameReference<SpaceGame>` instead of using global singletons
 - Keep Flutter UI widgets separate from game state updates
 - If saving is needed later, add IDs and JSON‑serializable state
 - Fixed logical resolution scaled to device for consistent gameplay
