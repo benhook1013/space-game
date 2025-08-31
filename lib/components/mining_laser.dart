@@ -14,7 +14,19 @@ class MiningLaserComponent extends Component with HasGameReference<SpaceGame> {
   final PlayerComponent player;
   AsteroidComponent? _target;
   final Paint _paint = Paint()..color = const Color(0x66ffffff);
-  double _pulseTimer = 0;
+  final Timer _pulseTimer = Timer(Constants.miningPulseInterval, repeat: true);
+
+  @override
+  Future<void> onLoad() async {
+    _pulseTimer.onTick = () {
+      _paint.strokeWidth = 2;
+      _target?.takeDamage(Constants.miningPulseDamage);
+      if (_target?.isMounted != true) {
+        _target = null;
+      }
+    };
+    return super.onLoad();
+  }
 
   @override
   void update(double dt) {
@@ -26,30 +38,25 @@ class MiningLaserComponent extends Component with HasGameReference<SpaceGame> {
     if (_target == null ||
         !_target!.isMounted ||
         _target!.position.distanceToSquared(player.position) > rangeSquared) {
-      final asteroids = game.asteroids.isNotEmpty
-          ? game.asteroids
-          : game.children.whereType<AsteroidComponent>();
+      final asteroids = game.pools.nearbyAsteroids(
+        player.position,
+        Constants.playerMiningRange,
+      );
       _target = asteroids.findClosest(
         player.position,
         Constants.playerMiningRange,
       );
-      _pulseTimer = 0;
+      _pulseTimer
+        ..stop()
+        ..start();
     }
 
     if (_target != null) {
-      _pulseTimer += dt;
-      final progress =
-          (_pulseTimer / Constants.miningPulseInterval).clamp(0, 1).toDouble();
+      _pulseTimer.update(dt);
+      final progress = _pulseTimer.progress;
       _paint.strokeWidth = 2 + 2 * progress;
-      if (_pulseTimer >= Constants.miningPulseInterval) {
-        _pulseTimer = 0;
-        _paint.strokeWidth = 2;
-        _target!.takeDamage(Constants.miningPulseDamage);
-        if (!_target!.isMounted) {
-          _target = null;
-        }
-      }
     } else {
+      _pulseTimer.stop();
       _paint.strokeWidth = 2;
     }
   }

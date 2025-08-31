@@ -4,11 +4,13 @@ import 'dart:ui';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
+import 'package:meta/meta.dart';
 import '../assets.dart';
 import '../constants.dart';
 import '../game/space_game.dart';
 import 'debug_health_text.dart';
 import '../util/collision_utils.dart';
+import 'damageable.dart';
 
 /// Neutral obstacle that can be mined for score and minerals.
 ///
@@ -19,7 +21,8 @@ class AsteroidComponent extends SpriteComponent
         HasGameReference<SpaceGame>,
         CollisionCallbacks,
         DebugHealthText,
-        SolidBody {
+        SolidBody,
+        Damageable {
   AsteroidComponent()
       : super(
           size: Vector2.all(
@@ -32,6 +35,9 @@ class AsteroidComponent extends SpriteComponent
   final Vector2 _velocity = Vector2.zero();
   static final _rand = math.Random();
   int _health = Constants.asteroidMaxHealth;
+
+  @visibleForTesting
+  int get health => _health;
 
   /// Prepares the asteroid for reuse.
   void reset(Vector2 position, Vector2 velocity) {
@@ -51,13 +57,15 @@ class AsteroidComponent extends SpriteComponent
   @override
   void onMount() {
     super.onMount();
-    game.asteroids.add(this);
+    game.pools.trackAsteroid(this);
   }
 
   @override
   void update(double dt) {
     super.update(dt);
+    final previous = position.clone();
     position += _velocity * dt;
+    game.pools.updateAsteroidPosition(this, previous);
     if (position.y > Constants.worldSize.y + size.y ||
         position.y < -size.y ||
         position.x < -size.x ||
@@ -75,21 +83,22 @@ class AsteroidComponent extends SpriteComponent
   @override
   void onRemove() {
     super.onRemove();
-    game.asteroids.remove(this);
-    game.releaseAsteroid(this);
+    game.pools.untrackAsteroid(this);
+    game.pools.releaseAsteroid(this);
   }
 
-  /// Reduces health by [amount], dropping minerals for each point of damage
-  /// and removing the asteroid when depleted.
+  /// Reduces health by [amount], dropping a limited number of minerals and
+  /// removing the asteroid when depleted.
   void takeDamage(int amount) {
     final damage = math.min(amount, _health);
-    _health -= amount;
-    for (var i = 0; i < damage; i++) {
+    _health -= damage;
+    final drops = math.min(damage, Constants.asteroidMineralDropMax);
+    for (var i = 0; i < drops; i++) {
       final angle = _rand.nextDouble() * math.pi * 2;
       final distance = _rand.nextDouble() * Constants.mineralDropRadius;
       final offset = Vector2(math.cos(angle), math.sin(angle))..scale(distance);
-      final mineral = game.acquireMineral(position + offset);
-      game.mineralPickups.add(mineral);
+      final mineral = game.pools.acquireMineral(position + offset);
+      game.pools.mineralPickups.add(mineral);
       game.add(mineral);
       game.addScore(Constants.asteroidScore);
     }

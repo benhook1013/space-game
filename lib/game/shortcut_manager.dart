@@ -1,0 +1,78 @@
+import 'package:flutter/services.dart';
+
+import '../services/audio_service.dart';
+import 'game_state_machine.dart';
+import 'game_state.dart';
+import 'key_dispatcher.dart';
+
+/// Registers global keyboard shortcuts and wires them to actions.
+class ShortcutManager {
+  ShortcutManager({
+    required KeyDispatcher keyDispatcher,
+    required GameStateMachine stateMachine,
+    required AudioService audioService,
+    required void Function() toggleHelp,
+    required void Function() toggleUpgrades,
+    required void Function() toggleDebug,
+  }) {
+    keyDispatcher.register(LogicalKeyboardKey.escape, onDown: () {
+      if (stateMachine.state == GameState.playing) {
+        stateMachine.pauseGame();
+      } else if (stateMachine.state == GameState.paused) {
+        stateMachine.resumeGame();
+      } else if (stateMachine.state == GameState.gameOver) {
+        stateMachine.returnToMenu();
+      }
+    });
+
+    keyDispatcher.register(LogicalKeyboardKey.keyP, onDown: () {
+      if (stateMachine.state == GameState.playing) {
+        stateMachine.pauseGame();
+      } else if (stateMachine.state == GameState.paused) {
+        stateMachine.resumeGame();
+      }
+    });
+
+    keyDispatcher.register(
+      LogicalKeyboardKey.keyM,
+      onDown: audioService.toggleMute,
+    );
+
+    keyDispatcher.register(LogicalKeyboardKey.enter, onDown: () {
+      if (stateMachine.state == GameState.menu ||
+          stateMachine.state == GameState.gameOver) {
+        stateMachine.startGame();
+      }
+    });
+
+    keyDispatcher.register(LogicalKeyboardKey.keyR, onDown: () {
+      if (stateMachine.state == GameState.gameOver ||
+          stateMachine.state == GameState.playing ||
+          stateMachine.state == GameState.paused) {
+        stateMachine.startGame();
+      }
+    });
+
+    keyDispatcher.register(LogicalKeyboardKey.keyQ, onDown: () {
+      if (stateMachine.state == GameState.paused ||
+          stateMachine.state == GameState.gameOver) {
+        stateMachine.returnToMenu();
+      }
+    });
+
+    keyDispatcher.register(
+      LogicalKeyboardKey.keyH,
+      onDown: toggleHelp,
+    );
+
+    keyDispatcher.register(
+      LogicalKeyboardKey.keyU,
+      onDown: toggleUpgrades,
+    );
+
+    keyDispatcher.register(
+      LogicalKeyboardKey.f1,
+      onDown: toggleDebug,
+    );
+  }
+}

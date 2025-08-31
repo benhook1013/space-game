@@ -9,6 +9,7 @@ import '../constants.dart';
 import '../game/space_game.dart';
 import 'debug_health_text.dart';
 import '../util/collision_utils.dart';
+import 'damageable.dart';
 
 /// Basic foe that drifts toward the player.
 ///
@@ -19,7 +20,8 @@ class EnemyComponent extends SpriteComponent
         HasGameReference<SpaceGame>,
         CollisionCallbacks,
         DebugHealthText,
-        SolidBody {
+        SolidBody,
+        Damageable {
   EnemyComponent()
       : super(
           size: Vector2.all(
@@ -46,7 +48,7 @@ class EnemyComponent extends SpriteComponent
   @override
   void onMount() {
     super.onMount();
-    game.enemies.add(this);
+    game.pools.enemies.add(this);
   }
 
   @override
@@ -72,8 +74,8 @@ class EnemyComponent extends SpriteComponent
   @override
   void onRemove() {
     super.onRemove();
-    game.enemies.remove(this);
-    game.releaseEnemy(this);
+    game.pools.enemies.remove(this);
+    game.pools.releaseEnemy(this);
   }
 
   /// Reduces health by [amount] and removes the enemy when depleted.

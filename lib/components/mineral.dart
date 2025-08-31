@@ -37,9 +37,19 @@ class MineralComponent extends SpriteComponent
   }
 
   @override
+  void update(double dt) {
+    super.update(dt);
+    final toPlayer = game.player.position - position;
+    final distance = toPlayer.length;
+    if (distance <= Constants.playerMagnetRange && distance > 0) {
+      position += toPlayer / distance * Constants.mineralMagnetSpeed * dt;
+    }
+  }
+
+  @override
   void onRemove() {
     super.onRemove();
-    game.mineralPickups.remove(this);
-    game.releaseMineral(this);
+    game.pools.mineralPickups.remove(this);
+    game.pools.releaseMineral(this);
   }
 }

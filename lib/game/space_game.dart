@@ -6,7 +6,6 @@ import 'package:flame/input.dart';
 import 'package:flame/experimental.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart' show EdgeInsets;
-import 'package:flutter/services.dart' show LogicalKeyboardKey;
 
 import '../components/asteroid.dart';
 import '../components/enemy.dart';
@@ -14,11 +13,10 @@ import '../components/bullet.dart';
 import '../assets.dart';
 import '../components/player.dart';
 import '../components/mining_laser.dart';
-import '../components/mineral.dart';
-import '../components/mineral_magnet.dart';
 import '../components/enemy_spawner.dart';
 import '../components/asteroid_spawner.dart';
 import '../components/starfield.dart';
+import '../components/mineral.dart';
 import '../constants.dart';
 import '../game/key_dispatcher.dart';
 import '../game/game_state_machine.dart';
@@ -29,6 +27,9 @@ import '../services/audio_service.dart';
 import '../ui/help_overlay.dart';
 import '../ui/upgrades_overlay.dart';
 import 'game_state.dart';
+import 'pool_manager.dart';
+import 'lifecycle_manager.dart';
+import 'shortcut_manager.dart';
 
 /// Root Flame game handling the core loop.
 ///
@@ -56,11 +57,13 @@ class SpaceGame extends FlameGame
   late final KeyDispatcher keyDispatcher;
   late final PlayerComponent player;
   late final MiningLaserComponent miningLaser;
-  late final MineralMagnetComponent mineralMagnet;
   late final JoystickComponent joystick;
   late final HudButtonComponent fireButton;
   late final EnemySpawner enemySpawner;
   late final AsteroidSpawner asteroidSpawner;
+  final PoolManager pools = PoolManager();
+  late final LifecycleManager lifecycle;
+  late final ShortcutManager shortcuts;
   ParallaxComponent? _starfield;
   FpsTextComponent? _fpsText;
 
@@ -78,28 +81,23 @@ class SpaceGame extends FlameGame
     selectedPlayerIndex.value = index.clamp(0, Assets.players.length - 1);
   }
 
-  /// Pool of reusable bullets.
-  final List<BulletComponent> _bulletPool = [];
+  List<EnemyComponent> get enemies => pools.enemies;
+  List<AsteroidComponent> get asteroids => pools.asteroids;
+  List<MineralComponent> get mineralPickups => pools.mineralPickups;
 
-  /// Pool of reusable asteroids.
-  final List<AsteroidComponent> _asteroidPool = [];
-
-  /// Pool of reusable enemies.
-  final List<EnemyComponent> _enemyPool = [];
-
-  /// Pool of reusable mineral pickups.
-  final List<MineralComponent> _mineralPool = [];
-
-  /// Active enemies tracked for quick lookup.
-  final List<EnemyComponent> enemies = [];
-
-  /// Active asteroids tracked for quick lookup.
-  final List<AsteroidComponent> asteroids = [];
-
-  /// Active mineral pickups tracked for cleanup.
-  final List<MineralComponent> mineralPickups = [];
-
-  /// TODO: Investigate spatial partitioning (e.g., quad trees) if counts grow.
+  BulletComponent acquireBullet(Vector2 position, Vector2 direction) =>
+      pools.acquireBullet(position, direction);
+  void releaseBullet(BulletComponent bullet) => pools.releaseBullet(bullet);
+  AsteroidComponent acquireAsteroid(Vector2 position, Vector2 velocity) =>
+      pools.acquireAsteroid(position, velocity);
+  void releaseAsteroid(AsteroidComponent asteroid) =>
+      pools.releaseAsteroid(asteroid);
+  EnemyComponent acquireEnemy(Vector2 position) => pools.acquireEnemy(position);
+  void releaseEnemy(EnemyComponent enemy) => pools.releaseEnemy(enemy);
+  MineralComponent acquireMineral(Vector2 position) =>
+      pools.acquireMineral(position);
+  void releaseMineral(MineralComponent mineral) =>
+      pools.releaseMineral(mineral);
 
   /// Tracks whether the game was playing when the help overlay opened.
   bool _helpWasPlaying = false;
@@ -137,9 +135,6 @@ class SpaceGame extends FlameGame
     );
     player.position = Constants.worldSize / 2;
     add(player);
-
-    mineralMagnet = MineralMagnetComponent(player: player);
-    add(mineralMagnet);
     camera
       ..setBounds(
         Rectangle.fromLTWH(
@@ -174,71 +169,25 @@ class SpaceGame extends FlameGame
     addAll([enemySpawner, asteroidSpawner]);
 
     overlayService = OverlayService(this);
+    lifecycle = LifecycleManager(this);
     stateMachine = GameStateMachine(
       overlays: overlayService,
-      onStart: _onStart,
+      onStart: lifecycle.onStart,
       onPause: pauseEngine,
       onResume: resumeEngine,
-      onGameOver: _onGameOver,
-      onMenu: _onMenu,
+      onGameOver: lifecycle.onGameOver,
+      onMenu: lifecycle.onMenu,
     );
 
-    _registerShortcuts();
+    shortcuts = ShortcutManager(
+      keyDispatcher: keyDispatcher,
+      stateMachine: stateMachine,
+      audioService: audioService,
+      toggleHelp: toggleHelp,
+      toggleUpgrades: toggleUpgrades,
+      toggleDebug: toggleDebug,
+    );
     stateMachine.returnToMenu();
-  }
-
-  /// Retrieves a bullet from the pool or creates a new one.
-  BulletComponent acquireBullet(Vector2 position, Vector2 direction) {
-    final bullet =
-        _bulletPool.isNotEmpty ? _bulletPool.removeLast() : BulletComponent();
-    bullet.reset(position, direction);
-    return bullet;
-  }
-
-  /// Returns [bullet] to the pool for reuse.
-  void releaseBullet(BulletComponent bullet) {
-    _bulletPool.add(bullet);
-  }
-
-  /// Retrieves an asteroid from the pool or creates a new one.
-  AsteroidComponent acquireAsteroid(Vector2 position, Vector2 velocity) {
-    final asteroid = _asteroidPool.isNotEmpty
-        ? _asteroidPool.removeLast()
-        : AsteroidComponent();
-    asteroid.reset(position, velocity);
-    return asteroid;
-  }
-
-  /// Returns [asteroid] to the pool for reuse.
-  void releaseAsteroid(AsteroidComponent asteroid) {
-    _asteroidPool.add(asteroid);
-  }
-
-  /// Retrieves an enemy from the pool or creates a new one.
-  EnemyComponent acquireEnemy(Vector2 position) {
-    final enemy =
-        _enemyPool.isNotEmpty ? _enemyPool.removeLast() : EnemyComponent();
-    enemy.reset(position);
-    return enemy;
-  }
-
-  /// Returns [enemy] to the pool for reuse.
-  void releaseEnemy(EnemyComponent enemy) {
-    _enemyPool.add(enemy);
-  }
-
-  /// Retrieves a mineral from the pool or creates a new one.
-  MineralComponent acquireMineral(Vector2 position) {
-    final mineral = _mineralPool.isNotEmpty
-        ? _mineralPool.removeLast()
-        : MineralComponent();
-    mineral.reset(position);
-    return mineral;
-  }
-
-  /// Returns [mineral] to the pool for reuse.
-  void releaseMineral(MineralComponent mineral) {
-    _mineralPool.add(mineral);
   }
 
   /// Toggles the upgrades overlay and pauses/resumes the game.
@@ -337,107 +286,5 @@ class SpaceGame extends FlameGame
   /// Toggles rendering of the player's auto-aim radius.
   void toggleAutoAimRadius() {
     player.toggleAutoAimRadius();
-  }
-
-  void _onStart() {
-    scoreService.reset();
-    for (final enemy in enemies.toList()) {
-      enemy.removeFromParent();
-    }
-    for (final asteroid in asteroids.toList()) {
-      asteroid.removeFromParent();
-    }
-    for (final mineral in mineralPickups.toList()) {
-      mineral.removeFromParent();
-    }
-    children.whereType<BulletComponent>().forEach((b) => b.removeFromParent());
-    if (!player.isMounted) {
-      add(player);
-      camera.follow(player);
-    }
-    player.setSprite(selectedPlayerSprite);
-    player.reset();
-    enemySpawner
-      ..stop()
-      ..start();
-    asteroidSpawner
-      ..stop()
-      ..start();
-    resumeEngine();
-  }
-
-  void _onGameOver() {
-    enemySpawner.stop();
-    asteroidSpawner.stop();
-    scoreService.updateHighScoreIfNeeded();
-    pauseEngine();
-  }
-
-  void _onMenu() {
-    enemySpawner.stop();
-    asteroidSpawner.stop();
-    pauseEngine();
-  }
-
-  void _registerShortcuts() {
-    keyDispatcher.register(LogicalKeyboardKey.escape, onDown: () {
-      if (stateMachine.state == GameState.playing) {
-        stateMachine.pauseGame();
-      } else if (stateMachine.state == GameState.paused) {
-        stateMachine.resumeGame();
-      } else if (stateMachine.state == GameState.gameOver) {
-        stateMachine.returnToMenu();
-      }
-    });
-
-    keyDispatcher.register(LogicalKeyboardKey.keyP, onDown: () {
-      if (stateMachine.state == GameState.playing) {
-        stateMachine.pauseGame();
-      } else if (stateMachine.state == GameState.paused) {
-        stateMachine.resumeGame();
-      }
-    });
-
-    keyDispatcher.register(
-      LogicalKeyboardKey.keyM,
-      onDown: audioService.toggleMute,
-    );
-
-    keyDispatcher.register(LogicalKeyboardKey.enter, onDown: () {
-      if (stateMachine.state == GameState.menu ||
-          stateMachine.state == GameState.gameOver) {
-        stateMachine.startGame();
-      }
-    });
-
-    keyDispatcher.register(LogicalKeyboardKey.keyR, onDown: () {
-      if (stateMachine.state == GameState.gameOver ||
-          stateMachine.state == GameState.playing ||
-          stateMachine.state == GameState.paused) {
-        stateMachine.startGame();
-      }
-    });
-
-    keyDispatcher.register(LogicalKeyboardKey.keyQ, onDown: () {
-      if (stateMachine.state == GameState.paused ||
-          stateMachine.state == GameState.gameOver) {
-        stateMachine.returnToMenu();
-      }
-    });
-
-    keyDispatcher.register(
-      LogicalKeyboardKey.keyH,
-      onDown: toggleHelp,
-    );
-
-    keyDispatcher.register(
-      LogicalKeyboardKey.keyU,
-      onDown: toggleUpgrades,
-    );
-
-    keyDispatcher.register(
-      LogicalKeyboardKey.f1,
-      onDown: toggleDebug,
-    );
   }
 }

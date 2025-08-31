@@ -31,8 +31,8 @@ Gameplay entities and reusable pieces.
   asteroids with a widening pulse beam.
 - [MineralComponent](mineral.md) – collectible dropped whenever an asteroid is
   damaged that increases the player's mineral total when picked up.
-- [MineralMagnetComponent](mineral_magnet.md) – blue aura that follows the
-  player and draws nearby mineral pickups toward the ship.
+- Each mineral independently homes toward the player when within magnet range,
+  removing the need for a separate magnet component.
 - [Starfield](starfield.md) – parallax background built with Flame's
   `ParallaxComponent`.
 

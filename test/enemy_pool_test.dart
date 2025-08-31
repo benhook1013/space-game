@@ -18,9 +18,9 @@ void main() {
     final audio = await AudioService.create(storage);
     final game = SpaceGame(storageService: storage, audioService: audio);
 
-    final enemy1 = game.acquireEnemy(Vector2.zero());
-    game.releaseEnemy(enemy1);
-    final enemy2 = game.acquireEnemy(Vector2.zero());
+    final enemy1 = game.pools.acquireEnemy(Vector2.zero());
+    game.pools.releaseEnemy(enemy1);
+    final enemy2 = game.pools.acquireEnemy(Vector2.zero());
     expect(identical(enemy1, enemy2), isTrue);
   });
 }

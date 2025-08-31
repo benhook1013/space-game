@@ -9,10 +9,10 @@ import 'package:flutter/services.dart';
 import '../constants.dart';
 import '../game/space_game.dart';
 import '../game/key_dispatcher.dart';
-import 'asteroid.dart';
 import 'enemy.dart';
-import '../util/nearest_component.dart';
+import 'asteroid.dart';
 import 'mineral.dart';
+import '../util/nearest_component.dart';
 
 /// Controllable player ship.
 class PlayerComponent extends SpriteComponent
@@ -92,7 +92,7 @@ class PlayerComponent extends SpriteComponent
     }
     final direction =
         Vector2(math.cos(angle - math.pi / 2), math.sin(angle - math.pi / 2));
-    final bullet = game.acquireBullet(position.clone(), direction);
+    final bullet = game.pools.acquireBullet(position.clone(), direction);
     game.add(bullet);
     game.audioService.playShoot();
     _shootCooldown = Constants.bulletCooldown;
@@ -108,6 +108,12 @@ class PlayerComponent extends SpriteComponent
   }
 
   @override
+  void onRemove() {
+    keyDispatcher.unregister(LogicalKeyboardKey.space);
+    super.onRemove();
+  }
+
+  @override
   void onGameResize(Vector2 size) {
     super.onGameResize(size);
   }
@@ -115,12 +121,31 @@ class PlayerComponent extends SpriteComponent
   @override
   void update(double dt) {
     super.update(dt);
+    _updateDamageFlash(dt);
+    _applyCooldown(dt);
+    final moved = _processInput(dt);
+    if (!moved) {
+      _autoAim();
+    }
+    _updateRotation(dt);
+  }
+
+  void _updateDamageFlash(double dt) {
     if (_damageFlashTime > 0) {
       _damageFlashTime -= dt;
       if (_damageFlashTime <= 0) {
         paint.colorFilter = null;
       }
     }
+  }
+
+  void _applyCooldown(double dt) {
+    if (_shootCooldown > 0) {
+      _shootCooldown -= dt;
+    }
+  }
+
+  bool _processInput(double dt) {
     _keyboardDirection
       ..setZero()
       ..x += keyDispatcher.isAnyPressed([
@@ -148,9 +173,6 @@ class PlayerComponent extends SpriteComponent
           ? 1
           : 0;
 
-    if (_shootCooldown > 0) {
-      _shootCooldown -= dt;
-    }
     var input =
         joystick.delta.isZero() ? _keyboardDirection : joystick.relativeDelta;
     if (!input.isZero()) {
@@ -162,22 +184,27 @@ class PlayerComponent extends SpriteComponent
         Constants.worldSize - halfSize,
       );
       _targetAngle = math.atan2(input.y, input.x) + math.pi / 2;
-    } else {
-      final enemies = game.enemies.isNotEmpty
-          ? game.enemies
-          : game.children.whereType<EnemyComponent>();
-      final target = enemies.findClosest(
-        position,
-        Constants.playerAutoAimRange,
-      );
-      if (target != null) {
-        _targetAngle = math.atan2(
-              target.position.y - position.y,
-              target.position.x - position.x,
-            ) +
-            math.pi / 2;
-      }
+      return true;
     }
+    return false;
+  }
+
+  void _autoAim() {
+    final enemies = game.pools.enemies;
+    final target = enemies.findClosest(
+      position,
+      Constants.playerAutoAimRange,
+    );
+    if (target != null) {
+      _targetAngle = math.atan2(
+            target.position.y - position.y,
+            target.position.x - position.x,
+          ) +
+          math.pi / 2;
+    }
+  }
+
+  void _updateRotation(double dt) {
     final rotationDelta = _normalizeAngle(_targetAngle - angle);
     final maxDelta = Constants.playerRotationSpeed * dt;
     if (rotationDelta.abs() <= maxDelta) {
