@@ -1,7 +1,10 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
-import '../game/space_game.dart';
 import '../assets.dart';
+import '../constants.dart';
+import '../game/space_game.dart';
 import 'game_text.dart';
 import 'overlay_widgets.dart';
 
@@ -20,7 +23,11 @@ class MenuOverlay extends StatelessWidget {
     return OverlayLayout(
       builder: (context, spacing, iconSize) {
         final shortestSide = spacing / 0.02;
-        final playerSize = shortestSide * 0.12;
+        final playerSize = math.min(
+          shortestSide * 0.12,
+          Constants.playerSize *
+              (Constants.spriteScale + Constants.playerScale),
+        );
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
