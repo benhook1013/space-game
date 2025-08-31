@@ -13,6 +13,7 @@ concurrency:
 
 permissions:
   contents: write
+  actions: write
 
 jobs:
   build-and-deploy:
@@ -23,6 +24,27 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+      - name: Cancel preview deployments
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const runs = await github.paginate(
+              github.rest.actions.listWorkflowRuns,
+              {
+                owner,
+                repo,
+                workflow_id: 'deploy-preview.yml',
+                status: 'in_progress',
+              }
+            );
+            for (const run of runs) {
+              await github.rest.actions.cancelWorkflowRun({
+                owner,
+                repo,
+                run_id: run.id,
+              });
+            }
       - name: Cache Flutter SDK
         uses: actions/cache@v4
         with:
@@ -46,4 +68,5 @@ jobs:
         with:
           branch: ${{ github.ref == 'refs/heads/main' && 'gh-pages' || 'gh-pages-staging' }}
           folder: build/web
-          clean: false
+          # Remove old preview artifacts to keep deploy branch lean
+          clean: true
