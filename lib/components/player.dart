@@ -8,13 +8,17 @@ import 'package:flutter/services.dart';
 
 import '../constants.dart';
 import '../game/space_game.dart';
+import '../game/key_dispatcher.dart';
 import 'asteroid.dart';
 import 'enemy.dart';
 
 /// Controllable player ship.
 class PlayerComponent extends SpriteComponent
-    with HasGameReference<SpaceGame>, KeyboardHandler, CollisionCallbacks {
-  PlayerComponent({required this.joystick, required String spritePath})
+    with HasGameReference<SpaceGame>, CollisionCallbacks {
+  PlayerComponent(
+      {required this.joystick,
+      required this.keyDispatcher,
+      required String spritePath})
       : _spritePath = spritePath,
         super(
           size: Vector2.all(
@@ -25,6 +29,7 @@ class PlayerComponent extends SpriteComponent
 
   /// Reference to the on-screen joystick for touch input.
   final JoystickComponent joystick;
+  final KeyDispatcher keyDispatcher;
 
   String _spritePath;
 
@@ -85,6 +90,7 @@ class PlayerComponent extends SpriteComponent
   Future<void> onLoad() async {
     setSprite(_spritePath);
     add(CircleHitbox());
+    keyDispatcher.register(LogicalKeyboardKey.space, onDown: shoot);
   }
 
   @override
@@ -96,6 +102,25 @@ class PlayerComponent extends SpriteComponent
   @override
   void update(double dt) {
     super.update(dt);
+    _keyboardDirection
+      ..setZero()
+      ..x += (keyDispatcher.isPressed(LogicalKeyboardKey.keyA) ||
+              keyDispatcher.isPressed(LogicalKeyboardKey.arrowLeft))
+          ? -1
+          : 0
+      ..x += (keyDispatcher.isPressed(LogicalKeyboardKey.keyD) ||
+              keyDispatcher.isPressed(LogicalKeyboardKey.arrowRight))
+          ? 1
+          : 0
+      ..y += (keyDispatcher.isPressed(LogicalKeyboardKey.keyW) ||
+              keyDispatcher.isPressed(LogicalKeyboardKey.arrowUp))
+          ? -1
+          : 0
+      ..y += (keyDispatcher.isPressed(LogicalKeyboardKey.keyS) ||
+              keyDispatcher.isPressed(LogicalKeyboardKey.arrowDown))
+          ? 1
+          : 0;
+
     if (_shootCooldown > 0) {
       _shootCooldown -= dt;
     }
@@ -142,32 +167,6 @@ class PlayerComponent extends SpriteComponent
         _autoAimPaint,
       );
     }
-  }
-
-  @override
-  bool onKeyEvent(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
-    if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.space) {
-      shoot();
-    }
-    _keyboardDirection
-      ..setZero()
-      ..x += (keysPressed.contains(LogicalKeyboardKey.keyA) ||
-              keysPressed.contains(LogicalKeyboardKey.arrowLeft))
-          ? -1
-          : 0
-      ..x += (keysPressed.contains(LogicalKeyboardKey.keyD) ||
-              keysPressed.contains(LogicalKeyboardKey.arrowRight))
-          ? 1
-          : 0
-      ..y += (keysPressed.contains(LogicalKeyboardKey.keyW) ||
-              keysPressed.contains(LogicalKeyboardKey.arrowUp))
-          ? -1
-          : 0
-      ..y += (keysPressed.contains(LogicalKeyboardKey.keyS) ||
-              keysPressed.contains(LogicalKeyboardKey.arrowDown))
-          ? 1
-          : 0;
-    return true;
   }
 
   @override

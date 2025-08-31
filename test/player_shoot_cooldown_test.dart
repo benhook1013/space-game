@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:space_game/components/bullet.dart';
 import 'package:space_game/components/player.dart';
 import 'package:space_game/constants.dart';
+import 'package:space_game/game/key_dispatcher.dart';
 import 'package:space_game/game/space_game.dart';
 import 'package:space_game/services/audio_service.dart';
 import 'package:space_game/services/storage_service.dart';
@@ -15,7 +16,7 @@ class _TestBullet extends BulletComponent {
 }
 
 class _TestPlayer extends PlayerComponent {
-  _TestPlayer({required super.joystick})
+  _TestPlayer({required super.joystick, required super.keyDispatcher})
       : super(spritePath: 'players/player1.png');
 
   @override
@@ -42,11 +43,13 @@ class _TestGame extends SpaceGame {
 
   @override
   Future<void> onLoad() async {
+    final keyDispatcher = KeyDispatcher();
+    add(keyDispatcher);
     joystick = JoystickComponent(
       knob: CircleComponent(radius: 1),
       background: CircleComponent(radius: 2),
     );
-    player = _TestPlayer(joystick: joystick);
+    player = _TestPlayer(joystick: joystick, keyDispatcher: keyDispatcher);
     add(player);
     onGameResize(
       Vector2.all(Constants.playerSize * Constants.playerScale * 2),
