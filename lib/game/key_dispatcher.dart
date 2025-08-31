@@ -24,6 +24,16 @@ class KeyDispatcher extends Component with KeyboardHandler {
   /// Returns whether [key] is currently pressed.
   bool isPressed(LogicalKeyboardKey key) => _pressed.contains(key);
 
+  /// Returns whether any of [keys] are currently pressed.
+  bool isAnyPressed(Iterable<LogicalKeyboardKey> keys) {
+    for (final key in keys) {
+      if (_pressed.contains(key)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   @override
   bool onKeyEvent(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
     final key = event.logicalKey;
@@ -34,6 +44,7 @@ class KeyDispatcher extends Component with KeyboardHandler {
       _pressed.remove(key);
       _up[key]?.call();
     }
-    return true;
+    // Allow other handlers to receive the event as well.
+    return false;
   }
 }
