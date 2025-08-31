@@ -4,7 +4,6 @@ Neutral obstacle that can be mined for score and minerals.
 
 ## Behaviour
 
-- Spawns randomly and drifts across the play area.
 - Destroyed by repeated bullet or mining laser hits. Each hit awards score and
   drops a mineral pickup worth `Constants.asteroidMinerals` at a random spot
   within `Constants.mineralDropRadius` of the asteroid.

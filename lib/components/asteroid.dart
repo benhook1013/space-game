@@ -89,6 +89,9 @@ class AsteroidComponent extends SpriteComponent
       game.addScore(Constants.asteroidScore);
     }
     if (_health <= 0 && !isRemoving) {
+      final mineral = game.acquireMineral(position.clone());
+      game.mineralPickups.add(mineral);
+      game.add(mineral);
       removeFromParent();
     }
   }
