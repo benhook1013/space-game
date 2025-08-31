@@ -42,7 +42,6 @@ class MineralComponent extends SpriteComponent
   @override
   void onMount() {
     super.onMount();
-    game.eventBus.emit(ComponentSpawnEvent<MineralComponent>(this));
   }
 
   @override
