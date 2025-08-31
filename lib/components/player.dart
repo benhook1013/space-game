@@ -195,7 +195,10 @@ class PlayerComponent extends SpriteComponent
   EnemyComponent? _findClosestEnemy() {
     EnemyComponent? closest;
     var closestDistance = Constants.playerAutoAimRange;
-    final enemies = game.children.whereType<EnemyComponent>().toList();
+    Iterable<EnemyComponent> enemies = game.enemies;
+    if (enemies.isEmpty) {
+      enemies = game.children.whereType<EnemyComponent>();
+    }
     for (final enemy in enemies) {
       final distance = enemy.position.distanceTo(position);
       if (distance <= closestDistance) {

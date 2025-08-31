@@ -60,7 +60,10 @@ class MiningLaserComponent extends Component with HasGameReference<SpaceGame> {
   AsteroidComponent? _findClosestAsteroid() {
     AsteroidComponent? closest;
     var closestDistance = Constants.playerMiningRange;
-    final asteroids = game.children.whereType<AsteroidComponent>().toList();
+    Iterable<AsteroidComponent> asteroids = game.asteroids;
+    if (asteroids.isEmpty) {
+      asteroids = game.children.whereType<AsteroidComponent>();
+    }
     for (final asteroid in asteroids) {
       final distance = asteroid.position.distanceTo(player.position);
       if (distance <= closestDistance) {
