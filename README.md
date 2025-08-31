@@ -38,6 +38,7 @@ dedicated server or NAT traversal.
 - Enemy groups spawn periodically and the main weapon smoothly auto-aims at the
   closest foe
 - Asteroids can be mined for mineral pickups using an auto-targeting laser
+- A blue magnetic aura draws nearby mineral pickups toward the ship
 - Single endless level with quick restart
 - Player health, minerals and high score displayed in the HUD; health drops on
   collision and minerals increase when collecting pickups from mined asteroids

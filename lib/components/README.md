@@ -2,7 +2,8 @@
 
 Gameplay entities and reusable pieces.
 
-- Includes player, enemy, asteroid, bullet and mineral pickup components.
+- Includes player, enemy, asteroid, bullet, mineral pickup and magnet
+  components.
 - Each extends a Flame component and mixes in `HasGameReference<SpaceGame>`
   when it needs game context.
 - Use simple hit boxes like `CircleHitbox` or `RectangleHitbox` with
@@ -30,6 +31,8 @@ Gameplay entities and reusable pieces.
   asteroids with a widening pulse beam.
 - [MineralComponent](mineral.md) – collectible dropped by destroyed asteroids
   that increases the player's mineral total when picked up.
+- [MineralMagnetComponent](mineral_magnet.md) – blue aura that follows the
+  player and draws nearby mineral pickups toward the ship.
 - [Starfield](starfield.md) – parallax background built with Flame's
   `ParallaxComponent`.
 

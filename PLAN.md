@@ -19,6 +19,7 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
   groups
 - Auto-firing mining laser targets asteroids while the main cannon locks onto
   the closest enemy
+- A blue magnetic aura around the ship pulls in loose mineral pickups
 - Minerals feed a broad upgrade tree for weapons and ship systems in later
   milestones
 

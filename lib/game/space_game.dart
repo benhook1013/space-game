@@ -15,6 +15,7 @@ import '../assets.dart';
 import '../components/player.dart';
 import '../components/mining_laser.dart';
 import '../components/mineral.dart';
+import '../components/mineral_magnet.dart';
 import '../components/enemy_spawner.dart';
 import '../components/asteroid_spawner.dart';
 import '../components/starfield.dart';
@@ -55,6 +56,7 @@ class SpaceGame extends FlameGame
   late final KeyDispatcher keyDispatcher;
   late final PlayerComponent player;
   late final MiningLaserComponent miningLaser;
+  late final MineralMagnetComponent mineralMagnet;
   late final JoystickComponent joystick;
   late final HudButtonComponent fireButton;
   late final EnemySpawner enemySpawner;
@@ -135,6 +137,9 @@ class SpaceGame extends FlameGame
     );
     player.position = Constants.worldSize / 2;
     add(player);
+
+    mineralMagnet = MineralMagnetComponent(player: player);
+    add(mineralMagnet);
     camera
       ..setBounds(
         Rectangle.fromLTWH(
