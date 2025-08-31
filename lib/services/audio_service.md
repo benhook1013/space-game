@@ -8,5 +8,7 @@ Lightweight wrapper around `flame_audio`.
 - Play one-shot effects for actions like shooting or explosions.
 - Expose a mute toggle persisted via `StorageService`.
 - Provide simple methods like `playShoot()` or `playExplosion()`.
+- Reuse the shoot sound via a web-only `AudioPool` to avoid network
+  fetches on rapid fire.
 
 See [../../PLAN.md](../../PLAN.md) for polish goals.

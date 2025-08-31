@@ -9,18 +9,38 @@ import 'storage_service.dart';
 
 /// Wrapper around `flame_audio` providing sound effects with a mute toggle.
 class AudioService {
-  AudioService._(this._storage, this.muted);
+  AudioService._(this._storage, this.muted, this._shootPool);
 
   /// Asynchronously create the service and load the persisted mute flag.
+  ///
+  /// The shoot sound is backed by an [AudioPool] so repeated shots reuse
+  /// cached players instead of fetching the asset every time. If the pool
+  /// cannot be created (e.g. when the audio plugin isn't available in tests),
+  /// a fallback is used that plays the clip directly for each shot.
   static Future<AudioService> create(StorageService storage) async {
     final muted = ValueNotifier<bool>(storage.isMuted());
-    return AudioService._(storage, muted);
+    AudioPool? shootPool;
+    if (kIsWeb) {
+      try {
+        shootPool = await FlameAudio.createPool(
+          Assets.shootSfx,
+          maxPlayers: 3,
+        );
+      } catch (_) {
+        shootPool = null;
+      }
+    }
+    return AudioService._(storage, muted, shootPool);
   }
 
   final StorageService _storage;
 
   /// Whether audio is muted. Exposed as a [ValueNotifier] for UI binding.
   final ValueNotifier<bool> muted;
+
+  /// Pool for the rapidly-fired shoot sound effect. May be null in tests where
+  /// the audio plugin is unavailable.
+  final AudioPool? _shootPool;
 
   /// Toggles the mute flag and persists the new value.
   Future<void> toggleMute() async {
@@ -35,7 +55,11 @@ class AudioService {
   /// Plays the shoot sound effect if not muted.
   void playShoot() {
     if (muted.value) return;
-    FlameAudio.play(Assets.shootSfx);
+    if (_shootPool != null) {
+      _shootPool.start();
+    } else {
+      FlameAudio.play(Assets.shootSfx);
+    }
   }
 
   /// Plays the explosion sound effect if not muted.
