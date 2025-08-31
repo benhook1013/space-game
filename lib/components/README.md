@@ -7,6 +7,8 @@ Gameplay entities and reusable pieces.
   when it needs game context.
 - Use simple hit boxes like `CircleHitbox` or `RectangleHitbox` with
   `HasCollisionDetection` on the game.
+- Shared mixins like `DebugHealthText` provide common behaviours such as
+  rendering health values while in debug mode.
 - Pull tunable values from `constants.dart` and asset references from
   `assets.dart`.
 - Bullet, asteroid and enemy components use small object pools to reduce
