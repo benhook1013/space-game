@@ -7925,7 +7925,7 @@ this.b=b
 this.c=c},
 apT(a,b,c){var s=A.a1(a).h("ac<1,oV>")
 s=A.Y(new A.ac(a,new A.a0z(c),s),s.h("as.E"))
-return new A.a0x(s,!1)},
+return new A.a0x(s,!0)},
 oV:function oV(a,b){this.a=a
 this.b=b},
 a0x:function a0x(a,b){this.a=a
@@ -36352,16 +36352,15 @@ A.a0z.prototype={
 $1(a){return new A.oV(a,this.a)},
 $S:168}
 A.a0y.prototype={
-ai(a){var s,r,q,p,o=this,n=o.c+=a
-o.d+=a
-if(o.y)return
-if(!o.z)o.z=!0
-for(s=o.a,r=s.a,s=s.b;q=o.b,p=r[q].b,n>=p;)if(q===r.length-1)if(s){n-=p
-o.c=n
-o.b=0}else{o.y=!0
-return}else{n-=p
-o.c=n
-o.b=q+1}}}
+ai(a){var s,r,q,p=this,o=p.c+=a
+p.d+=a
+if(p.y)return
+if(!p.z)p.z=!0
+for(s=p.a.a;r=p.b,q=s[r].b,o>=q;)if(r===s.length-1){o-=q
+p.c=o
+p.b=0}else{o-=q
+p.c=o
+p.b=r+1}}}
 A.Tu.prototype={
 j(a){var s=this
 return"LineMetrics(left: "+A.j(s.a)+", baseline: "+A.j(s.b)+", width: "+A.j(s.c)+", ascent: "+A.j(s.d)+", descent: "+A.j(s.e)+")"}}
@@ -59284,7 +59283,7 @@ aO(){var s=0,r=A.y(t.H),q=this,p,o
 var $async$aO=A.u(function(a,b){if(a===1)return A.v(b,r)
 while(true)switch(s){case 0:o=t.lo
 o=A.Y(new A.ac(B.jM,new A.Qy(),o),o.h("as.E"))
-o=A.apT(o,!1,0.1)
+o=A.apT(o,!0,0.05)
 p=q.p1
 if((p==null?null:p.a)!==o){q.p1=new A.a0y(o)
 q.wo()}return A.w(null,r)}})
