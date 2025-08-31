@@ -15,9 +15,9 @@ void main() {
     final audio = await AudioService.create(storage);
     final game = SpaceGame(storageService: storage, audioService: audio);
 
-    final bullet1 = game.acquireBullet(Vector2.zero(), Vector2(0, -1));
-    game.releaseBullet(bullet1);
-    final bullet2 = game.acquireBullet(Vector2.zero(), Vector2(0, -1));
+    final bullet1 = game.pools.acquireBullet(Vector2.zero(), Vector2(0, -1));
+    game.pools.releaseBullet(bullet1);
+    final bullet2 = game.pools.acquireBullet(Vector2.zero(), Vector2(0, -1));
     expect(identical(bullet1, bullet2), isTrue);
   });
 }

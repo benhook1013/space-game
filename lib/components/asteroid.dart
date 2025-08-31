@@ -7,10 +7,12 @@ import 'package:flame/flame.dart';
 import 'package:meta/meta.dart';
 import '../assets.dart';
 import '../constants.dart';
+import '../game/event_bus.dart';
 import '../game/space_game.dart';
 import 'debug_health_text.dart';
 import '../util/collision_utils.dart';
 import 'damageable.dart';
+import 'mineral.dart';
 
 /// Neutral obstacle that can be mined for score and minerals.
 ///
@@ -57,7 +59,7 @@ class AsteroidComponent extends SpriteComponent
   @override
   void onMount() {
     super.onMount();
-    game.pools.trackAsteroid(this);
+    game.eventBus.emit(ComponentSpawnEvent<AsteroidComponent>(this));
   }
 
   @override
@@ -83,8 +85,7 @@ class AsteroidComponent extends SpriteComponent
   @override
   void onRemove() {
     super.onRemove();
-    game.pools.untrackAsteroid(this);
-    game.pools.releaseAsteroid(this);
+    game.eventBus.emit(ComponentRemoveEvent<AsteroidComponent>(this));
   }
 
   /// Reduces health by [amount], dropping a limited number of minerals and
@@ -98,8 +99,8 @@ class AsteroidComponent extends SpriteComponent
       final distance = _rand.nextDouble() * Constants.mineralDropRadius;
       final offset = Vector2(math.cos(angle), math.sin(angle))..scale(distance);
       final mineral = game.pools.acquireMineral(position + offset);
-      game.pools.mineralPickups.add(mineral);
       game.add(mineral);
+      game.eventBus.emit(ComponentSpawnEvent<MineralComponent>(mineral));
       game.addScore(Constants.asteroidScore);
     }
     if (_health <= 0 && !isRemoving) {

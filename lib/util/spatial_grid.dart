@@ -61,4 +61,7 @@ class SpatialGrid<T extends PositionComponent> {
       }
     }
   }
+
+  /// Removes all components from the grid.
+  void clear() => _cells.clear();
 }

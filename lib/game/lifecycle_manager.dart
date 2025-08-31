@@ -1,7 +1,3 @@
-import '../components/asteroid.dart';
-import '../components/bullet.dart';
-import '../components/mineral.dart';
-import '../components/enemy.dart';
 import '../game/space_game.dart';
 
 /// Handles start, menu, and game over transitions.
@@ -12,18 +8,7 @@ class LifecycleManager {
 
   void onStart() {
     game.scoreService.reset();
-    for (final enemy in game.pools.enemies.toList()) {
-      enemy.removeFromParent();
-    }
-    for (final asteroid in game.pools.asteroids.toList()) {
-      asteroid.removeFromParent();
-    }
-    for (final mineral in game.pools.mineralPickups.toList()) {
-      mineral.removeFromParent();
-    }
-    game.children
-        .whereType<BulletComponent>()
-        .forEach((b) => b.removeFromParent());
+    game.pools.clear();
     if (!game.player.isMounted) {
       game.add(game.player);
       game.camera.follow(game.player);

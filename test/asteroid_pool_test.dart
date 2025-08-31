@@ -18,9 +18,11 @@ void main() {
     final audio = await AudioService.create(storage);
     final game = SpaceGame(storageService: storage, audioService: audio);
 
-    final asteroid1 = game.acquireAsteroid(Vector2.zero(), Vector2.zero());
-    game.releaseAsteroid(asteroid1);
-    final asteroid2 = game.acquireAsteroid(Vector2.zero(), Vector2.zero());
+    final asteroid1 =
+        game.pools.acquireAsteroid(Vector2.zero(), Vector2.zero());
+    game.pools.releaseAsteroid(asteroid1);
+    final asteroid2 =
+        game.pools.acquireAsteroid(Vector2.zero(), Vector2.zero());
     expect(identical(asteroid1, asteroid2), isTrue);
   });
 }

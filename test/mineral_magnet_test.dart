@@ -47,7 +47,7 @@ void main() {
     await game.ready();
 
     final start = Vector2(Constants.playerMagnetRange - 10, 0);
-    final mineral = game.acquireMineral(start.clone());
+    final mineral = game.pools.acquireMineral(start.clone());
     await game.add(mineral);
     await game.ready();
 
@@ -66,7 +66,7 @@ void main() {
     await game.ready();
 
     final start = Vector2(Constants.playerMagnetRange + 10, 0);
-    final mineral = game.acquireMineral(start.clone());
+    final mineral = game.pools.acquireMineral(start.clone());
     await game.add(mineral);
     await game.ready();
 

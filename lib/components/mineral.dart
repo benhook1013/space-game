@@ -1,8 +1,11 @@
+import 'dart:math' as math;
+
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 
 import '../assets.dart';
 import '../constants.dart';
+import '../game/event_bus.dart';
 import '../game/space_game.dart';
 import '../util/collision_utils.dart';
 
@@ -37,19 +40,28 @@ class MineralComponent extends SpriteComponent
   }
 
   @override
+  void onMount() {
+    super.onMount();
+    game.eventBus.emit(ComponentSpawnEvent<MineralComponent>(this));
+  }
+
+  @override
   void update(double dt) {
     super.update(dt);
     final toPlayer = game.player.position - position;
-    final distance = toPlayer.length;
-    if (distance <= Constants.playerMagnetRange && distance > 0) {
-      position += toPlayer / distance * Constants.mineralMagnetSpeed * dt;
+    final distanceSquared = toPlayer.length2;
+    final rangeSquared =
+        Constants.playerMagnetRange * Constants.playerMagnetRange;
+    if (distanceSquared == 0 || distanceSquared > rangeSquared) {
+      return;
     }
+    final distance = math.sqrt(distanceSquared);
+    position += toPlayer / distance * Constants.mineralMagnetSpeed * dt;
   }
 
   @override
   void onRemove() {
     super.onRemove();
-    game.pools.mineralPickups.remove(this);
-    game.pools.releaseMineral(this);
+    game.eventBus.emit(ComponentRemoveEvent<MineralComponent>(this));
   }
 }

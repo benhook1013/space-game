@@ -7,6 +7,7 @@ import 'package:space_game/components/player.dart';
 import 'package:space_game/constants.dart';
 import 'package:space_game/game/key_dispatcher.dart';
 import 'package:space_game/game/space_game.dart';
+import 'package:space_game/game/pool_manager.dart';
 import 'package:space_game/services/audio_service.dart';
 import 'package:space_game/services/storage_service.dart';
 
@@ -23,9 +24,8 @@ class _TestPlayer extends PlayerComponent {
   Future<void> onLoad() async {}
 }
 
-class _TestGame extends SpaceGame {
-  _TestGame({required StorageService storage, required AudioService audio})
-      : super(storageService: storage, audioService: audio);
+class _TestPoolManager extends PoolManager {
+  _TestPoolManager({required super.game, required super.events});
 
   final List<_TestBullet> _pool = [];
 
@@ -40,6 +40,15 @@ class _TestGame extends SpaceGame {
   void releaseBullet(BulletComponent bullet) {
     _pool.add(bullet as _TestBullet);
   }
+}
+
+class _TestGame extends SpaceGame {
+  _TestGame({required StorageService storage, required AudioService audio})
+      : super(storageService: storage, audioService: audio);
+
+  @override
+  PoolManager createPoolManager() =>
+      _TestPoolManager(game: this, events: eventBus);
 
   @override
   Future<void> onLoad() async {
