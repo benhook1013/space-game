@@ -21,8 +21,8 @@ Core game class and shared systems.
 - Configure the world, including the parallax starfield background and
   camera.
 - Spawn the player and register component spawners.
-- Maintain `GameState` values (`menu`, `playing`, `gameOver`) and swap
-  overlays accordingly.
+- Maintain `GameState` values (`menu`, `playing`, `upgrades`, `paused`,
+  `gameOver`) and swap overlays accordingly.
 - Schedule the update tick and other timers.
 - Route input from joystick, fire button or keyboard to the player component.
 

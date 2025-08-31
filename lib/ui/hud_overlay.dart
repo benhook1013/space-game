@@ -71,6 +71,13 @@ class HudOverlay extends StatelessWidget {
                   ),
                   IconButton(
                     iconSize: iconSize,
+                    // Mirrors the U keyboard shortcut.
+                    icon:
+                        const Icon(Icons.upgrade, color: GameText.defaultColor),
+                    onPressed: game.toggleUpgrades,
+                  ),
+                  IconButton(
+                    iconSize: iconSize,
                     // Mirrors the H keyboard shortcut.
                     icon: const Icon(Icons.help_outline,
                         color: GameText.defaultColor),

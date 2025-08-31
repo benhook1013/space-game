@@ -18,7 +18,8 @@ _Update this file whenever a player-facing feature is added or changed._
 - [ ] Minerals reset when restarting the game
 - [ ] HUD shows current score, minerals and high score during play
 - [ ] Collisions reduce player health; game over when health reaches zero
-- [ ] Game states transition: menu → playing → paused → game over → restart or menu
+- [ ] Game states transition: menu → playing → upgrades → paused → game over
+      → restart or menu
 - [ ] Player can choose a ship from the menu before starting
 - [ ] Enter starts or restarts from the menu or game over; `R` restarts at any time
 - [ ] Escape or `P` key pauses or resumes the game; `Q` returns to the menu from
@@ -28,6 +29,8 @@ _Update this file whenever a player-facing feature is added or changed._
       or via the `M` key
 - [ ] Game can be paused, resumed and return to menu (including from game over)
 - [ ] Pressing `H` shows a help overlay; `Esc` or `H` closes it and resumes play
+- [ ] Pressing `U` shows an upgrades overlay and pauses the game; `Esc` or `U`
+      closes it
 - [ ] Local high score persists between sessions
 - [ ] PWA installability and offline play after initial load
 - [ ] Performance acceptable on target devices
