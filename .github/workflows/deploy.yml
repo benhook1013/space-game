@@ -11,7 +11,6 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
-  actions: write
   contents: write
 
 jobs:
@@ -23,30 +22,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
-      - name: Cancel In-Progress Preview Deploys
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const runs = await github.rest.actions.listWorkflowRuns({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'deploy-preview.yml',
-              status: 'in_progress'
-            });
-            for (const run of runs.data.workflow_runs) {
-              try {
-                await github.rest.actions.cancelWorkflowRun({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  run_id: run.id
-                });
-              } catch (error) {
-                // Ignore 409 errors for runs that have already completed
-                if (error.status !== 409) {
-                  throw error;
-                }
-              }
-            }
       - name: Cache Flutter SDK
         uses: actions/cache@v4
         with:
