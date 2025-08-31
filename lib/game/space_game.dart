@@ -58,6 +58,7 @@ class SpaceGame extends FlameGame
   late final HudButtonComponent fireButton;
   late final EnemySpawner enemySpawner;
   late final AsteroidSpawner asteroidSpawner;
+  ParallaxComponent? _starfield;
   FpsTextComponent? _fpsText;
   ParallaxComponent? _starfield;
 
