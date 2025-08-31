@@ -57,7 +57,7 @@ void main() {
     final game = _TestGame(storage: storage, audio: audio);
     await game.onLoad();
 
-    final asteroid = game.acquireAsteroid(Vector2.zero(), Vector2.zero());
+    final asteroid = game.pools.acquireAsteroid(Vector2.zero(), Vector2.zero());
     await game.add(asteroid);
     game.update(0);
     final origin = asteroid.position.clone();
@@ -66,11 +66,12 @@ void main() {
     while (asteroid.parent != null && hits < 10) {
       asteroid.takeDamage(1);
       game.update(0);
+      game.update(0);
       hits++;
     }
     await game.ready();
-    expect(game.mineralPickups.length, hits);
-    for (final mineral in game.mineralPickups) {
+    expect(game.pools.mineralPickups.length, hits);
+    for (final mineral in game.pools.mineralPickups) {
       final offset = mineral.position - origin;
       expect(offset.length, greaterThan(0));
       expect(offset.length, lessThanOrEqualTo(Constants.mineralDropRadius));
@@ -85,8 +86,7 @@ void main() {
     final game = _TestGame(storage: storage, audio: audio);
     await game.onLoad();
 
-    final mineral = game.acquireMineral(game.player.position.clone());
-    game.mineralPickups.add(mineral);
+    final mineral = game.pools.acquireMineral(game.player.position.clone());
     final initial = game.minerals.value;
     game.player.onCollisionStart({}, mineral);
 

@@ -6,6 +6,7 @@ import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import '../assets.dart';
 import '../constants.dart';
+import '../game/event_bus.dart';
 import '../game/space_game.dart';
 import 'debug_health_text.dart';
 import '../util/collision_utils.dart';
@@ -48,7 +49,7 @@ class EnemyComponent extends SpriteComponent
   @override
   void onMount() {
     super.onMount();
-    game.pools.enemies.add(this);
+    game.eventBus.emit(ComponentSpawnEvent<EnemyComponent>(this));
   }
 
   @override
@@ -74,8 +75,7 @@ class EnemyComponent extends SpriteComponent
   @override
   void onRemove() {
     super.onRemove();
-    game.pools.enemies.remove(this);
-    game.pools.releaseEnemy(this);
+    game.eventBus.emit(ComponentRemoveEvent<EnemyComponent>(this));
   }
 
   /// Reduces health by [amount] and removes the enemy when depleted.

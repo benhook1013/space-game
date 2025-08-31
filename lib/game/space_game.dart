@@ -7,16 +7,12 @@ import 'package:flame/experimental.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart' show EdgeInsets;
 
-import '../components/asteroid.dart';
-import '../components/enemy.dart';
-import '../components/bullet.dart';
 import '../assets.dart';
 import '../components/player.dart';
 import '../components/mining_laser.dart';
 import '../components/enemy_spawner.dart';
 import '../components/asteroid_spawner.dart';
 import '../components/starfield.dart';
-import '../components/mineral.dart';
 import '../constants.dart';
 import '../game/key_dispatcher.dart';
 import '../game/game_state_machine.dart';
@@ -26,6 +22,7 @@ import '../services/storage_service.dart';
 import '../services/audio_service.dart';
 import '../ui/help_overlay.dart';
 import '../ui/upgrades_overlay.dart';
+import 'event_bus.dart';
 import 'game_state.dart';
 import 'pool_manager.dart';
 import 'lifecycle_manager.dart';
@@ -42,6 +39,7 @@ class SpaceGame extends FlameGame
   SpaceGame({required this.storageService, required this.audioService})
       : scoreService = ScoreService(storageService: storageService) {
     debugMode = kDebugMode;
+    pools = createPoolManager();
   }
 
   /// Handles persistence for the high score.
@@ -61,9 +59,10 @@ class SpaceGame extends FlameGame
   late final HudButtonComponent fireButton;
   late final EnemySpawner enemySpawner;
   late final AsteroidSpawner asteroidSpawner;
-  final PoolManager pools = PoolManager();
+  late final PoolManager pools;
   late final LifecycleManager lifecycle;
   late final ShortcutManager shortcuts;
+  final GameEventBus eventBus = GameEventBus();
   ParallaxComponent? _starfield;
   FpsTextComponent? _fpsText;
 
@@ -80,24 +79,6 @@ class SpaceGame extends FlameGame
   void selectPlayer(int index) {
     selectedPlayerIndex.value = index.clamp(0, Assets.players.length - 1);
   }
-
-  List<EnemyComponent> get enemies => pools.enemies;
-  List<AsteroidComponent> get asteroids => pools.asteroids;
-  List<MineralComponent> get mineralPickups => pools.mineralPickups;
-
-  BulletComponent acquireBullet(Vector2 position, Vector2 direction) =>
-      pools.acquireBullet(position, direction);
-  void releaseBullet(BulletComponent bullet) => pools.releaseBullet(bullet);
-  AsteroidComponent acquireAsteroid(Vector2 position, Vector2 velocity) =>
-      pools.acquireAsteroid(position, velocity);
-  void releaseAsteroid(AsteroidComponent asteroid) =>
-      pools.releaseAsteroid(asteroid);
-  EnemyComponent acquireEnemy(Vector2 position) => pools.acquireEnemy(position);
-  void releaseEnemy(EnemyComponent enemy) => pools.releaseEnemy(enemy);
-  MineralComponent acquireMineral(Vector2 position) =>
-      pools.acquireMineral(position);
-  void releaseMineral(MineralComponent mineral) =>
-      pools.releaseMineral(mineral);
 
   /// Tracks whether the game was playing when the help overlay opened.
   bool _helpWasPlaying = false;
@@ -189,6 +170,9 @@ class SpaceGame extends FlameGame
     );
     stateMachine.returnToMenu();
   }
+
+  @protected
+  PoolManager createPoolManager() => PoolManager(game: this, events: eventBus);
 
   /// Toggles the upgrades overlay and pauses/resumes the game.
   void toggleUpgrades() {

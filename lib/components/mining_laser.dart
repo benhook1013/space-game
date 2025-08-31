@@ -9,15 +9,7 @@ import '../util/nearest_component.dart';
 
 /// Automatically mines the nearest asteroid within range.
 class MiningLaserComponent extends Component with HasGameReference<SpaceGame> {
-  MiningLaserComponent({required this.player});
-
-  final PlayerComponent player;
-  AsteroidComponent? _target;
-  final Paint _paint = Paint()..color = const Color(0x66ffffff);
-  final Timer _pulseTimer = Timer(Constants.miningPulseInterval, repeat: true);
-
-  @override
-  Future<void> onLoad() async {
+  MiningLaserComponent({required this.player}) {
     _pulseTimer.onTick = () {
       _paint.strokeWidth = 2;
       _target?.takeDamage(Constants.miningPulseDamage);
@@ -25,8 +17,12 @@ class MiningLaserComponent extends Component with HasGameReference<SpaceGame> {
         _target = null;
       }
     };
-    return super.onLoad();
   }
+
+  final PlayerComponent player;
+  AsteroidComponent? _target;
+  final Paint _paint = Paint()..color = const Color(0x66ffffff);
+  final Timer _pulseTimer = Timer(Constants.miningPulseInterval, repeat: true);
 
   @override
   void update(double dt) {

@@ -54,16 +54,18 @@ void main() {
     final game = _TestGame(storageService: storage, audioService: audio);
     await game.onLoad();
 
-    final asteroid = game.acquireAsteroid(Vector2.zero(), Vector2.zero());
+    final asteroid = game.pools.acquireAsteroid(Vector2.zero(), Vector2.zero());
     await game.add(asteroid);
     game.update(0);
     final initialHealth = asteroid.health;
 
     asteroid.takeDamage(initialHealth + 5);
+    game.update(0);
+    game.update(0);
 
     expect(asteroid.health, 0);
     expect(
-      game.mineralPickups.length,
+      game.pools.mineralPickups.length,
       math.min(initialHealth, Constants.asteroidMineralDropMax),
     );
   });

@@ -5,6 +5,7 @@ import 'package:flame/components.dart';
 
 import '../assets.dart';
 import '../constants.dart';
+import '../game/event_bus.dart';
 import '../game/space_game.dart';
 import 'damageable.dart';
 
@@ -35,6 +36,12 @@ class BulletComponent extends SpriteComponent
   }
 
   @override
+  void onMount() {
+    super.onMount();
+    game.eventBus.emit(ComponentSpawnEvent<BulletComponent>(this));
+  }
+
+  @override
   void update(double dt) {
     super.update(dt);
     position += _direction * Constants.bulletSpeed * dt;
@@ -49,7 +56,7 @@ class BulletComponent extends SpriteComponent
   @override
   void onRemove() {
     super.onRemove();
-    game.pools.releaseBullet(this);
+    game.eventBus.emit(ComponentRemoveEvent<BulletComponent>(this));
   }
 
   @override
