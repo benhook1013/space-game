@@ -58,7 +58,7 @@ class KeyDispatcher extends Component with KeyboardHandler {
       _pressed.remove(key);
       _up[key]?.call();
     }
-    // Allow other handlers to receive the event as well.
-    return false;
+    // Consume the event so browser defaults like page scrolling don't trigger.
+    return true;
   }
 }
