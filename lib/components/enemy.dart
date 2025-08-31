@@ -8,13 +8,18 @@ import '../assets.dart';
 import '../constants.dart';
 import '../game/space_game.dart';
 import 'debug_health_text.dart';
+import '../util/collision_utils.dart';
 
 /// Basic foe that drifts toward the player.
 ///
 /// Instances are pooled by [SpaceGame] to reduce garbage collection. Call
 /// [reset] before adding to the game to initialise position.
 class EnemyComponent extends SpriteComponent
-    with HasGameReference<SpaceGame>, CollisionCallbacks, DebugHealthText {
+    with
+        HasGameReference<SpaceGame>,
+        CollisionCallbacks,
+        DebugHealthText,
+        SolidBody {
   EnemyComponent()
       : super(
           size: Vector2.all(

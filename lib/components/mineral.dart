@@ -4,13 +4,14 @@ import 'package:flame/components.dart';
 import '../assets.dart';
 import '../constants.dart';
 import '../game/space_game.dart';
+import '../util/collision_utils.dart';
 
 /// Collectible mineral dropped by destroyed asteroids.
 ///
 /// Instances are pooled by [SpaceGame] to avoid repeated allocations. Call
 /// [reset] before adding to the game to set its position and value.
 class MineralComponent extends SpriteComponent
-    with HasGameReference<SpaceGame>, CollisionCallbacks {
+    with HasGameReference<SpaceGame>, CollisionCallbacks, SolidBody {
   MineralComponent()
       : super(
           size: Vector2.all(
