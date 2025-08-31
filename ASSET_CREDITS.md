@@ -10,6 +10,7 @@ required attribution details.
 | Enemy sprites in `assets/images/enemies/` | Created with PixelLab (user-provided) | Unknown | None provided |
 | Asteroid sprites in `assets/images/asteroids/` | Created with PixelLab (user-provided) | Unknown | None provided |
 | `bullet.png` placeholder | Generated via Python | CC0 | None required |
+| Mineral icon in `assets/images/icons/mineral.png` | Generated with ImageMagick | CC0 | None required |
 | `shoot.wav` placeholder sound | Generated via Python | CC0 | None required |
 
 Add more entries as you include assets.
