@@ -78,7 +78,7 @@ class AsteroidSpawner extends Component with HasGameReference<SpaceGame> {
     }
     position.clamp(Vector2.zero(), Constants.worldSize);
     game.add(
-      game.acquireAsteroid(position, velocity),
+      game.pools.acquireAsteroid(position, velocity),
     );
   }
 }

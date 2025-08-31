@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:space_game/assets.dart';
-import 'package:space_game/components/mineral_magnet.dart';
+import 'package:space_game/components/mineral.dart';
 import 'package:space_game/components/player.dart';
 import 'package:space_game/game/key_dispatcher.dart';
 import 'package:space_game/game/space_game.dart';
@@ -19,7 +19,7 @@ class _TestGame extends SpaceGame {
   @override
   Future<void> onLoad() async {
     final keyDispatcher = KeyDispatcher();
-    add(keyDispatcher);
+    await add(keyDispatcher);
     joystick = JoystickComponent(
       knob: CircleComponent(radius: 1),
       background: CircleComponent(radius: 2),
@@ -27,42 +27,51 @@ class _TestGame extends SpaceGame {
     player = PlayerComponent(
       joystick: joystick,
       keyDispatcher: keyDispatcher,
-      spritePath: 'players/player1.png',
+      spritePath: Assets.players.first,
     );
-    add(player);
-    mineralMagnet = MineralMagnetComponent(player: player);
-    add(mineralMagnet);
-    onGameResize(
-      Vector2.all(Constants.playerSize *
-          (Constants.spriteScale + Constants.playerScale) *
-          2),
-    );
+    player.position = Vector2.zero();
+    await add(player);
   }
 }
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('minerals move toward player within magnet field', () async {
+  test('mineral moves toward player within magnet range', () async {
     SharedPreferences.setMockInitialValues({});
     await Flame.images.loadAll([Assets.mineralIcon, ...Assets.players]);
     final storage = await StorageService.create();
     final audio = await AudioService.create(storage);
     final game = _TestGame(storage: storage, audio: audio);
     await game.onLoad();
+    await game.ready();
 
-    game.update(0);
-    expect(game.mineralMagnet.position, game.player.position);
-
-    final mineral = game.acquireMineral(game.player.position + Vector2(100, 0));
-    game.mineralPickups.add(mineral);
+    final start = Vector2(Constants.playerMagnetRange - 10, 0);
+    final mineral = game.acquireMineral(start.clone());
     await game.add(mineral);
-    game.update(0);
+    await game.ready();
 
-    final initial = (game.player.position - mineral.position).length;
+    final before = mineral.position.clone();
     game.update(0.1);
-    final current = (game.player.position - mineral.position).length;
+    expect(mineral.position.x, lessThan(before.x));
+  });
 
-    expect(current, lessThan(initial));
+  test('mineral outside magnet range stays put', () async {
+    SharedPreferences.setMockInitialValues({});
+    await Flame.images.loadAll([Assets.mineralIcon, ...Assets.players]);
+    final storage = await StorageService.create();
+    final audio = await AudioService.create(storage);
+    final game = _TestGame(storage: storage, audio: audio);
+    await game.onLoad();
+    await game.ready();
+
+    final start = Vector2(Constants.playerMagnetRange + 10, 0);
+    final mineral = game.acquireMineral(start.clone());
+    await game.add(mineral);
+    await game.ready();
+
+    final before = mineral.position.clone();
+    game.update(0.1);
+    expect(mineral.position, equals(before));
   });
 }

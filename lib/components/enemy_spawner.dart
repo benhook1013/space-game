@@ -69,7 +69,7 @@ class EnemySpawner extends Component with HasGameReference<SpaceGame> {
           (Constants.enemyGroupSpread * 2);
       final position = base + offset;
       position.clamp(Vector2.zero(), Constants.worldSize);
-      game.add(game.acquireEnemy(position));
+      game.add(game.pools.acquireEnemy(position));
     }
   }
 

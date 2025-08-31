@@ -6,6 +6,7 @@ class KeyDispatcher extends Component with KeyboardHandler {
   final Map<LogicalKeyboardKey, VoidCallback> _down = {};
   final Map<LogicalKeyboardKey, VoidCallback> _up = {};
   final Set<LogicalKeyboardKey> _pressed = <LogicalKeyboardKey>{};
+  final Set<LogicalKeyboardKey> _ignored = <LogicalKeyboardKey>{};
 
   /// Registers callbacks for [key].
   void register(
@@ -19,6 +20,15 @@ class KeyDispatcher extends Component with KeyboardHandler {
     if (onUp != null) {
       _up[key] = onUp;
     }
+    _ignored.remove(key);
+  }
+
+  /// Unregisters callbacks for [key] and clears pressed state.
+  void unregister(LogicalKeyboardKey key) {
+    _down.remove(key);
+    _up.remove(key);
+    _pressed.remove(key);
+    _ignored.add(key);
   }
 
   /// Returns whether [key] is currently pressed.
@@ -37,6 +47,10 @@ class KeyDispatcher extends Component with KeyboardHandler {
   @override
   bool onKeyEvent(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
     final key = event.logicalKey;
+    if (_ignored.contains(key)) {
+      _pressed.remove(key);
+      return false;
+    }
     if (event is KeyDownEvent) {
       _pressed.add(key);
       _down[key]?.call();

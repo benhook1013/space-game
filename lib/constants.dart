@@ -104,6 +104,9 @@ class Constants {
   /// Minerals granted by a single mineral pickup.
   static const int asteroidMinerals = 1;
 
+  /// Maximum number of minerals spawned per damage instance on an asteroid.
+  static const int asteroidMineralDropMax = 3;
+
   /// Base mineral pickup sprite size in logical pixels.
   static const double mineralSize = 16;
 
@@ -112,6 +115,9 @@ class Constants {
 
   /// Distance from an asteroid where mineral drops may appear.
   static const double mineralDropRadius = 16;
+
+  /// Cell size for spatial grid used in proximity queries.
+  static const double spatialGridCellSize = 200;
 
   /// Number of stars spawned per parallax layer.
   static const int starsPerLayer = 30;

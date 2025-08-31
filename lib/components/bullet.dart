@@ -6,8 +6,7 @@ import 'package:flame/components.dart';
 import '../assets.dart';
 import '../constants.dart';
 import '../game/space_game.dart';
-import 'enemy.dart';
-import 'asteroid.dart';
+import 'damageable.dart';
 
 /// Short-lived projectile fired by the player.
 ///
@@ -50,7 +49,7 @@ class BulletComponent extends SpriteComponent
   @override
   void onRemove() {
     super.onRemove();
-    game.releaseBullet(this);
+    game.pools.releaseBullet(this);
   }
 
   @override
@@ -59,12 +58,8 @@ class BulletComponent extends SpriteComponent
     PositionComponent other,
   ) {
     super.onCollisionStart(intersectionPoints, other);
-    if (other is EnemyComponent) {
-      other.takeDamage(Constants.bulletDamage);
-      removeFromParent();
-    }
-    if (other is AsteroidComponent) {
-      other.takeDamage(Constants.bulletDamage);
+    if (other case Damageable damageable) {
+      damageable.takeDamage(Constants.bulletDamage);
       removeFromParent();
     }
   }
