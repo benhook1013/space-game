@@ -60,7 +60,6 @@ class SpaceGame extends FlameGame
   late final AsteroidSpawner asteroidSpawner;
   ParallaxComponent? _starfield;
   FpsTextComponent? _fpsText;
-  ParallaxComponent? _starfield;
 
   ValueNotifier<int> get score => scoreService.score;
   ValueNotifier<int> get highScore => scoreService.highScore;
