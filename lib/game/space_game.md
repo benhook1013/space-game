@@ -8,7 +8,7 @@ Main FlameGame subclass managing world setup, state transitions and the update l
 - Configure the parallax background, set up a fixed-resolution camera that
   follows the player, and register component spawners.
 - Spawn the player and register enemy or asteroid generators.
-- Provide small bullet, asteroid and enemy pools to limit allocations.
+- Provide small bullet, asteroid, enemy and mineral pickup pools to limit allocations.
 - Maintain `GameState` values (`menu`, `playing`, `paused`, `gameOver`)
   and toggle overlays.
 - Route joystick, button and keyboard input to the player component.

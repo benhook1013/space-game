@@ -64,10 +64,7 @@ class BulletComponent extends SpriteComponent
       removeFromParent();
     }
     if (other is AsteroidComponent) {
-      other.takeDamage(
-        Constants.bulletDamage,
-        awardMinerals: false,
-      );
+      other.takeDamage(Constants.bulletDamage);
       removeFromParent();
     }
   }

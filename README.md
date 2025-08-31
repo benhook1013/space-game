@@ -35,12 +35,13 @@ dedicated server or NAT traversal.
 ## 🧩 MVP Features
 
 - Touch/joystick movement and shooting
-- Enemy groups spawn periodically and the main weapon auto-aims at the closest
-  foe
-- Asteroids can be mined for mineral drops using an auto-targeting laser
+- Enemy groups spawn periodically and the main weapon smoothly auto-aims at the
+  closest foe
+- Asteroids can be mined for mineral pickups using an auto-targeting laser
+- A blue magnetic aura draws nearby mineral pickups toward the ship
 - Single endless level with quick restart
 - Player health, minerals and high score displayed in the HUD; health drops on
-  collision and minerals increase when mining asteroids
+  collision and minerals increase when collecting pickups from mined asteroids
 - Local high score stored on device using `shared_preferences`
 - Basic sound effects with a mute toggle on menu, HUD, pause and game over
   screens, plus an `M` key shortcut

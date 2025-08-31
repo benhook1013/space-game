@@ -9,3 +9,5 @@ discrete pulses.
   `Constants.miningPulseDamage` damage.
 - Renders a line between the player and target that widens as the pulse
   charges.
+- Destroying an asteroid with the laser drops a `MineralComponent` the player
+  can collect.

@@ -2,11 +2,14 @@
 
 Gameplay entities and reusable pieces.
 
-- Includes player, enemy, asteroid and bullet components.
+- Includes player, enemy, asteroid, bullet, mineral pickup and magnet
+  components.
 - Each extends a Flame component and mixes in `HasGameReference<SpaceGame>`
   when it needs game context.
 - Use simple hit boxes like `CircleHitbox` or `RectangleHitbox` with
   `HasCollisionDetection` on the game.
+- Shared mixins like `DebugHealthText` provide common behaviours such as
+  rendering health values while in debug mode.
 - Pull tunable values from `constants.dart` and asset references from
   `assets.dart`.
 - Bullet, asteroid and enemy components use small object pools to reduce
@@ -23,10 +26,13 @@ Gameplay entities and reusable pieces.
 - [BulletComponent](bullet.md) – short-lived projectile that deals one damage
   and is destroyed on hit or when leaving the screen.
 - [AsteroidComponent](asteroid.md) – floats randomly, requires four to six
-  damage pulses, and awards score on each hit while only mining laser hits
-  grant minerals.
+  damage pulses and drops a mineral pickup on destruction.
 - [MiningLaserComponent](mining_laser.md) – auto-targets and mines nearby
   asteroids with a widening pulse beam.
+- [MineralComponent](mineral.md) – collectible dropped by destroyed asteroids
+  that increases the player's mineral total when picked up.
+- [MineralMagnetComponent](mineral_magnet.md) – blue aura that follows the
+  player and draws nearby mineral pickups toward the ship.
 - [Starfield](starfield.md) – parallax background built with Flame's
   `ParallaxComponent`.
 
