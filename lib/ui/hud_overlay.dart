@@ -4,6 +4,7 @@ import '../game/space_game.dart';
 import 'game_text.dart';
 import 'responsive.dart';
 import 'overlay_widgets.dart';
+import 'mineral_display.dart';
 
 /// Simple heads-up display shown during play.
 class HudOverlay extends StatelessWidget {
@@ -47,13 +48,6 @@ class HudOverlay extends StatelessWidget {
                       ),
                     ),
                     ValueListenableBuilder<int>(
-                      valueListenable: game.minerals,
-                      builder: (context, value, _) => GameText(
-                        'Minerals: $value',
-                        maxLines: 1,
-                      ),
-                    ),
-                    ValueListenableBuilder<int>(
                       valueListenable: game.health,
                       builder: (context, value, _) => GameText(
                         'Health: $value',
@@ -63,6 +57,7 @@ class HudOverlay extends StatelessWidget {
                   ],
                 ),
               ),
+              MineralDisplay(game: game),
               Row(
                 children: [
                   IconButton(
