@@ -49,6 +49,9 @@ class PlayerComponent extends SpriteComponent
   /// Whether to render the auto-aim radius around the player.
   bool showAutoAimRadius = false;
 
+  /// Whether the shoot input is currently held.
+  bool _isShooting = false;
+
   /// Paint used when drawing the auto-aim radius.
   final Paint _autoAimPaint = Paint()
     ..color = const Color(0x66ffffff)
@@ -101,13 +104,28 @@ class PlayerComponent extends SpriteComponent
     _shootCooldown = Constants.bulletCooldown;
   }
 
+  /// Begins continuous shooting and fires immediately.
+  void startShooting() {
+    _isShooting = true;
+    shoot();
+  }
+
+  /// Stops continuous shooting.
+  void stopShooting() {
+    _isShooting = false;
+  }
+
   @override
   Future<void> onLoad() async {
     setSprite(_spritePath);
     paint.color = const Color(0xffffffff);
     paint.colorFilter = null;
     add(CircleHitbox());
-    keyDispatcher.register(LogicalKeyboardKey.space, onDown: shoot);
+    keyDispatcher.register(
+      LogicalKeyboardKey.space,
+      onDown: startShooting,
+      onUp: stopShooting,
+    );
   }
 
   @override
@@ -126,6 +144,9 @@ class PlayerComponent extends SpriteComponent
     super.update(dt);
     _updateDamageFlash(dt);
     _applyCooldown(dt);
+    if (_isShooting) {
+      shoot();
+    }
     final moved = _processInput(dt);
     if (!moved) {
       _autoAim();
