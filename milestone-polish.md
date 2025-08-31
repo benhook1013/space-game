@@ -15,7 +15,7 @@ See [PLAN.md](PLAN.md) for overall project goals and
 
 ## Design Notes
 
-- A procedural `StarfieldComponent` supplies the parallax background.
+- A parallax starfield uses Flame's `ParallaxComponent` for the background.
 - Centralise audio assets in `assets.dart` and play them through a small
   audio service.
 - Persist the high score with `shared_preferences` using a lightweight storage

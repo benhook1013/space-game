@@ -90,10 +90,10 @@ class SpaceGame extends FlameGame
 
   /// Tracks whether the game was playing when the help overlay opened.
   bool _helpWasPlaying = false;
+  ParallaxComponent? _starfield;
 
   @override
   Future<void> onLoad() async {
-    add(StarfieldComponent());
     if (kDebugMode) {
       _fpsText = FpsTextComponent(position: Vector2.all(10));
       await add(_fpsText!);
@@ -392,6 +392,17 @@ class SpaceGame extends FlameGame
   /// Toggles rendering of the player's auto-aim radius.
   void toggleAutoAimRadius() {
     player.toggleAutoAimRadius();
+  }
+
+  @override
+  void onGameResize(Vector2 size) {
+    super.onGameResize(size);
+    if (_starfield == null && !size.isZero()) {
+      createStarfieldParallax(size).then((component) {
+        _starfield = component;
+        add(component);
+      });
+    }
   }
 
   @override
