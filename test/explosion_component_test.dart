@@ -15,7 +15,7 @@ void main() {
     final explosion = ExplosionComponent(position: Vector2.zero());
     await game.add(explosion);
     await game.ready();
-    final total = Constants.explosionFrameDuration * Assets.explosions.length;
+    final total = Constants.explosionLifetime;
     game.update(total + 0.1);
     await game.ready();
     expect(explosion.isMounted, isFalse);
