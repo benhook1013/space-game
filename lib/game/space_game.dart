@@ -234,6 +234,7 @@ class SpaceGame extends FlameGame
     if (stateMachine.state != GameState.playing) {
       return;
     }
+    player.flashDamage();
     if (scoreService.hitPlayer()) {
       stateMachine.gameOver();
     }
