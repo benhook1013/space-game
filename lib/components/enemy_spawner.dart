@@ -32,8 +32,8 @@ class EnemySpawner extends Component with HasGameReference<SpaceGame> {
 
   void _spawn() {
     final x = _random.nextDouble() * Constants.worldSize.x;
-    gameRef.add(
-      gameRef.acquireEnemy(
+    game.add(
+      game.acquireEnemy(
         Vector2(x, -Constants.enemySize * Constants.enemyScale),
       ),
     );

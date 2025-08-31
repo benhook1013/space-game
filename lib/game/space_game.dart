@@ -16,6 +16,8 @@ import '../components/player.dart';
 import '../components/mining_laser.dart';
 import '../components/enemy_spawner.dart';
 import '../components/asteroid_spawner.dart';
+import '../components/starfield.dart';
+import '../constants.dart';
 import '../game/key_dispatcher.dart';
 import '../game/game_state_machine.dart';
 import '../services/score_service.dart';
@@ -56,6 +58,7 @@ class SpaceGame extends FlameGame
   late final HudButtonComponent fireButton;
   late final EnemySpawner enemySpawner;
   late final AsteroidSpawner asteroidSpawner;
+  ParallaxComponent? _starfield;
   FpsTextComponent? _fpsText;
 
   ValueNotifier<int> get score => scoreService.score;
