@@ -1,5 +1,10 @@
+import 'package:flame/components.dart';
+
 /// Centralised tunable values for the game.
 class Constants {
+  /// Dimensions of the playable world in pixels.
+  static final Vector2 worldSize = Vector2(2000, 2000);
+
   /// Player movement speed in pixels per second.
   static const double playerSpeed = 200;
 

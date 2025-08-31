@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
+import 'package:flame/experimental.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart' show EdgeInsets;
 import 'package:flutter/services.dart' show LogicalKeyboardKey;
@@ -114,13 +115,27 @@ class SpaceGame extends FlameGame
     );
     add(joystick);
 
+    _starfield = await createStarfieldParallax(Constants.worldSize);
+    add(_starfield!);
+
     player = PlayerComponent(
       joystick: joystick,
       keyDispatcher: keyDispatcher,
       spritePath: selectedPlayerSprite,
     );
+    player.position = Constants.worldSize / 2;
     add(player);
-    camera.follow(player);
+    camera
+      ..setBounds(
+        Rectangle.fromLTWH(
+          0,
+          0,
+          Constants.worldSize.x,
+          Constants.worldSize.y,
+        ),
+        considerViewport: true,
+      )
+      ..follow(player);
     miningLaser = MiningLaserComponent(player: player);
     add(miningLaser);
 

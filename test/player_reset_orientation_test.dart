@@ -12,6 +12,7 @@ import 'package:space_game/ui/game_over_overlay.dart';
 import 'package:space_game/ui/hud_overlay.dart';
 import 'package:space_game/ui/menu_overlay.dart';
 import 'package:space_game/ui/pause_overlay.dart';
+import 'package:space_game/constants.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -42,11 +43,11 @@ void main() {
     // Starting a new game should reset orientation and position.
     game.startGame();
     expect(game.player.angle, 0);
-    expect(game.player.position, Vector2.all(50));
+    expect(game.player.position, Constants.worldSize / 2);
 
     // After update with no input, angle and position should remain unchanged.
     game.player.update(0.1);
     expect(game.player.angle, 0);
-    expect(game.player.position, Vector2.all(50));
+    expect(game.player.position, Constants.worldSize / 2);
   });
 }

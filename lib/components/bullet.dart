@@ -40,9 +40,9 @@ class BulletComponent extends SpriteComponent
     super.update(dt);
     position += _direction * Constants.bulletSpeed * dt;
     if (position.y < -size.y ||
-        position.y > game.size.y + size.y ||
+        position.y > Constants.worldSize.y + size.y ||
         position.x < -size.x ||
-        position.x > game.size.x + size.x) {
+        position.x > Constants.worldSize.x + size.x) {
       removeFromParent();
     }
   }

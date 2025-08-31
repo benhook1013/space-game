@@ -67,7 +67,7 @@ class PlayerComponent extends SpriteComponent
 
   /// Resets the player to its default orientation and clears input state.
   void reset() {
-    position = game.size / 2;
+    position = Constants.worldSize / 2;
     angle = 0;
     _targetAngle = 0;
     _shootCooldown = 0;
@@ -109,7 +109,6 @@ class PlayerComponent extends SpriteComponent
   @override
   void onGameResize(Vector2 size) {
     super.onGameResize(size);
-    position = size / 2;
   }
 
   @override
@@ -148,9 +147,10 @@ class PlayerComponent extends SpriteComponent
     if (!input.isZero()) {
       input = input.normalized();
       position += input * Constants.playerSpeed * dt;
+      final halfSize = Vector2.all(size.x / 2);
       position.clamp(
-        Vector2.all(size.x / 2),
-        game.size - Vector2.all(size.x / 2),
+        halfSize,
+        Constants.worldSize - halfSize,
       );
       _targetAngle = math.atan2(input.y, input.x) + math.pi / 2;
       _autoAimTimer = 0;

@@ -29,7 +29,7 @@ class AsteroidSpawner extends Component with HasGameReference<SpaceGame> {
   }
 
   void _spawn() {
-    final x = _random.nextDouble() * game.size.x;
+    final x = _random.nextDouble() * Constants.worldSize.x;
     final vx = (_random.nextDouble() - 0.5) * Constants.asteroidSpeed;
     game.add(
       game.acquireAsteroid(
