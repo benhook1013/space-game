@@ -33,7 +33,7 @@ class Constants {
   static const double miningPulseInterval = 0.5;
 
   /// Volume for the mining laser sound effect (0-1).
-  static const double miningLaserVolume = 0.5;
+  static const double miningLaserVolume = 0.25;
 
   /// Starting health for the player.
   static const int playerMaxHealth = 3;
