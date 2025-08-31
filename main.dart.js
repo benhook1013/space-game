@@ -60033,7 +60033,7 @@ pL(){var s=0,r=A.y(t.H),q,p=this
 var $async$pL=A.u(function(a,b){if(a===1)return A.v(b,r)
 while(true)switch(s){case 0:if(p.b.a||p.c!=null){s=1
 break}s=3
-return A.D(A.nI("mining-laser-continuous.mp3",1,B.he,B.tw,null),$async$pL)
+return A.D(A.nI("mining-laser-continuous.mp3",0.5,B.he,B.tw,null),$async$pL)
 case 3:p.c=b
 case 1:return A.w(q,r)}})
 return A.x($async$pL,r)}}
