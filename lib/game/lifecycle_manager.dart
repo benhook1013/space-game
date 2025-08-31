@@ -22,6 +22,7 @@ class LifecycleManager {
       ..stop()
       ..start();
     game.resumeEngine();
+    game.focusGame();
   }
 
   void onGameOver() {
