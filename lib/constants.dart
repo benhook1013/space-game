@@ -20,6 +20,9 @@ class Constants {
   /// Maximum distance to auto-aim enemies when stationary, in pixels.
   static const double playerAutoAimRange = 300;
 
+  /// Seconds between auto-aim direction updates when stationary.
+  static const double playerAutoAimInterval = 0.2;
+
   /// Maximum distance to auto-mine asteroids, in pixels.
   static const double playerMiningRange = playerAutoAimRange;
 
