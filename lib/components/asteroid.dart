@@ -8,13 +8,18 @@ import '../assets.dart';
 import '../constants.dart';
 import '../game/space_game.dart';
 import 'debug_health_text.dart';
+import '../util/collision_utils.dart';
 
 /// Neutral obstacle that can be mined for score and minerals.
 ///
 /// Instances are pooled by [SpaceGame] to reduce garbage collection. Call
 /// [reset] before adding to the game to initialise position and velocity.
 class AsteroidComponent extends SpriteComponent
-    with HasGameReference<SpaceGame>, CollisionCallbacks, DebugHealthText {
+    with
+        HasGameReference<SpaceGame>,
+        CollisionCallbacks,
+        DebugHealthText,
+        SolidBody {
   AsteroidComponent()
       : super(
           size: Vector2.all(
@@ -89,9 +94,6 @@ class AsteroidComponent extends SpriteComponent
       game.addScore(Constants.asteroidScore);
     }
     if (_health <= 0 && !isRemoving) {
-      final mineral = game.acquireMineral(position.clone());
-      game.mineralPickups.add(mineral);
-      game.add(mineral);
       removeFromParent();
     }
   }
