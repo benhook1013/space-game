@@ -39,7 +39,7 @@ class ExplosionComponent extends SpriteAnimationComponent {
           .map((path) => Sprite(Flame.images.fromCache(path)))
           .toList(),
       stepTime: Constants.explosionFrameDuration,
-      loop: false,
+      loop: true,
     );
   }
 }

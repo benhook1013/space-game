@@ -9,7 +9,7 @@ import 'package:space_game/constants.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('removes itself after animation completes', () async {
+  test('removes itself after lifetime expires', () async {
     await Flame.images.loadAll(Assets.explosions);
     final game = FlameGame();
     final explosion = ExplosionComponent(position: Vector2.zero());
