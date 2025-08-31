@@ -4,7 +4,7 @@ Blue gradient aura surrounding the player that attracts nearby mineral pickups.
 
 ## Behaviour
 
-- Follows the player and renders a radial blue gradient.
+- Follows the player and renders a radial blue gradient centered on the ship.
 - Pulls `MineralComponent`s toward the ship within a fixed radius using
   values from `constants.dart`.
 

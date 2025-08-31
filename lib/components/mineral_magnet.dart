@@ -32,7 +32,12 @@ class MineralMagnetComponent extends PositionComponent
           Color(0x440099ff),
           Color(0x000099ff),
         ],
-      ).createShader(Rect.fromCircle(center: Offset.zero, radius: _radius));
+      ).createShader(
+        Rect.fromCircle(
+          center: Offset(_radius, _radius),
+          radius: _radius,
+        ),
+      );
   }
 
   @override
@@ -50,6 +55,6 @@ class MineralMagnetComponent extends PositionComponent
 
   @override
   void render(Canvas canvas) {
-    canvas.drawCircle(Offset.zero, _radius, _paint);
+    canvas.drawCircle(Offset(_radius, _radius), _radius, _paint);
   }
 }

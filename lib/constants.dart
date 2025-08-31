@@ -68,6 +68,12 @@ class Constants {
   /// Seconds between enemy spawns.
   static const double enemySpawnInterval = 2;
 
+  /// Number of enemies spawned at once.
+  static const int enemyGroupSize = 3;
+
+  /// Maximum random offset for enemies within a spawn group.
+  static const double enemyGroupSpread = 40;
+
   /// Maximum health for an enemy.
   static const int enemyMaxHealth = 1;
 

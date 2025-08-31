@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flame/components.dart';
+import 'package:meta/meta.dart';
 
 import '../constants.dart';
 import '../game/space_game.dart';
@@ -35,35 +36,43 @@ class EnemySpawner extends Component with HasGameReference<SpaceGame> {
         Constants.enemySize * (Constants.spriteScale + Constants.enemyScale);
     final rect = game.camera.visibleWorldRect;
     final edge = _random.nextInt(4);
-    late Vector2 position;
+    late Vector2 base;
     switch (edge) {
       case 0: // top
-        position = Vector2(
+        base = Vector2(
           rect.left + _random.nextDouble() * rect.width,
           rect.top - spawnDistance,
         );
         break;
       case 1: // bottom
-        position = Vector2(
+        base = Vector2(
           rect.left + _random.nextDouble() * rect.width,
           rect.bottom + spawnDistance,
         );
         break;
       case 2: // left
-        position = Vector2(
+        base = Vector2(
           rect.left - spawnDistance,
           rect.top + _random.nextDouble() * rect.height,
         );
         break;
       default: // right
-        position = Vector2(
+        base = Vector2(
           rect.right + spawnDistance,
           rect.top + _random.nextDouble() * rect.height,
         );
     }
-    position.clamp(Vector2.zero(), Constants.worldSize);
-    game.add(
-      game.acquireEnemy(position),
-    );
+    base.clamp(Vector2.zero(), Constants.worldSize);
+
+    for (var i = 0; i < Constants.enemyGroupSize; i++) {
+      final offset = (Vector2.random(_random) - Vector2.all(0.5)) *
+          (Constants.enemyGroupSpread * 2);
+      final position = base + offset;
+      position.clamp(Vector2.zero(), Constants.worldSize);
+      game.add(game.acquireEnemy(position));
+    }
   }
+
+  @visibleForTesting
+  void spawnNow() => _spawn();
 }

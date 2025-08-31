@@ -51,6 +51,9 @@ void main() {
     final game = _TestGame(storage: storage, audio: audio);
     await game.onLoad();
 
+    game.update(0);
+    expect(game.mineralMagnet.position, game.player.position);
+
     final mineral = game.acquireMineral(game.player.position + Vector2(100, 0));
     game.mineralPickups.add(mineral);
     await game.add(mineral);
