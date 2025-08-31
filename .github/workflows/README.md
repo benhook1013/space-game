@@ -3,7 +3,9 @@
 CI/CD automation for the project.
 
 - `ci.yml` – formats code, runs static analysis and tests.
-- `deploy.yml` – builds the web release and publishes it.
+- `deploy.yml` – builds the web release and publishes it. It runs on
+  pushes to `main` and `develop` and can be triggered manually from the
+  GitHub Actions tab.
 - `deploy-preview.yml` – manually builds the current branch and publishes it to a branch-specific preview path.
 
 All workflows use concurrency groups to cancel in-progress runs when new
@@ -13,8 +15,9 @@ Workflows follow the lightweight pipeline described in [../../PLAN.md](../../PLA
 
 ### GitHub Pages Deployment
 
-`deploy.yml` runs on pushes to `main` and `develop`. It builds the web
-release and deploys `build/web` to GitHub Pages:
+`deploy.yml` runs on pushes to `main` and `develop`, or can be triggered
+manually via the GitHub Actions tab. It builds the web release and
+deploys `build/web` to GitHub Pages:
 
 - `main` → `gh-pages` (live site)
 - `develop` → `gh-pages-staging` (preview)
