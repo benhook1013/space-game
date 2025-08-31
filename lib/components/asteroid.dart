@@ -4,18 +4,17 @@ import 'dart:ui';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
-import 'package:flame/text.dart';
-
 import '../assets.dart';
 import '../constants.dart';
 import '../game/space_game.dart';
+import 'debug_health_text.dart';
 
 /// Neutral obstacle that can be mined for score and minerals.
 ///
 /// Instances are pooled by [SpaceGame] to reduce garbage collection. Call
 /// [reset] before adding to the game to initialise position and velocity.
 class AsteroidComponent extends SpriteComponent
-    with HasGameReference<SpaceGame>, CollisionCallbacks {
+    with HasGameReference<SpaceGame>, CollisionCallbacks, DebugHealthText {
   AsteroidComponent()
       : super(
           size: Vector2.all(
@@ -27,13 +26,6 @@ class AsteroidComponent extends SpriteComponent
   final Vector2 _velocity = Vector2.zero();
   static final _rand = math.Random();
   int _health = Constants.asteroidMaxHealth;
-
-  static final TextPaint _debugTextPaint = TextPaint(
-    style: const TextStyle(
-      color: Color(0xffffffff),
-      fontSize: 10,
-    ),
-  );
 
   /// Prepares the asteroid for reuse.
   void reset(Vector2 position, Vector2 velocity) {
@@ -71,15 +63,7 @@ class AsteroidComponent extends SpriteComponent
   @override
   void render(Canvas canvas) {
     super.render(canvas);
-    if (game.debugMode) {
-      final text = '$_health';
-      final tp = _debugTextPaint.toTextPainter(text);
-      final position = Vector2(
-        -tp.width / 2,
-        -size.y / 2 - tp.height,
-      );
-      _debugTextPaint.render(canvas, text, position);
-    }
+    renderHealth(canvas, _health);
   }
 
   @override
@@ -90,17 +74,13 @@ class AsteroidComponent extends SpriteComponent
   }
 
   /// Reduces health by [amount] and removes the asteroid when depleted.
-  ///
-  /// When [awardMinerals] is true (the default) minerals are granted to the
-  /// player for each hit, simulating mining laser pulses. Bullet damage passes
-  /// `awardMinerals: false` to avoid granting minerals for the main attack.
-  void takeDamage(int amount, {bool awardMinerals = true}) {
+  void takeDamage(int amount) {
     _health -= amount;
     game.addScore(Constants.asteroidScore);
-    if (awardMinerals) {
-      game.addMinerals(Constants.asteroidMinerals);
-    }
     if (_health <= 0 && !isRemoving) {
+      final mineral = game.acquireMineral(position.clone());
+      game.mineralPickups.add(mineral);
+      game.add(mineral);
       removeFromParent();
     }
   }

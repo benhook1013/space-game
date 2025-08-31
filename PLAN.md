@@ -153,9 +153,9 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
 
 - Touch/joystick movement and shooting
 - Shooting uses a short cooldown to limit fire rate
-- Enemy groups spawn periodically; the main weapon auto-aims at the closest foe
-- Asteroids drop minerals when mined with an auto-targeting laser; destroying
-  enemies also grants points
+- Enemy groups spawn periodically; the main weapon smoothly auto-aims at the closest foe
+- Asteroids drop mineral pickups when mined with an auto-targeting laser;
+  destroying enemies also grants points
 - Single endless level without progression for now
 - Player health, minerals and high score shown in the HUD with simple
   start/game‑over screens
