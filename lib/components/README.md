@@ -35,6 +35,8 @@ Gameplay entities and reusable pieces.
   removing the need for a separate magnet component.
 - [Starfield](starfield.md) – parallax background built with Flame's
   `ParallaxComponent`.
+- [ExplosionComponent](explosion.md) – short animation and sound played when
+  a ship is destroyed.
 
 ## Planned Components
 

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/foundation.dart';
 
@@ -22,6 +24,10 @@ class AudioService {
   /// Toggles the mute flag and persists the new value.
   Future<void> toggleMute() async {
     muted.value = !muted.value;
+    if (muted.value) {
+      _miningLoop?.stop();
+      _miningLoop = null;
+    }
     await _storage.setMuted(muted.value);
   }
 
@@ -29,5 +35,25 @@ class AudioService {
   void playShoot() {
     if (muted.value) return;
     FlameAudio.play(Assets.shootSfx);
+  }
+
+  /// Plays the explosion sound effect if not muted.
+  void playExplosion() {
+    if (muted.value) return;
+    FlameAudio.play(Assets.explosionSfx);
+  }
+
+  AudioPlayer? _miningLoop;
+
+  /// Starts the looping mining laser sound if not muted.
+  Future<void> startMiningLaser() async {
+    if (muted.value || _miningLoop != null) return;
+    _miningLoop = await FlameAudio.loop(Assets.miningLaserSfx);
+  }
+
+  /// Stops the looping mining laser sound if playing.
+  void stopMiningLaser() {
+    _miningLoop?.stop();
+    _miningLoop = null;
   }
 }

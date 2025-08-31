@@ -13,6 +13,7 @@ import '../components/mining_laser.dart';
 import '../components/enemy_spawner.dart';
 import '../components/asteroid_spawner.dart';
 import '../components/starfield.dart';
+import '../components/explosion.dart';
 import '../constants.dart';
 import '../game/key_dispatcher.dart';
 import '../game/game_state_machine.dart';
@@ -214,6 +215,9 @@ class SpaceGame extends FlameGame
     }
     player.flashDamage();
     if (scoreService.hitPlayer()) {
+      add(ExplosionComponent(position: player.position.clone()));
+      audioService.playExplosion();
+      player.removeFromParent();
       stateMachine.gameOver();
     }
   }

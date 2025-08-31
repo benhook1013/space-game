@@ -11,6 +11,7 @@ import '../game/space_game.dart';
 import 'debug_health_text.dart';
 import '../util/collision_utils.dart';
 import 'damageable.dart';
+import 'explosion.dart';
 
 /// Basic foe that drifts toward the player.
 ///
@@ -82,7 +83,10 @@ class EnemyComponent extends SpriteComponent
   void takeDamage(int amount) {
     _health -= amount;
     if (_health <= 0 && !isRemoving) {
-      game.addScore(Constants.enemyScore);
+      game
+        ..addScore(Constants.enemyScore)
+        ..audioService.playExplosion()
+        ..add(ExplosionComponent(position: position.clone()));
       removeFromParent();
     }
   }

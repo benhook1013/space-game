@@ -23,11 +23,18 @@ class Assets {
     'asteroids/asteroid4.png',
     'asteroids/asteroid5.png',
   ];
+  static const List<String> explosions = [
+    'explosions/explosion1.png',
+    'explosions/explosion2.png',
+    'explosions/explosion3.png',
+  ];
   static const String bullet = 'bullet.png';
   static const String mineralIcon = 'icons/mineral.png';
 
   // FlameAudio uses `assets/audio/` as the default base path.
-  static const String shootSfx = 'shoot.wav';
+  static const String shootSfx = 'laser-bullet.mp3';
+  static const String explosionSfx = 'explosion.mp3';
+  static const String miningLaserSfx = 'mining-laser-continuous.mp3';
 
   /// Preloads all images and audio assets.
   static Future<void> load() async {
@@ -35,11 +42,13 @@ class Assets {
       ...players,
       ...enemies,
       ...asteroids,
+      ...explosions,
       bullet,
       mineralIcon,
     ]);
 
-    await FlameAudio.audioCache.loadAll([shootSfx]);
+    await FlameAudio.audioCache
+        .loadAll([shootSfx, explosionSfx, miningLaserSfx]);
   }
 
   static final Random _rand = Random();

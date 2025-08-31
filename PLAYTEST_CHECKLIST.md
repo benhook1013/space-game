@@ -28,6 +28,9 @@ _Update this file whenever a player-facing feature is added or changed._
 - [ ] Parallax starfield renders behind gameplay
 - [ ] Sound effects play and can be muted from menu, HUD, pause or game over overlay,
       or via the `M` key
+- [ ] Laser shot sound plays when firing
+- [ ] Explosion animation and sound play when a ship is destroyed
+- [ ] Mining laser emits a looping sound while active
 - [ ] Game can be paused, resumed and return to menu (including from game over)
 - [ ] Pressing `H` shows a help overlay; `Esc` or `H` closes it and resumes play
 - [ ] Pressing `U` shows an upgrades overlay and pauses the game; `Esc` or `U`

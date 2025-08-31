@@ -29,5 +29,6 @@ flutter:
     - assets/images/players/
     - assets/images/asteroids/
     - assets/images/icons/
+    - assets/images/explosions/
     - assets/audio/
     - assets/fonts/
