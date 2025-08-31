@@ -34,11 +34,18 @@ jobs:
               status: 'in_progress'
             });
             for (const run of runs.data.workflow_runs) {
-              await github.rest.actions.cancelWorkflowRun({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                run_id: run.id
-              });
+              try {
+                await github.rest.actions.cancelWorkflowRun({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  run_id: run.id
+                });
+              } catch (error) {
+                // Ignore 409 errors for runs that have already completed
+                if (error.status !== 409) {
+                  throw error;
+                }
+              }
             }
       - name: Cache Flutter SDK
         uses: actions/cache@v4
