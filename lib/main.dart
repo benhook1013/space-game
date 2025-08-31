@@ -21,6 +21,14 @@ Future<void> main() async {
   final game = SpaceGame(storageService: storage, audioService: audio);
   runApp(
     MaterialApp(
+      theme: ThemeData(
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.grey.shade700,
+            side: BorderSide(color: Colors.grey.shade500, width: 2),
+          ),
+        ),
+      ),
       home: GameWidget<SpaceGame>(
         game: game,
         // Automatically request keyboard focus so web players can use WASD
