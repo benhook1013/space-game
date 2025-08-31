@@ -141,7 +141,8 @@ class SpaceGame extends FlameGame
       ),
       anchor: Anchor.bottomRight,
       margin: const EdgeInsets.only(right: 40, bottom: 40),
-      onPressed: () => player.shoot(),
+      onPressed: player.startShooting,
+      onReleased: player.stopShooting,
     );
     add(fireButton);
 
