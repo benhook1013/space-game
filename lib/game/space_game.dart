@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'dart:ui';
 
 import 'package:flame/components.dart';
@@ -6,9 +5,7 @@ import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart' show EdgeInsets;
-import 'package:flutter/services.dart'
-    show KeyDownEvent, KeyEvent, LogicalKeyboardKey;
-import 'package:flutter/widgets.dart' show KeyEventResult;
+import 'package:flutter/services.dart' show LogicalKeyboardKey;
 
 import '../components/asteroid.dart';
 import '../components/enemy.dart';
@@ -17,13 +14,15 @@ import '../assets.dart';
 import '../components/player.dart';
 import '../components/starfield.dart';
 import '../components/mining_laser.dart';
+import '../components/enemy_spawner.dart';
+import '../components/asteroid_spawner.dart';
+import '../game/key_dispatcher.dart';
+import '../game/game_state_machine.dart';
+import '../services/score_service.dart';
+import '../services/overlay_service.dart';
 import '../constants.dart';
 import '../services/storage_service.dart';
 import '../services/audio_service.dart';
-import '../ui/game_over_overlay.dart';
-import '../ui/hud_overlay.dart';
-import '../ui/menu_overlay.dart';
-import '../ui/pause_overlay.dart';
 import '../ui/help_overlay.dart';
 import '../ui/upgrades_overlay.dart';
 import 'game_state.dart';
@@ -36,7 +35,8 @@ import 'game_state.dart';
 /// intentionally omitted.
 class SpaceGame extends FlameGame
     with HasKeyboardHandlerComponents, HasCollisionDetection {
-  SpaceGame({required this.storageService, required this.audioService}) {
+  SpaceGame({required this.storageService, required this.audioService})
+      : scoreService = ScoreService(storageService: storageService) {
     debugMode = kDebugMode;
   }
 
@@ -46,29 +46,23 @@ class SpaceGame extends FlameGame
   /// Plays sound effects and handles the mute toggle.
   final AudioService audioService;
 
-  GameState state = GameState.menu;
+  final ScoreService scoreService;
+  late final OverlayService overlayService;
+  late final GameStateMachine stateMachine;
+
+  late final KeyDispatcher keyDispatcher;
   late final PlayerComponent player;
   late final MiningLaserComponent miningLaser;
   late final JoystickComponent joystick;
   late final HudButtonComponent fireButton;
-  late final Timer _enemySpawnTimer;
-  late final Timer _asteroidSpawnTimer;
-  final Random _random = Random();
+  late final EnemySpawner enemySpawner;
+  late final AsteroidSpawner asteroidSpawner;
   FpsTextComponent? _fpsText;
 
-  /// Current score exposed to Flutter overlays.
-  final ValueNotifier<int> score = ValueNotifier<int>(0);
-
-  /// Highest score persisted across sessions.
-  final ValueNotifier<int> highScore = ValueNotifier<int>(0);
-
-  /// Minerals collected from asteroids.
-  final ValueNotifier<int> minerals = ValueNotifier<int>(0);
-
-  /// Player health exposed for HUD rendering.
-  final ValueNotifier<int> health = ValueNotifier<int>(
-    Constants.playerMaxHealth,
-  );
+  ValueNotifier<int> get score => scoreService.score;
+  ValueNotifier<int> get highScore => scoreService.highScore;
+  ValueNotifier<int> get minerals => scoreService.minerals;
+  ValueNotifier<int> get health => scoreService.health;
 
   /// Selected player sprite index for menu selection.
   final ValueNotifier<int> selectedPlayerIndex = ValueNotifier<int>(0);
@@ -106,6 +100,10 @@ class SpaceGame extends FlameGame
       _fpsText = FpsTextComponent(position: Vector2.all(10));
       await add(_fpsText!);
     }
+
+    keyDispatcher = KeyDispatcher();
+    await add(keyDispatcher);
+
     joystick = JoystickComponent(
       knob: CircleComponent(
         radius: 20,
@@ -119,8 +117,11 @@ class SpaceGame extends FlameGame
     );
     add(joystick);
 
-    player =
-        PlayerComponent(joystick: joystick, spritePath: selectedPlayerSprite);
+    player = PlayerComponent(
+      joystick: joystick,
+      keyDispatcher: keyDispatcher,
+      spritePath: selectedPlayerSprite,
+    );
     add(player);
     camera.follow(player);
     miningLaser = MiningLaserComponent(player: player);
@@ -141,41 +142,22 @@ class SpaceGame extends FlameGame
     );
     add(fireButton);
 
-    _enemySpawnTimer = Timer(
-      Constants.enemySpawnInterval,
-      onTick: _spawnEnemy,
-      repeat: true,
-    );
-    _asteroidSpawnTimer = Timer(
-      Constants.asteroidSpawnInterval,
-      onTick: _spawnAsteroid,
-      repeat: true,
+    enemySpawner = EnemySpawner();
+    asteroidSpawner = AsteroidSpawner();
+    addAll([enemySpawner, asteroidSpawner]);
+
+    overlayService = OverlayService(this);
+    stateMachine = GameStateMachine(
+      overlays: overlayService,
+      onStart: _onStart,
+      onPause: pauseEngine,
+      onResume: resumeEngine,
+      onGameOver: _onGameOver,
+      onMenu: _onMenu,
     );
 
-    highScore.value = storageService.getHighScore();
-
-    pauseEngine();
-    overlays.add(MenuOverlay.id);
-  }
-
-  void _spawnEnemy() {
-    final x = _random.nextDouble() * size.x;
-    add(
-      acquireEnemy(
-        Vector2(x, -Constants.enemySize * Constants.enemyScale),
-      ),
-    );
-  }
-
-  void _spawnAsteroid() {
-    final x = _random.nextDouble() * size.x;
-    final vx = (_random.nextDouble() - 0.5) * Constants.asteroidSpeed;
-    add(
-      acquireAsteroid(
-        Vector2(x, -Constants.asteroidSize * Constants.asteroidScale),
-        Vector2(vx, Constants.asteroidSpeed),
-      ),
-    );
+    _registerShortcuts();
+    stateMachine.returnToMenu();
   }
 
   /// Retrieves a bullet from the pool or creates a new one.
@@ -221,18 +203,15 @@ class SpaceGame extends FlameGame
   /// Toggles the upgrades overlay and pauses/resumes the game.
   void toggleUpgrades() {
     if (overlays.isActive(UpgradesOverlay.id)) {
-      overlays.remove(UpgradesOverlay.id);
-      state = GameState.playing;
-      overlays.add(HudOverlay.id);
+      overlayService.hideUpgrades();
+      stateMachine.state = GameState.playing;
       resumeEngine();
     } else {
-      if (state != GameState.playing) {
+      if (stateMachine.state != GameState.playing) {
         return;
       }
-      state = GameState.upgrades;
-      overlays
-        ..remove(HudOverlay.id)
-        ..add(UpgradesOverlay.id);
+      stateMachine.state = GameState.upgrades;
+      overlayService.showUpgrades();
       pauseEngine();
     }
   }
@@ -240,13 +219,13 @@ class SpaceGame extends FlameGame
   /// Toggles the help overlay and pauses/resumes if entering from gameplay.
   void toggleHelp() {
     if (overlays.isActive(HelpOverlay.id)) {
-      overlays.remove(HelpOverlay.id);
+      overlayService.hideHelp();
       if (_helpWasPlaying) {
         resumeEngine();
       }
     } else {
-      _helpWasPlaying = state == GameState.playing;
-      overlays.add(HelpOverlay.id);
+      _helpWasPlaying = stateMachine.state == GameState.playing;
+      overlayService.showHelp();
       if (_helpWasPlaying) {
         pauseEngine();
       }
@@ -255,123 +234,37 @@ class SpaceGame extends FlameGame
 
   /// Handles player damage and checks for game over.
   void hitPlayer() {
-    if (state != GameState.playing) {
+    if (stateMachine.state != GameState.playing) {
       return;
     }
-    health.value -= 1;
-    if (health.value <= 0) {
-      gameOver();
+    if (scoreService.hitPlayer()) {
+      stateMachine.gameOver();
     }
   }
 
   /// Adds [value] to the current score.
-  void addScore(int value) {
-    score.value += value;
-  }
+  void addScore(int value) => scoreService.addScore(value);
 
   /// Adds [value] to the current mineral count.
-  void addMinerals(int value) {
-    minerals.value += value;
-  }
-
-  @override
-  void update(double dt) {
-    super.update(dt);
-    if (state == GameState.playing) {
-      _enemySpawnTimer.update(dt);
-      _asteroidSpawnTimer.update(dt);
-    }
-  }
+  void addMinerals(int value) => scoreService.addMinerals(value);
 
   /// Pauses the game and shows the pause overlay.
-  void pauseGame() {
-    if (state != GameState.playing) {
-      return;
-    }
-    state = GameState.paused;
-    overlays
-      ..remove(HudOverlay.id)
-      ..add(PauseOverlay.id);
-    pauseEngine();
-  }
+  void pauseGame() => stateMachine.pauseGame();
 
   /// Resumes the game from a paused state.
-  void resumeGame() {
-    if (state != GameState.paused) {
-      return;
-    }
-    state = GameState.playing;
-    overlays
-      ..remove(PauseOverlay.id)
-      ..add(HudOverlay.id);
-    resumeEngine();
-  }
+  void resumeGame() => stateMachine.resumeGame();
 
   /// Returns to the main menu without restarting the session.
-  void returnToMenu() {
-    state = GameState.menu;
-    overlays
-      ..remove(HudOverlay.id)
-      ..remove(PauseOverlay.id)
-      ..remove(GameOverOverlay.id)
-      ..add(MenuOverlay.id);
-    _enemySpawnTimer.stop();
-    _asteroidSpawnTimer.stop();
-    pauseEngine();
-  }
+  void returnToMenu() => stateMachine.returnToMenu();
 
   /// Starts a new game session.
-  void startGame() {
-    state = GameState.playing;
-    score.value = 0;
-    minerals.value = 0;
-    health.value = Constants.playerMaxHealth;
-    for (final enemy in enemies.toList()) {
-      enemy.removeFromParent();
-    }
-    for (final asteroid in asteroids.toList()) {
-      asteroid.removeFromParent();
-    }
-    children.whereType<BulletComponent>().forEach((b) => b.removeFromParent());
-    if (!player.isMounted) {
-      add(player);
-      camera.follow(player);
-    }
-    player.setSprite(selectedPlayerSprite);
-    player.reset();
-    overlays
-      ..remove(MenuOverlay.id)
-      ..remove(GameOverOverlay.id)
-      ..remove(PauseOverlay.id)
-      ..add(HudOverlay.id);
-    _enemySpawnTimer
-      ..stop()
-      ..start();
-    _asteroidSpawnTimer
-      ..stop()
-      ..start();
-    resumeEngine();
-  }
+  void startGame() => stateMachine.startGame();
 
   /// Clears the saved high score.
-  Future<void> resetHighScore() async {
-    highScore.value = 0;
-    await storageService.resetHighScore();
-  }
+  Future<void> resetHighScore() => scoreService.resetHighScore();
 
   /// Transitions to the game over state.
-  void gameOver() {
-    state = GameState.gameOver;
-    if (score.value > highScore.value) {
-      highScore.value = score.value;
-      storageService.setHighScore(highScore.value);
-    }
-    overlays
-      ..remove(HudOverlay.id)
-      ..remove(PauseOverlay.id)
-      ..add(GameOverOverlay.id);
-    pauseEngine();
-  }
+  void gameOver() => stateMachine.gameOver();
 
   /// Toggles debug rendering and FPS overlay.
   void toggleDebug() {
@@ -404,83 +297,102 @@ class SpaceGame extends FlameGame
     player.toggleAutoAimRadius();
   }
 
-  @override
-  void onGameResize(Vector2 size) {
-    super.onGameResize(size);
-    if (_starfield == null && !size.isZero()) {
-      createStarfieldParallax(size).then((component) {
-        _starfield = component;
-        add(component);
-      });
+  void _onStart() {
+    scoreService.reset();
+    for (final enemy in enemies.toList()) {
+      enemy.removeFromParent();
     }
+    for (final asteroid in asteroids.toList()) {
+      asteroid.removeFromParent();
+    }
+    children.whereType<BulletComponent>().forEach((b) => b.removeFromParent());
+    if (!player.isMounted) {
+      add(player);
+      camera.follow(player);
+    }
+    player.setSprite(selectedPlayerSprite);
+    player.reset();
+    enemySpawner
+      ..stop()
+      ..start();
+    asteroidSpawner
+      ..stop()
+      ..start();
+    resumeEngine();
   }
 
-  @override
-  KeyEventResult onKeyEvent(
-    KeyEvent event,
-    Set<LogicalKeyboardKey> keysPressed,
-  ) {
-    if (event is KeyDownEvent) {
-      if (overlays.isActive(UpgradesOverlay.id) &&
-          (event.logicalKey == LogicalKeyboardKey.escape ||
-              event.logicalKey == LogicalKeyboardKey.keyU)) {
-        toggleUpgrades();
-        return KeyEventResult.handled;
-      } else if (overlays.isActive(HelpOverlay.id) &&
-          (event.logicalKey == LogicalKeyboardKey.escape ||
-              event.logicalKey == LogicalKeyboardKey.keyH)) {
-        toggleHelp();
-        return KeyEventResult.handled;
-      } else if (event.logicalKey == LogicalKeyboardKey.escape) {
-        if (state == GameState.playing) {
-          pauseGame();
-          return KeyEventResult.handled;
-        } else if (state == GameState.paused) {
-          resumeGame();
-          return KeyEventResult.handled;
-        } else if (state == GameState.gameOver) {
-          returnToMenu();
-          return KeyEventResult.handled;
-        }
-      } else if (event.logicalKey == LogicalKeyboardKey.keyP) {
-        if (state == GameState.playing) {
-          pauseGame();
-          return KeyEventResult.handled;
-        } else if (state == GameState.paused) {
-          resumeGame();
-          return KeyEventResult.handled;
-        }
-      } else if (event.logicalKey == LogicalKeyboardKey.keyM) {
-        audioService.toggleMute();
-        return KeyEventResult.handled;
-      } else if (event.logicalKey == LogicalKeyboardKey.enter) {
-        if (state == GameState.menu || state == GameState.gameOver) {
-          startGame();
-          return KeyEventResult.handled;
-        }
-      } else if (event.logicalKey == LogicalKeyboardKey.keyR) {
-        if (state == GameState.gameOver ||
-            state == GameState.playing ||
-            state == GameState.paused) {
-          startGame();
-          return KeyEventResult.handled;
-        }
-      } else if (event.logicalKey == LogicalKeyboardKey.keyQ) {
-        if (state == GameState.paused || state == GameState.gameOver) {
-          returnToMenu();
-          return KeyEventResult.handled;
-        }
-      } else if (event.logicalKey == LogicalKeyboardKey.keyH) {
-        toggleHelp();
-        return KeyEventResult.handled;
-      } else if (event.logicalKey == LogicalKeyboardKey.keyU) {
-        toggleUpgrades();
-        return KeyEventResult.handled;
-      } else if (event.logicalKey == LogicalKeyboardKey.f1) {
-        toggleDebug();
-        return KeyEventResult.handled;
+  void _onGameOver() {
+    enemySpawner.stop();
+    asteroidSpawner.stop();
+    scoreService.updateHighScoreIfNeeded();
+    pauseEngine();
+  }
+
+  void _onMenu() {
+    enemySpawner.stop();
+    asteroidSpawner.stop();
+    pauseEngine();
+  }
+
+  void _registerShortcuts() {
+    keyDispatcher.register(LogicalKeyboardKey.escape, onDown: () {
+      if (stateMachine.state == GameState.playing) {
+        stateMachine.pauseGame();
+      } else if (stateMachine.state == GameState.paused) {
+        stateMachine.resumeGame();
+      } else if (stateMachine.state == GameState.gameOver) {
+        stateMachine.returnToMenu();
       }
-    }
-    return super.onKeyEvent(event, keysPressed);
+    });
+
+    keyDispatcher.register(LogicalKeyboardKey.keyP, onDown: () {
+      if (stateMachine.state == GameState.playing) {
+        stateMachine.pauseGame();
+      } else if (stateMachine.state == GameState.paused) {
+        stateMachine.resumeGame();
+      }
+    });
+
+    keyDispatcher.register(
+      LogicalKeyboardKey.keyM,
+      onDown: audioService.toggleMute,
+    );
+
+    keyDispatcher.register(LogicalKeyboardKey.enter, onDown: () {
+      if (stateMachine.state == GameState.menu ||
+          stateMachine.state == GameState.gameOver) {
+        stateMachine.startGame();
+      }
+    });
+
+    keyDispatcher.register(LogicalKeyboardKey.keyR, onDown: () {
+      if (stateMachine.state == GameState.gameOver ||
+          stateMachine.state == GameState.playing ||
+          stateMachine.state == GameState.paused) {
+        stateMachine.startGame();
+      }
+    });
+
+    keyDispatcher.register(LogicalKeyboardKey.keyQ, onDown: () {
+      if (stateMachine.state == GameState.paused ||
+          stateMachine.state == GameState.gameOver) {
+        stateMachine.returnToMenu();
+      }
+    });
+
+    keyDispatcher.register(
+      LogicalKeyboardKey.keyH,
+      onDown: toggleHelp,
+    );
+
+    keyDispatcher.register(
+      LogicalKeyboardKey.keyU,
+      onDown: toggleUpgrades,
+    );
+
+    keyDispatcher.register(
+      LogicalKeyboardKey.f1,
+      onDown: toggleDebug,
+    );
   }
 }

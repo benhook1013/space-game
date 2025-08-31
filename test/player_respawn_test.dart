@@ -38,7 +38,7 @@ void main() {
       game.hitPlayer();
     }
 
-    expect(game.state, GameState.gameOver);
+    expect(game.stateMachine.state, GameState.gameOver);
 
     game.startGame();
     expect(game.player.position, Vector2.all(50));

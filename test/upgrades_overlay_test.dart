@@ -7,6 +7,7 @@ import 'package:space_game/game/game_state.dart';
 import 'package:space_game/services/audio_service.dart';
 import 'package:space_game/services/storage_service.dart';
 import 'package:space_game/ui/upgrades_overlay.dart';
+import 'package:space_game/ui/menu_overlay.dart';
 import 'package:space_game/ui/hud_overlay.dart';
 
 void main() {
@@ -17,11 +18,15 @@ void main() {
     final storage = await StorageService.create();
     final audio = await AudioService.create(storage);
     final game = SpaceGame(storageService: storage, audioService: audio);
+    game.overlays.addEntry(MenuOverlay.id, (_, __) => const SizedBox());
+    await game.onLoad();
     game.overlays
       ..addEntry(UpgradesOverlay.id, (_, __) => const SizedBox())
       ..addEntry(HudOverlay.id, (_, __) => const SizedBox());
 
-    game.state = GameState.playing;
+    game.stateMachine.state = GameState.playing;
+    game.overlayService.showHud();
+    game.resumeEngine();
     expect(game.overlays.isActive(UpgradesOverlay.id), isFalse);
     expect(game.paused, isFalse);
 
