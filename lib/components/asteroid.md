@@ -11,6 +11,6 @@ Neutral obstacle that can be mined for score and minerals.
 - Starts with 4–6 health and grants `Constants.asteroidScore` points and
   `Constants.asteroidMinerals` minerals per mining laser hit.
 - Uses a small object pool to reuse instances.
-- Uses `CircleHitbox` and `HasGameRef<SpaceGame>`.
+- Uses `CircleHitbox` and `HasGameReference<SpaceGame>`.
 
 See [../../PLAN.md](../../PLAN.md) for core loop goals.

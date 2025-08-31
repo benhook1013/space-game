@@ -6,7 +6,7 @@ import '../constants.dart';
 import '../game/space_game.dart';
 
 /// Spawns asteroids at timed intervals when started.
-class AsteroidSpawner extends Component with HasGameRef<SpaceGame> {
+class AsteroidSpawner extends Component with HasGameReference<SpaceGame> {
   AsteroidSpawner();
 
   final Random _random = Random();
@@ -31,8 +31,8 @@ class AsteroidSpawner extends Component with HasGameRef<SpaceGame> {
   void _spawn() {
     final x = _random.nextDouble() * Constants.worldSize.x;
     final vx = (_random.nextDouble() - 0.5) * Constants.asteroidSpeed;
-    gameRef.add(
-      gameRef.acquireAsteroid(
+    game.add(
+      game.acquireAsteroid(
         Vector2(x, -Constants.asteroidSize * Constants.asteroidScale),
         Vector2(vx, Constants.asteroidSpeed),
       ),

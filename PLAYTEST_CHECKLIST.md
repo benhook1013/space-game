@@ -18,6 +18,7 @@ _Update this file whenever a player-facing feature is added or changed._
 - [ ] Minerals reset when restarting the game
 - [ ] HUD shows current score, minerals and high score during play
 - [ ] Collisions reduce player health; game over when health reaches zero
+- [ ] Player ship flashes red when taking damage
 - [ ] Game states transition: menu → playing → upgrades → paused → game over
       → restart or menu
 - [ ] Player can choose a ship from the menu before starting
