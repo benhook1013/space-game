@@ -4,34 +4,27 @@ import 'dart:math' as math;
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
-import 'package:flame/text.dart';
-
 import '../assets.dart';
 import '../constants.dart';
 import '../game/space_game.dart';
+import 'debug_health_text.dart';
 
 /// Basic foe that drifts toward the player.
 ///
 /// Instances are pooled by [SpaceGame] to reduce garbage collection. Call
 /// [reset] before adding to the game to initialise position.
 class EnemyComponent extends SpriteComponent
-    with HasGameReference<SpaceGame>, CollisionCallbacks {
+    with HasGameReference<SpaceGame>, CollisionCallbacks, DebugHealthText {
   EnemyComponent()
       : super(
           size: Vector2.all(
-            Constants.enemySize * Constants.enemyScale,
+            Constants.enemySize *
+                (Constants.spriteScale + Constants.enemyScale),
           ),
           anchor: Anchor.center,
         );
 
   int _health = Constants.enemyMaxHealth;
-
-  static final TextPaint _debugTextPaint = TextPaint(
-    style: const TextStyle(
-      color: Color(0xffffffff),
-      fontSize: 10,
-    ),
-  );
 
   /// Prepares the enemy for reuse.
   void reset(Vector2 position) {
@@ -68,15 +61,7 @@ class EnemyComponent extends SpriteComponent
   @override
   void render(Canvas canvas) {
     super.render(canvas);
-    if (game.debugMode) {
-      final text = '$_health';
-      final tp = _debugTextPaint.toTextPainter(text);
-      final position = Vector2(
-        -tp.width / 2,
-        -size.y / 2 - tp.height,
-      );
-      _debugTextPaint.render(canvas, text, position);
-    }
+    renderHealth(canvas, _health);
   }
 
   @override

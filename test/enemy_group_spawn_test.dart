@@ -1,17 +1,16 @@
-import 'dart:ui';
-
 import 'package:flame/components.dart';
+import 'package:flame/flame.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:space_game/assets.dart';
 import 'package:space_game/components/player.dart';
+import 'package:space_game/components/enemy_spawner.dart';
+import 'package:space_game/components/enemy.dart';
 import 'package:space_game/constants.dart';
-import 'package:space_game/game/game_state.dart';
-import 'package:space_game/game/game_state_machine.dart';
 import 'package:space_game/game/key_dispatcher.dart';
 import 'package:space_game/game/space_game.dart';
 import 'package:space_game/services/audio_service.dart';
-import 'package:space_game/services/overlay_service.dart';
 import 'package:space_game/services/storage_service.dart';
 
 class _TestPlayer extends PlayerComponent {
@@ -28,15 +27,6 @@ class _TestGame extends SpaceGame {
 
   @override
   Future<void> onLoad() async {
-    overlayService = OverlayService(this);
-    stateMachine = GameStateMachine(
-      overlays: overlayService,
-      onStart: () {},
-      onPause: () {},
-      onResume: () {},
-      onGameOver: () {},
-      onMenu: () {},
-    )..state = GameState.playing;
     final keyDispatcher = KeyDispatcher();
     add(keyDispatcher);
     joystick = JoystickComponent(
@@ -45,28 +35,31 @@ class _TestGame extends SpaceGame {
     );
     player = _TestPlayer(joystick: joystick, keyDispatcher: keyDispatcher);
     add(player);
-    onGameResize(Vector2.all(Constants.playerSize *
-        (Constants.spriteScale + Constants.playerScale) *
-        2));
+    onGameResize(
+      Vector2.all(Constants.playerSize *
+          (Constants.spriteScale + Constants.playerScale) *
+          2),
+    );
+    enemySpawner = EnemySpawner();
+    add(enemySpawner);
   }
 }
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('player flashes red when hit', () async {
+  test('enemy spawner emits group', () async {
     SharedPreferences.setMockInitialValues({});
+    await Flame.images.loadAll([...Assets.players, ...Assets.enemies]);
     final storage = await StorageService.create();
     final audio = await AudioService.create(storage);
     final game = _TestGame(storage: storage, audio: audio);
     await game.onLoad();
-
-    expect(game.player.paint.colorFilter, isNull);
-
-    game.hitPlayer();
-    expect(game.player.paint.colorFilter, isNotNull);
-
-    game.player.update(Constants.playerDamageFlashDuration);
-    expect(game.player.paint.colorFilter, isNull);
+    await game.ready();
+    game.enemySpawner.spawnNow();
+    game.update(0);
+    await game.ready();
+    final count = game.children.whereType<EnemyComponent>().length;
+    expect(count, Constants.enemyGroupSize);
   });
 }

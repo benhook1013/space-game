@@ -14,6 +14,8 @@ import '../components/bullet.dart';
 import '../assets.dart';
 import '../components/player.dart';
 import '../components/mining_laser.dart';
+import '../components/mineral.dart';
+import '../components/mineral_magnet.dart';
 import '../components/enemy_spawner.dart';
 import '../components/asteroid_spawner.dart';
 import '../components/starfield.dart';
@@ -54,6 +56,7 @@ class SpaceGame extends FlameGame
   late final KeyDispatcher keyDispatcher;
   late final PlayerComponent player;
   late final MiningLaserComponent miningLaser;
+  late final MineralMagnetComponent mineralMagnet;
   late final JoystickComponent joystick;
   late final HudButtonComponent fireButton;
   late final EnemySpawner enemySpawner;
@@ -84,11 +87,17 @@ class SpaceGame extends FlameGame
   /// Pool of reusable enemies.
   final List<EnemyComponent> _enemyPool = [];
 
+  /// Pool of reusable mineral pickups.
+  final List<MineralComponent> _mineralPool = [];
+
   /// Active enemies tracked for quick lookup.
   final List<EnemyComponent> enemies = [];
 
   /// Active asteroids tracked for quick lookup.
   final List<AsteroidComponent> asteroids = [];
+
+  /// Active mineral pickups tracked for cleanup.
+  final List<MineralComponent> mineralPickups = [];
 
   /// TODO: Investigate spatial partitioning (e.g., quad trees) if counts grow.
 
@@ -128,6 +137,9 @@ class SpaceGame extends FlameGame
     );
     player.position = Constants.worldSize / 2;
     add(player);
+
+    mineralMagnet = MineralMagnetComponent(player: player);
+    add(mineralMagnet);
     camera
       ..setBounds(
         Rectangle.fromLTWH(
@@ -213,6 +225,20 @@ class SpaceGame extends FlameGame
   /// Returns [enemy] to the pool for reuse.
   void releaseEnemy(EnemyComponent enemy) {
     _enemyPool.add(enemy);
+  }
+
+  /// Retrieves a mineral from the pool or creates a new one.
+  MineralComponent acquireMineral(Vector2 position) {
+    final mineral = _mineralPool.isNotEmpty
+        ? _mineralPool.removeLast()
+        : MineralComponent();
+    mineral.reset(position);
+    return mineral;
+  }
+
+  /// Returns [mineral] to the pool for reuse.
+  void releaseMineral(MineralComponent mineral) {
+    _mineralPool.add(mineral);
   }
 
   /// Toggles the upgrades overlay and pauses/resumes the game.
@@ -320,6 +346,9 @@ class SpaceGame extends FlameGame
     }
     for (final asteroid in asteroids.toList()) {
       asteroid.removeFromParent();
+    }
+    for (final mineral in mineralPickups.toList()) {
+      mineral.removeFromParent();
     }
     children.whereType<BulletComponent>().forEach((b) => b.removeFromParent());
     if (!player.isMounted) {

@@ -5,6 +5,7 @@ import '../constants.dart';
 import '../game/space_game.dart';
 import 'asteroid.dart';
 import 'player.dart';
+import '../util/nearest_component.dart';
 
 /// Automatically mines the nearest asteroid within range.
 class MiningLaserComponent extends Component with HasGameReference<SpaceGame> {
@@ -20,11 +21,18 @@ class MiningLaserComponent extends Component with HasGameReference<SpaceGame> {
     super.update(dt);
     if (!player.isMounted) return;
 
+    final rangeSquared =
+        Constants.playerMiningRange * Constants.playerMiningRange;
     if (_target == null ||
         !_target!.isMounted ||
-        _target!.position.distanceTo(player.position) >
-            Constants.playerMiningRange) {
-      _target = _findClosestAsteroid();
+        _target!.position.distanceToSquared(player.position) > rangeSquared) {
+      final asteroids = game.asteroids.isNotEmpty
+          ? game.asteroids
+          : game.children.whereType<AsteroidComponent>();
+      _target = asteroids.findClosest(
+        player.position,
+        Constants.playerMiningRange,
+      );
       _pulseTimer = 0;
     }
 
@@ -55,22 +63,5 @@ class MiningLaserComponent extends Component with HasGameReference<SpaceGame> {
       _target!.position.toOffset(),
       _paint,
     );
-  }
-
-  AsteroidComponent? _findClosestAsteroid() {
-    AsteroidComponent? closest;
-    var closestDistance = Constants.playerMiningRange;
-    Iterable<AsteroidComponent> asteroids = game.asteroids;
-    if (asteroids.isEmpty) {
-      asteroids = game.children.whereType<AsteroidComponent>();
-    }
-    for (final asteroid in asteroids) {
-      final distance = asteroid.position.distanceTo(player.position);
-      if (distance <= closestDistance) {
-        closest = asteroid;
-        closestDistance = distance;
-      }
-    }
-    return closest;
   }
 }
