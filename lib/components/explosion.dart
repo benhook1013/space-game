@@ -14,8 +14,22 @@ class ExplosionComponent extends SpriteAnimationComponent {
                 (Constants.spriteScale + Constants.explosionScale),
           ),
           anchor: Anchor.center,
-        ) {
-    removeOnFinish = true;
+        );
+
+  final Timer _timer = Timer(Constants.explosionLifetime);
+
+  @override
+  Future<void> onMount() async {
+    _timer
+      ..onTick = removeFromParent
+      ..start();
+    return super.onMount();
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+    _timer.update(dt);
   }
 
   @override
@@ -25,6 +39,7 @@ class ExplosionComponent extends SpriteAnimationComponent {
           .map((path) => Sprite(Flame.images.fromCache(path)))
           .toList(),
       stepTime: Constants.explosionFrameDuration,
+      loop: false,
     );
   }
 }
