@@ -6,6 +6,7 @@ import 'package:flame/input.dart';
 import 'package:flame/experimental.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart' show EdgeInsets;
+import 'package:flutter/widgets.dart' show FocusNode;
 
 import '../assets.dart';
 import '../components/player.dart';
@@ -26,7 +27,7 @@ import 'event_bus.dart';
 import 'game_state.dart';
 import 'pool_manager.dart';
 import 'lifecycle_manager.dart';
-import 'shortcut_manager.dart';
+import 'shortcut_manager.dart' as game_shortcuts;
 
 /// Root Flame game handling the core loop.
 ///
@@ -36,8 +37,12 @@ import 'shortcut_manager.dart';
 /// intentionally omitted.
 class SpaceGame extends FlameGame
     with HasKeyboardHandlerComponents, HasCollisionDetection {
-  SpaceGame({required this.storageService, required this.audioService})
-      : scoreService = ScoreService(storageService: storageService) {
+  SpaceGame({
+    required this.storageService,
+    required this.audioService,
+    FocusNode? focusNode,
+  })  : focusNode = focusNode ?? FocusNode(),
+        scoreService = ScoreService(storageService: storageService) {
     debugMode = kDebugMode;
     pools = createPoolManager();
   }
@@ -47,6 +52,9 @@ class SpaceGame extends FlameGame
 
   /// Plays sound effects and handles the mute toggle.
   final AudioService audioService;
+
+  /// Focus node used to capture keyboard input.
+  final FocusNode focusNode;
 
   final ScoreService scoreService;
   late final OverlayService overlayService;
@@ -61,7 +69,7 @@ class SpaceGame extends FlameGame
   late final AsteroidSpawner asteroidSpawner;
   late final PoolManager pools;
   late final LifecycleManager lifecycle;
-  late final ShortcutManager shortcuts;
+  late final game_shortcuts.ShortcutManager shortcuts;
   final GameEventBus eventBus = GameEventBus();
   ParallaxComponent? _starfield;
   FpsTextComponent? _fpsText;
@@ -161,7 +169,7 @@ class SpaceGame extends FlameGame
       onMenu: lifecycle.onMenu,
     );
 
-    shortcuts = ShortcutManager(
+    shortcuts = game_shortcuts.ShortcutManager(
       keyDispatcher: keyDispatcher,
       stateMachine: stateMachine,
       audioService: audioService,
@@ -181,6 +189,7 @@ class SpaceGame extends FlameGame
       overlayService.hideUpgrades();
       stateMachine.state = GameState.playing;
       resumeEngine();
+      focusGame();
     } else {
       if (stateMachine.state != GameState.playing) {
         return;
@@ -197,6 +206,7 @@ class SpaceGame extends FlameGame
       overlayService.hideHelp();
       if (_helpWasPlaying) {
         resumeEngine();
+        focusGame();
       }
     } else {
       _helpWasPlaying = stateMachine.state == GameState.playing;
@@ -228,7 +238,10 @@ class SpaceGame extends FlameGame
   void pauseGame() => stateMachine.pauseGame();
 
   /// Resumes the game from a paused state.
-  void resumeGame() => stateMachine.resumeGame();
+  void resumeGame() {
+    stateMachine.resumeGame();
+    focusGame();
+  }
 
   /// Returns to the main menu without restarting the session.
   void returnToMenu() => stateMachine.returnToMenu();
@@ -272,4 +285,7 @@ class SpaceGame extends FlameGame
   void toggleAutoAimRadius() {
     player.toggleAutoAimRadius();
   }
+
+  /// Requests keyboard focus for the surrounding [GameWidget].
+  void focusGame() => focusNode.requestFocus();
 }

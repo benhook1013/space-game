@@ -18,7 +18,12 @@ Future<void> main() async {
   await Assets.load();
   final storage = await StorageService.create();
   final audio = await AudioService.create(storage);
-  final game = SpaceGame(storageService: storage, audioService: audio);
+  final focusNode = FocusNode();
+  final game = SpaceGame(
+    storageService: storage,
+    audioService: audio,
+    focusNode: focusNode,
+  );
   runApp(
     MaterialApp(
       theme: ThemeData(
@@ -31,6 +36,7 @@ Future<void> main() async {
       ),
       home: GameWidget<SpaceGame>(
         game: game,
+        focusNode: focusNode,
         // Automatically request keyboard focus so web players can use WASD
         // without tapping the canvas first.
         autofocus: true,
