@@ -57,6 +57,12 @@ class PlayerComponent extends SpriteComponent
     ..color = const Color(0x66ffffff)
     ..style = PaintingStyle.stroke;
 
+  /// Paint used when drawing the player's magnetic field.
+  final Paint _magnetPaint = Paint()
+    ..color = const Color(0x3300aaff)
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 2;
+
   static final _damageFilter =
       ColorFilter.mode(const Color(0xffff0000), BlendMode.srcATop);
 
@@ -241,6 +247,11 @@ class PlayerComponent extends SpriteComponent
   @override
   void render(Canvas canvas) {
     super.render(canvas);
+    canvas.drawCircle(
+      Offset(size.x / 2, size.y / 2),
+      Constants.playerMagnetRange,
+      _magnetPaint,
+    );
     if (showAutoAimRadius) {
       canvas.drawCircle(
         Offset(size.x / 2, size.y / 2),
