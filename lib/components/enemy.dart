@@ -46,6 +46,12 @@ class EnemyComponent extends SpriteComponent
   }
 
   @override
+  void onMount() {
+    super.onMount();
+    game.enemies.add(this);
+  }
+
+  @override
   void update(double dt) {
     super.update(dt);
     final direction = (game.player.position - position).normalized();
@@ -75,6 +81,7 @@ class EnemyComponent extends SpriteComponent
   @override
   void onRemove() {
     super.onRemove();
+    game.enemies.remove(this);
     game.releaseEnemy(this);
   }
 

@@ -88,6 +88,14 @@ class SpaceGame extends FlameGame
   /// Pool of reusable enemies.
   final List<EnemyComponent> _enemyPool = [];
 
+  /// Active enemies tracked for quick lookup.
+  final List<EnemyComponent> enemies = [];
+
+  /// Active asteroids tracked for quick lookup.
+  final List<AsteroidComponent> asteroids = [];
+
+  /// TODO: Investigate spatial partitioning (e.g., quad trees) if counts grow.
+
   /// Tracks whether the game was playing when the help overlay opened.
   bool _helpWasPlaying = false;
   ParallaxComponent? _starfield;
@@ -318,10 +326,12 @@ class SpaceGame extends FlameGame
     score.value = 0;
     minerals.value = 0;
     health.value = Constants.playerMaxHealth;
-    children.whereType<EnemyComponent>().forEach((e) => e.removeFromParent());
-    children.whereType<AsteroidComponent>().forEach(
-          (a) => a.removeFromParent(),
-        );
+    for (final enemy in enemies.toList()) {
+      enemy.removeFromParent();
+    }
+    for (final asteroid in asteroids.toList()) {
+      asteroid.removeFromParent();
+    }
     children.whereType<BulletComponent>().forEach((b) => b.removeFromParent());
     if (!player.isMounted) {
       add(player);

@@ -51,6 +51,12 @@ class AsteroidComponent extends SpriteComponent
   }
 
   @override
+  void onMount() {
+    super.onMount();
+    game.asteroids.add(this);
+  }
+
+  @override
   void update(double dt) {
     super.update(dt);
     position += _velocity * dt;
@@ -78,6 +84,7 @@ class AsteroidComponent extends SpriteComponent
   @override
   void onRemove() {
     super.onRemove();
+    game.asteroids.remove(this);
     game.releaseAsteroid(this);
   }
 
