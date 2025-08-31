@@ -31,11 +31,36 @@ class EnemySpawner extends Component with HasGameReference<SpaceGame> {
   }
 
   void _spawn() {
-    final x = _random.nextDouble() * Constants.worldSize.x;
+    final spawnDistance = Constants.enemySize * Constants.enemyScale;
+    final edge = _random.nextInt(4);
+    late Vector2 position;
+    switch (edge) {
+      case 0: // top
+        position = Vector2(
+          _random.nextDouble() * Constants.worldSize.x,
+          -spawnDistance,
+        );
+        break;
+      case 1: // bottom
+        position = Vector2(
+          _random.nextDouble() * Constants.worldSize.x,
+          Constants.worldSize.y + spawnDistance,
+        );
+        break;
+      case 2: // left
+        position = Vector2(
+          -spawnDistance,
+          _random.nextDouble() * Constants.worldSize.y,
+        );
+        break;
+      default: // right
+        position = Vector2(
+          Constants.worldSize.x + spawnDistance,
+          _random.nextDouble() * Constants.worldSize.y,
+        );
+    }
     game.add(
-      game.acquireEnemy(
-        Vector2(x, -Constants.enemySize * Constants.enemyScale),
-      ),
+      game.acquireEnemy(position),
     );
   }
 }
