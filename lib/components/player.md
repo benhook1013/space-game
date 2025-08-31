@@ -10,6 +10,7 @@ Controllable ship for the player.
 - Colliding with enemies or asteroids reduces health via `SpaceGame.hitPlayer`
   and briefly flashes the ship red.
 - When stationary, periodically rotates to face the nearest enemy within range.
+- Collects `MineralComponent`s on contact to increase the mineral counter.
 - Pulls sprites from `assets.dart` and tuning values from `constants.dart`.
 - Uses `CircleHitbox` and `HasGameReference<SpaceGame>`.
 

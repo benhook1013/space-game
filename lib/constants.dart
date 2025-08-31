@@ -20,9 +20,6 @@ class Constants {
   /// Maximum distance to auto-aim enemies when stationary, in pixels.
   static const double playerAutoAimRange = 300;
 
-  /// Seconds between auto-aim direction updates when stationary.
-  static const double playerAutoAimInterval = 0.2;
-
   /// Maximum distance to auto-mine asteroids, in pixels.
   static const double playerMiningRange = playerAutoAimRange;
 
@@ -89,8 +86,11 @@ class Constants {
   /// Score awarded for mining an asteroid.
   static const int asteroidScore = 1;
 
-  /// Minerals gained for each hit on an asteroid.
+  /// Minerals granted by a single mineral pickup.
   static const int asteroidMinerals = 1;
+
+  /// Base mineral pickup sprite size in logical pixels.
+  static const double mineralSize = 16;
 
   /// Number of stars spawned per parallax layer.
   static const int starsPerLayer = 30;

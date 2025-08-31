@@ -78,9 +78,9 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
 - [ ] Spawn enemy groups on a timer.
 - [ ] Add a mining laser that automatically targets and fires at nearby
       asteroids.
-- [ ] Drop mineral pickups from asteroids and track the player's total.
+- [x] Drop mineral pickups from asteroids and track the player's total.
 - [x] Auto-aim the primary weapon at the closest enemy when stationary.
-- [ ] Refine auto-aim targeting behaviour for smoother updates.
+- [x] Refine auto-aim targeting behaviour for smoother updates.
 - [ ] Design a broad upgrade system where minerals purchase new weapon and ship
       upgrades.
 - [ ] Add a minimap or other navigation aid for exploring the larger world.

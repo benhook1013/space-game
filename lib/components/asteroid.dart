@@ -74,17 +74,13 @@ class AsteroidComponent extends SpriteComponent
   }
 
   /// Reduces health by [amount] and removes the asteroid when depleted.
-  ///
-  /// When [awardMinerals] is true (the default) minerals are granted to the
-  /// player for each hit, simulating mining laser pulses. Bullet damage passes
-  /// `awardMinerals: false` to avoid granting minerals for the main attack.
-  void takeDamage(int amount, {bool awardMinerals = true}) {
+  void takeDamage(int amount) {
     _health -= amount;
     game.addScore(Constants.asteroidScore);
-    if (awardMinerals) {
-      game.addMinerals(Constants.asteroidMinerals);
-    }
     if (_health <= 0 && !isRemoving) {
+      final mineral = game.acquireMineral(position.clone());
+      game.mineralPickups.add(mineral);
+      game.add(mineral);
       removeFromParent();
     }
   }
