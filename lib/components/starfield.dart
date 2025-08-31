@@ -2,88 +2,56 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flame/components.dart';
+import 'package:flame/parallax.dart';
+import 'package:flutter/painting.dart' show ImageRepeat;
 
 import '../constants.dart';
-import '../game/space_game.dart';
 
-/// Procedural parallax starfield rendered behind the gameplay.
-class StarfieldComponent extends Component with HasGameReference<SpaceGame> {
-  StarfieldComponent({int starsPerLayer = Constants.starsPerLayer})
-      : _starsPerLayer = starsPerLayer,
-        super(priority: -1);
+/// Creates a parallax starfield using Flame's [ParallaxComponent].
+///
+/// The starfield consists of three layers that scroll at different
+/// speeds to give a depth effect. Stars are drawn once into off-screen
+/// images and the parallax system handles the scrolling and wrapping.
+Future<ParallaxComponent> createStarfieldParallax(Vector2 size) async {
+  final random = Random();
+  final paint = Paint();
 
-  final int _starsPerLayer;
-  final Random _random = Random();
-  final List<_Star> _stars = [];
-  final Paint _paint = Paint();
-
-  @override
-  Future<void> onLoad() async {
-    if (!game.size.isZero()) {
-      _initStars();
-    }
-  }
-
-  void _initStars() {
-    _stars
-      ..clear()
-      ..addAll(_generateLayer(Constants.starSpeedSlow))
-      ..addAll(_generateLayer(Constants.starSpeedMedium))
-      ..addAll(_generateLayer(Constants.starSpeedFast));
-  }
-
-  List<_Star> _generateLayer(double speed) {
-    return List.generate(_starsPerLayer, (_) {
-      final brightness = 128 + _random.nextInt(128);
-      return _Star(
-        position: Vector2(
-          _random.nextDouble() * game.size.x,
-          _random.nextDouble() * game.size.y,
-        ),
-        speed: speed,
-        radius: _random.nextDouble() * Constants.starMaxSize + 1,
-        color: Color.fromARGB(255, brightness, brightness, brightness),
+  Future<ParallaxImage> buildLayer() async {
+    final recorder = PictureRecorder();
+    final canvas = Canvas(recorder);
+    for (var i = 0; i < Constants.starsPerLayer; i++) {
+      final brightness = 128 + random.nextInt(128);
+      paint.color = Color.fromARGB(255, brightness, brightness, brightness);
+      final position = Offset(
+        random.nextDouble() * size.x,
+        random.nextDouble() * size.y,
       );
-    });
-  }
-
-  @override
-  void onGameResize(Vector2 size) {
-    super.onGameResize(size);
-    _initStars();
-  }
-
-  @override
-  void update(double dt) {
-    for (final star in _stars) {
-      star.position.y += star.speed * dt;
-      if (star.position.y > game.size.y) {
-        star.position
-          ..y = 0
-          ..x = _random.nextDouble() * game.size.x;
-      }
+      final radius = random.nextDouble() * Constants.starMaxSize + 1;
+      canvas.drawCircle(position, radius, paint);
     }
+    final picture = recorder.endRecording();
+    final image = await picture.toImage(size.x.toInt(), size.y.toInt());
+    return ParallaxImage(image, repeat: ImageRepeat.repeat);
   }
 
-  @override
-  void render(Canvas canvas) {
-    for (final star in _stars) {
-      _paint.color = star.color;
-      canvas.drawCircle(star.position.toOffset(), star.radius, _paint);
-    }
-  }
-}
+  final slowLayer = ParallaxLayer(
+    await buildLayer(),
+    velocityMultiplier: Vector2.all(1),
+  );
+  final mediumLayer = ParallaxLayer(
+    await buildLayer(),
+    velocityMultiplier:
+        Vector2.all(Constants.starSpeedMedium / Constants.starSpeedSlow),
+  );
+  final fastLayer = ParallaxLayer(
+    await buildLayer(),
+    velocityMultiplier:
+        Vector2.all(Constants.starSpeedFast / Constants.starSpeedSlow),
+  );
 
-class _Star {
-  _Star({
-    required this.position,
-    required this.speed,
-    required this.radius,
-    required this.color,
-  });
-
-  Vector2 position;
-  double speed;
-  double radius;
-  Color color;
+  final parallax = Parallax(
+    [slowLayer, mediumLayer, fastLayer],
+    baseVelocity: Vector2(0, Constants.starSpeedSlow),
+  );
+  return ParallaxComponent(parallax: parallax, priority: -1);
 }

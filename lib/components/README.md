@@ -27,8 +27,8 @@ Gameplay entities and reusable pieces.
   grant minerals.
 - [MiningLaserComponent](mining_laser.md) – auto-targets and mines nearby
   asteroids with a widening pulse beam.
-- [StarfieldComponent](starfield.md) – procedural three-layer background with
-  parallax motion.
+- [Starfield](starfield.md) – parallax background built with Flame's
+  `ParallaxComponent`.
 
 ## Planned Components
 
