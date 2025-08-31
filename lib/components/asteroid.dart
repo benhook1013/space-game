@@ -98,7 +98,9 @@ class AsteroidComponent extends SpriteComponent
       final angle = _rand.nextDouble() * math.pi * 2;
       final distance = _rand.nextDouble() * Constants.mineralDropRadius;
       final offset = Vector2(math.cos(angle), math.sin(angle))..scale(distance);
-      final mineral = game.pools.acquireMineral(position + offset);
+      final mineral = game.pools.acquire<MineralComponent>(
+        (m) => m.reset(position + offset),
+      );
       game.add(mineral);
       game.eventBus.emit(ComponentSpawnEvent<MineralComponent>(mineral));
       game.addScore(Constants.asteroidScore);

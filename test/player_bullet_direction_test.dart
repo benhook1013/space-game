@@ -27,20 +27,27 @@ class _TestPlayer extends PlayerComponent {
 }
 
 class _TestPoolManager extends PoolManager {
-  _TestPoolManager({required super.game, required super.events});
+  _TestPoolManager({required super.events});
 
   final List<_TestBullet> _pool = [];
 
   @override
-  BulletComponent acquireBullet(Vector2 position, Vector2 direction) {
-    final bullet = _pool.isNotEmpty ? _pool.removeLast() : _TestBullet();
-    bullet.reset(position, direction);
-    return bullet;
+  T acquire<T extends Component>(void Function(T) reset) {
+    if (T == BulletComponent) {
+      final bullet = _pool.isNotEmpty ? _pool.removeLast() : _TestBullet();
+      reset(bullet as T);
+      return bullet as T;
+    }
+    return super.acquire<T>(reset);
   }
 
   @override
-  void releaseBullet(BulletComponent bullet) {
-    _pool.add(bullet as _TestBullet);
+  void release<T extends Component>(T component) {
+    if (component is BulletComponent) {
+      _pool.add(component as _TestBullet);
+      return;
+    }
+    super.release(component);
   }
 }
 
@@ -49,8 +56,7 @@ class _TestGame extends SpaceGame {
       : super(storageService: storage, audioService: audio);
 
   @override
-  PoolManager createPoolManager() =>
-      _TestPoolManager(game: this, events: eventBus);
+  PoolManager createPoolManager() => _TestPoolManager(events: eventBus);
 
   @override
   Future<void> onLoad() async {

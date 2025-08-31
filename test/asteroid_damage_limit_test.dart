@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:space_game/assets.dart';
 import 'package:space_game/components/asteroid.dart';
 import 'package:space_game/components/player.dart';
+import 'package:space_game/components/mineral.dart';
 import 'package:space_game/constants.dart';
 import 'package:space_game/game/key_dispatcher.dart';
 import 'package:space_game/game/space_game.dart';
@@ -54,7 +55,9 @@ void main() {
     final game = _TestGame(storageService: storage, audioService: audio);
     await game.onLoad();
 
-    final asteroid = game.pools.acquireAsteroid(Vector2.zero(), Vector2.zero());
+    final asteroid = game.pools.acquire<AsteroidComponent>(
+      (a) => a.reset(Vector2.zero(), Vector2.zero()),
+    );
     await game.add(asteroid);
     game.update(0);
     final initialHealth = asteroid.health;
@@ -65,7 +68,7 @@ void main() {
 
     expect(asteroid.health, 0);
     expect(
-      game.pools.mineralPickups.length,
+      game.pools.components<MineralComponent>().length,
       math.min(initialHealth, Constants.asteroidMineralDropMax),
     );
   });

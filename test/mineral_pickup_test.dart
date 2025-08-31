@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:space_game/assets.dart';
 import 'package:space_game/components/mineral.dart';
 import 'package:space_game/components/player.dart';
+import 'package:space_game/components/asteroid.dart';
 import 'package:space_game/constants.dart';
 import 'package:space_game/game/key_dispatcher.dart';
 import 'package:space_game/game/space_game.dart';
@@ -57,7 +58,9 @@ void main() {
     final game = _TestGame(storage: storage, audio: audio);
     await game.onLoad();
 
-    final asteroid = game.pools.acquireAsteroid(Vector2.zero(), Vector2.zero());
+    final asteroid = game.pools.acquire<AsteroidComponent>(
+      (a) => a.reset(Vector2.zero(), Vector2.zero()),
+    );
     await game.add(asteroid);
     game.update(0);
     final origin = asteroid.position.clone();
@@ -70,8 +73,8 @@ void main() {
       hits++;
     }
     await game.ready();
-    expect(game.pools.mineralPickups.length, hits);
-    for (final mineral in game.pools.mineralPickups) {
+    expect(game.pools.components<MineralComponent>().length, hits);
+    for (final mineral in game.pools.components<MineralComponent>()) {
       final offset = mineral.position - origin;
       expect(offset.length, greaterThan(0));
       expect(offset.length, lessThanOrEqualTo(Constants.mineralDropRadius));
@@ -86,7 +89,9 @@ void main() {
     final game = _TestGame(storage: storage, audio: audio);
     await game.onLoad();
 
-    final mineral = game.pools.acquireMineral(game.player.position.clone());
+    final mineral = game.pools.acquire<MineralComponent>(
+      (m) => m.reset(game.player.position.clone()),
+    );
     final initial = game.minerals.value;
     game.player.onCollisionStart({}, mineral);
 

@@ -172,7 +172,7 @@ class SpaceGame extends FlameGame
   }
 
   @protected
-  PoolManager createPoolManager() => PoolManager(game: this, events: eventBus);
+  PoolManager createPoolManager() => PoolManager(events: eventBus);
 
   /// Toggles the upgrades overlay and pauses/resumes the game.
   void toggleUpgrades() {
