@@ -176,7 +176,6 @@ class PlayerComponent extends SpriteComponent
             math.pi / 2;
       }
     }
-
     final rotationDelta = _normalizeAngle(_targetAngle - angle);
     final maxDelta = Constants.playerRotationSpeed * dt;
     if (rotationDelta.abs() <= maxDelta) {
