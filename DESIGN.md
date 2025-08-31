@@ -80,7 +80,7 @@ tree spanning weapons and ship systems.
 ## Components
 
 - Player, enemy, asteroid and bullet components live under `lib/components/`.
-- Components mix in `HasGameRef<SpaceGame>` when they need game context.
+- Components mix in `HasGameReference<SpaceGame>` when they need game context.
 - Use simple hit boxes (`CircleHitbox`, `RectangleHitbox`) and
   `HasCollisionDetection`.
 - An `EnemySpawner` system releases groups of enemies at timed intervals.

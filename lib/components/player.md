@@ -10,6 +10,6 @@ Controllable ship for the player.
 - Colliding with enemies or asteroids reduces health via `SpaceGame.hitPlayer`.
 - When stationary, periodically rotates to face the nearest enemy within range.
 - Pulls sprites from `assets.dart` and tuning values from `constants.dart`.
-- Uses `CircleHitbox` and `HasGameRef<SpaceGame>`.
+- Uses `CircleHitbox` and `HasGameReference<SpaceGame>`.
 
 See [../../PLAN.md](../../PLAN.md) for core loop goals.
