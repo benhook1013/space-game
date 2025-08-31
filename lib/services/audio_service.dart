@@ -4,6 +4,7 @@ import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/foundation.dart';
 
 import '../assets.dart';
+import '../constants.dart';
 import 'storage_service.dart';
 
 /// Wrapper around `flame_audio` providing sound effects with a mute toggle.
@@ -48,7 +49,10 @@ class AudioService {
   /// Starts the looping mining laser sound if not muted.
   Future<void> startMiningLaser() async {
     if (muted.value || _miningLoop != null) return;
-    _miningLoop = await FlameAudio.loop(Assets.miningLaserSfx);
+    _miningLoop = await FlameAudio.loop(
+      Assets.miningLaserSfx,
+      volume: Constants.miningLaserVolume,
+    );
   }
 
   /// Stops the looping mining laser sound if playing.
