@@ -5,6 +5,9 @@ import 'package:flame/components.dart';
 
 /// Mixin that prevents [PositionComponent]s from overlapping by
 /// pushing them away from each other when a collision occurs.
+///
+/// When bodies of different sizes collide, the smaller body is moved
+/// entirely to avoid tiny objects pushing larger ones around.
 mixin SolidBody on PositionComponent, CollisionCallbacks {
   static final _rand = math.Random();
 
@@ -30,9 +33,21 @@ mixin SolidBody on PositionComponent, CollisionCallbacks {
     final minDistance = (size.x + other.size.x) / 2;
     final overlap = minDistance - distance;
     if (overlap > 0) {
-      final push = diff.normalized() * (overlap / 2);
-      position.add(push);
-      other.position.sub(push);
+      final direction = diff.normalized();
+      final selfSize = size.length;
+      final otherSize = other.size.length;
+      if (selfSize < otherSize) {
+        // Current component is smaller; move it out of the way entirely.
+        position.add(direction * overlap);
+      } else if (selfSize > otherSize) {
+        // Other component is smaller; move it out of the way.
+        other.position.sub(direction * overlap);
+      } else {
+        // Components are roughly the same size; split the push.
+        final push = direction * (overlap / 2);
+        position.add(push);
+        other.position.sub(push);
+      }
     }
   }
 }
