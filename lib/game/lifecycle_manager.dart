@@ -1,4 +1,5 @@
 import '../game/space_game.dart';
+import '../components/explosion.dart';
 
 /// Handles start, menu, and game over transitions.
 class LifecycleManager {
@@ -9,6 +10,12 @@ class LifecycleManager {
   void onStart() {
     game.scoreService.reset();
     game.pools.clear();
+    // Remove any lingering explosions from a previous session.
+    for (final explosion in List<ExplosionComponent>.from(
+      game.children.whereType<ExplosionComponent>(),
+    )) {
+      explosion.removeFromParent();
+    }
     if (!game.player.isMounted) {
       game.add(game.player);
       game.camera.follow(game.player);
