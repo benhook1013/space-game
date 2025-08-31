@@ -68,4 +68,5 @@ jobs:
         with:
           branch: ${{ github.ref == 'refs/heads/main' && 'gh-pages' || 'gh-pages-staging' }}
           folder: build/web
-          clean: false
+          # Remove old preview artifacts to keep deploy branch lean
+          clean: true
