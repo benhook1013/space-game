@@ -44,9 +44,6 @@ class PlayerComponent extends SpriteComponent
   /// Angle the ship should currently rotate towards.
   double _targetAngle = 0;
 
-  /// Accumulates time between auto-aim updates when stationary.
-  double _autoAimTimer = 0;
-
   /// Whether to render the auto-aim radius around the player.
   bool showAutoAimRadius = false;
 
@@ -163,7 +160,6 @@ class PlayerComponent extends SpriteComponent
         Constants.worldSize - halfSize,
       );
       _targetAngle = math.atan2(input.y, input.x) + math.pi / 2;
-      _autoAimTimer = 0;
     } else {
       _autoAimTimer += dt;
       if (_autoAimTimer >= Constants.playerAutoAimInterval) {
@@ -184,7 +180,6 @@ class PlayerComponent extends SpriteComponent
         }
       }
     }
-
     final rotationDelta = _normalizeAngle(_targetAngle - angle);
     final maxDelta = Constants.playerRotationSpeed * dt;
     if (rotationDelta.abs() <= maxDelta) {

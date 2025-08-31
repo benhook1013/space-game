@@ -6,10 +6,12 @@ CI/CD automation for the project.
 - `deploy.yml` – builds the web release and publishes it. It runs on
   pushes to `main` and `develop` and can be triggered manually from the
   GitHub Actions tab.
-- `deploy-preview.yml` – manually builds the current branch and publishes it to a branch-specific preview path.
+- `deploy-preview.yml` – builds the current branch on pull requests or
+  manual triggers and publishes it to a branch-specific preview path.
 
-All workflows use concurrency groups to cancel in-progress runs when new
-commits arrive.
+Workflows avoid interfering with each other by using concurrency groups.
+The main deploy workflow also cancels any running preview deployments
+before starting.
 
 Workflows follow the lightweight pipeline described in [../../PLAN.md](../../PLAN.md).
 
