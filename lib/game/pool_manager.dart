@@ -8,101 +8,69 @@ import '../constants.dart';
 import '../util/object_pool.dart';
 import '../util/spatial_grid.dart';
 import 'event_bus.dart';
-import 'space_game.dart';
 
 /// Manages pooled game components to reduce allocations.
 class PoolManager {
-  PoolManager({required SpaceGame game, required GameEventBus events})
-      : _game = game,
-        _events = events {
-    _events.on<ComponentSpawnEvent<EnemyComponent>>().listen((event) {
-      enemies.add(event.component);
-    });
-    _events.on<ComponentRemoveEvent<EnemyComponent>>().listen((event) {
-      enemies.remove(event.component);
-      releaseEnemy(event.component);
-    });
-    _events.on<ComponentSpawnEvent<AsteroidComponent>>().listen((event) {
-      asteroids.add(event.component);
-      _asteroidGrid.add(event.component);
-    });
-    _events.on<ComponentRemoveEvent<AsteroidComponent>>().listen((event) {
-      asteroids.remove(event.component);
-      _asteroidGrid.remove(event.component);
-      releaseAsteroid(event.component);
-    });
-    _events.on<ComponentSpawnEvent<MineralComponent>>().listen((event) {
-      mineralPickups.add(event.component);
-    });
-    _events.on<ComponentRemoveEvent<MineralComponent>>().listen((event) {
-      mineralPickups.remove(event.component);
-      releaseMineral(event.component);
-    });
-    _events.on<ComponentSpawnEvent<BulletComponent>>().listen((event) {
-      bullets.add(event.component);
-    });
-    _events.on<ComponentRemoveEvent<BulletComponent>>().listen((event) {
-      bullets.remove(event.component);
-      releaseBullet(event.component);
-    });
+  PoolManager({required GameEventBus events}) : _events = events {
+    _register<BulletComponent>(() => BulletComponent());
+    _register<EnemyComponent>(() => EnemyComponent());
+    _register<MineralComponent>(() => MineralComponent());
+    _register<AsteroidComponent>(
+      () => AsteroidComponent(),
+      onSpawn: _asteroidGrid.add,
+      onRemove: _asteroidGrid.remove,
+    );
   }
 
-  final SpaceGame _game;
   final GameEventBus _events;
 
-  final ObjectPool<BulletComponent> _bulletPool =
-      ObjectPool(() => BulletComponent());
-  final ObjectPool<AsteroidComponent> _asteroidPool =
-      ObjectPool(() => AsteroidComponent());
-  final ObjectPool<EnemyComponent> _enemyPool =
-      ObjectPool(() => EnemyComponent());
-  final ObjectPool<MineralComponent> _mineralPool =
-      ObjectPool(() => MineralComponent());
-
-  /// Active bullets tracked for cleanup.
-  final List<BulletComponent> bullets = [];
-
-  /// Active enemies tracked for quick lookup.
-  final List<EnemyComponent> enemies = [];
-
-  /// Active asteroids tracked for quick lookup.
-  final List<AsteroidComponent> asteroids = [];
+  final Map<Type, ObjectPool<dynamic>> _pools = {};
+  final Map<Type, List<dynamic>> _active = {};
+  final Map<Type, void Function(dynamic)> _onRemove = {};
+  final Map<Type, void Function(dynamic)> _onSpawn = {};
 
   final SpatialGrid<AsteroidComponent> _asteroidGrid =
       SpatialGrid(cellSize: Constants.spatialGridCellSize);
 
-  /// Active mineral pickups tracked for cleanup.
-  final List<MineralComponent> mineralPickups = [];
+  void _register<T extends Component>(
+    T Function() factory, {
+    void Function(T)? onSpawn,
+    void Function(T)? onRemove,
+  }) {
+    _pools[T] = ObjectPool<T>(factory);
+    _active[T] = <T>[];
+    if (onSpawn != null) {
+      _onSpawn[T] = (dynamic c) => onSpawn(c as T);
+    }
+    if (onRemove != null) {
+      _onRemove[T] = (dynamic c) => onRemove(c as T);
+    }
 
-  /// Retrieves a bullet from the pool or creates a new one.
-  BulletComponent acquireBullet(Vector2 position, Vector2 direction) =>
-      _bulletPool.acquire((bullet) => bullet.reset(position, direction));
+    _events.on<ComponentSpawnEvent<T>>().listen((event) {
+      (_active[T] as List<T>).add(event.component);
+      _onSpawn[T]?.call(event.component);
+    });
+    _events.on<ComponentRemoveEvent<T>>().listen((event) {
+      (_active[T] as List<T>).remove(event.component);
+      _onRemove[T]?.call(event.component);
+      release(event.component);
+    });
+  }
 
-  /// Returns [bullet] to the pool for reuse.
-  void releaseBullet(BulletComponent bullet) => _bulletPool.release(bullet);
+  /// Retrieves an instance of [T] from its pool.
+  T acquire<T extends Component>(void Function(T) reset) {
+    final pool = _pools[T] as ObjectPool<T>;
+    return pool.acquire(reset);
+  }
 
-  /// Retrieves an asteroid from the pool or creates a new one.
-  AsteroidComponent acquireAsteroid(Vector2 position, Vector2 velocity) =>
-      _asteroidPool.acquire((asteroid) => asteroid.reset(position, velocity));
+  /// Returns [component] to its pool for reuse.
+  void release<T extends Component>(T component) {
+    final pool = _pools[T] as ObjectPool<T>?;
+    pool?.release(component);
+  }
 
-  /// Returns [asteroid] to the pool for reuse.
-  void releaseAsteroid(AsteroidComponent asteroid) =>
-      _asteroidPool.release(asteroid);
-
-  /// Retrieves an enemy from the pool or creates a new one.
-  EnemyComponent acquireEnemy(Vector2 position) =>
-      _enemyPool.acquire((enemy) => enemy.reset(position));
-
-  /// Returns [enemy] to the pool for reuse.
-  void releaseEnemy(EnemyComponent enemy) => _enemyPool.release(enemy);
-
-  /// Retrieves a mineral from the pool or creates a new one.
-  MineralComponent acquireMineral(Vector2 position) =>
-      _mineralPool.acquire((mineral) => mineral.reset(position));
-
-  /// Returns [mineral] to the pool for reuse.
-  void releaseMineral(MineralComponent mineral) =>
-      _mineralPool.release(mineral);
+  /// Returns the active components for type [T].
+  List<T> components<T extends Component>() => _active[T] as List<T>? ?? <T>[];
 
   void updateAsteroidPosition(
     AsteroidComponent asteroid,
@@ -119,22 +87,12 @@ class PoolManager {
 
   /// Removes all active components and resets tracking structures.
   void clear() {
-    for (final enemy in enemies.toList()) {
-      enemy.removeFromParent();
+    for (final list in _active.values) {
+      for (final component in List<Component>.from(list as List<Component>)) {
+        component.removeFromParent();
+      }
+      list.clear();
     }
-    for (final asteroid in asteroids.toList()) {
-      asteroid.removeFromParent();
-    }
-    for (final mineral in mineralPickups.toList()) {
-      mineral.removeFromParent();
-    }
-    for (final bullet in bullets.toList()) {
-      bullet.removeFromParent();
-    }
-    enemies.clear();
-    asteroids.clear();
-    mineralPickups.clear();
-    bullets.clear();
     _asteroidGrid.clear();
   }
 }

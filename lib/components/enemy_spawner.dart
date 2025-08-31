@@ -5,6 +5,7 @@ import 'package:meta/meta.dart';
 
 import '../constants.dart';
 import '../game/space_game.dart';
+import 'enemy.dart';
 
 /// Spawns enemies at timed intervals when started.
 class EnemySpawner extends Component with HasGameReference<SpaceGame> {
@@ -69,7 +70,9 @@ class EnemySpawner extends Component with HasGameReference<SpaceGame> {
           (Constants.enemyGroupSpread * 2);
       final position = base + offset;
       position.clamp(Vector2.zero(), Constants.worldSize);
-      game.add(game.pools.acquireEnemy(position));
+      game.add(
+        game.pools.acquire<EnemyComponent>((e) => e.reset(position)),
+      );
     }
   }
 

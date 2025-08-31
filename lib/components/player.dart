@@ -12,6 +12,7 @@ import '../game/key_dispatcher.dart';
 import 'enemy.dart';
 import 'asteroid.dart';
 import 'mineral.dart';
+import 'bullet.dart';
 import '../util/nearest_component.dart';
 
 /// Controllable player ship.
@@ -92,7 +93,9 @@ class PlayerComponent extends SpriteComponent
     }
     final direction =
         Vector2(math.cos(angle - math.pi / 2), math.sin(angle - math.pi / 2));
-    final bullet = game.pools.acquireBullet(position.clone(), direction);
+    final bullet = game.pools.acquire<BulletComponent>(
+      (b) => b.reset(position.clone(), direction),
+    );
     game.add(bullet);
     game.audioService.playShoot();
     _shootCooldown = Constants.bulletCooldown;
@@ -190,7 +193,7 @@ class PlayerComponent extends SpriteComponent
   }
 
   void _autoAim() {
-    final enemies = game.pools.enemies;
+    final enemies = game.pools.components<EnemyComponent>();
     final target = enemies.findClosest(
       position,
       Constants.playerAutoAimRange,

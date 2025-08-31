@@ -4,6 +4,7 @@ import 'package:flame/components.dart';
 
 import '../constants.dart';
 import '../game/space_game.dart';
+import 'asteroid.dart';
 
 /// Spawns asteroids at timed intervals when started.
 class AsteroidSpawner extends Component with HasGameReference<SpaceGame> {
@@ -78,7 +79,9 @@ class AsteroidSpawner extends Component with HasGameReference<SpaceGame> {
     }
     position.clamp(Vector2.zero(), Constants.worldSize);
     game.add(
-      game.pools.acquireAsteroid(position, velocity),
+      game.pools.acquire<AsteroidComponent>(
+        (a) => a.reset(position, velocity),
+      ),
     );
   }
 }

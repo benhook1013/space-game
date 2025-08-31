@@ -28,9 +28,15 @@ void main() {
     final game = _TestGame(storage: storage, audio: audio);
     await game.onLoad();
 
-    final a1 = game.pools.acquireAsteroid(Vector2.zero(), Vector2.zero());
-    final a2 = game.pools.acquireAsteroid(Vector2(100, 0), Vector2.zero());
-    final a3 = game.pools.acquireAsteroid(Vector2(500, 500), Vector2.zero());
+    final a1 = game.pools.acquire<AsteroidComponent>(
+      (a) => a.reset(Vector2.zero(), Vector2.zero()),
+    );
+    final a2 = game.pools.acquire<AsteroidComponent>(
+      (a) => a.reset(Vector2(100, 0), Vector2.zero()),
+    );
+    final a3 = game.pools.acquire<AsteroidComponent>(
+      (a) => a.reset(Vector2(500, 500), Vector2.zero()),
+    );
     await game.add(a1);
     await game.add(a2);
     await game.add(a3);
