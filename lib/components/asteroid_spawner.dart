@@ -29,7 +29,8 @@ class AsteroidSpawner extends Component with HasGameReference<SpaceGame> {
   }
 
   void _spawn() {
-    final spawnDistance = Constants.asteroidSize * Constants.asteroidScale;
+    final spawnDistance = Constants.asteroidSize *
+        (Constants.spriteScale + Constants.asteroidScale);
     final rect = game.camera.visibleWorldRect;
     final edge = _random.nextInt(4);
     late Vector2 position;

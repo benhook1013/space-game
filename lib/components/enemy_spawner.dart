@@ -31,7 +31,8 @@ class EnemySpawner extends Component with HasGameReference<SpaceGame> {
   }
 
   void _spawn() {
-    final spawnDistance = Constants.enemySize * Constants.enemyScale;
+    final spawnDistance =
+        Constants.enemySize * (Constants.spriteScale + Constants.enemyScale);
     final rect = game.camera.visibleWorldRect;
     final edge = _random.nextInt(4);
     late Vector2 position;

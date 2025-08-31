@@ -9,8 +9,9 @@ Core game class and shared systems.
 - Uses the default camera viewport so the game fills the available
   browser window.
 - Timer-based spawners generate enemies and asteroids.
-- Input uses Flame's `JoystickComponent`, `ButtonComponent` and
-  `KeyboardListenerComponent`.
+  - Input uses Flame's `JoystickComponent`, `ButtonComponent` and a
+    custom `KeyDispatcher` (via `KeyboardHandler`) that supports helpers like
+    `isAnyPressed` for grouped key queries.
 - Hooks exist for resource mining, inventory, networking and save/load in later
   milestones.
 - Keep this layer lean and delegate work to components or services.

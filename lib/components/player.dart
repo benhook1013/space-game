@@ -11,6 +11,8 @@ import '../game/space_game.dart';
 import '../game/key_dispatcher.dart';
 import 'asteroid.dart';
 import 'enemy.dart';
+import '../util/nearest_component.dart';
+import 'mineral.dart';
 
 /// Controllable player ship.
 class PlayerComponent extends SpriteComponent
@@ -22,7 +24,8 @@ class PlayerComponent extends SpriteComponent
       : _spritePath = spritePath,
         super(
           size: Vector2.all(
-            Constants.playerSize * Constants.playerScale,
+            Constants.playerSize *
+                (Constants.spriteScale + Constants.playerScale),
           ),
           anchor: Anchor.center,
         );
@@ -41,9 +44,6 @@ class PlayerComponent extends SpriteComponent
 
   /// Angle the ship should currently rotate towards.
   double _targetAngle = 0;
-
-  /// Accumulates time between auto-aim updates when stationary.
-  double _autoAimTimer = 0;
 
   /// Whether to render the auto-aim radius around the player.
   bool showAutoAimRadius = false;
@@ -122,20 +122,28 @@ class PlayerComponent extends SpriteComponent
     }
     _keyboardDirection
       ..setZero()
-      ..x += (keyDispatcher.isPressed(LogicalKeyboardKey.keyA) ||
-              keyDispatcher.isPressed(LogicalKeyboardKey.arrowLeft))
+      ..x += keyDispatcher.isAnyPressed([
+        LogicalKeyboardKey.keyA,
+        LogicalKeyboardKey.arrowLeft,
+      ])
           ? -1
           : 0
-      ..x += (keyDispatcher.isPressed(LogicalKeyboardKey.keyD) ||
-              keyDispatcher.isPressed(LogicalKeyboardKey.arrowRight))
+      ..x += keyDispatcher.isAnyPressed([
+        LogicalKeyboardKey.keyD,
+        LogicalKeyboardKey.arrowRight,
+      ])
           ? 1
           : 0
-      ..y += (keyDispatcher.isPressed(LogicalKeyboardKey.keyW) ||
-              keyDispatcher.isPressed(LogicalKeyboardKey.arrowUp))
+      ..y += keyDispatcher.isAnyPressed([
+        LogicalKeyboardKey.keyW,
+        LogicalKeyboardKey.arrowUp,
+      ])
           ? -1
           : 0
-      ..y += (keyDispatcher.isPressed(LogicalKeyboardKey.keyS) ||
-              keyDispatcher.isPressed(LogicalKeyboardKey.arrowDown))
+      ..y += keyDispatcher.isAnyPressed([
+        LogicalKeyboardKey.keyS,
+        LogicalKeyboardKey.arrowDown,
+      ])
           ? 1
           : 0;
 
@@ -153,17 +161,20 @@ class PlayerComponent extends SpriteComponent
         Constants.worldSize - halfSize,
       );
       _targetAngle = math.atan2(input.y, input.x) + math.pi / 2;
-      _autoAimTimer = 0;
     } else {
-      _autoAimTimer += dt;
-      if (_autoAimTimer >= Constants.playerAutoAimInterval) {
-        _autoAimTimer = 0;
-        final target = _findClosestEnemy();
-        if (target != null) {
-          _targetAngle = math.atan2(target.position.y - position.y,
-                  target.position.x - position.x) +
-              math.pi / 2;
-        }
+      final enemies = game.enemies.isNotEmpty
+          ? game.enemies
+          : game.children.whereType<EnemyComponent>();
+      final target = enemies.findClosest(
+        position,
+        Constants.playerAutoAimRange,
+      );
+      if (target != null) {
+        _targetAngle = math.atan2(
+              target.position.y - position.y,
+              target.position.x - position.x,
+            ) +
+            math.pi / 2;
       }
     }
 
@@ -197,6 +208,9 @@ class PlayerComponent extends SpriteComponent
     if (other is EnemyComponent || other is AsteroidComponent) {
       other.removeFromParent();
       game.hitPlayer();
+    } else if (other is MineralComponent) {
+      game.addMinerals(other.value);
+      other.removeFromParent();
     }
   }
 
@@ -208,22 +222,5 @@ class PlayerComponent extends SpriteComponent
       a -= math.pi * 2;
     }
     return a;
-  }
-
-  EnemyComponent? _findClosestEnemy() {
-    EnemyComponent? closest;
-    var closestDistance = Constants.playerAutoAimRange;
-    Iterable<EnemyComponent> enemies = game.enemies;
-    if (enemies.isEmpty) {
-      enemies = game.children.whereType<EnemyComponent>();
-    }
-    for (final enemy in enemies) {
-      final distance = enemy.position.distanceTo(position);
-      if (distance <= closestDistance) {
-        closest = enemy;
-        closestDistance = distance;
-      }
-    }
-    return closest;
   }
 }

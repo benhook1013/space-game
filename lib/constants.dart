@@ -11,17 +11,17 @@ class Constants {
   /// Player rotation speed in radians per second.
   static const double playerRotationSpeed = 10;
 
+  /// Default scale multiplier applied to most sprites.
+  static const double spriteScale = 3;
+
   /// Base player sprite size in logical pixels.
   static const double playerSize = 32;
 
-  /// Scale applied to the player sprite size.
-  static const double playerScale = 3;
+  /// Extra scale applied on top of [spriteScale] for the player sprite.
+  static const double playerScale = 0;
 
   /// Maximum distance to auto-aim enemies when stationary, in pixels.
   static const double playerAutoAimRange = 300;
-
-  /// Seconds between auto-aim direction updates when stationary.
-  static const double playerAutoAimInterval = 0.2;
 
   /// Maximum distance to auto-mine asteroids, in pixels.
   static const double playerMiningRange = playerAutoAimRange;
@@ -37,6 +37,12 @@ class Constants {
 
   /// Seconds that the player sprite flashes red after taking damage.
   static const double playerDamageFlashDuration = 0.2;
+
+  /// Radius of the player's mineral attractor field in pixels.
+  static const double playerMagnetRange = 150;
+
+  /// Speed minerals move toward the player within the attractor field.
+  static const double mineralMagnetSpeed = 200;
 
   /// Bullet travel speed in pixels per second.
   static const double bulletSpeed = 400;
@@ -56,8 +62,8 @@ class Constants {
   /// Base enemy sprite size in logical pixels.
   static const double enemySize = 32;
 
-  /// Scale applied to the enemy sprite size.
-  static const double enemyScale = 3;
+  /// Extra scale applied on top of [spriteScale] for enemy sprites.
+  static const double enemyScale = 0;
 
   /// Seconds between enemy spawns.
   static const double enemySpawnInterval = 2;
@@ -71,8 +77,8 @@ class Constants {
   /// Base asteroid sprite size in logical pixels.
   static const double asteroidSize = 24;
 
-  /// Scale applied to the asteroid sprite size.
-  static const double asteroidScale = 3;
+  /// Extra scale applied on top of [spriteScale] for asteroid sprites.
+  static const double asteroidScale = 0;
 
   /// Minimum health for an asteroid.
   static const int asteroidMinHealth = 4;
@@ -89,8 +95,17 @@ class Constants {
   /// Score awarded for mining an asteroid.
   static const int asteroidScore = 1;
 
-  /// Minerals gained for each hit on an asteroid.
+  /// Minerals granted by a single mineral pickup.
   static const int asteroidMinerals = 1;
+
+  /// Base mineral pickup sprite size in logical pixels.
+  static const double mineralSize = 16;
+
+  /// Extra scale applied on top of [spriteScale] for mineral sprites.
+  static const double mineralScale = 0;
+
+  /// Distance from an asteroid where mineral drops may appear.
+  static const double mineralDropRadius = 16;
 
   /// Number of stars spawned per parallax layer.
   static const int starsPerLayer = 30;

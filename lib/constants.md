@@ -9,6 +9,8 @@ Holds tunable values and configuration numbers used across the game.
   so they are easy to tweak.
 - Include timing values such as `bulletCooldown` and spawn intervals so
   behaviour like fire rates and spawn rates can be adjusted centrally.
+- Use a global `spriteScale` for the default 3× enlargement, with per-entity
+  scale offsets like `playerScale` layered on top.
 - Expose values as `const` when possible so the compiler can optimise them.
 
 See [../PLAN.md](../PLAN.md) for the authoritative roadmap.
