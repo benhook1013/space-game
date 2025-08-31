@@ -60269,7 +60269,7 @@ pV(){var s=0,r=A.v(t.H),q,p=this
 var $async$pV=A.q(function(a,b){if(a===1)return A.r(b,r)
 while(true)switch(s){case 0:if(p.b.a||p.d!=null){s=1
 break}s=3
-return A.z(A.nL("mining-laser-continuous.mp3",0.5,B.he,B.tw,null),$async$pV)
+return A.z(A.nL("mining-laser-continuous.mp3",0.25,B.he,B.tw,null),$async$pV)
 case 3:p.d=b
 case 1:return A.t(q,r)}})
 return A.u($async$pV,r)}}
