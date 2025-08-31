@@ -58,6 +58,7 @@ class EnemyComponent extends SpriteComponent
     angle = math.atan2(direction.y, direction.x) + math.pi / 2;
     position += direction * Constants.enemySpeed * dt;
     if (position.y > Constants.worldSize.y + size.y ||
+        position.y < -size.y ||
         position.x < -size.x ||
         position.x > Constants.worldSize.x + size.x) {
       removeFromParent();

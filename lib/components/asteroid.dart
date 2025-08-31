@@ -61,6 +61,7 @@ class AsteroidComponent extends SpriteComponent
     super.update(dt);
     position += _velocity * dt;
     if (position.y > Constants.worldSize.y + size.y ||
+        position.y < -size.y ||
         position.x < -size.x ||
         position.x > Constants.worldSize.x + size.x) {
       removeFromParent();

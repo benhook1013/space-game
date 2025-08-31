@@ -29,13 +29,53 @@ class AsteroidSpawner extends Component with HasGameReference<SpaceGame> {
   }
 
   void _spawn() {
-    final x = _random.nextDouble() * Constants.worldSize.x;
-    final vx = (_random.nextDouble() - 0.5) * Constants.asteroidSpeed;
+    final spawnDistance = Constants.asteroidSize * Constants.asteroidScale;
+    final edge = _random.nextInt(4);
+    late Vector2 position;
+    late Vector2 velocity;
+    switch (edge) {
+      case 0: // top
+        position = Vector2(
+          _random.nextDouble() * Constants.worldSize.x,
+          -spawnDistance,
+        );
+        velocity = Vector2(
+          (_random.nextDouble() - 0.5) * Constants.asteroidSpeed,
+          Constants.asteroidSpeed,
+        );
+        break;
+      case 1: // bottom
+        position = Vector2(
+          _random.nextDouble() * Constants.worldSize.x,
+          Constants.worldSize.y + spawnDistance,
+        );
+        velocity = Vector2(
+          (_random.nextDouble() - 0.5) * Constants.asteroidSpeed,
+          -Constants.asteroidSpeed,
+        );
+        break;
+      case 2: // left
+        position = Vector2(
+          -spawnDistance,
+          _random.nextDouble() * Constants.worldSize.y,
+        );
+        velocity = Vector2(
+          Constants.asteroidSpeed,
+          (_random.nextDouble() - 0.5) * Constants.asteroidSpeed,
+        );
+        break;
+      default: // right
+        position = Vector2(
+          Constants.worldSize.x + spawnDistance,
+          _random.nextDouble() * Constants.worldSize.y,
+        );
+        velocity = Vector2(
+          -Constants.asteroidSpeed,
+          (_random.nextDouble() - 0.5) * Constants.asteroidSpeed,
+        );
+    }
     game.add(
-      game.acquireAsteroid(
-        Vector2(x, -Constants.asteroidSize * Constants.asteroidScale),
-        Vector2(vx, Constants.asteroidSpeed),
-      ),
+      game.acquireAsteroid(position, velocity),
     );
   }
 }
