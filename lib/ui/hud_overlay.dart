@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../game/space_game.dart';
 import 'game_text.dart';
 import 'responsive.dart';
+import 'overlay_widgets.dart';
 
 /// Simple heads-up display shown during play.
 class HudOverlay extends StatelessWidget {
@@ -69,32 +70,9 @@ class HudOverlay extends StatelessWidget {
                     icon: const Icon(Icons.gps_fixed, color: Colors.white),
                     onPressed: game.toggleAutoAimRadius,
                   ),
-                  IconButton(
-                    iconSize: iconSize,
-                    // Mirrors the U keyboard shortcut.
-                    icon:
-                        const Icon(Icons.upgrade, color: GameText.defaultColor),
-                    onPressed: game.toggleUpgrades,
-                  ),
-                  IconButton(
-                    iconSize: iconSize,
-                    // Mirrors the H keyboard shortcut.
-                    icon: const Icon(Icons.help_outline,
-                        color: GameText.defaultColor),
-                    onPressed: game.toggleHelp,
-                  ),
-                  ValueListenableBuilder<bool>(
-                    valueListenable: game.audioService.muted,
-                    builder: (context, muted, _) => IconButton(
-                      iconSize: iconSize,
-                      // Mirrors the `M` keyboard shortcut.
-                      icon: Icon(
-                        muted ? Icons.volume_off : Icons.volume_up,
-                        color: GameText.defaultColor,
-                      ),
-                      onPressed: game.audioService.toggleMute,
-                    ),
-                  ),
+                  UpgradeButton(game: game, iconSize: iconSize),
+                  HelpButton(game: game, iconSize: iconSize),
+                  MuteButton(game: game, iconSize: iconSize),
                   IconButton(
                     iconSize: iconSize,
                     // Mirrors the Escape and P keyboard shortcuts.
