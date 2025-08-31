@@ -127,6 +127,11 @@ class PlayerComponent extends SpriteComponent
     paint.color = const Color(0xffffffff);
     paint.colorFilter = null;
     add(CircleHitbox());
+  }
+
+  @override
+  void onMount() {
+    super.onMount();
     keyDispatcher.register(
       LogicalKeyboardKey.space,
       onDown: startShooting,
