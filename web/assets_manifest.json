@@ -10,11 +10,17 @@
     "assets/images/enemies/enemy2.png",
     "assets/images/enemies/enemy3.png",
     "assets/images/enemies/enemy4.png",
+    "assets/images/explosions/explosion1.png",
+    "assets/images/explosions/explosion2.png",
+    "assets/images/explosions/explosion3.png",
+    "assets/images/icons/mineral.png",
     "assets/images/players/player1.png",
     "assets/images/players/player2.png"
   ],
   "audio": [
-    "assets/audio/shoot.wav"
+    "assets/audio/explosion.mp3",
+    "assets/audio/laser-bullet.mp3",
+    "assets/audio/mining-laser-continuous.mp3"
   ],
   "fonts": []
 }

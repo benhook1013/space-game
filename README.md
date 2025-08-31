@@ -105,12 +105,10 @@ Create the remaining assets locally under `assets/` before running the game:
 - Enemy sprites in `assets/images/enemies/`
 - Asteroid sprites in `assets/images/asteroids/`
 - `assets/images/bullet.png`
-- `assets/audio/shoot.wav`
 
 Simple placeholders can be generated with common tools. For example:
 
 - ImageMagick: `convert -size 32x32 canvas:red assets/images/enemies/enemy1.png`
-- FFmpeg: `ffmpeg -f lavfi -i "sine=frequency=880:duration=0.1" assets/audio/shoot.wav`
 
 Remember to update `assets_manifest.json` and credit any third-party assets in
 `ASSET_CREDITS.md`.
