@@ -20,6 +20,7 @@ class MenuOverlay extends StatelessWidget {
     return OverlayLayout(
       builder: (context, spacing, iconSize) {
         final shortestSide = spacing / 0.02;
+        final playerSize = shortestSide * 0.12;
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -59,7 +60,8 @@ class MenuOverlay extends StatelessWidget {
                       onTap: () => game.selectPlayer(i),
                       child: Container(
                         margin: EdgeInsets.all(spacing),
-                        padding: EdgeInsets.all(spacing / 2),
+                        width: playerSize,
+                        height: playerSize,
                         decoration: BoxDecoration(
                           border: Border.all(
                             color: selected == i
@@ -70,7 +72,7 @@ class MenuOverlay extends StatelessWidget {
                         ),
                         child: Image.asset(
                           'assets/images/${Assets.players[i]}',
-                          width: shortestSide * 0.1,
+                          fit: BoxFit.contain,
                         ),
                       ),
                     ),
