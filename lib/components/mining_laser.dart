@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flame/components.dart';
 import 'package:flutter/painting.dart';
 
@@ -23,6 +25,7 @@ class MiningLaserComponent extends Component with HasGameReference<SpaceGame> {
   AsteroidComponent? _target;
   final Paint _paint = Paint()..color = const Color(0x66ffffff);
   final Timer _pulseTimer = Timer(Constants.miningPulseInterval, repeat: true);
+  bool _playingSound = false;
 
   @override
   void update(double dt) {
@@ -51,9 +54,17 @@ class MiningLaserComponent extends Component with HasGameReference<SpaceGame> {
       _pulseTimer.update(dt);
       final progress = _pulseTimer.progress;
       _paint.strokeWidth = 2 + 2 * progress;
+      if (!_playingSound) {
+        unawaited(game.audioService.startMiningLaser());
+        _playingSound = true;
+      }
     } else {
       _pulseTimer.stop();
       _paint.strokeWidth = 2;
+      if (_playingSound) {
+        game.audioService.stopMiningLaser();
+        _playingSound = false;
+      }
     }
   }
 

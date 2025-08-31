@@ -56,6 +56,15 @@ class Constants {
   /// Damage dealt by player bullets.
   static const int bulletDamage = 1;
 
+  /// Base explosion sprite size in logical pixels.
+  static const double explosionSize = 32;
+
+  /// Extra scale applied on top of [spriteScale] for explosion sprites.
+  static const double explosionScale = 0;
+
+  /// Duration of each explosion animation frame in seconds.
+  static const double explosionFrameDuration = 0.1;
+
   /// Enemy movement speed in pixels per second.
   static const double enemySpeed = 100;
 

@@ -1,4 +1,5 @@
 import 'package:flame/components.dart';
+import 'package:flame/flame.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -11,6 +12,7 @@ import 'package:space_game/game/space_game.dart';
 import 'package:space_game/services/audio_service.dart';
 import 'package:space_game/services/overlay_service.dart';
 import 'package:space_game/services/storage_service.dart';
+import 'package:space_game/assets.dart';
 
 class _TestPlayer extends PlayerComponent {
   _TestPlayer({required super.joystick, required super.keyDispatcher})
@@ -57,6 +59,7 @@ void main() {
     final storage = await StorageService.create();
     final audio = await AudioService.create(storage);
     final game = _TestGame(storage: storage, audio: audio);
+    await Flame.images.loadAll(Assets.explosions);
     await game.onLoad();
 
     expect(game.player.paint.colorFilter, isNull);

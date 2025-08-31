@@ -6,6 +6,7 @@ Sprites and background art.
 - Player sprites live under `players/` (e.g., `player1.png`).
 - Enemy sprites in `enemies/` and asteroid sprites in `asteroids/` (e.g., `asteroid1.png`).
 - Icons live under `icons/` (e.g., `mineral.png`).
+- Explosion sprites in `explosions/`.
 - `bullet.png` sits at the root of this directory.
 - Reference assets through `assets.dart`; avoid hard-coded paths.
 - List files in `assets_manifest.json` (see `../../assets_manifest.md`).

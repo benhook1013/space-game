@@ -20,7 +20,7 @@ void main() {
 
   test('player respawns at center after death', () async {
     SharedPreferences.setMockInitialValues({});
-    await Flame.images.loadAll([...Assets.players]);
+    await Flame.images.loadAll([...Assets.players, ...Assets.explosions]);
     final storage = await StorageService.create();
     final audio = await AudioService.create(storage);
     final game = SpaceGame(storageService: storage, audioService: audio);
