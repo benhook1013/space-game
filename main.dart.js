@@ -59941,8 +59941,8 @@ $S:43}
 A.oe.prototype={
 U(a){return new A.jS(new A.Wf(this),!1,null)}}
 A.Wf.prototype={
-$3(a,b,c){var s=null,r=this.a,q=r.c,p=t.S,o=t.E
-return A.r1(A.c([A.fD("Space Miner",1,A.aH(a).ok.e),A.cy(s,b,s),A.ke(new A.Wc(),q.bZ.c,p),A.cy(s,b,s),new A.Ey(new A.Wd(r),s,s,s,s,s,s,!1,s,!0,s,B.yH,s),A.cy(s,b,s),A.ke(new A.We(r,b,b/0.02*0.12),q.ex,p),A.cy(s,b,s),A.oE(A.c([A.jr(B.yF,q.guh()),A.cy(s,s,b),new A.lp(q,s,s),A.cy(s,s,b),new A.jO(q,c,s)],o),B.a4,B.au,B.av)],o),B.a4,B.av)},
+$3(a,b,c){var s=null,r=Math.min(b/0.02*0.12,96),q=this.a,p=q.c,o=t.S,n=t.E
+return A.r1(A.c([A.fD("Space Miner",1,A.aH(a).ok.e),A.cy(s,b,s),A.ke(new A.Wc(),p.bZ.c,o),A.cy(s,b,s),new A.Ey(new A.Wd(q),s,s,s,s,s,s,!1,s,!0,s,B.yH,s),A.cy(s,b,s),A.ke(new A.We(q,b,r),p.ex,o),A.cy(s,b,s),A.oE(A.c([A.jr(B.yF,p.guh()),A.cy(s,s,b),new A.lp(p,s,s),A.cy(s,s,b),new A.jO(p,c,s)],n),B.a4,B.au,B.av)],n),B.a4,B.av)},
 $C:"$3",
 $R:3,
 $S:38}
