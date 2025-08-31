@@ -66,7 +66,7 @@ class Constants {
   static const double explosionScale = 0;
 
   /// Duration of each explosion animation frame in seconds.
-  static const double explosionFrameDuration = 0.1;
+  static const double explosionFrameDuration = 0.05;
 
   /// Seconds an explosion stays on screen before being removed.
   static const double explosionLifetime = 3;
