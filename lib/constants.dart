@@ -69,7 +69,7 @@ class Constants {
   static const double explosionFrameDuration = 0.05;
 
   /// Seconds an explosion stays on screen before being removed.
-  static const double explosionLifetime = 3;
+  static const double explosionLifetime = 2;
 
   /// Enemy movement speed in pixels per second.
   static const double enemySpeed = 100;
