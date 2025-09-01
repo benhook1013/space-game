@@ -116,7 +116,7 @@ class SpaceGame extends FlameGame
     add(joystick);
 
     _starfield = await createStarfieldParallax(Constants.worldSize);
-    add(_starfield!);
+    await add(_starfield!);
 
     player = PlayerComponent(
       joystick: joystick,
