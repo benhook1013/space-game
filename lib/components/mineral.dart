@@ -50,12 +50,12 @@ class MineralComponent extends SpriteComponent
     final toPlayer = game.player.position - position;
     final distanceSquared = toPlayer.length2;
     final rangeSquared =
-        Constants.playerMagnetRange * Constants.playerMagnetRange;
+        Constants.playerTractorAuraRadius * Constants.playerTractorAuraRadius;
     if (distanceSquared == 0 || distanceSquared > rangeSquared) {
       return;
     }
     final distance = math.sqrt(distanceSquared);
-    position += toPlayer / distance * Constants.mineralMagnetSpeed * dt;
+    position += toPlayer / distance * Constants.tractorAuraPullSpeed * dt;
   }
 
   @override
