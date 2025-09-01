@@ -21,7 +21,9 @@ class _TestPlayer extends PlayerComponent {
       : super(spritePath: 'players/player1.png');
 
   @override
-  Future<void> onLoad() async {}
+  Future<void> onLoad() async {
+    await super.onLoad();
+  }
 }
 
 class _TestPoolManager extends PoolManager {
@@ -65,7 +67,7 @@ class _TestGame extends SpaceGame {
       background: CircleComponent(radius: 2),
     );
     player = _TestPlayer(joystick: joystick, keyDispatcher: keyDispatcher);
-    add(player);
+    await add(player);
     onGameResize(
       Vector2.all(Constants.playerSize *
           (Constants.spriteScale + Constants.playerScale) *
@@ -92,7 +94,7 @@ void main() {
     game.update(0);
     expect(game.children.whereType<BulletComponent>().length, 1);
 
-    game.player.update(Constants.bulletCooldown);
+    game.update(Constants.bulletCooldown);
     game.player.shoot();
     game.update(0);
     expect(game.children.whereType<BulletComponent>().length, 2);

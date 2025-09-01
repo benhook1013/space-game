@@ -5,16 +5,20 @@ import 'package:flame/components.dart';
 
 import '../assets.dart';
 import '../constants.dart';
-import '../game/event_bus.dart';
 import '../game/space_game.dart';
 import '../util/collision_utils.dart';
+import 'spawn_remove_emitter.dart';
 
 /// Collectible mineral dropped by destroyed asteroids.
 ///
 /// Instances are pooled by [SpaceGame] to avoid repeated allocations. Call
 /// [reset] before adding to the game to set its position and value.
 class MineralComponent extends SpriteComponent
-    with HasGameReference<SpaceGame>, CollisionCallbacks, SolidBody {
+    with
+        HasGameReference<SpaceGame>,
+        CollisionCallbacks,
+        SolidBody,
+        SpawnRemoveEmitter<MineralComponent> {
   MineralComponent()
       : super(
           size: Vector2.all(
@@ -40,14 +44,11 @@ class MineralComponent extends SpriteComponent
   }
 
   @override
-  void onMount() {
-    super.onMount();
-  }
-
-  @override
   void update(double dt) {
     super.update(dt);
-    final toPlayer = game.player.position - position;
+    final playerPos =
+        game.targetingService.playerPosition ?? game.player.position;
+    final toPlayer = playerPos - position;
     final distanceSquared = toPlayer.length2;
     final rangeSquared =
         Constants.playerTractorAuraRadius * Constants.playerTractorAuraRadius;
@@ -56,11 +57,5 @@ class MineralComponent extends SpriteComponent
     }
     final distance = math.sqrt(distanceSquared);
     position += toPlayer / distance * Constants.tractorAuraPullSpeed * dt;
-  }
-
-  @override
-  void onRemove() {
-    super.onRemove();
-    game.eventBus.emit(ComponentRemoveEvent<MineralComponent>(this));
   }
 }

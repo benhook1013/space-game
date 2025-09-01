@@ -22,6 +22,7 @@ import '../services/score_service.dart';
 import '../services/overlay_service.dart';
 import '../services/storage_service.dart';
 import '../services/audio_service.dart';
+import '../services/targeting_service.dart';
 import '../ui/help_overlay.dart';
 import '../ui/upgrades_overlay.dart';
 import 'event_bus.dart';
@@ -46,6 +47,7 @@ class SpaceGame extends FlameGame
         scoreService = ScoreService(storageService: storageService) {
     debugMode = kDebugMode;
     pools = createPoolManager();
+    targetingService = TargetingService(eventBus);
   }
 
   /// Handles persistence for the high score.
@@ -72,7 +74,8 @@ class SpaceGame extends FlameGame
   late final LifecycleManager lifecycle;
   late final game_shortcuts.ShortcutManager shortcuts;
   final GameEventBus eventBus = GameEventBus();
-  ParallaxComponent? _starfield;
+  late final TargetingService targetingService;
+  StarfieldComponent? _starfield;
   FpsTextComponent? _fpsText;
 
   ValueNotifier<int> get score => scoreService.score;
@@ -115,7 +118,7 @@ class SpaceGame extends FlameGame
     );
     add(joystick);
 
-    _starfield = await createStarfieldParallax(Constants.worldSize);
+    _starfield = await StarfieldComponent();
     await add(_starfield!);
 
     player = PlayerComponent(
@@ -124,7 +127,7 @@ class SpaceGame extends FlameGame
       spritePath: selectedPlayerSprite,
     );
     player.position = Constants.worldSize / 2;
-    add(player);
+    await add(player);
     camera
       ..setBounds(
         Rectangle.fromLTWH(
@@ -137,7 +140,7 @@ class SpaceGame extends FlameGame
       )
       ..follow(player, snap: true);
     miningLaser = MiningLaserComponent(player: player);
-    add(miningLaser);
+    await add(miningLaser);
 
     fireButton = HudButtonComponent(
       button: CircleComponent(
@@ -153,11 +156,12 @@ class SpaceGame extends FlameGame
       onPressed: player.startShooting,
       onReleased: player.stopShooting,
     );
-    add(fireButton);
+    await add(fireButton);
 
     enemySpawner = EnemySpawner();
     asteroidSpawner = AsteroidSpawner();
-    addAll([enemySpawner, asteroidSpawner]);
+    await add(enemySpawner);
+    await add(asteroidSpawner);
 
     overlayService = OverlayService(this);
     lifecycle = LifecycleManager(this);

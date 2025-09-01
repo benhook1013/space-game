@@ -32,21 +32,24 @@ void main() {
 
     // Set a non-zero orientation.
     game.joystick.delta.setValues(1, 0);
-    game.player.update(0.1);
+    game.joystick.relativeDelta.setValues(1, 0);
+    game.update(0.1);
     expect(game.player.angle, greaterThan(0));
     // Move the player away from center.
     game.player.position.setValues(20, 20);
 
     // Clear input before restarting.
     game.joystick.delta.setZero();
+    game.joystick.relativeDelta.setZero();
 
     // Starting a new game should reset orientation and position.
     game.startGame();
+    game.onGameResize(Vector2.all(100));
     expect(game.player.angle, 0);
     expect(game.player.position, Constants.worldSize / 2);
 
     // After update with no input, angle and position should remain unchanged.
-    game.player.update(0.1);
+    game.update(0.1);
     expect(game.player.angle, 0);
     expect(game.player.position, Constants.worldSize / 2);
   });

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import '../game/space_game.dart';
 import '../components/explosion.dart';
 import '../components/player.dart';
@@ -24,23 +26,32 @@ class LifecycleManager {
     )) {
       player.removeFromParent();
     }
-
-    // Create a fresh player for the new session.
-    final player = PlayerComponent(
-      joystick: game.joystick,
-      keyDispatcher: game.keyDispatcher,
-      spritePath: game.selectedPlayerSprite,
-    )..reset();
-    game.player = player;
-    game.add(player);
-    // Recreate the mining laser for the new player.
-    game.miningLaser.removeFromParent();
-    game.miningLaser = MiningLaserComponent(player: player);
-    game.add(game.miningLaser);
-    // Update fire button callbacks.
-    game.fireButton
-      ..onPressed = player.startShooting
-      ..onReleased = player.stopShooting;
+    if (game.player.isRemoving || !game.player.isMounted) {
+      // Previous player is pending removal; create a fresh instance.
+      final player = PlayerComponent(
+        joystick: game.joystick,
+        keyDispatcher: game.keyDispatcher,
+        spritePath: game.selectedPlayerSprite,
+      )..reset();
+      game.player = player;
+      final addResult = game.add(player);
+      if (addResult is Future<void>) {
+        unawaited(addResult.then((_) => player.resetInput()));
+      } else {
+        player.resetInput();
+      }
+      // Recreate the mining laser for the new player.
+      game.miningLaser.removeFromParent();
+      game.miningLaser = MiningLaserComponent(player: player);
+      game.add(game.miningLaser);
+      // Update fire button callbacks.
+      game.fireButton
+        ..onPressed = player.startShooting
+        ..onReleased = player.stopShooting;
+    } else {
+      game.player.setSprite(game.selectedPlayerSprite);
+      game.player.reset();
+    }
     game.camera.follow(game.player, snap: true);
     game.enemySpawner
       ..stop()

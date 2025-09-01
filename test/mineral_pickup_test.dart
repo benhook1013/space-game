@@ -20,6 +20,7 @@ class _TestPlayer extends PlayerComponent {
 
   @override
   Future<void> onLoad() async {
+    await super.onLoad();
     add(CircleHitbox());
   }
 }
@@ -37,7 +38,7 @@ class _TestGame extends SpaceGame {
       background: CircleComponent(radius: 2),
     );
     player = _TestPlayer(joystick: joystick, keyDispatcher: keyDispatcher);
-    add(player);
+    await add(player);
     onGameResize(
       Vector2.all(Constants.playerSize *
           (Constants.spriteScale + Constants.playerScale) *

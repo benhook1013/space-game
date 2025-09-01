@@ -11,6 +11,7 @@ import 'package:space_game/components/player.dart';
 import 'package:space_game/constants.dart';
 import 'package:space_game/game/key_dispatcher.dart';
 import 'package:space_game/game/space_game.dart';
+import 'package:space_game/game/event_bus.dart';
 import 'package:space_game/services/audio_service.dart';
 import 'package:space_game/services/storage_service.dart';
 
@@ -19,7 +20,9 @@ class _TestPlayer extends PlayerComponent {
       : super(spritePath: 'players/player1.png');
 
   @override
-  Future<void> onLoad() async {}
+  Future<void> onLoad() async {
+    await super.onLoad();
+  }
 }
 
 class _TestGame extends SpaceGame {
@@ -35,7 +38,7 @@ class _TestGame extends SpaceGame {
       background: CircleComponent(radius: 2),
     );
     player = _TestPlayer(joystick: joystick, keyDispatcher: keyDispatcher);
-    add(player);
+    await add(player);
     onGameResize(
       Vector2.all(Constants.playerSize *
           (Constants.spriteScale + Constants.playerScale) *
@@ -54,6 +57,7 @@ void main() {
     final audio = await AudioService.create(storage);
     final game = _TestGame(storage: storage, audio: audio);
     await game.onLoad();
+    game.eventBus.emit(ComponentSpawnEvent<PlayerComponent>(game.player));
 
     final enemy = EnemyComponent()
       ..game = game

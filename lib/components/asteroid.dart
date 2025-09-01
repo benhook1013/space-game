@@ -7,12 +7,13 @@ import 'package:flame/flame.dart';
 import 'package:meta/meta.dart';
 import '../assets.dart';
 import '../constants.dart';
-import '../game/event_bus.dart';
 import '../game/space_game.dart';
 import 'debug_health_text.dart';
 import '../util/collision_utils.dart';
 import 'damageable.dart';
 import 'mineral.dart';
+import 'offscreen_despawn.dart';
+import 'spawn_remove_emitter.dart';
 
 /// Neutral obstacle that can be mined for score and minerals.
 ///
@@ -24,7 +25,9 @@ class AsteroidComponent extends SpriteComponent
         CollisionCallbacks,
         DebugHealthText,
         SolidBody,
-        Damageable {
+        Damageable,
+        SpawnRemoveEmitter<AsteroidComponent>,
+        OffscreenDespawn {
   AsteroidComponent()
       : super(
           size: Vector2.all(
@@ -57,35 +60,18 @@ class AsteroidComponent extends SpriteComponent
   }
 
   @override
-  void onMount() {
-    super.onMount();
-    game.eventBus.emit(ComponentSpawnEvent<AsteroidComponent>(this));
-  }
-
-  @override
   void update(double dt) {
     super.update(dt);
     final previous = position.clone();
     position += _velocity * dt;
     game.pools.updateAsteroidPosition(this, previous);
-    if (position.y > Constants.worldSize.y + size.y ||
-        position.y < -size.y ||
-        position.x < -size.x ||
-        position.x > Constants.worldSize.x + size.x) {
-      removeFromParent();
-    }
+    removeIfOffscreen();
   }
 
   @override
   void render(Canvas canvas) {
     super.render(canvas);
     renderHealth(canvas, _health);
-  }
-
-  @override
-  void onRemove() {
-    super.onRemove();
-    game.eventBus.emit(ComponentRemoveEvent<AsteroidComponent>(this));
   }
 
   /// Reduces health by [amount], dropping a limited number of minerals and
@@ -102,7 +88,6 @@ class AsteroidComponent extends SpriteComponent
         (m) => m.reset(position + offset),
       );
       game.add(mineral);
-      game.eventBus.emit(ComponentSpawnEvent<MineralComponent>(mineral));
       game.addScore(Constants.asteroidScore);
     }
     if (_health <= 0 && !isRemoving) {
