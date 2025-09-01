@@ -118,7 +118,7 @@ class SpaceGame extends FlameGame
     );
     add(joystick);
 
-    _starfield = StarfieldComponent();
+    _starfield = await StarfieldComponent();
     await add(_starfield!);
 
     player = PlayerComponent(
