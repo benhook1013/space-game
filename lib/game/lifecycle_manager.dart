@@ -18,27 +18,29 @@ class LifecycleManager {
     )) {
       explosion.removeFromParent();
     }
-    if (game.player.isRemoving || !game.player.isMounted) {
-      // Previous player is pending removal; create a fresh instance.
-      final player = PlayerComponent(
-        joystick: game.joystick,
-        keyDispatcher: game.keyDispatcher,
-        spritePath: game.selectedPlayerSprite,
-      )..reset();
-      game.player = player;
-      game.add(player);
-      // Recreate the mining laser for the new player.
-      game.miningLaser.removeFromParent();
-      game.miningLaser = MiningLaserComponent(player: player);
-      game.add(game.miningLaser);
-      // Update fire button callbacks.
-      game.fireButton
-        ..onPressed = player.startShooting
-        ..onReleased = player.stopShooting;
-    } else {
-      game.player.setSprite(game.selectedPlayerSprite);
-      game.player.reset();
+    // Ensure any previous player instances are fully removed before starting.
+    for (final player in List<PlayerComponent>.from(
+      game.children.whereType<PlayerComponent>(),
+    )) {
+      player.removeFromParent();
     }
+
+    // Create a fresh player for the new session.
+    final player = PlayerComponent(
+      joystick: game.joystick,
+      keyDispatcher: game.keyDispatcher,
+      spritePath: game.selectedPlayerSprite,
+    )..reset();
+    game.player = player;
+    game.add(player);
+    // Recreate the mining laser for the new player.
+    game.miningLaser.removeFromParent();
+    game.miningLaser = MiningLaserComponent(player: player);
+    game.add(game.miningLaser);
+    // Update fire button callbacks.
+    game.fireButton
+      ..onPressed = player.startShooting
+      ..onReleased = player.stopShooting;
     game.camera.follow(game.player, snap: true);
     game.enemySpawner
       ..stop()
