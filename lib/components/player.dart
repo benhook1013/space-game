@@ -57,11 +57,8 @@ class PlayerComponent extends SpriteComponent
     ..color = const Color(0x66ffffff)
     ..style = PaintingStyle.stroke;
 
-  /// Paint used when drawing the player's magnetic field.
-  final Paint _magnetPaint = Paint()
-    ..color = const Color(0x3300aaff)
-    ..style = PaintingStyle.stroke
-    ..strokeWidth = 2;
+  /// Paint used when drawing the player's Tractor Aura.
+  final Paint _tractorAuraPaint = Paint()..style = PaintingStyle.fill;
 
   static final _damageFilter =
       ColorFilter.mode(const Color(0xffff0000), BlendMode.srcATop);
@@ -252,10 +249,20 @@ class PlayerComponent extends SpriteComponent
   @override
   void render(Canvas canvas) {
     super.render(canvas);
+    final auraCenter = Offset(size.x / 2, size.y / 2);
+    final auraRadius = Constants.playerTractorAuraRadius;
+    _tractorAuraPaint.shader = Gradient.radial(
+      auraCenter,
+      auraRadius,
+      [
+        const Color(0x5500aaff),
+        const Color(0x0000aaff),
+      ],
+    );
     canvas.drawCircle(
-      Offset(size.x / 2, size.y / 2),
-      Constants.playerMagnetRange,
-      _magnetPaint,
+      auraCenter,
+      auraRadius,
+      _tractorAuraPaint,
     );
     if (showAutoAimRadius) {
       canvas.drawCircle(

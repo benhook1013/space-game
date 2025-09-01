@@ -79,7 +79,7 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
 - [ ] Add a mining laser that automatically targets and fires at nearby
       asteroids.
 - [x] Drop mineral pickups from asteroids and track the player's total.
-- [x] Pull nearby minerals toward the player with a magnetic field.
+- [x] Pull nearby pickups toward the player with a Tractor Aura.
 - [x] Auto-aim the primary weapon at the closest enemy when stationary.
 - [x] Refine auto-aim targeting behaviour for smoother updates.
 - [ ] Design a broad upgrade system where minerals purchase new weapon and ship

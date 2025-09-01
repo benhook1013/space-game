@@ -37,7 +37,7 @@ class _TestGame extends SpaceGame {
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('mineral moves toward player within magnet range', () async {
+  test('pickup moves toward player within Tractor Aura radius', () async {
     SharedPreferences.setMockInitialValues({});
     await Flame.images.loadAll([Assets.mineralIcon, ...Assets.players]);
     final storage = await StorageService.create();
@@ -46,19 +46,19 @@ void main() {
     await game.onLoad();
     await game.ready();
 
-    final start = Vector2(Constants.playerMagnetRange - 10, 0);
-    final mineral = game.pools.acquire<MineralComponent>(
+    final start = Vector2(Constants.playerTractorAuraRadius - 10, 0);
+    final pickup = game.pools.acquire<MineralComponent>(
       (m) => m.reset(start.clone()),
     );
-    await game.add(mineral);
+    await game.add(pickup);
     await game.ready();
 
-    final before = mineral.position.clone();
+    final before = pickup.position.clone();
     game.update(0.1);
-    expect(mineral.position.x, lessThan(before.x));
+    expect(pickup.position.x, lessThan(before.x));
   });
 
-  test('mineral outside magnet range stays put', () async {
+  test('pickup outside Tractor Aura radius stays put', () async {
     SharedPreferences.setMockInitialValues({});
     await Flame.images.loadAll([Assets.mineralIcon, ...Assets.players]);
     final storage = await StorageService.create();
@@ -67,15 +67,15 @@ void main() {
     await game.onLoad();
     await game.ready();
 
-    final start = Vector2(Constants.playerMagnetRange + 10, 0);
-    final mineral = game.pools.acquire<MineralComponent>(
+    final start = Vector2(Constants.playerTractorAuraRadius + 10, 0);
+    final pickup = game.pools.acquire<MineralComponent>(
       (m) => m.reset(start.clone()),
     );
-    await game.add(mineral);
+    await game.add(pickup);
     await game.ready();
 
-    final before = mineral.position.clone();
+    final before = pickup.position.clone();
     game.update(0.1);
-    expect(mineral.position, equals(before));
+    expect(pickup.position, equals(before));
   });
 }

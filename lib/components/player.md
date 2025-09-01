@@ -11,7 +11,7 @@ Controllable ship for the player.
   and briefly tints the ship red to show damage.
 - When stationary, periodically rotates to face the nearest enemy within range.
 - Collects `MineralComponent`s on contact to increase the mineral counter.
-- A blue magnetic aura pulls nearby mineral pickups toward the ship.
+- A blue Tractor Aura pulls nearby pickups toward the ship.
 - Pulls sprites from `assets.dart` and tuning values from `constants.dart`.
 - Uses `CircleHitbox` and `HasGameReference<SpaceGame>`.
 

@@ -2,7 +2,7 @@
 
 Gameplay entities and reusable pieces.
 
-- Includes player, enemy, asteroid, bullet, mineral pickup and magnet
+- Includes player, enemy, asteroid, bullet and mineral pickup
   components.
 - Each extends a Flame component and mixes in `HasGameReference<SpaceGame>`
   when it needs game context.
@@ -31,8 +31,8 @@ Gameplay entities and reusable pieces.
   asteroids with a widening pulse beam.
 - [MineralComponent](mineral.md) – collectible dropped whenever an asteroid is
   damaged that increases the player's mineral total when picked up.
-- Each mineral independently homes toward the player when within magnet range,
-  removing the need for a separate magnet component.
+- Each mineral independently homes toward the player when within the Tractor
+  Aura, removing the need for a separate component.
 - [Starfield](starfield.md) – parallax background built with Flame's
   `ParallaxComponent`.
 - [ExplosionComponent](explosion.md) – short animation and sound played when

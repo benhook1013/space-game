@@ -9,7 +9,7 @@ Collectible pickup dropped by destroyed asteroids.
 - Uses the `mineral.png` sprite from `assets.dart` and values from
   `constants.dart`.
 - Instances are pooled by `SpaceGame` and tracked in `mineralPickups`.
-- When inside the player's magnetic field, drifts toward the ship for easier
+- When inside the player's Tractor Aura, drifts toward the ship for easier
   collection.
 
 See [../../PLAN.md](../../PLAN.md) for the broader roadmap.

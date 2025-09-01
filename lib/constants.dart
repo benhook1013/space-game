@@ -41,11 +41,11 @@ class Constants {
   /// Seconds that the player sprite flashes red after taking damage.
   static const double playerDamageFlashDuration = 0.2;
 
-  /// Radius of the player's mineral attractor field in pixels.
-  static const double playerMagnetRange = 150;
+  /// Radius of the player's Tractor Aura in pixels.
+  static const double playerTractorAuraRadius = 150;
 
-  /// Speed minerals move toward the player within the attractor field.
-  static const double mineralMagnetSpeed = 200;
+  /// Speed pickups move toward the player within the Tractor Aura.
+  static const double tractorAuraPullSpeed = 200;
 
   /// Bullet travel speed in pixels per second.
   static const double bulletSpeed = 400;
