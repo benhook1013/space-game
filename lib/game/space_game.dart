@@ -135,7 +135,7 @@ class SpaceGame extends FlameGame
         ),
         considerViewport: true,
       )
-      ..follow(player);
+      ..follow(player, snap: true);
     miningLaser = MiningLaserComponent(player: player);
     add(miningLaser);
 
