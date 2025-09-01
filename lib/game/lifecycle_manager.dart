@@ -20,6 +20,12 @@ class LifecycleManager {
     )) {
       explosion.removeFromParent();
     }
+    // Ensure any previous player instances are fully removed before starting.
+    for (final player in List<PlayerComponent>.from(
+      game.children.whereType<PlayerComponent>(),
+    )) {
+      player.removeFromParent();
+    }
     if (game.player.isRemoving || !game.player.isMounted) {
       // Previous player is pending removal; create a fresh instance.
       final player = PlayerComponent(
@@ -34,7 +40,6 @@ class LifecycleManager {
       } else {
         player.resetInput();
       }
-      game.camera.follow(player);
       // Recreate the mining laser for the new player.
       game.miningLaser.removeFromParent();
       game.miningLaser = MiningLaserComponent(player: player);
@@ -46,8 +51,8 @@ class LifecycleManager {
     } else {
       game.player.setSprite(game.selectedPlayerSprite);
       game.player.reset();
-      game.camera.follow(game.player);
     }
+    game.camera.follow(game.player, snap: true);
     game.enemySpawner
       ..stop()
       ..start();

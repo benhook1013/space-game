@@ -27,6 +27,10 @@ class PlayerComponent extends SpriteComponent
     required this.keyDispatcher,
     required String spritePath,
   })  : _spritePath = spritePath,
+        _input = PlayerInputBehavior(
+          joystick: joystick,
+          keyDispatcher: keyDispatcher,
+        ),
         super(
           size: Vector2.all(
             Constants.playerSize *
@@ -111,14 +115,10 @@ class PlayerComponent extends SpriteComponent
     paint.color = const Color(0xffffffff);
     paint.colorFilter = null;
     add(CircleHitbox());
-    _input = PlayerInputBehavior(
-      joystick: joystick,
-      keyDispatcher: keyDispatcher,
-    );
     _autoAim = AutoAimBehavior();
-    add(_input);
-    add(_autoAim);
-    add(TractorAuraRenderer());
+    await add(_input);
+    await add(_autoAim);
+    await add(TractorAuraRenderer());
   }
 
   /// Smoothly rotates the player toward [targetAngle].

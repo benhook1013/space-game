@@ -127,7 +127,7 @@ class SpaceGame extends FlameGame
       spritePath: selectedPlayerSprite,
     );
     player.position = Constants.worldSize / 2;
-    add(player);
+    await add(player);
     camera
       ..setBounds(
         Rectangle.fromLTWH(
@@ -138,9 +138,9 @@ class SpaceGame extends FlameGame
         ),
         considerViewport: true,
       )
-      ..follow(player);
+      ..follow(player, snap: true);
     miningLaser = MiningLaserComponent(player: player);
-    add(miningLaser);
+    await add(miningLaser);
 
     fireButton = HudButtonComponent(
       button: CircleComponent(
@@ -156,11 +156,12 @@ class SpaceGame extends FlameGame
       onPressed: player.startShooting,
       onReleased: player.stopShooting,
     );
-    add(fireButton);
+    await add(fireButton);
 
     enemySpawner = EnemySpawner();
     asteroidSpawner = AsteroidSpawner();
-    addAll([enemySpawner, asteroidSpawner]);
+    await add(enemySpawner);
+    await add(asteroidSpawner);
 
     overlayService = OverlayService(this);
     lifecycle = LifecycleManager(this);
