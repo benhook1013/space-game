@@ -1,5 +1,7 @@
 import '../game/space_game.dart';
 import '../components/explosion.dart';
+import '../components/player.dart';
+import '../components/mining_laser.dart';
 
 /// Handles start, menu, and game over transitions.
 class LifecycleManager {
@@ -16,12 +18,29 @@ class LifecycleManager {
     )) {
       explosion.removeFromParent();
     }
-    if (!game.player.isMounted) {
-      game.add(game.player);
+    if (game.player.isRemoving || !game.player.isMounted) {
+      // Previous player is pending removal; create a fresh instance.
+      final player = PlayerComponent(
+        joystick: game.joystick,
+        keyDispatcher: game.keyDispatcher,
+        spritePath: game.selectedPlayerSprite,
+      )..reset();
+      game.player = player;
+      game.add(player);
+      game.camera.follow(player);
+      // Recreate the mining laser for the new player.
+      game.miningLaser.removeFromParent();
+      game.miningLaser = MiningLaserComponent(player: player);
+      game.add(game.miningLaser);
+      // Update fire button callbacks.
+      game.fireButton
+        ..onPressed = player.startShooting
+        ..onReleased = player.stopShooting;
+    } else {
+      game.player.setSprite(game.selectedPlayerSprite);
+      game.player.reset();
       game.camera.follow(game.player);
     }
-    game.player.setSprite(game.selectedPlayerSprite);
-    game.player.reset();
     game.enemySpawner
       ..stop()
       ..start();

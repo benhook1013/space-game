@@ -62,8 +62,8 @@ class SpaceGame extends FlameGame
   late final GameStateMachine stateMachine;
 
   late final KeyDispatcher keyDispatcher;
-  late final PlayerComponent player;
-  late final MiningLaserComponent miningLaser;
+  late PlayerComponent player;
+  late MiningLaserComponent miningLaser;
   late final JoystickComponent joystick;
   late final HudButtonComponent fireButton;
   late final EnemySpawner enemySpawner;
