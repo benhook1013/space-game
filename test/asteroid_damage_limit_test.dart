@@ -22,6 +22,7 @@ class _TestPlayer extends PlayerComponent {
 
   @override
   Future<void> onLoad() async {
+    await super.onLoad();
     add(CircleHitbox());
   }
 }

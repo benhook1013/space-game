@@ -4,25 +4,29 @@ import 'dart:ui';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
-import 'package:flutter/services.dart';
 
 import '../constants.dart';
-import '../game/space_game.dart';
 import '../game/key_dispatcher.dart';
-import 'enemy.dart';
+import '../game/space_game.dart';
 import 'asteroid.dart';
+import 'auto_aim_behavior.dart';
+import 'enemy.dart';
 import 'mineral.dart';
-import 'bullet.dart';
-import '../util/nearest_component.dart';
+import 'player_input_behavior.dart';
+import 'spawn_remove_emitter.dart';
+import 'tractor_aura_renderer.dart';
 
 /// Controllable player ship.
 class PlayerComponent extends SpriteComponent
-    with HasGameReference<SpaceGame>, CollisionCallbacks {
-  PlayerComponent(
-      {required this.joystick,
-      required this.keyDispatcher,
-      required String spritePath})
-      : _spritePath = spritePath,
+    with
+        HasGameReference<SpaceGame>,
+        CollisionCallbacks,
+        SpawnRemoveEmitter<PlayerComponent> {
+  PlayerComponent({
+    required this.joystick,
+    required this.keyDispatcher,
+    required String spritePath,
+  })  : _spritePath = spritePath,
         super(
           size: Vector2.all(
             Constants.playerSize *
@@ -37,28 +41,19 @@ class PlayerComponent extends SpriteComponent
 
   String _spritePath;
 
-  /// Direction from keyboard input.
-  final Vector2 _keyboardDirection = Vector2.zero();
-
-  /// Remaining cooldown time before another shot can fire.
-  double _shootCooldown = 0;
-
-  /// Angle the ship should currently rotate towards.
-  double _targetAngle = 0;
-
   /// Whether to render the auto-aim radius around the player.
   bool showAutoAimRadius = false;
 
-  /// Whether the shoot input is currently held.
-  bool _isShooting = false;
+  /// Angle the ship should currently rotate towards.
+  double targetAngle = 0;
+
+  /// Whether the player moved during the latest update.
+  bool isMoving = false;
 
   /// Paint used when drawing the auto-aim radius.
   final Paint _autoAimPaint = Paint()
     ..color = const Color(0x66ffffff)
     ..style = PaintingStyle.stroke;
-
-  /// Paint used when drawing the player's Tractor Aura.
-  final Paint _tractorAuraPaint = Paint()..style = PaintingStyle.fill;
 
   static final _damageFilter =
       ColorFilter.mode(const Color(0xffff0000), BlendMode.srcATop);
@@ -66,20 +61,29 @@ class PlayerComponent extends SpriteComponent
   /// Remaining time for the damage flash effect.
   double _damageFlashTime = 0;
 
+  late final PlayerInputBehavior _input;
+  late final AutoAimBehavior _autoAim;
+
   /// Sets the current sprite for the player.
   void setSprite(String path) {
     _spritePath = path;
     sprite = Sprite(Flame.images.fromCache(_spritePath));
   }
 
-  /// Resets the player to its default orientation and clears input state.
+  /// Resets position and orientation to defaults.
   void reset() {
     position = Constants.worldSize / 2;
     angle = 0;
-    _targetAngle = 0;
-    _shootCooldown = 0;
-    _keyboardDirection.setZero();
+    targetAngle = 0;
   }
+
+  /// Clears any lingering input state.
+  void resetInput() {
+    _input.reset();
+  }
+
+  /// Exposes the input behavior for testing.
+  PlayerInputBehavior get inputBehavior => _input;
 
   /// Toggles visibility of the auto-aim radius.
   void toggleAutoAimRadius() {
@@ -92,31 +96,14 @@ class PlayerComponent extends SpriteComponent
     paint.colorFilter = _damageFilter;
   }
 
-  /// Fires a bullet from the player's current position.
-  void shoot() {
-    if (_shootCooldown > 0) {
-      return;
-    }
-    final direction =
-        Vector2(math.cos(angle - math.pi / 2), math.sin(angle - math.pi / 2));
-    final bullet = game.pools.acquire<BulletComponent>(
-      (b) => b.reset(position.clone(), direction),
-    );
-    game.add(bullet);
-    game.audioService.playShoot();
-    _shootCooldown = Constants.bulletCooldown;
-  }
+  /// Allows external callers to fire a bullet.
+  void shoot() => _input.shoot();
 
-  /// Begins continuous shooting and fires immediately.
-  void startShooting() {
-    _isShooting = true;
-    shoot();
-  }
+  /// Begins continuous shooting.
+  void startShooting() => _input.startShooting();
 
   /// Stops continuous shooting.
-  void stopShooting() {
-    _isShooting = false;
-  }
+  void stopShooting() => _input.stopShooting();
 
   @override
   Future<void> onLoad() async {
@@ -124,42 +111,31 @@ class PlayerComponent extends SpriteComponent
     paint.color = const Color(0xffffffff);
     paint.colorFilter = null;
     add(CircleHitbox());
-  }
-
-  @override
-  void onMount() {
-    super.onMount();
-    keyDispatcher.register(
-      LogicalKeyboardKey.space,
-      onDown: startShooting,
-      onUp: stopShooting,
+    _input = PlayerInputBehavior(
+      joystick: joystick,
+      keyDispatcher: keyDispatcher,
     );
+    _autoAim = AutoAimBehavior();
+    add(_input);
+    add(_autoAim);
+    add(TractorAuraRenderer());
   }
 
-  @override
-  void onRemove() {
-    keyDispatcher.unregister(LogicalKeyboardKey.space);
-    super.onRemove();
-  }
-
-  @override
-  void onGameResize(Vector2 size) {
-    super.onGameResize(size);
+  /// Smoothly rotates the player toward [targetAngle].
+  void updateRotation(double dt) {
+    final rotationDelta = _normalizeAngle(targetAngle - angle);
+    final maxDelta = Constants.playerRotationSpeed * dt;
+    if (rotationDelta.abs() <= maxDelta) {
+      angle = targetAngle;
+    } else {
+      angle += maxDelta * rotationDelta.sign;
+    }
   }
 
   @override
   void update(double dt) {
     super.update(dt);
     _updateDamageFlash(dt);
-    _applyCooldown(dt);
-    if (_isShooting) {
-      shoot();
-    }
-    final moved = _processInput(dt);
-    if (!moved) {
-      _autoAim();
-    }
-    _updateRotation(dt);
   }
 
   void _updateDamageFlash(double dt) {
@@ -171,99 +147,9 @@ class PlayerComponent extends SpriteComponent
     }
   }
 
-  void _applyCooldown(double dt) {
-    if (_shootCooldown > 0) {
-      _shootCooldown -= dt;
-    }
-  }
-
-  bool _processInput(double dt) {
-    _keyboardDirection
-      ..setZero()
-      ..x += keyDispatcher.isAnyPressed([
-        LogicalKeyboardKey.keyA,
-        LogicalKeyboardKey.arrowLeft,
-      ])
-          ? -1
-          : 0
-      ..x += keyDispatcher.isAnyPressed([
-        LogicalKeyboardKey.keyD,
-        LogicalKeyboardKey.arrowRight,
-      ])
-          ? 1
-          : 0
-      ..y += keyDispatcher.isAnyPressed([
-        LogicalKeyboardKey.keyW,
-        LogicalKeyboardKey.arrowUp,
-      ])
-          ? -1
-          : 0
-      ..y += keyDispatcher.isAnyPressed([
-        LogicalKeyboardKey.keyS,
-        LogicalKeyboardKey.arrowDown,
-      ])
-          ? 1
-          : 0;
-
-    var input =
-        joystick.delta.isZero() ? _keyboardDirection : joystick.relativeDelta;
-    if (!input.isZero()) {
-      input = input.normalized();
-      position += input * Constants.playerSpeed * dt;
-      final halfSize = Vector2.all(size.x / 2);
-      position.clamp(
-        halfSize,
-        Constants.worldSize - halfSize,
-      );
-      _targetAngle = math.atan2(input.y, input.x) + math.pi / 2;
-      return true;
-    }
-    return false;
-  }
-
-  void _autoAim() {
-    final enemies = game.pools.components<EnemyComponent>();
-    final target = enemies.findClosest(
-      position,
-      Constants.playerAutoAimRange,
-    );
-    if (target != null) {
-      _targetAngle = math.atan2(
-            target.position.y - position.y,
-            target.position.x - position.x,
-          ) +
-          math.pi / 2;
-    }
-  }
-
-  void _updateRotation(double dt) {
-    final rotationDelta = _normalizeAngle(_targetAngle - angle);
-    final maxDelta = Constants.playerRotationSpeed * dt;
-    if (rotationDelta.abs() <= maxDelta) {
-      angle = _targetAngle;
-    } else {
-      angle += maxDelta * rotationDelta.sign;
-    }
-  }
-
   @override
   void render(Canvas canvas) {
     super.render(canvas);
-    final auraCenter = Offset(size.x / 2, size.y / 2);
-    final auraRadius = Constants.playerTractorAuraRadius;
-    _tractorAuraPaint.shader = Gradient.radial(
-      auraCenter,
-      auraRadius,
-      [
-        const Color(0x5500aaff),
-        const Color(0x0000aaff),
-      ],
-    );
-    canvas.drawCircle(
-      auraCenter,
-      auraRadius,
-      _tractorAuraPaint,
-    );
     if (showAutoAimRadius) {
       canvas.drawCircle(
         Offset(size.x / 2, size.y / 2),

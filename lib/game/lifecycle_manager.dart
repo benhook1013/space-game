@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import '../game/space_game.dart';
 import '../components/explosion.dart';
 import '../components/player.dart';
@@ -26,7 +28,12 @@ class LifecycleManager {
         spritePath: game.selectedPlayerSprite,
       )..reset();
       game.player = player;
-      game.add(player);
+      final addResult = game.add(player);
+      if (addResult is Future<void>) {
+        unawaited(addResult.then((_) => player.resetInput()));
+      } else {
+        player.resetInput();
+      }
       game.camera.follow(player);
       // Recreate the mining laser for the new player.
       game.miningLaser.removeFromParent();

@@ -19,7 +19,9 @@ class _TestPlayer extends PlayerComponent {
       : super(spritePath: 'players/player1.png');
 
   @override
-  Future<void> onLoad() async {}
+  Future<void> onLoad() async {
+    await super.onLoad();
+  }
 }
 
 class _TestGame extends SpaceGame {
@@ -44,7 +46,7 @@ class _TestGame extends SpaceGame {
       background: CircleComponent(radius: 2),
     );
     player = _TestPlayer(joystick: joystick, keyDispatcher: keyDispatcher);
-    add(player);
+    await add(player);
     onGameResize(Vector2.all(Constants.playerSize *
         (Constants.spriteScale + Constants.playerScale) *
         2));
@@ -67,7 +69,7 @@ void main() {
     game.hitPlayer();
     expect(game.player.paint.colorFilter, isNotNull);
 
-    game.player.update(Constants.playerDamageFlashDuration);
+    game.update(Constants.playerDamageFlashDuration);
     expect(game.player.paint.colorFilter, isNull);
   });
 }

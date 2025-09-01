@@ -22,6 +22,7 @@ import '../services/score_service.dart';
 import '../services/overlay_service.dart';
 import '../services/storage_service.dart';
 import '../services/audio_service.dart';
+import '../services/targeting_service.dart';
 import '../ui/help_overlay.dart';
 import '../ui/upgrades_overlay.dart';
 import 'event_bus.dart';
@@ -46,6 +47,7 @@ class SpaceGame extends FlameGame
         scoreService = ScoreService(storageService: storageService) {
     debugMode = kDebugMode;
     pools = createPoolManager();
+    targetingService = TargetingService(eventBus);
   }
 
   /// Handles persistence for the high score.
@@ -72,7 +74,8 @@ class SpaceGame extends FlameGame
   late final LifecycleManager lifecycle;
   late final game_shortcuts.ShortcutManager shortcuts;
   final GameEventBus eventBus = GameEventBus();
-  ParallaxComponent? _starfield;
+  late final TargetingService targetingService;
+  StarfieldComponent? _starfield;
   FpsTextComponent? _fpsText;
 
   ValueNotifier<int> get score => scoreService.score;
@@ -115,8 +118,8 @@ class SpaceGame extends FlameGame
     );
     add(joystick);
 
-    _starfield = await createStarfieldParallax(Constants.worldSize);
-    add(_starfield!);
+    _starfield = StarfieldComponent();
+    await add(_starfield!);
 
     player = PlayerComponent(
       joystick: joystick,

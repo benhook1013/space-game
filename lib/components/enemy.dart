@@ -6,12 +6,13 @@ import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import '../assets.dart';
 import '../constants.dart';
-import '../game/event_bus.dart';
 import '../game/space_game.dart';
 import 'debug_health_text.dart';
 import '../util/collision_utils.dart';
 import 'damageable.dart';
 import 'explosion.dart';
+import 'offscreen_despawn.dart';
+import 'spawn_remove_emitter.dart';
 
 /// Basic foe that drifts toward the player.
 ///
@@ -23,7 +24,9 @@ class EnemyComponent extends SpriteComponent
         CollisionCallbacks,
         DebugHealthText,
         SolidBody,
-        Damageable {
+        Damageable,
+        SpawnRemoveEmitter<EnemyComponent>,
+        OffscreenDespawn {
   EnemyComponent()
       : super(
           size: Vector2.all(
@@ -48,35 +51,21 @@ class EnemyComponent extends SpriteComponent
   }
 
   @override
-  void onMount() {
-    super.onMount();
-    game.eventBus.emit(ComponentSpawnEvent<EnemyComponent>(this));
-  }
-
-  @override
   void update(double dt) {
     super.update(dt);
-    final direction = (game.player.position - position).normalized();
-    angle = math.atan2(direction.y, direction.x) + math.pi / 2;
-    position += direction * Constants.enemySpeed * dt;
-    if (position.y > Constants.worldSize.y + size.y ||
-        position.y < -size.y ||
-        position.x < -size.x ||
-        position.x > Constants.worldSize.x + size.x) {
-      removeFromParent();
+    final playerPos = game.targetingService.playerPosition;
+    if (playerPos != null) {
+      final direction = (playerPos - position).normalized();
+      angle = math.atan2(direction.y, direction.x) + math.pi / 2;
+      position += direction * Constants.enemySpeed * dt;
     }
+    removeIfOffscreen();
   }
 
   @override
   void render(Canvas canvas) {
     super.render(canvas);
     renderHealth(canvas, _health);
-  }
-
-  @override
-  void onRemove() {
-    super.onRemove();
-    game.eventBus.emit(ComponentRemoveEvent<EnemyComponent>(this));
   }
 
   /// Reduces health by [amount] and removes the enemy when depleted.

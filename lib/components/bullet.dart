@@ -5,16 +5,21 @@ import 'package:flame/components.dart';
 
 import '../assets.dart';
 import '../constants.dart';
-import '../game/event_bus.dart';
 import '../game/space_game.dart';
 import 'damageable.dart';
+import 'offscreen_despawn.dart';
+import 'spawn_remove_emitter.dart';
 
 /// Short-lived projectile fired by the player.
 ///
 /// Instances are pooled by [SpaceGame] to reduce garbage collection. Call
 /// [reset] before adding to the game to initialise position and direction.
 class BulletComponent extends SpriteComponent
-    with HasGameReference<SpaceGame>, CollisionCallbacks {
+    with
+        HasGameReference<SpaceGame>,
+        CollisionCallbacks,
+        SpawnRemoveEmitter<BulletComponent>,
+        OffscreenDespawn {
   BulletComponent()
       : super(size: Vector2.all(Constants.bulletSize), anchor: Anchor.center);
 
@@ -36,27 +41,10 @@ class BulletComponent extends SpriteComponent
   }
 
   @override
-  void onMount() {
-    super.onMount();
-    game.eventBus.emit(ComponentSpawnEvent<BulletComponent>(this));
-  }
-
-  @override
   void update(double dt) {
     super.update(dt);
     position += _direction * Constants.bulletSpeed * dt;
-    if (position.y < -size.y ||
-        position.y > Constants.worldSize.y + size.y ||
-        position.x < -size.x ||
-        position.x > Constants.worldSize.x + size.x) {
-      removeFromParent();
-    }
-  }
-
-  @override
-  void onRemove() {
-    super.onRemove();
-    game.eventBus.emit(ComponentRemoveEvent<BulletComponent>(this));
+    removeIfOffscreen();
   }
 
   @override

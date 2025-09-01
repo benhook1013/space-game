@@ -16,7 +16,9 @@ class _TestPlayer extends PlayerComponent {
       : super(spritePath: 'players/player1.png');
 
   @override
-  Future<void> onLoad() async {}
+  Future<void> onLoad() async {
+    await super.onLoad();
+  }
 }
 
 class _TestGame extends SpaceGame {
@@ -32,7 +34,7 @@ class _TestGame extends SpaceGame {
       background: CircleComponent(radius: 2),
     );
     player = _TestPlayer(joystick: joystick, keyDispatcher: keyDispatcher);
-    add(player);
+    await add(player);
     onGameResize(
       Vector2.all(Constants.playerSize *
           (Constants.spriteScale + Constants.playerScale) *
@@ -53,7 +55,9 @@ void main() {
 
     // Move down; target angle is pi.
     game.joystick.delta.setValues(0, 1);
-    game.player.update(0.05);
+    game.joystick.relativeDelta.setValues(0, 1);
+    final input = game.player.inputBehavior;
+    input.update(0.05);
     final angleAfterFirstUpdate = game.player.angle;
 
     // Should have started rotating but not reached the target.
@@ -62,11 +66,12 @@ void main() {
 
     // Change direction upward before rotation completes.
     game.joystick.delta.setValues(0, -1);
-    game.player.update(0.05);
+    game.joystick.relativeDelta.setValues(0, -1);
+    input.update(0.05);
     expect(game.player.angle, lessThan(angleAfterFirstUpdate));
 
     // Let it finish rotating to the new target.
-    game.player.update(1);
+    input.update(1);
     expect(game.player.angle, closeTo(0, 0.001));
   });
 }
