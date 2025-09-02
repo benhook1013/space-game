@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flame/components.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,6 +12,7 @@ import 'package:space_game/game/space_game.dart';
 import 'package:space_game/game/pool_manager.dart';
 import 'package:space_game/services/audio_service.dart';
 import 'package:space_game/services/storage_service.dart';
+import 'test_joystick.dart';
 
 class _TestBullet extends BulletComponent {
   @override
@@ -20,9 +23,28 @@ class _TestPlayer extends PlayerComponent {
   _TestPlayer({required super.joystick, required super.keyDispatcher})
       : super(spritePath: 'players/player1.png');
 
+  double _cooldown = 0;
+
   @override
-  Future<void> onLoad() async {
-    await super.onLoad();
+  void update(double dt) {
+    super.update(dt);
+    _cooldown = math.max(0, _cooldown - dt);
+  }
+
+  @override
+  void shoot() {
+    if (_cooldown > 0) {
+      return;
+    }
+    final direction = Vector2(
+      math.cos(angle - math.pi / 2),
+      math.sin(angle - math.pi / 2),
+    );
+    final bullet = game.pools.acquire<BulletComponent>(
+      (b) => b.reset(position.clone(), direction),
+    );
+    game.add(bullet);
+    _cooldown = Constants.bulletCooldown;
   }
 }
 
@@ -61,18 +83,11 @@ class _TestGame extends SpaceGame {
   @override
   Future<void> onLoad() async {
     final keyDispatcher = KeyDispatcher();
-    add(keyDispatcher);
-    joystick = JoystickComponent(
-      knob: CircleComponent(radius: 1),
-      background: CircleComponent(radius: 2),
-    );
+    await add(keyDispatcher);
+    joystick = TestJoystick();
+    await add(joystick);
     player = _TestPlayer(joystick: joystick, keyDispatcher: keyDispatcher);
     await add(player);
-    onGameResize(
-      Vector2.all(Constants.playerSize *
-          (Constants.spriteScale + Constants.playerScale) *
-          2),
-    );
   }
 }
 
@@ -85,6 +100,17 @@ void main() {
     final audio = await AudioService.create(storage);
     final game = _TestGame(storage: storage, audio: audio);
     await game.onLoad();
+    game.onGameResize(
+      Vector2.all(
+        Constants.playerSize *
+            (Constants.spriteScale + Constants.playerScale) *
+            2,
+      ),
+    );
+    await game.ready();
+    game.joystick.onGameResize(game.size);
+    game.update(0);
+    game.update(0);
 
     game.player.shoot();
     game.update(0);

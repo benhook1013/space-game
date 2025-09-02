@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:space_game/assets.dart';
 import 'package:space_game/components/mineral.dart';
 import 'package:space_game/components/player.dart';
+import 'package:space_game/game/event_bus.dart';
 import 'package:space_game/game/key_dispatcher.dart';
 import 'package:space_game/game/space_game.dart';
 import 'package:space_game/services/audio_service.dart';
@@ -45,6 +46,10 @@ void main() {
     final game = _TestGame(storage: storage, audio: audio);
     await game.onLoad();
     await game.ready();
+    game.onGameResize(Vector2.all(100));
+    game.eventBus.emit(ComponentSpawnEvent<PlayerComponent>(game.player));
+    game.update(0);
+    game.update(0);
 
     final start = Vector2(Constants.playerTractorAuraRadius - 10, 0);
     final pickup = game.pools.acquire<MineralComponent>(
@@ -52,6 +57,8 @@ void main() {
     );
     await game.add(pickup);
     await game.ready();
+    game.update(0);
+    game.update(0);
 
     final before = pickup.position.clone();
     game.update(0.1);
@@ -66,6 +73,10 @@ void main() {
     final game = _TestGame(storage: storage, audio: audio);
     await game.onLoad();
     await game.ready();
+    game.onGameResize(Vector2.all(100));
+    game.eventBus.emit(ComponentSpawnEvent<PlayerComponent>(game.player));
+    game.update(0);
+    game.update(0);
 
     final start = Vector2(Constants.playerTractorAuraRadius + 10, 0);
     final pickup = game.pools.acquire<MineralComponent>(
@@ -73,6 +84,8 @@ void main() {
     );
     await game.add(pickup);
     await game.ready();
+    game.update(0);
+    game.update(0);
 
     final before = pickup.position.clone();
     game.update(0.1);

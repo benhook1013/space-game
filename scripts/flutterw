@@ -7,5 +7,9 @@ set --
 source "$(dirname "$0")/bootstrap_flutter.sh"
 # Restore original args for the actual flutter invocation.
 set -- "${args[@]}"
+echo "[flutterw] starting at $(date)"
 echo "[flutterw] flutter $@"
+if [[ "${1:-}" == "test" ]]; then
+  echo "[flutterw] running tests..."
+fi
 exec ".tooling/flutter/bin/flutter" "$@"
