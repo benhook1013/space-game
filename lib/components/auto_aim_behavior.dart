@@ -23,12 +23,24 @@ class AutoAimBehavior extends Component
       Constants.playerAutoAimRange,
     );
     if (target != null) {
-      parent.targetAngle = math.atan2(
-            target.position.y - parent.position.y,
-            target.position.x - parent.position.x,
-          ) +
-          math.pi / 2;
+      parent.targetAngle = _normalizeAngle(
+        math.atan2(
+              target.position.y - parent.position.y,
+              target.position.x - parent.position.x,
+            ) +
+            math.pi / 2,
+      );
       parent.updateRotation(dt);
     }
+  }
+
+  double _normalizeAngle(double a) {
+    while (a <= -math.pi) {
+      a += math.pi * 2;
+    }
+    while (a > math.pi) {
+      a -= math.pi * 2;
+    }
+    return a;
   }
 }
