@@ -1,16 +1,25 @@
-import 'dart:ui';
-
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/widgets.dart';
 
+import 'package:space_game/assets.dart';
 import 'package:space_game/components/player.dart';
+import 'package:space_game/game/space_game.dart';
 import 'package:space_game/game/key_dispatcher.dart';
+import 'package:space_game/services/audio_service.dart';
+import 'package:space_game/services/storage_service.dart';
+import 'package:space_game/ui/game_over_overlay.dart';
+import 'package:space_game/ui/hud_overlay.dart';
+import 'package:space_game/ui/menu_overlay.dart';
+import 'package:space_game/ui/pause_overlay.dart';
+import 'test_joystick.dart';
 
 class _TestPlayer extends PlayerComponent {
   _TestPlayer({required super.joystick, required super.keyDispatcher})
-      : super(spritePath: 'players/player1.png');
+      : super(spritePath: Assets.players.first);
 
   bool started = false;
 
@@ -20,33 +29,59 @@ class _TestPlayer extends PlayerComponent {
   }
 }
 
+class _TestGame extends SpaceGame {
+  _TestGame({required StorageService storage, required AudioService audio})
+      : super(storageService: storage, audioService: audio);
+
+  @override
+  Future<void> onLoad() async {
+    keyDispatcher = KeyDispatcher();
+    await add(keyDispatcher);
+    joystick = TestJoystick();
+    await add(joystick);
+  }
+}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   test('player re-registers space key after remount', () async {
-    final keyDispatcher = KeyDispatcher();
-    final joystick = JoystickComponent(
-      knob: CircleComponent(radius: 1),
-      background: CircleComponent(radius: 2),
-    );
+    SharedPreferences.setMockInitialValues({});
+    await Flame.images.loadAll([...Assets.players]);
+    final storage = await StorageService.create();
+    final audio = await AudioService.create(storage);
+    final game = _TestGame(storage: storage, audio: audio);
+    game.overlays.addEntry(MenuOverlay.id, (_, __) => const SizedBox());
+    game.overlays.addEntry(HudOverlay.id, (_, __) => const SizedBox());
+    game.overlays.addEntry(PauseOverlay.id, (_, __) => const SizedBox());
+    game.overlays.addEntry(GameOverOverlay.id, (_, __) => const SizedBox());
+    await game.onLoad();
+    game.onGameResize(Vector2.all(100));
+    await game.ready();
+    game.joystick.onGameResize(game.size);
+    game.update(0);
+    game.update(0);
+
     final player = _TestPlayer(
-      joystick: joystick,
-      keyDispatcher: keyDispatcher,
+      joystick: game.joystick,
+      keyDispatcher: game.keyDispatcher,
     );
+    await game.add(player);
+    await game.ready();
+    game.update(0);
+    game.update(0);
 
-    final recorder = PictureRecorder();
-    final canvas = Canvas(recorder);
-    canvas.drawRect(
-        Rect.fromLTWH(0, 0, 1, 1), Paint()..color = const Color(0xffffffff));
-    final image = await recorder.endRecording().toImage(1, 1);
-    Flame.images.add('players/player1.png', image);
-    await player.onLoad();
+    player.removeFromParent();
+    await game.ready();
+    game.update(0);
+    game.update(0);
 
-    player.onMount();
-    player.onRemove();
-    player.onMount();
+    await game.add(player);
+    await game.ready();
+    game.update(0);
+    game.update(0);
 
-    keyDispatcher.onKeyEvent(
+    game.keyDispatcher.onKeyEvent(
       KeyDownEvent(
         logicalKey: LogicalKeyboardKey.space,
         physicalKey: PhysicalKeyboardKey.space,

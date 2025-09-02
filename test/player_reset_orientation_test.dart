@@ -13,6 +13,7 @@ import 'package:space_game/ui/hud_overlay.dart';
 import 'package:space_game/ui/menu_overlay.dart';
 import 'package:space_game/ui/pause_overlay.dart';
 import 'package:space_game/constants.dart';
+import 'test_joystick.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -29,6 +30,12 @@ void main() {
     game.overlays.addEntry(GameOverOverlay.id, (_, __) => const SizedBox());
     await game.onLoad();
     game.onGameResize(Vector2.all(100));
+    await game.ready();
+    game.joystick.removeFromParent();
+    game.joystick = TestJoystick();
+    await game.add(game.joystick);
+    game.update(0);
+    game.update(0);
 
     // Set a non-zero orientation.
     game.joystick.delta.setValues(1, 0);
@@ -45,6 +52,9 @@ void main() {
     // Starting a new game should reset orientation and position.
     game.startGame();
     game.onGameResize(Vector2.all(100));
+    await game.ready();
+    game.update(0);
+    game.update(0);
     expect(game.player.angle, 0);
     expect(game.player.position, Constants.worldSize / 2);
 
