@@ -30,74 +30,77 @@ lower() { echo "$1" | tr '[:upper:]' '[:lower:]'; }
 
 log "Ensuring Flutter $FLUTTER_VERSION ($FLUTTER_CHANNEL) in $FLUTTER_DIR"
 
-# If already present, ensure the version/channel match; otherwise upgrade
+needs_download=true
 if [ -x "$FLUTTER_DIR/bin/flutter" ]; then
-  log "Existing Flutter installation detected; checking version"
-  current_info="$("$FLUTTER_DIR/bin/flutter" --version 2>/dev/null | head -n1 || true)"
-  current_version="$(echo "$current_info" | awk '{print $2}')"
-  current_channel="$(echo "$current_info" | awk '{print $5}')"
-  if [ "$current_version" = "$FLUTTER_VERSION" ] && \
-     [ "$current_channel" = "$FLUTTER_CHANNEL" ]; then
-    log "Flutter $current_version ($current_channel) already installed"
-    export PATH="$(pwd)/$FLUTTER_DIR/bin:$PATH"
-    git config --global --add safe.directory "$(pwd)/$FLUTTER_DIR" 2>/dev/null || true
-    "$FLUTTER_DIR/bin/flutter" --version >/dev/null 2>&1 || true
-    "$FLUTTER_DIR/bin/flutter" config --enable-web >/dev/null 2>&1 || true
-    return 0 2>/dev/null || exit 0
-  else
-    log "Flutter $current_version ($current_channel) found, but $FLUTTER_VERSION ($FLUTTER_CHANNEL) required"
-    log "Removing old Flutter installation"
+  if [ "$FORCE" = true ]; then
+    log "Force option set; removing existing Flutter installation"
     rm -rf "$FLUTTER_DIR"
+  else
+    log "Existing Flutter installation detected; checking version"
+    current_info="$("$FLUTTER_DIR/bin/flutter" --version 2>/dev/null | head -n1 || true)"
+    current_version="$(echo "$current_info" | awk '{print $2}')"
+    current_channel="$(echo "$current_info" | awk '{print $5}')"
+    if [ "$current_version" = "$FLUTTER_VERSION" ] && \
+       [ "$current_channel" = "$FLUTTER_CHANNEL" ]; then
+      log "Flutter $current_version ($current_channel) already installed"
+      needs_download=false
+    else
+      log "Flutter $current_version ($current_channel) found, but $FLUTTER_VERSION ($FLUTTER_CHANNEL) required"
+      log "Removing old Flutter installation"
+      rm -rf "$FLUTTER_DIR"
+    fi
   fi
 else
   log "No Flutter installation found"
 fi
 
-log "Bootstrapping Flutter $FLUTTER_VERSION ($FLUTTER_CHANNEL)"
-mkdir -p .tooling
-pushd .tooling >/dev/null
+if [ "$needs_download" = true ]; then
+  log "Bootstrapping Flutter $FLUTTER_VERSION ($FLUTTER_CHANNEL)"
+  mkdir -p .tooling
+  pushd .tooling >/dev/null
 
-OS_NAME="$(uname -s)"
-case "$OS_NAME" in
-  Linux)
-    ARCHIVE="flutter_linux_${FLUTTER_VERSION}-${FLUTTER_CHANNEL}.tar.xz"
-    OS_SLUG="linux"
-    ;;
-  Darwin)
-    ARCHIVE="flutter_macos_${FLUTTER_VERSION}-${FLUTTER_CHANNEL}.zip"
-    OS_SLUG="macos"
-    ;;
-  CYGWIN*|MINGW*|MSYS*)
-    echo "Windows bootstrap via bash is not supported here. Use scripts/bootstrap_flutter.ps1."
-    exit 1
-    ;;
-  *)
-    echo "Unsupported OS: $OS_NAME"
-    exit 1
-    ;;
-esac
+  OS_NAME="$(uname -s)"
+  case "$OS_NAME" in
+    Linux)
+      ARCHIVE="flutter_linux_${FLUTTER_VERSION}-${FLUTTER_CHANNEL}.tar.xz"
+      OS_SLUG="linux"
+      ;;
+    Darwin)
+      ARCHIVE="flutter_macos_${FLUTTER_VERSION}-${FLUTTER_CHANNEL}.zip"
+      OS_SLUG="macos"
+      ;;
+    CYGWIN*|MINGW*|MSYS*)
+      echo "Windows bootstrap via bash is not supported here. Use scripts/bootstrap_flutter.ps1."
+      exit 1
+      ;;
+    *)
+      echo "Unsupported OS: $OS_NAME"
+      exit 1
+      ;;
+  esac
 
-if [ -n "${FLUTTER_DOWNLOAD_MIRROR:-}" ]; then
-  BASE_URL="${FLUTTER_DOWNLOAD_MIRROR%/}"
-else
-  BASE_URL="https://storage.googleapis.com/flutter_infra_release/releases"
-fi
-URL="${BASE_URL}/${FLUTTER_CHANNEL}/$(lower "$OS_SLUG")/${ARCHIVE}"
-log "Downloading: $URL (downloader=$DOWNLOADER)"
+  if [ -n "${FLUTTER_DOWNLOAD_MIRROR:-}" ]; then
+    BASE_URL="${FLUTTER_DOWNLOAD_MIRROR%/}"
+  else
+    BASE_URL="https://storage.googleapis.com/flutter_infra_release/releases"
+  fi
+  URL="${BASE_URL}/${FLUTTER_CHANNEL}/$(lower "$OS_SLUG")/${ARCHIVE}"
+  log "Downloading: $URL (downloader=$DOWNLOADER)"
 
-download_http() {
-  local url="$1" dest="$2"
-  local tmp="${dest}.partial"
-  local opts=(--fail --location --retry 3 --retry-delay 2 --connect-timeout 30)
-  if [ "$QUIET" = true ]; then opts+=(--silent --show-error); fi
-  if [ -f "$tmp" ]; then opts+=(-C -); fi
-  curl "${opts[@]}" "$url" -o "$tmp"
-  mv "$tmp" "$dest"
-}
+  download_http() {
+    local url="$1" dest="$2"
+    local tmp="${dest}.partial"
+    local opts=(--fail --location --retry 3 --retry-delay 2 --connect-timeout 30)
+    if [ "$QUIET" = true ]; then opts+=(--silent --show-error); fi
+    if [ -f "$tmp" ]; then opts+=(-C -); fi
+    curl "${opts[@]}" "$url" -o "$tmp"
+    mv "$tmp" "$dest"
+  }
 
-download_ranges() {
+  download_ranges() {
   local url="$1" dest="$2" parts=8
-  local len=$(curl -sI "$url" | awk '/Content-Length/ {print $2}' | tr -d '\r')
+  local len
+  len=$(curl -sI "$url" | awk '/Content-Length/ {print $2}' | tr -d '\r')
   if [[ -z "$len" ]]; then
     log "Server did not return length; falling back to single stream"
     download_http "$url" "$dest"
@@ -116,8 +119,9 @@ download_ranges() {
     if [ "$QUIET" = true ]; then curl_opts+=(--silent --show-error); fi
     curl "${curl_opts[@]}" "$url" -o "$tmp" &
   done
-  local start_time=$(date +%s)
-  while kill -0 $(jobs -p) 2>/dev/null; do
+  local start_time
+  start_time=$(date +%s)
+  while jobs -p >/dev/null 2>&1; do
     local size=0
     for f in "${tmpfiles[@]}"; do
       if [ -f "$f" ]; then
@@ -130,9 +134,12 @@ download_ranges() {
     done
     local elapsed=$(( $(date +%s) - start_time ))
     (( elapsed == 0 )) && elapsed=1
-    local mb_read=$(awk "BEGIN {printf \"%.1f\", $size/1048576}")
-    local mb_tot=$(awk "BEGIN {printf \"%.1f\", $len/1048576}")
-    local speed=$(awk "BEGIN {printf \"%.2f\", ($size/1048576)/$elapsed}")
+    local mb_read
+    mb_read=$(awk "BEGIN {printf \"%.1f\", $size/1048576}")
+    local mb_tot
+    mb_tot=$(awk "BEGIN {printf \"%.1f\", $len/1048576}")
+    local speed
+    speed=$(awk "BEGIN {printf \"%.2f\", ($size/1048576)/$elapsed}")
     local pct=$(( size*100/len ))
     if [ "$QUIET" != true ]; then
       printf "\rDownloading Flutter (ranges): %s/%s MB (%d%%) @ %s MB/s" \
@@ -144,9 +151,9 @@ download_ranges() {
   if [ "$QUIET" != true ]; then printf "\n"; fi
   cat "${tmpfiles[@]}" > "$dest"
   rm -f "${tmpfiles[@]}"
-}
+  }
 
-extract_with_progress() {
+  extract_with_progress() {
   python3 - "$1" "$QUIET" <<'PY'
 import sys, zipfile, tarfile
 archive = sys.argv[1]
@@ -173,30 +180,32 @@ else:
 if not quiet:
     print()
 PY
-}
+  }
 
-dest="$ARCHIVE"
-case "$DOWNLOADER" in
-  ranges) download_ranges "$URL" "$dest" ;;
-  *)      download_http   "$URL" "$dest" ;;
-esac
+  dest="$ARCHIVE"
+  case "$DOWNLOADER" in
+    ranges) download_ranges "$URL" "$dest" ;;
+    *)      download_http   "$URL" "$dest" ;;
+  esac
 
-if [ -n "${FLUTTER_SHA256:-}" ]; then
-  log "Verifying SHA256"
-  actual=$(sha256sum "$dest" | awk '{print $1}')
-  if [ "${actual,,}" != "${FLUTTER_SHA256,,}" ]; then
-    echo "Checksum mismatch for $ARCHIVE" >&2
-    exit 1
+  if [ -n "${FLUTTER_SHA256:-}" ]; then
+    log "Verifying SHA256"
+    actual=$(sha256sum "$dest" | awk '{print $1}')
+    if [ "${actual,,}" != "${FLUTTER_SHA256,,}" ]; then
+      echo "Checksum mismatch for $ARCHIVE" >&2
+      exit 1
+    fi
   fi
+
+  extract_with_progress "$dest"
+  rm -f "$dest"
+
+  popd >/dev/null
+  log "Flutter SDK installed at $FLUTTER_DIR"
 fi
 
-extract_with_progress "$dest"
-rm -f "$dest"
-
-popd >/dev/null
-log "Flutter SDK installed at $FLUTTER_DIR"
-
-export PATH="$(pwd)/$FLUTTER_DIR/bin:$PATH"
+PATH="$(pwd)/$FLUTTER_DIR/bin:$PATH"
+export PATH
 git config --global --add safe.directory "$(pwd)/$FLUTTER_DIR" 2>/dev/null || true
 
 log "Running flutter --version"
