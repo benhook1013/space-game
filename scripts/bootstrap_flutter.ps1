@@ -25,6 +25,7 @@ $flutterBat    = Join-Path $flutterBinDir 'flutter.bat'
 
 Say "Ensuring Flutter $FLUTTER_VERSION ($FLUTTER_CHANNEL) in $FLUTTER_DIR"
 
+$needsDownload = $true
 # If already present, ensure version/channel match; otherwise upgrade
 if ((Test-Path $flutterBat) -and -not $Force) {
   Say "Existing Flutter installation detected; checking version"
@@ -39,10 +40,7 @@ if ((Test-Path $flutterBat) -and -not $Force) {
   }
   if (($currentVersion -eq $FLUTTER_VERSION) -and ($currentChannel -eq $FLUTTER_CHANNEL)) {
     Say "Flutter $currentVersion ($currentChannel) already installed"
-    $env:PATH = "$flutterBinDir;$env:PATH"
-    try { git config --global --add safe.directory (Resolve-Path "$FLUTTER_DIR").Path } catch {}
-    Say $versionOutput
-    return
+    $needsDownload = $false
   } else {
     $cv = if ($null -ne $currentVersion) { $currentVersion } else { 'unknown' }
     $cc = if ($null -ne $currentChannel) { $currentChannel } else { 'unknown' }
@@ -54,10 +52,11 @@ if ((Test-Path $flutterBat) -and -not $Force) {
   Say "No Flutter installation found"
 }
 
-Say "Bootstrapping Flutter $FLUTTER_VERSION ($FLUTTER_CHANNEL)"
-New-Item -ItemType Directory -Force -Path '.tooling' | Out-Null
-Push-Location '.tooling'
-try {
+if ($needsDownload) {
+  Say "Bootstrapping Flutter $FLUTTER_VERSION ($FLUTTER_CHANNEL)"
+  New-Item -ItemType Directory -Force -Path '.tooling' | Out-Null
+  Push-Location '.tooling'
+  try {
 # --- Config & URL (keeps your env overrides) ---
 $BASE_URL  = if ($env:FLUTTER_DOWNLOAD_MIRROR) { $env:FLUTTER_DOWNLOAD_MIRROR.TrimEnd('/') } else { 'https://storage.googleapis.com/flutter_infra_release/releases' }
 $ARCHIVE   = "flutter_windows_${FLUTTER_VERSION}-${FLUTTER_CHANNEL}.zip"
@@ -253,7 +252,12 @@ Remove-Item $destZip -Force
 } finally {
   Pop-Location
 }
-Say "Flutter SDK installed at $FLUTTER_DIR"
+
+if ($needsDownload) {
+  Say "Flutter SDK installed at $FLUTTER_DIR"
+} else {
+  Say "Flutter SDK already present at $FLUTTER_DIR"
+}
 
 # Put Flutter on PATH for this session
 $flutterBinDir = (Resolve-Path "$FLUTTER_DIR/bin").Path
