@@ -1,0 +1,57 @@
+name: Script Analysis
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  shellcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Cache APT packages
+        uses: actions/cache@v3
+        with:
+          path: /var/cache/apt/archives
+          key: ${{ runner.os }}-apt-shellcheck-${{ hashFiles('setup.sh') }}
+          restore-keys: |
+            ${{ runner.os }}-apt-shellcheck-
+      - name: Install ShellCheck
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y shellcheck
+      - name: Run ShellCheck
+        run: |
+          sh_files=$(git ls-files '*.sh')
+          if [ -n "$sh_files" ]; then
+            shellcheck $sh_files
+          else
+            echo "No shell scripts found"
+          fi
+
+  psscriptanalyzer:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Cache PowerShell modules
+        uses: actions/cache@v3
+        with:
+          path: '~\\Documents\\PowerShell\\Modules'
+          key: ${{ runner.os }}-psmodule-${{ hashFiles('**/*.ps1') }}
+          restore-keys: |
+            ${{ runner.os }}-psmodule-
+      - name: Install PSScriptAnalyzer
+        shell: pwsh
+        run: |
+          if (-not (Get-Module -ListAvailable -Name PSScriptAnalyzer)) {
+            Install-Module PSScriptAnalyzer -Scope CurrentUser -Force
+          }
+      - name: Run PSScriptAnalyzer
+        shell: pwsh
+        run: |
+          $ps1 = Get-ChildItem -Path . -Filter *.ps1 -Recurse
+          if ($ps1) {
+            Invoke-ScriptAnalyzer -Path $ps1
+          } else {
+            Write-Host 'No PowerShell scripts found'
+          }
