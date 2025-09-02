@@ -13,11 +13,7 @@ import 'package:space_game/game/key_dispatcher.dart';
 import 'package:space_game/game/space_game.dart';
 import 'package:space_game/services/audio_service.dart';
 import 'package:space_game/services/storage_service.dart';
-
-class _TestEnemy extends EnemyComponent {
-  @override
-  Future<void> onLoad() async {}
-}
+import 'test_joystick.dart';
 
 class _TestPlayer extends PlayerComponent {
   _TestPlayer({required super.joystick, required super.keyDispatcher})
@@ -36,17 +32,17 @@ class _TestGame extends SpaceGame {
   @override
   Future<void> onLoad() async {
     final keyDispatcher = KeyDispatcher();
-    add(keyDispatcher);
-    joystick = JoystickComponent(
-      knob: CircleComponent(radius: 1),
-      background: CircleComponent(radius: 2),
-    );
+    await add(keyDispatcher);
+    joystick = TestJoystick();
+    await add(joystick);
     player = _TestPlayer(joystick: joystick, keyDispatcher: keyDispatcher);
     await add(player);
     onGameResize(
-      Vector2.all(Constants.playerSize *
-          (Constants.spriteScale + Constants.playerScale) *
-          2),
+      Vector2.all(
+        Constants.playerSize *
+            (Constants.spriteScale + Constants.playerScale) *
+            2,
+      ),
     );
   }
 }
@@ -61,8 +57,13 @@ void main() {
     final audio = await AudioService.create(storage);
     final game = _TestGame(storage: storage, audio: audio);
     await game.onLoad();
+    await game.ready();
+    game.update(0);
+    game.update(0);
 
-    final enemy = _TestEnemy()..reset(game.player.position + Vector2(100, 0));
+    final enemy = game.pools.acquire<EnemyComponent>(
+      (e) => e.reset(game.player.position + Vector2(100, 0)),
+    );
     await game.add(enemy);
     game.update(0);
 
