@@ -12,7 +12,7 @@ import 'debug_health_text.dart';
 import '../util/collision_utils.dart';
 import 'damageable.dart';
 import 'mineral.dart';
-import 'offscreen_despawn.dart';
+import 'offscreen_cleanup.dart';
 import 'spawn_remove_emitter.dart';
 
 /// Neutral obstacle that can be mined for score and minerals.
@@ -27,7 +27,7 @@ class AsteroidComponent extends SpriteComponent
         SolidBody,
         Damageable,
         SpawnRemoveEmitter<AsteroidComponent>,
-        OffscreenDespawn {
+        OffscreenCleanup {
   AsteroidComponent()
       : super(
           size: Vector2.all(
@@ -61,11 +61,10 @@ class AsteroidComponent extends SpriteComponent
 
   @override
   void update(double dt) {
-    super.update(dt);
     final previous = position.clone();
     position += _velocity * dt;
     game.pools.updateAsteroidPosition(this, previous);
-    removeIfOffscreen();
+    super.update(dt);
   }
 
   @override

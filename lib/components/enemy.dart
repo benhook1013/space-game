@@ -11,7 +11,7 @@ import 'debug_health_text.dart';
 import '../util/collision_utils.dart';
 import 'damageable.dart';
 import 'explosion.dart';
-import 'offscreen_despawn.dart';
+import 'offscreen_cleanup.dart';
 import 'spawn_remove_emitter.dart';
 
 /// Basic foe that drifts toward the player.
@@ -26,7 +26,7 @@ class EnemyComponent extends SpriteComponent
         SolidBody,
         Damageable,
         SpawnRemoveEmitter<EnemyComponent>,
-        OffscreenDespawn {
+        OffscreenCleanup {
   EnemyComponent()
       : super(
           size: Vector2.all(
@@ -52,14 +52,13 @@ class EnemyComponent extends SpriteComponent
 
   @override
   void update(double dt) {
-    super.update(dt);
     final playerPos = game.targetingService.playerPosition;
     if (playerPos != null) {
       final direction = (playerPos - position).normalized();
       angle = math.atan2(direction.y, direction.x) + math.pi / 2;
       position += direction * Constants.enemySpeed * dt;
     }
-    removeIfOffscreen();
+    super.update(dt);
   }
 
   @override
