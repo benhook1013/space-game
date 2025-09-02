@@ -10,14 +10,15 @@ import 'bullet.dart';
 import 'player.dart';
 
 /// Handles keyboard/joystick input, movement and shooting for the player.
-class PlayerInputBehavior extends Component
-    with HasGameReference<SpaceGame>, ParentIsA<PlayerComponent> {
+class PlayerInputBehavior extends Component with HasGameReference<SpaceGame> {
   PlayerInputBehavior({
+    required this.player,
     required this.joystick,
     required this.keyDispatcher,
   });
 
-  final JoystickComponent joystick;
+  final PlayerComponent player;
+  JoystickComponent joystick;
   final KeyDispatcher keyDispatcher;
 
   final Vector2 _keyboardDirection = Vector2.zero();
@@ -27,16 +28,10 @@ class PlayerInputBehavior extends Component
   @override
   void onMount() {
     super.onMount();
-    keyDispatcher.register(
-      LogicalKeyboardKey.space,
-      onDown: startShooting,
-      onUp: stopShooting,
-    );
   }
 
   @override
   void onRemove() {
-    keyDispatcher.unregister(LogicalKeyboardKey.space);
     super.onRemove();
   }
 
@@ -49,7 +44,7 @@ class PlayerInputBehavior extends Component
     }
     final moved = _processInput(dt);
     if (moved) {
-      parent.updateRotation(dt);
+      player.updateRotation(dt);
     }
   }
 
@@ -67,7 +62,7 @@ class PlayerInputBehavior extends Component
   }
 
   bool _processInput(double dt) {
-    parent.isMoving = false;
+    player.isMoving = false;
     _keyboardDirection
       ..setZero()
       ..x += keyDispatcher.isAnyPressed([
@@ -99,14 +94,14 @@ class PlayerInputBehavior extends Component
         joystick.delta.isZero() ? _keyboardDirection : joystick.relativeDelta;
     if (!input.isZero()) {
       input = input.normalized();
-      parent.position += input * Constants.playerSpeed * dt;
-      final halfSize = Vector2.all(parent.size.x / 2);
-      parent.position.clamp(
+      player.position += input * Constants.playerSpeed * dt;
+      final halfSize = Vector2.all(player.size.x / 2);
+      player.position.clamp(
         halfSize,
         Constants.worldSize - halfSize,
       );
-      parent.targetAngle = math.atan2(input.y, input.x) + math.pi / 2;
-      parent.isMoving = true;
+      player.targetAngle = math.atan2(input.y, input.x) + math.pi / 2;
+      player.isMoving = true;
       return true;
     }
     return false;
@@ -118,11 +113,11 @@ class PlayerInputBehavior extends Component
       return;
     }
     final direction = Vector2(
-      math.cos(parent.angle - math.pi / 2),
-      math.sin(parent.angle - math.pi / 2),
+      math.cos(player.angle - math.pi / 2),
+      math.sin(player.angle - math.pi / 2),
     );
     final bullet = game.pools.acquire<BulletComponent>(
-      (b) => b.reset(parent.position.clone(), direction),
+      (b) => b.reset(player.position.clone(), direction),
     );
     game.add(bullet);
     game.audioService.playShoot();

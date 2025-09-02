@@ -66,7 +66,15 @@ class SpaceGame extends FlameGame
   late final KeyDispatcher keyDispatcher;
   late PlayerComponent player;
   late MiningLaserComponent miningLaser;
-  late final JoystickComponent joystick;
+  late JoystickComponent _joystick;
+  JoystickComponent get joystick => _joystick;
+  set joystick(JoystickComponent value) {
+    _joystick = value;
+    if (_playerInitialized) {
+      player.setJoystick(value);
+    }
+  }
+
   late final HudButtonComponent fireButton;
   late final EnemySpawner enemySpawner;
   late final AsteroidSpawner asteroidSpawner;
@@ -77,6 +85,7 @@ class SpaceGame extends FlameGame
   late final TargetingService targetingService;
   StarfieldComponent? _starfield;
   FpsTextComponent? _fpsText;
+  bool _playerInitialized = false;
 
   ValueNotifier<int> get score => scoreService.score;
   ValueNotifier<int> get highScore => scoreService.highScore;
@@ -128,17 +137,8 @@ class SpaceGame extends FlameGame
     );
     player.position = Constants.worldSize / 2;
     await add(player);
-    camera
-      ..setBounds(
-        Rectangle.fromLTWH(
-          0,
-          0,
-          Constants.worldSize.x,
-          Constants.worldSize.y,
-        ),
-        considerViewport: true,
-      )
-      ..follow(player, snap: true);
+    _playerInitialized = true;
+    camera.follow(player, snap: true);
     miningLaser = MiningLaserComponent(player: player);
     await add(miningLaser);
 

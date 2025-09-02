@@ -3,8 +3,10 @@ set -euo pipefail
 # Preserve original args before sourcing bootstrap script, which consumes positional params.
 args=("$@")
 set --
+echo "[flutterw] bootstrapping Flutter SDK..."
 # Ensure Flutter exists and PATH is set for this process without seeing user args.
 source "$(dirname "$0")/bootstrap_flutter.sh"
+echo "[flutterw] Flutter SDK ready"
 # Restore original args for the actual flutter invocation.
 set -- "${args[@]}"
 echo "[flutterw] starting at $(date)"

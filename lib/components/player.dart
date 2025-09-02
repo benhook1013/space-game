@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
+import 'package:flutter/services.dart';
 
 import '../constants.dart';
 import '../game/key_dispatcher.dart';
@@ -27,20 +28,22 @@ class PlayerComponent extends SpriteComponent
     required this.keyDispatcher,
     required String spritePath,
   })  : _spritePath = spritePath,
-        _input = PlayerInputBehavior(
-          joystick: joystick,
-          keyDispatcher: keyDispatcher,
-        ),
         super(
           size: Vector2.all(
             Constants.playerSize *
                 (Constants.spriteScale + Constants.playerScale),
           ),
           anchor: Anchor.center,
-        );
+        ) {
+    _input = PlayerInputBehavior(
+      player: this,
+      joystick: joystick,
+      keyDispatcher: keyDispatcher,
+    );
+  }
 
   /// Reference to the on-screen joystick for touch input.
-  final JoystickComponent joystick;
+  JoystickComponent joystick;
   final KeyDispatcher keyDispatcher;
 
   String _spritePath;
@@ -89,6 +92,12 @@ class PlayerComponent extends SpriteComponent
   /// Exposes the input behavior for testing.
   PlayerInputBehavior get inputBehavior => _input;
 
+  /// Updates the joystick reference and underlying input behavior.
+  void setJoystick(JoystickComponent joystick) {
+    this.joystick = joystick;
+    _input.joystick = joystick;
+  }
+
   /// Toggles visibility of the auto-aim radius.
   void toggleAutoAimRadius() {
     showAutoAimRadius = !showAutoAimRadius;
@@ -119,6 +128,28 @@ class PlayerComponent extends SpriteComponent
     await add(_input);
     await add(_autoAim);
     await add(TractorAuraRenderer());
+  }
+
+  @override
+  void onMount() {
+    super.onMount();
+    if (!contains(_input)) {
+      add(_input);
+    }
+    if (!contains(_autoAim)) {
+      add(_autoAim);
+    }
+    keyDispatcher.register(
+      LogicalKeyboardKey.space,
+      onDown: startShooting,
+      onUp: stopShooting,
+    );
+  }
+
+  @override
+  void onRemove() {
+    keyDispatcher.unregister(LogicalKeyboardKey.space);
+    super.onRemove();
   }
 
   /// Smoothly rotates the player toward [targetAngle].
