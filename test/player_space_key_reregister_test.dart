@@ -68,6 +68,7 @@ void main() {
     );
     await game.add(player);
     await game.ready();
+    player.onMount();
     game.update(0);
     game.update(0);
 
@@ -78,6 +79,7 @@ void main() {
 
     await game.add(player);
     await game.ready();
+    player.onMount();
     game.update(0);
     game.update(0);
 
