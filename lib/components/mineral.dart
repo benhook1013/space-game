@@ -46,8 +46,10 @@ class MineralComponent extends SpriteComponent
   @override
   void update(double dt) {
     super.update(dt);
-    final playerPos =
-        game.targetingService.playerPosition ?? game.player.position;
+    final playerPos = game.targetingService.playerPosition;
+    if (playerPos == null) {
+      return;
+    }
     final toPlayer = playerPos - position;
     final distanceSquared = toPlayer.length2;
     final rangeSquared =
