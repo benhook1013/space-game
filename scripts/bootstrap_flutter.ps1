@@ -253,6 +253,8 @@ Remove-Item $destZip -Force
   Pop-Location
 }
 
+}
+
 if ($needsDownload) {
   Say "Flutter SDK installed at $FLUTTER_DIR"
 } else {
