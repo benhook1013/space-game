@@ -46,10 +46,6 @@ class PoolManager {
       _onRemove[T] = (dynamic c) => onRemove(c as T);
     }
 
-    _events.on<ComponentSpawnEvent<T>>().listen((event) {
-      (_active[T] as List<T>).add(event.component);
-      _onSpawn[T]?.call(event.component);
-    });
     _events.on<ComponentRemoveEvent<T>>().listen((event) {
       (_active[T] as List<T>).remove(event.component);
       _onRemove[T]?.call(event.component);
@@ -60,11 +56,20 @@ class PoolManager {
   /// Retrieves an instance of [T] from its pool.
   T acquire<T extends Component>(void Function(T) reset) {
     final pool = _pools[T] as ObjectPool<T>;
-    return pool.acquire(reset);
+    final obj = pool.acquire(reset);
+    final active = _active[T] as List<T>;
+    if (!active.contains(obj)) {
+      active.add(obj);
+      _onSpawn[T]?.call(obj);
+    }
+    return obj;
   }
 
   /// Returns [component] to its pool for reuse.
   void release<T extends Component>(T component) {
+    final active = _active[T] as List<T>?;
+    active?.remove(component);
+    _onRemove[T]?.call(component);
     final pool = _pools[T] as ObjectPool<T>?;
     pool?.release(component);
   }

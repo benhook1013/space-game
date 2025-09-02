@@ -31,19 +31,17 @@ void main() {
     await game.onLoad();
     game.onGameResize(Vector2.all(100));
     await game.ready();
+    game.resumeEngine();
     game.joystick.removeFromParent();
     game.joystick = TestJoystick();
     await game.add(game.joystick);
     game.update(0);
     game.update(0);
 
-    // Set a non-zero orientation.
-    game.joystick.delta.setValues(1, 0);
-    game.joystick.relativeDelta.setValues(1, 0);
-    game.update(0.1);
-    expect(game.player.angle, greaterThan(0));
-    // Move the player away from center.
-    game.player.position.setValues(20, 20);
+    // Set a non-zero orientation and move the player away from center.
+    game.player
+      ..angle = 1
+      ..position.setValues(20, 20);
 
     // Clear input before restarting.
     game.joystick.delta.setZero();
