@@ -49,7 +49,7 @@ jobs:
       - name: Run PSScriptAnalyzer
         shell: pwsh
         run: |
-          $ps1 = Get-ChildItem -Path . -Filter *.ps1 -Recurse
+          $ps1 = Get-ChildItem -Path . -Filter *.ps1 -Recurse | Select-Object -ExpandProperty FullName
           if ($ps1) {
             Invoke-ScriptAnalyzer -Path $ps1
           } else {
