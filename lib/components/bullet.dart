@@ -7,7 +7,7 @@ import '../assets.dart';
 import '../constants.dart';
 import '../game/space_game.dart';
 import 'damageable.dart';
-import 'offscreen_despawn.dart';
+import 'offscreen_cleanup.dart';
 import 'spawn_remove_emitter.dart';
 
 /// Short-lived projectile fired by the player.
@@ -19,7 +19,7 @@ class BulletComponent extends SpriteComponent
         HasGameReference<SpaceGame>,
         CollisionCallbacks,
         SpawnRemoveEmitter<BulletComponent>,
-        OffscreenDespawn {
+        OffscreenCleanup {
   BulletComponent()
       : super(size: Vector2.all(Constants.bulletSize), anchor: Anchor.center);
 
@@ -42,9 +42,8 @@ class BulletComponent extends SpriteComponent
 
   @override
   void update(double dt) {
-    super.update(dt);
     position += _direction * Constants.bulletSpeed * dt;
-    removeIfOffscreen();
+    super.update(dt);
   }
 
   @override

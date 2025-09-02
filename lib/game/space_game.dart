@@ -116,7 +116,7 @@ class SpaceGame extends FlameGame
       ),
       margin: const EdgeInsets.only(left: 40, bottom: 40),
     );
-    add(joystick);
+    await add(joystick);
 
     _starfield = await StarfieldComponent();
     await add(_starfield!);
