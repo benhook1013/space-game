@@ -22,8 +22,10 @@ import '../services/overlay_service.dart';
 import '../services/storage_service.dart';
 import '../services/audio_service.dart';
 import '../services/targeting_service.dart';
+import '../services/settings_service.dart';
 import '../ui/help_overlay.dart';
 import '../ui/upgrades_overlay.dart';
+import '../ui/settings_overlay.dart';
 import 'event_bus.dart';
 import 'game_state.dart';
 import 'pool_manager.dart';
@@ -41,8 +43,10 @@ class SpaceGame extends FlameGame
   SpaceGame({
     required this.storageService,
     required this.audioService,
+    SettingsService? settingsService,
     FocusNode? focusNode,
-  })  : focusNode = focusNode ?? FocusNode(),
+  })  : settingsService = settingsService ?? SettingsService(),
+        focusNode = focusNode ?? FocusNode(),
         scoreService = ScoreService(storageService: storageService) {
     debugMode = kDebugMode;
     pools = createPoolManager();
@@ -54,6 +58,9 @@ class SpaceGame extends FlameGame
 
   /// Plays sound effects and handles the mute toggle.
   final AudioService audioService;
+
+  /// Provides runtime-adjustable UI settings.
+  final SettingsService settingsService;
 
   /// Focus node used to capture keyboard input.
   final FocusNode focusNode;
@@ -115,11 +122,11 @@ class SpaceGame extends FlameGame
 
     joystick = JoystickComponent(
       knob: CircleComponent(
-        radius: 20,
+        radius: 20 * settingsService.joystickScale.value,
         paint: Paint()..color = const Color(0xffffffff),
       ),
       background: CircleComponent(
-        radius: 50,
+        radius: 50 * settingsService.joystickScale.value,
         paint: Paint()..color = const Color(0x66ffffff),
       ),
       margin: const EdgeInsets.only(left: 40, bottom: 40),
@@ -143,11 +150,11 @@ class SpaceGame extends FlameGame
 
     fireButton = HudButtonComponent(
       button: CircleComponent(
-        radius: 30,
+        radius: 30 * settingsService.hudButtonScale.value,
         paint: Paint()..color = const Color(0x66ffffff),
       ),
       buttonDown: CircleComponent(
-        radius: 30,
+        radius: 30 * settingsService.hudButtonScale.value,
         paint: Paint()..color = const Color(0xffffffff),
       ),
       anchor: Anchor.bottomRight,
@@ -182,6 +189,9 @@ class SpaceGame extends FlameGame
       toggleDebug: toggleDebug,
     );
     stateMachine.returnToMenu();
+
+    settingsService.joystickScale.addListener(_updateJoystickScale);
+    settingsService.hudButtonScale.addListener(_updateHudButtonScale);
   }
 
   @protected
@@ -291,6 +301,27 @@ class SpaceGame extends FlameGame
   /// Toggles rendering of the player's auto-aim radius.
   void toggleAutoAimRadius() {
     player.toggleAutoAimRadius();
+  }
+
+  /// Shows or hides the runtime settings overlay.
+  void toggleSettings() {
+    if (overlays.isActive(SettingsOverlay.id)) {
+      overlayService.hideSettings();
+    } else {
+      overlayService.showSettings();
+    }
+  }
+
+  void _updateJoystickScale() {
+    final scale = settingsService.joystickScale.value;
+    (joystick.knob as CircleComponent).radius = 20 * scale;
+    (joystick.background as CircleComponent).radius = 50 * scale;
+  }
+
+  void _updateHudButtonScale() {
+    final scale = settingsService.hudButtonScale.value;
+    (fireButton.button as CircleComponent).radius = 30 * scale;
+    (fireButton.buttonDown as CircleComponent).radius = 30 * scale;
   }
 
   /// Requests keyboard focus for the surrounding [GameWidget].
