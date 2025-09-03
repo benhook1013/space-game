@@ -31,13 +31,7 @@ class GameText extends StatelessWidget {
   /// Explicit colour override for the text.
   final Color? color;
 
-  /// Base colour used for in-game text.
-  static const Color defaultColor = Colors.yellow;
-
-  static const _baseStyle = TextStyle(
-    color: defaultColor,
-    fontSize: 18,
-  );
+  static const _baseStyle = TextStyle(fontSize: 18);
 
   /// Globally applied text scale factor. When attached, all [GameText]
   /// instances rebuild in response to changes.
@@ -51,8 +45,9 @@ class GameText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget buildText(double scale) {
+      final scheme = Theme.of(context).colorScheme;
       final mergedStyle =
-          _baseStyle.merge(style).copyWith(color: color ?? defaultColor);
+          _baseStyle.merge(style).copyWith(color: color ?? scheme.primary);
       final baseSize = mergedStyle.fontSize ?? _baseStyle.fontSize!;
       return AutoSizeText(
         data,

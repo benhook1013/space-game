@@ -58,9 +58,8 @@ class PlayerComponent extends SpriteComponent
   bool isMoving = false;
 
   /// Paint used when drawing the auto-aim radius.
-  final Paint _autoAimPaint = Paint()
-    ..color = const Color(0x66ffffff)
-    ..style = PaintingStyle.stroke;
+  final Paint _autoAimPaint = Paint()..style = PaintingStyle.stroke;
+  late void Function() _autoAimColorListener;
 
   static final _damageFilter =
       ColorFilter.mode(const Color(0xffff0000), BlendMode.srcATop);
@@ -139,6 +138,14 @@ class PlayerComponent extends SpriteComponent
     if (!contains(_autoAim)) {
       add(_autoAim);
     }
+    void updateAutoAimColor() {
+      _autoAimPaint.color =
+          game.colorScheme.value.primary.withValues(alpha: 0.4);
+    }
+
+    updateAutoAimColor();
+    _autoAimColorListener = updateAutoAimColor;
+    game.colorScheme.addListener(_autoAimColorListener);
     keyDispatcher.register(
       LogicalKeyboardKey.space,
       onDown: startShooting,
@@ -149,6 +156,7 @@ class PlayerComponent extends SpriteComponent
   @override
   void onRemove() {
     keyDispatcher.unregister(LogicalKeyboardKey.space);
+    game.colorScheme.removeListener(_autoAimColorListener);
     super.onRemove();
   }
 
