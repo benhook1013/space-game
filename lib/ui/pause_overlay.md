@@ -4,7 +4,7 @@ Overlay displayed when the game is paused.
 
 ## Features
 
-- Shows a centered "PAUSED" label.
+- Shows a centered "PAUSED" label with a hint to press `Esc` or `P` to resume.
 - Gameplay is halted but the interface remains visible for inspection.
 - Triggered from the HUD pause button or the Escape or `P` key.
 - Visible only while the game state is `paused`.
