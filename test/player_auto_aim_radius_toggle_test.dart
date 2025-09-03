@@ -57,5 +57,7 @@ void main() {
     expect(game.player.showAutoAimRadius, isFalse);
     game.toggleAutoAimRadius();
     expect(game.player.showAutoAimRadius, isTrue);
+    game.toggleAutoAimRadius();
+    expect(game.player.showAutoAimRadius, isFalse);
   });
 }
