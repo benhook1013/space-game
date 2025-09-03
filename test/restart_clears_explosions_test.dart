@@ -43,4 +43,28 @@ void main() {
     await game.ready();
     expect(game.children.whereType<ExplosionComponent>(), isEmpty);
   });
+
+  test('restarting immediately clears pending explosions', () async {
+    SharedPreferences.setMockInitialValues({});
+    await Flame.images.loadAll([...Assets.players, ...Assets.explosions]);
+    final storage = await StorageService.create();
+    final audio = await AudioService.create(storage);
+    audio.muted.value = true;
+    final game = SpaceGame(storageService: storage, audioService: audio);
+    game.overlays.addEntry(MenuOverlay.id, (_, __) => const SizedBox());
+    game.overlays.addEntry(HudOverlay.id, (_, __) => const SizedBox());
+    game.overlays.addEntry(PauseOverlay.id, (_, __) => const SizedBox());
+    game.overlays.addEntry(GameOverOverlay.id, (_, __) => const SizedBox());
+    await game.onLoad();
+    game.onGameResize(Vector2.all(100));
+
+    game.startGame();
+    for (var i = 0; i < Constants.playerMaxHealth; i++) {
+      game.hitPlayer();
+    }
+    // Immediately restart without waiting for lifecycle events to process.
+    game.startGame();
+    await game.ready();
+    expect(game.children.whereType<ExplosionComponent>(), isEmpty);
+  });
 }

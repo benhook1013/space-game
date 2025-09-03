@@ -16,7 +16,7 @@ _Update this file whenever a player-facing feature is added or changed._
 - [ ] Mining an asteroid increases the on-screen minerals
 - [ ] Score resets when restarting the game
 - [ ] Minerals reset when restarting the game
-- [ ] HUD shows current score, minerals and high score during play
+- [ ] HUD shows current score, minerals and health during play
 - [ ] Collisions reduce player health; game over when health reaches zero
 - [ ] Player ship flashes red when taking damage
 - [ ] Game states transition: menu → playing → upgrades → paused → game over
@@ -34,6 +34,8 @@ _Update this file whenever a player-facing feature is added or changed._
 - [ ] Pressing `H` shows a help overlay; `Esc` or `H` closes it and resumes play
 - [ ] Pressing `U` shows an upgrades overlay and pauses the game; `Esc` or `U`
       closes it
+- [ ] Settings overlay sliders adjust HUD button, text and joystick sizes
+      (default 0.75 for buttons and text)
 - [ ] Local high score persists between sessions
 - [ ] PWA installability and offline play after initial load
 - [ ] Performance acceptable on target devices

@@ -14,11 +14,21 @@ class PauseOverlay extends StatelessWidget {
   Widget build(BuildContext context) {
     return IgnorePointer(
       child: OverlayLayout(
-        builder: (context, _, __) {
-          return GameText(
-            'PAUSED',
-            style: Theme.of(context).textTheme.headlineMedium,
-            maxLines: 1,
+        builder: (context, spacing, __) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              GameText(
+                'PAUSED',
+                style: Theme.of(context).textTheme.headlineMedium,
+                maxLines: 1,
+              ),
+              SizedBox(height: spacing),
+              const GameText(
+                'Press Esc or P to resume',
+                maxLines: 1,
+              ),
+            ],
           );
         },
       ),

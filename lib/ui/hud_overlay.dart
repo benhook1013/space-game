@@ -6,6 +6,8 @@ import 'game_text.dart';
 import 'responsive.dart';
 import 'overlay_widgets.dart';
 import 'mineral_display.dart';
+import 'score_display.dart';
+import 'health_display.dart';
 
 /// Simple heads-up display shown during play.
 class HudOverlay extends StatelessWidget {
@@ -34,30 +36,11 @@ class HudOverlay extends StatelessWidget {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(top: 8),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Row(
                       children: [
-                        ValueListenableBuilder<int>(
-                          valueListenable: game.score,
-                          builder: (context, value, _) => GameText(
-                            'Score: $value',
-                            maxLines: 1,
-                          ),
-                        ),
-                        ValueListenableBuilder<int>(
-                          valueListenable: game.highScore,
-                          builder: (context, value, _) => GameText(
-                            'High: $value',
-                            maxLines: 1,
-                          ),
-                        ),
-                        ValueListenableBuilder<int>(
-                          valueListenable: game.health,
-                          builder: (context, value, _) => GameText(
-                            'Health: $value',
-                            maxLines: 1,
-                          ),
-                        ),
+                        ScoreDisplay(game: game),
+                        const SizedBox(width: 8),
+                        HealthDisplay(game: game),
                       ],
                     ),
                   ),

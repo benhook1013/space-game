@@ -120,17 +120,7 @@ class SpaceGame extends FlameGame
     keyDispatcher = KeyDispatcher();
     await add(keyDispatcher);
 
-    joystick = JoystickComponent(
-      knob: CircleComponent(
-        radius: 20 * settingsService.joystickScale.value,
-        paint: Paint()..color = const Color(0xffffffff),
-      ),
-      background: CircleComponent(
-        radius: 50 * settingsService.joystickScale.value,
-        paint: Paint()..color = const Color(0x66ffffff),
-      ),
-      margin: const EdgeInsets.only(left: 40, bottom: 40),
-    );
+    joystick = _buildJoystick();
     await add(joystick);
 
     _starfield = await StarfieldComponent();
@@ -312,10 +302,26 @@ class SpaceGame extends FlameGame
     }
   }
 
-  void _updateJoystickScale() {
+  JoystickComponent _buildJoystick() {
     final scale = settingsService.joystickScale.value;
-    (joystick.knob as CircleComponent).radius = 20 * scale;
-    (joystick.background as CircleComponent).radius = 50 * scale;
+    return JoystickComponent(
+      knob: CircleComponent(
+        radius: 20 * scale,
+        paint: Paint()..color = const Color(0xffffffff),
+      ),
+      background: CircleComponent(
+        radius: 50 * scale,
+        paint: Paint()..color = const Color(0x66ffffff),
+      ),
+      margin: const EdgeInsets.only(left: 40, bottom: 40),
+    );
+  }
+
+  void _updateJoystickScale() {
+    final oldJoystick = joystick;
+    joystick = _buildJoystick();
+    oldJoystick.removeFromParent();
+    add(joystick);
   }
 
   void _updateHudButtonScale() {
