@@ -19,14 +19,15 @@ class HudValueDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     return ValueListenableBuilder<int>(
       valueListenable: valueListenable,
       builder: (context, value, _) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
         decoration: BoxDecoration(
-          color: Colors.black54,
+          color: scheme.surface.withValues(alpha: 0.7),
           borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: Colors.white),
+          border: Border.all(color: scheme.onSurface),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,

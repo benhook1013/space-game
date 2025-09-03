@@ -6,6 +6,7 @@ import 'package:flame/input.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart' show EdgeInsets;
 import 'package:flutter/widgets.dart' show FocusNode;
+import 'package:flutter/material.dart' show ColorScheme, Colors;
 
 import '../assets.dart';
 import '../components/player.dart';
@@ -23,6 +24,7 @@ import '../services/storage_service.dart';
 import '../services/audio_service.dart';
 import '../services/targeting_service.dart';
 import '../services/settings_service.dart';
+import '../theme/game_theme.dart';
 import '../ui/help_overlay.dart';
 import '../ui/upgrades_overlay.dart';
 import '../ui/settings_overlay.dart';
@@ -43,9 +45,14 @@ class SpaceGame extends FlameGame
   SpaceGame({
     required this.storageService,
     required this.audioService,
+    ValueNotifier<ColorScheme>? colorScheme,
+    ValueNotifier<GameColors>? gameColors,
     SettingsService? settingsService,
     FocusNode? focusNode,
-  })  : settingsService = settingsService ?? SettingsService(),
+  })  : colorScheme = colorScheme ??
+            ValueNotifier(ColorScheme.fromSeed(seedColor: Colors.deepPurple)),
+        gameColors = gameColors ?? ValueNotifier(GameColors.light),
+        settingsService = settingsService ?? SettingsService(),
         focusNode = focusNode ?? FocusNode(),
         scoreService = ScoreService(storageService: storageService) {
     debugMode = kDebugMode;
@@ -61,6 +68,12 @@ class SpaceGame extends FlameGame
 
   /// Provides runtime-adjustable UI settings.
   final SettingsService settingsService;
+
+  /// Active colour scheme shared with Flutter widgets.
+  final ValueNotifier<ColorScheme> colorScheme;
+
+  /// Game-specific colours from [GameColors] extension.
+  final ValueNotifier<GameColors> gameColors;
 
   /// Focus node used to capture keyboard input.
   final FocusNode focusNode;
@@ -92,6 +105,8 @@ class SpaceGame extends FlameGame
   StarfieldComponent? _starfield;
   FpsTextComponent? _fpsText;
   bool _playerInitialized = false;
+
+  late void Function() _updateFireButtonColors;
 
   ValueNotifier<int> get score => scoreService.score;
   ValueNotifier<int> get highScore => scoreService.highScore;
@@ -138,21 +153,31 @@ class SpaceGame extends FlameGame
     miningLaser = MiningLaserComponent(player: player);
     await add(miningLaser);
 
+    final upButton = CircleComponent(
+      radius: 30 * settingsService.hudButtonScale.value,
+      paint: Paint(),
+    );
+    final downButton = CircleComponent(
+      radius: 30 * settingsService.hudButtonScale.value,
+      paint: Paint(),
+    );
     fireButton = HudButtonComponent(
-      button: CircleComponent(
-        radius: 30 * settingsService.hudButtonScale.value,
-        paint: Paint()..color = const Color(0x66ffffff),
-      ),
-      buttonDown: CircleComponent(
-        radius: 30 * settingsService.hudButtonScale.value,
-        paint: Paint()..color = const Color(0xffffffff),
-      ),
+      button: upButton,
+      buttonDown: downButton,
       anchor: Anchor.bottomRight,
       margin: const EdgeInsets.only(right: 40, bottom: 40),
       onPressed: player.startShooting,
       onReleased: player.stopShooting,
     );
     await add(fireButton);
+    void updateFireButtonColors() {
+      upButton.paint.color = colorScheme.value.primary.withValues(alpha: 0.4);
+      downButton.paint.color = colorScheme.value.primary;
+    }
+
+    updateFireButtonColors();
+    _updateFireButtonColors = updateFireButtonColors;
+    colorScheme.addListener(_updateFireButtonColors);
 
     enemySpawner = EnemySpawner();
     asteroidSpawner = AsteroidSpawner();
@@ -182,6 +207,12 @@ class SpaceGame extends FlameGame
 
     settingsService.joystickScale.addListener(_updateJoystickScale);
     settingsService.hudButtonScale.addListener(_updateHudButtonScale);
+  }
+
+  @override
+  void onRemove() {
+    colorScheme.removeListener(_updateFireButtonColors);
+    super.onRemove();
   }
 
   @protected

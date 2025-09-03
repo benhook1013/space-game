@@ -1,11 +1,12 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 /// Holds tweakable UI scale values for live prototyping.
 class SettingsService {
   SettingsService()
       : hudButtonScale = ValueNotifier<double>(defaultHudButtonScale),
         textScale = ValueNotifier<double>(defaultTextScale),
-        joystickScale = ValueNotifier<double>(defaultJoystickScale);
+        joystickScale = ValueNotifier<double>(defaultJoystickScale),
+        themeMode = ValueNotifier<ThemeMode>(ThemeMode.light);
 
   static const double defaultHudButtonScale = 0.75;
   static const double defaultTextScale = 1.5;
@@ -19,4 +20,7 @@ class SettingsService {
 
   /// Multiplier applied to on-screen joystick elements.
   final ValueNotifier<double> joystickScale;
+
+  /// Currently selected theme mode.
+  final ValueNotifier<ThemeMode> themeMode;
 }

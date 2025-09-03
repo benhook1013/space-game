@@ -12,9 +12,10 @@ class ScoreDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     return HudValueDisplay(
       valueListenable: game.score,
-      icon: const Icon(Icons.star, color: Colors.white, size: 24),
+      icon: Icon(Icons.star, color: scheme.primary, size: 24),
     );
   }
 }

@@ -23,6 +23,7 @@ dedicated server or NAT traversal.
 - Code and asset base kept tiny and easy to maintain
 - Ship quickly and iterate in small increments
 - Responsive scaling for phones, tablets and desktop
+- Centralised colour theming with light and dark palettes
 - Solo-friendly workflow with minimal tooling
 - Fun, casual tone with cartoony visuals
 - Modular game logic built with Flame (pinned for stability)
