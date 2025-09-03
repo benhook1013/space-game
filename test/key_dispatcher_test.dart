@@ -4,6 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:space_game/game/key_dispatcher.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   test('onKeyEvent consumes handled keys', () {
     final dispatcher = KeyDispatcher();
     var pressed = false;

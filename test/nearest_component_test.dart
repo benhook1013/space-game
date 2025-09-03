@@ -10,6 +10,8 @@ class _TestComponent extends PositionComponent {
 }
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   test('findClosestComponent returns nearest within range', () {
     final components = [
       _TestComponent(Vector2(10, 0)),
