@@ -30,6 +30,13 @@
   </head>
   <body>
     <script>
+      // Prevent F1 from opening browser help so the game can use it for debugging.
+      window.addEventListener('keydown', (event) => {
+        if (event.key === 'F1') {
+          event.preventDefault();
+        }
+      });
+
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', function () {
           navigator.serviceWorker.register('sw.js');
