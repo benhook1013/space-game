@@ -125,8 +125,9 @@ tree spanning weapons and ship systems.
 - The game starts in a menu overlay that also exposes a mute toggle.
 - `SpaceGame` transitions to `playing` when the user taps start.
 - Players can pause the game from the HUD or with the Escape or `P` key,
-  showing a centered `PAUSED` label while gameplay halts.
-- During play the HUD provides score, minerals, high score, health, pause and
+  showing a centered `PAUSED` label with a hint to press `Esc` or `P` to
+  resume while gameplay halts.
+- During play the HUD provides score, minerals, health, pause and
   mute controls.
 - On player death, a game over overlay appears with restart, menu and mute buttons.
 - A help overlay lists controls and can be toggled with the `H` key, pausing the

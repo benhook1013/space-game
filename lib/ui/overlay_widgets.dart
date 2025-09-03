@@ -35,7 +35,11 @@ class OverlayLayout extends StatelessWidget {
 
         Widget child = Center(child: builder(context, spacing, iconSize));
         if (dimmed) {
-          child = Container(color: Colors.black54, child: child);
+          final scheme = Theme.of(context).colorScheme;
+          child = Container(
+            color: scheme.scrim.withValues(alpha: 0.54),
+            child: child,
+          );
         }
         return child;
       },

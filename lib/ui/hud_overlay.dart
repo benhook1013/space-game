@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../game/space_game.dart';
+import '../game/game_state.dart';
 import 'game_text.dart';
 import 'responsive.dart';
 import 'overlay_widgets.dart';
 import 'mineral_display.dart';
+import 'score_display.dart';
+import 'health_display.dart';
 
 /// Simple heads-up display shown during play.
 class HudOverlay extends StatelessWidget {
@@ -33,30 +36,11 @@ class HudOverlay extends StatelessWidget {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(top: 8),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Row(
                       children: [
-                        ValueListenableBuilder<int>(
-                          valueListenable: game.score,
-                          builder: (context, value, _) => GameText(
-                            'Score: $value',
-                            maxLines: 1,
-                          ),
-                        ),
-                        ValueListenableBuilder<int>(
-                          valueListenable: game.highScore,
-                          builder: (context, value, _) => GameText(
-                            'High: $value',
-                            maxLines: 1,
-                          ),
-                        ),
-                        ValueListenableBuilder<int>(
-                          valueListenable: game.health,
-                          builder: (context, value, _) => GameText(
-                            'Health: $value',
-                            maxLines: 1,
-                          ),
-                        ),
+                        ScoreDisplay(game: game),
+                        const SizedBox(width: 8),
+                        HealthDisplay(game: game),
                       ],
                     ),
                   ),
@@ -65,19 +49,29 @@ class HudOverlay extends StatelessWidget {
                     children: [
                       IconButton(
                         iconSize: iconSize,
-                        icon: const Icon(Icons.gps_fixed, color: Colors.white),
+                        icon: Icon(Icons.gps_fixed,
+                            color: Theme.of(context).colorScheme.onSurface),
                         onPressed: game.toggleAutoAimRadius,
                       ),
                       UpgradeButton(game: game, iconSize: iconSize),
                       HelpButton(game: game, iconSize: iconSize),
                       SettingsButton(game: game, iconSize: iconSize),
                       MuteButton(game: game, iconSize: iconSize),
-                      IconButton(
-                        iconSize: iconSize,
-                        // Mirrors the Escape and P keyboard shortcuts.
-                        icon: const Icon(Icons.pause,
-                            color: GameText.defaultColor),
-                        onPressed: game.pauseGame,
+                      ValueListenableBuilder<GameState>(
+                        valueListenable: game.stateMachine.stateNotifier,
+                        builder: (context, state, _) {
+                          final paused = state == GameState.paused;
+                          return IconButton(
+                            iconSize: iconSize,
+                            // Mirrors the Escape and P keyboard shortcuts.
+                            icon: Icon(
+                              paused ? Icons.play_arrow : Icons.pause,
+                              color: GameText.defaultColor,
+                            ),
+                            onPressed:
+                                paused ? game.resumeGame : game.pauseGame,
+                          );
+                        },
                       ),
                     ],
                   ),

@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import '../services/overlay_service.dart';
 import 'game_state.dart';
 
@@ -19,7 +21,10 @@ class GameStateMachine {
   final void Function() onGameOver;
   final void Function() onMenu;
 
-  GameState state = GameState.menu;
+  final ValueNotifier<GameState> stateNotifier =
+      ValueNotifier<GameState>(GameState.menu);
+  GameState get state => stateNotifier.value;
+  set state(GameState value) => stateNotifier.value = value;
 
   void startGame() {
     state = GameState.playing;

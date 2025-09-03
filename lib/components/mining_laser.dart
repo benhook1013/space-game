@@ -15,22 +15,41 @@ class MiningLaserComponent extends Component with HasGameReference<SpaceGame> {
     _pulseTimer.onTick = () {
       _paint.strokeWidth = 2;
       _target?.takeDamage(Constants.miningPulseDamage);
-      if (_target?.isMounted != true) {
-        _target = null;
-      }
     };
   }
 
   final PlayerComponent player;
   AsteroidComponent? _target;
-  final Paint _paint = Paint()..color = const Color(0x66ffffff);
+  final Paint _paint = Paint();
+  late void Function() _colorListener;
   final Timer _pulseTimer = Timer(Constants.miningPulseInterval, repeat: true);
   bool _playingSound = false;
 
   @override
+  void onMount() {
+    super.onMount();
+    void updateColor() {
+      _paint.color = game.gameColors.value.playerLaser.withValues(alpha: 0.4);
+    }
+
+    updateColor();
+    _colorListener = updateColor;
+    game.gameColors.addListener(_colorListener);
+  }
+
+  @override
   void update(double dt) {
     super.update(dt);
-    if (!player.isMounted) return;
+    if (!player.isMounted) {
+      _target = null;
+      _pulseTimer.stop();
+      _paint.strokeWidth = 2;
+      if (_playingSound) {
+        game.audioService.stopMiningLaser();
+        _playingSound = false;
+      }
+      return;
+    }
 
     final rangeSquared =
         Constants.playerMiningRange * Constants.playerMiningRange;
@@ -52,11 +71,23 @@ class MiningLaserComponent extends Component with HasGameReference<SpaceGame> {
 
     if (_target != null) {
       _pulseTimer.update(dt);
-      final progress = _pulseTimer.progress;
-      _paint.strokeWidth = 2 + 2 * progress;
-      if (!_playingSound) {
-        unawaited(game.audioService.startMiningLaser());
-        _playingSound = true;
+      if (_target?.isMounted != true || _target?.isRemoving == true) {
+        // Target was destroyed or removed; cancel the audio loop immediately
+        // instead of waiting for the next frame.
+        _target = null;
+        _pulseTimer.stop();
+        _paint.strokeWidth = 2;
+        if (_playingSound) {
+          game.audioService.stopMiningLaser();
+          _playingSound = false;
+        }
+      } else {
+        final progress = _pulseTimer.progress;
+        _paint.strokeWidth = 2 + 2 * progress;
+        if (!_playingSound) {
+          unawaited(game.audioService.startMiningLaser());
+          _playingSound = true;
+        }
       }
     } else {
       _pulseTimer.stop();
@@ -69,6 +100,15 @@ class MiningLaserComponent extends Component with HasGameReference<SpaceGame> {
   }
 
   @override
+  void onRemove() {
+    if (_playingSound) {
+      game.audioService.stopMiningLaser();
+      _playingSound = false;
+    }
+    super.onRemove();
+  }
+
+  @override
   void render(Canvas canvas) {
     super.render(canvas);
     if (_target == null || !_target!.isMounted) return;
@@ -77,5 +117,11 @@ class MiningLaserComponent extends Component with HasGameReference<SpaceGame> {
       _target!.position.toOffset(),
       _paint,
     );
+  }
+
+  @override
+  void onRemove() {
+    game.gameColors.removeListener(_colorListener);
+    super.onRemove();
   }
 }

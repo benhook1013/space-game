@@ -23,6 +23,7 @@ dedicated server or NAT traversal.
 - Code and asset base kept tiny and easy to maintain
 - Ship quickly and iterate in small increments
 - Responsive scaling for phones, tablets and desktop
+- Centralised colour theming with light and dark palettes
 - Solo-friendly workflow with minimal tooling
 - Fun, casual tone with cartoony visuals
 - Modular game logic built with Flame (pinned for stability)
@@ -41,18 +42,18 @@ dedicated server or NAT traversal.
   each hit drops a mineral nearby
 - A blue Tractor Aura draws nearby pickups toward the ship
 - Single endless level with quick restart
-- Player health, minerals and high score displayed in the HUD; health drops on
+- Player score, health and minerals displayed in the HUD; health drops on
   collision and minerals increase when collecting pickups from mined asteroids
 - Local high score stored on device using `shared_preferences`
 - Basic sound effects with a mute toggle on menu, HUD and game over
   screens, plus an `M` key shortcut
-- Pause or resume via keyboard or HUD button with a centered `PAUSED`
-  indicator that leaves the interface visible
+- Pause or resume via keyboard or HUD button with a `PAUSED` indicator and a
+  hint to press `Esc` or `P` to resume, leaving the interface visible
 - Keyboard controls for desktop playtests (`WASD`/arrow keys to move, `Space` to
   shoot, `Escape` or `P` to pause or resume, `M` to mute, `F1` toggles debug
   overlays, `Enter` starts or restarts from the menu or game over, `R` restarts at
-  any time, `Q` returns to the menu from pause or game over, `Esc` also returns to
-  the menu from game over, `H` shows a help overlay that `Esc` also closes)
+  any time, `H` shows a help overlay that `Esc` also closes, `U`
+  opens an upgrades overlay that `Esc` also closes)
 - Game works offline after the first load
 - Parallax starfield background
 

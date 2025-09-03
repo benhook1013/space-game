@@ -13,10 +13,10 @@ Flutter overlays and HUD widgets.
 
 - [MenuOverlay](menu_overlay.md) – start button (or `Enter`), high score with
   reset, help (`H`) and mute toggle.
-- [HudOverlay](hud_overlay.md) – shows score, high score, minerals (with icon)
-    and health with auto-aim radius toggle, help, upgrades, mute and pause buttons.
-- [PauseOverlay](pause_overlay.md) – displays a centered "PAUSED" label while
-  the game is paused.
+- [HudOverlay](hud_overlay.md) – shows score, minerals (with icon) and health
+    with auto-aim radius toggle, help, upgrades, mute and pause buttons.
+- [PauseOverlay](pause_overlay.md) – displays a centered "PAUSED" label with
+  instructions to press `Esc` or `P` to resume while the game is paused.
 - [GameOverOverlay](game_over_overlay.md) – shows final and high scores with
   restart (button or `Enter`/`R`), menu, help and mute options.
 - [HelpOverlay](help_overlay.md) – lists all controls; toggled with `H` and
@@ -25,9 +25,7 @@ Flutter overlays and HUD widgets.
   upgrades; opened with `U` and pauses gameplay.
 - The `M` key toggles mute in any overlay; `F1` toggles debug overlays;
   `Enter` starts or restarts from the menu or game over; `R` restarts at any
-  time; `Escape` or `P` pauses or resumes; `Q` returns to the menu from pause
-  or game over and `Esc` also returns to the menu from game over; `H` shows or
-  hides the help overlay, `U` opens upgrades, and `Esc` also closes overlays
-  when visible.
+  time; `Escape` or `P` pauses or resumes; `H` shows or hides the help overlay,
+  `U` opens upgrades, and `Esc` also closes overlays when visible.
 
 See [../../PLAN.md](../../PLAN.md) for the broader roadmap.

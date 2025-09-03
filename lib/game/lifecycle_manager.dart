@@ -12,8 +12,13 @@ class LifecycleManager {
   final SpaceGame game;
 
   void onStart() {
+    game.audioService.stopAll();
     game.scoreService.reset();
     game.pools.clear();
+    // Process any queued lifecycle events so components added just before the
+    // previous session ended (like the player's explosion on death) are
+    // mounted and can be removed before the new run begins.
+    game.processLifecycleEvents();
     // Remove any lingering explosions from a previous session.
     for (final explosion in List<ExplosionComponent>.from(
       game.children.whereType<ExplosionComponent>(),
@@ -67,12 +72,14 @@ class LifecycleManager {
     game.enemySpawner.stop();
     game.asteroidSpawner.stop();
     game.scoreService.updateHighScoreIfNeeded();
+    game.audioService.stopAll();
     game.pauseEngine();
   }
 
   void onMenu() {
     game.enemySpawner.stop();
     game.asteroidSpawner.stop();
+    game.audioService.stopAll();
     game.pauseEngine();
   }
 }
