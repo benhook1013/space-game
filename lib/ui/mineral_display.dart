@@ -17,8 +17,8 @@ class MineralDisplay extends StatelessWidget {
       valueListenable: game.minerals,
       icon: Image.asset(
         'assets/images/${Assets.mineralIcon}',
-        width: 24,
-        height: 24,
+        width: 48,
+        height: 48,
       ),
     );
   }
