@@ -100,15 +100,6 @@ class MiningLaserComponent extends Component with HasGameReference<SpaceGame> {
   }
 
   @override
-  void onRemove() {
-    if (_playingSound) {
-      game.audioService.stopMiningLaser();
-      _playingSound = false;
-    }
-    super.onRemove();
-  }
-
-  @override
   void render(Canvas canvas) {
     super.render(canvas);
     if (_target == null || !_target!.isMounted) return;
@@ -121,6 +112,10 @@ class MiningLaserComponent extends Component with HasGameReference<SpaceGame> {
 
   @override
   void onRemove() {
+    if (_playingSound) {
+      game.audioService.stopMiningLaser();
+      _playingSound = false;
+    }
     game.gameColors.removeListener(_colorListener);
     super.onRemove();
   }

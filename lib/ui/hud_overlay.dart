@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../game/space_game.dart';
 import '../game/game_state.dart';
-import 'game_text.dart';
 import 'responsive.dart';
 import 'overlay_widgets.dart';
 import 'mineral_display.dart';
@@ -66,7 +65,7 @@ class HudOverlay extends StatelessWidget {
                             // Mirrors the Escape and P keyboard shortcuts.
                             icon: Icon(
                               paused ? Icons.play_arrow : Icons.pause,
-                              color: GameText.defaultColor,
+                              color: Theme.of(context).colorScheme.primary,
                             ),
                             onPressed:
                                 paused ? game.resumeGame : game.pauseGame,

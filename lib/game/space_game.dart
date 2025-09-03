@@ -107,6 +107,7 @@ class SpaceGame extends FlameGame
   bool _playerInitialized = false;
 
   late void Function() _updateFireButtonColors;
+  late void Function() _updateJoystickColors;
 
   ValueNotifier<int> get score => scoreService.score;
   ValueNotifier<int> get highScore => scoreService.highScore;
@@ -137,6 +138,16 @@ class SpaceGame extends FlameGame
 
     joystick = _buildJoystick();
     await add(joystick);
+    void updateJoystickColors() {
+      (joystick.knob as CircleComponent).paint.color =
+          colorScheme.value.primary;
+      (joystick.background as CircleComponent).paint.color =
+          colorScheme.value.primary.withValues(alpha: 0.4);
+    }
+
+    updateJoystickColors();
+    _updateJoystickColors = updateJoystickColors;
+    colorScheme.addListener(_updateJoystickColors);
 
     _starfield = await StarfieldComponent();
     await add(_starfield!);
@@ -211,7 +222,9 @@ class SpaceGame extends FlameGame
 
   @override
   void onRemove() {
-    colorScheme.removeListener(_updateFireButtonColors);
+    colorScheme
+      ..removeListener(_updateFireButtonColors)
+      ..removeListener(_updateJoystickColors);
     super.onRemove();
   }
 
@@ -335,14 +348,15 @@ class SpaceGame extends FlameGame
 
   JoystickComponent _buildJoystick() {
     final scale = settingsService.joystickScale.value;
+    final scheme = colorScheme.value;
     return JoystickComponent(
       knob: CircleComponent(
         radius: 20 * scale,
-        paint: Paint()..color = const Color(0xffffffff),
+        paint: Paint()..color = scheme.primary,
       ),
       background: CircleComponent(
         radius: 50 * scale,
-        paint: Paint()..color = const Color(0x66ffffff),
+        paint: Paint()..color = scheme.primary.withValues(alpha: 0.4),
       ),
       margin: const EdgeInsets.only(left: 40, bottom: 40),
     );

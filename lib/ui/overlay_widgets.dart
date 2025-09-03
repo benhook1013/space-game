@@ -59,14 +59,17 @@ class MuteButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ValueListenableBuilder<bool>(
       valueListenable: game.audioService.muted,
-      builder: (context, muted, _) => IconButton(
-        iconSize: iconSize,
-        icon: Icon(
-          muted ? Icons.volume_off : Icons.volume_up,
-          color: GameText.defaultColor,
-        ),
-        onPressed: game.audioService.toggleMute,
-      ),
+      builder: (context, muted, _) {
+        final primary = Theme.of(context).colorScheme.primary;
+        return IconButton(
+          iconSize: iconSize,
+          icon: Icon(
+            muted ? Icons.volume_off : Icons.volume_up,
+            color: primary,
+          ),
+          onPressed: game.audioService.toggleMute,
+        );
+      },
     );
   }
 }
@@ -84,9 +87,10 @@ class HelpButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (iconSize != null) {
+      final primary = Theme.of(context).colorScheme.primary;
       return IconButton(
         iconSize: iconSize,
-        icon: const Icon(Icons.help_outline, color: GameText.defaultColor),
+        icon: Icon(Icons.help_outline, color: primary),
         onPressed: game.toggleHelp,
       );
     }
@@ -110,9 +114,10 @@ class UpgradeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final primary = Theme.of(context).colorScheme.primary;
     return IconButton(
       iconSize: iconSize,
-      icon: const Icon(Icons.upgrade, color: GameText.defaultColor),
+      icon: Icon(Icons.upgrade, color: primary),
       onPressed: game.toggleUpgrades,
     );
   }
@@ -127,6 +132,7 @@ class SettingsButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final primary = Theme.of(context).colorScheme.primary;
     return IconButton(
       iconSize: iconSize,
       icon: ImageIcon(
