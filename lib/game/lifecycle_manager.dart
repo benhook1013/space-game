@@ -12,6 +12,7 @@ class LifecycleManager {
   final SpaceGame game;
 
   void onStart() {
+    game.audioService.stopAll();
     game.scoreService.reset();
     game.pools.clear();
     // Process any queued lifecycle events so components added just before the
@@ -71,12 +72,14 @@ class LifecycleManager {
     game.enemySpawner.stop();
     game.asteroidSpawner.stop();
     game.scoreService.updateHighScoreIfNeeded();
+    game.audioService.stopAll();
     game.pauseEngine();
   }
 
   void onMenu() {
     game.enemySpawner.stop();
     game.asteroidSpawner.stop();
+    game.audioService.stopAll();
     game.pauseEngine();
   }
 }

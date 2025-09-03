@@ -84,4 +84,9 @@ class AudioService {
     _miningLoop?.stop();
     _miningLoop = null;
   }
+
+  /// Stops all ongoing audio loops.
+  void stopAll() {
+    stopMiningLaser();
+  }
 }
