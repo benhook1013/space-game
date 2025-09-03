@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../assets.dart';
 import '../game/space_game.dart';
 import 'game_text.dart';
 import 'responsive.dart';
@@ -128,7 +129,10 @@ class SettingsButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       iconSize: iconSize,
-      icon: const Icon(Icons.tune, color: GameText.defaultColor),
+      icon: ImageIcon(
+        AssetImage('assets/images/${Assets.settingsIcon}'),
+        color: GameText.defaultColor,
+      ),
       onPressed: game.toggleSettings,
     );
   }
