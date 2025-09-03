@@ -1,5 +1,4 @@
 import 'package:flame/components.dart';
-import 'package:flame/flame.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,13 +14,14 @@ import 'package:space_game/ui/game_over_overlay.dart';
 import 'package:space_game/ui/hud_overlay.dart';
 import 'package:space_game/ui/menu_overlay.dart';
 import 'package:space_game/ui/pause_overlay.dart';
+import 'test_images.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   test('restarting removes the previous player instance', () async {
     SharedPreferences.setMockInitialValues({});
-    await Flame.images.loadAll([...Assets.players, ...Assets.explosions]);
+    await loadTestImages([...Assets.players, ...Assets.explosions]);
     final storage = await StorageService.create();
     final audio = await AudioService.create(storage);
     final game = SpaceGame(storageService: storage, audioService: audio);
