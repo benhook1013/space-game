@@ -80,6 +80,8 @@ class MenuOverlay extends StatelessWidget {
                         child: Image.asset(
                           'assets/images/${Assets.players[i]}',
                           fit: BoxFit.contain,
+                          // Use nearest-neighbor sampling to avoid blurred sprites.
+                          filterQuality: FilterQuality.none,
                         ),
                       ),
                     ),
