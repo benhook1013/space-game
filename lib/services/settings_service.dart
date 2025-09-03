@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 class SettingsService {
   SettingsService()
       : hudButtonScale = ValueNotifier<double>(1),
-        textScale = ValueNotifier<double>(1),
+        textScale = ValueNotifier<double>(1.5),
         joystickScale = ValueNotifier<double>(1);
 
   /// Multiplier applied to HUD buttons and icons.
