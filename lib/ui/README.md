@@ -25,9 +25,7 @@ Flutter overlays and HUD widgets.
   upgrades; opened with `U` and pauses gameplay.
 - The `M` key toggles mute in any overlay; `F1` toggles debug overlays;
   `Enter` starts or restarts from the menu or game over; `R` restarts at any
-  time; `Escape` or `P` pauses or resumes; `Q` returns to the menu from pause
-  or game over and `Esc` also returns to the menu from game over; `H` shows or
-  hides the help overlay, `U` opens upgrades, and `Esc` also closes overlays
-  when visible.
+  time; `Escape` or `P` pauses or resumes; `H` shows or hides the help overlay,
+  `U` opens upgrades, and `Esc` also closes overlays when visible.
 
 See [../../PLAN.md](../../PLAN.md) for the broader roadmap.

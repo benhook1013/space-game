@@ -51,8 +51,8 @@ dedicated server or NAT traversal.
 - Keyboard controls for desktop playtests (`WASD`/arrow keys to move, `Space` to
   shoot, `Escape` or `P` to pause or resume, `M` to mute, `F1` toggles debug
   overlays, `Enter` starts or restarts from the menu or game over, `R` restarts at
-  any time, `Q` returns to the menu from pause or game over, `Esc` also returns to
-  the menu from game over, `H` shows a help overlay that `Esc` also closes)
+  any time, `H` shows a help overlay that `Esc` also closes, `U`
+  opens an upgrades overlay that `Esc` also closes)
 - Game works offline after the first load
 - Parallax starfield background
 

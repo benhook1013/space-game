@@ -33,11 +33,12 @@ class HelpOverlay extends StatelessWidget {
               'Shoot: Space\n'
               'Mute: M\n'
               'Toggle Debug: F1\n'
-              'Auto-aim Radius: HUD button\n'
+              'Auto-aim Radius: Target Button\n'
+              'Upgrades: U or HUD button\n'
+              'Settings: HUD button\n'
               'Pause/Resume: Esc or P\n'
               'Start/Restart: Enter\n'
               'Restart anytime: R\n'
-              'Menu: Q (pause/game over), Esc (game over)\n'
               'Toggle Help: H or Esc',
               textAlign: TextAlign.center,
             ),
