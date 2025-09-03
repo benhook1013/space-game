@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../assets.dart';
 import '../game/space_game.dart';
 import 'hud_value_display.dart';
 
@@ -15,7 +16,11 @@ class HealthDisplay extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
     return HudValueDisplay(
       valueListenable: game.health,
-      icon: Icon(Icons.favorite, color: scheme.error, size: 24),
+      icon: ImageIcon(
+        AssetImage('assets/images/${Assets.healthIcon}'),
+        color: scheme.error,
+        size: 24,
+      ),
     );
   }
 }

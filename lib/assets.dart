@@ -30,6 +30,9 @@ class Assets {
   ];
   static const String bullet = 'bullet.png';
   static const String mineralIcon = 'icons/mineral.png';
+  static const String scoreIcon = 'icons/score.png';
+  static const String healthIcon = 'icons/health.png';
+  static const String settingsIcon = 'icons/settings.png';
 
   // FlameAudio uses `assets/audio/` as the default base path.
   static const String shootSfx = 'laser-bullet.mp3';
@@ -45,6 +48,9 @@ class Assets {
       ...explosions,
       bullet,
       mineralIcon,
+      scoreIcon,
+      healthIcon,
+      settingsIcon,
     ]);
 
     await FlameAudio.audioCache

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../assets.dart';
 import '../game/space_game.dart';
 import 'hud_value_display.dart';
 
@@ -17,7 +18,11 @@ class ScoreDisplay extends StatelessWidget {
   Widget build(BuildContext context) {
     return HudValueDisplay(
       valueListenable: game.score,
-      icon: const Icon(Icons.star, color: _goldColor, size: 24),
+      icon: ImageIcon(
+        AssetImage('assets/images/${Assets.scoreIcon}'),
+        color:  _goldColor,
+        size: 24,
+      ),
     );
   }
 }
