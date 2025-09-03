@@ -50,6 +50,10 @@ Future<void> main() async {
     gameColors: gameColors,
   );
 
+  // Pause the game and silence audio when the app is not visible.
+  final lifecycleObserver = _AppLifecycleObserver(game);
+  WidgetsBinding.instance.addObserver(lifecycleObserver);
+
   GameText.attachTextScale(settings.textScale);
 
   runApp(
@@ -91,4 +95,24 @@ Future<void> main() async {
       ),
     ),
   );
+}
+
+class _AppLifecycleObserver extends WidgetsBindingObserver {
+  _AppLifecycleObserver(this.game);
+
+  final SpaceGame game;
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.inactive ||
+        state == AppLifecycleState.detached) {
+      game.pauseEngine();
+      game.miningLaser.stopSound();
+      game.audioService.stopAll();
+    } else if (state == AppLifecycleState.resumed) {
+      game.resumeEngine();
+      game.focusGame();
+    }
+  }
 }
