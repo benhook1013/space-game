@@ -10,12 +10,14 @@ class ScoreDisplay extends StatelessWidget {
   /// Reference to the running game providing score updates.
   final SpaceGame game;
 
+  /// Gold colour used for the score icon.
+  static const Color _goldColor = Color(0xFFFFD700);
+
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
     return HudValueDisplay(
       valueListenable: game.score,
-      icon: Icon(Icons.star, color: scheme.primary, size: 24),
+      icon: const Icon(Icons.star, color: _goldColor, size: 24),
     );
   }
 }
