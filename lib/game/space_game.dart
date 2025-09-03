@@ -318,10 +318,9 @@ class SpaceGame extends FlameGame
   }
 
   void _updateJoystickScale() {
-    final oldJoystick = joystick;
-    joystick = _buildJoystick();
-    oldJoystick.removeFromParent();
-    add(joystick);
+    final scale = settingsService.joystickScale.value;
+    (joystick.knob as CircleComponent).radius = 20 * scale;
+    (joystick.background as CircleComponent).radius = 50 * scale;
   }
 
   void _updateHudButtonScale() {
