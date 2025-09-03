@@ -49,7 +49,8 @@ class HudOverlay extends StatelessWidget {
                     children: [
                       IconButton(
                         iconSize: iconSize,
-                        icon: const Icon(Icons.gps_fixed, color: Colors.white),
+                        icon: Icon(Icons.gps_fixed,
+                            color: Theme.of(context).colorScheme.onSurface),
                         onPressed: game.toggleAutoAimRadius,
                       ),
                       UpgradeButton(game: game, iconSize: iconSize),

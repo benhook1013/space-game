@@ -45,6 +45,15 @@ class SettingsOverlay extends StatelessWidget {
               settings.joystickScale,
               spacing,
             ),
+            ValueListenableBuilder<ThemeMode>(
+              valueListenable: settings.themeMode,
+              builder: (context, mode, _) => SwitchListTile(
+                title: const GameText('Dark Theme', maxLines: 1),
+                value: mode == ThemeMode.dark,
+                onChanged: (v) => settings.themeMode.value =
+                    v ? ThemeMode.dark : ThemeMode.light,
+              ),
+            ),
             SizedBox(height: spacing),
             ElevatedButton(
               onPressed: game.toggleSettings,

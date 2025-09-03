@@ -12,9 +12,10 @@ class HealthDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     return HudValueDisplay(
       valueListenable: game.health,
-      icon: const Icon(Icons.favorite, color: Colors.white, size: 24),
+      icon: Icon(Icons.favorite, color: scheme.error, size: 24),
     );
   }
 }
