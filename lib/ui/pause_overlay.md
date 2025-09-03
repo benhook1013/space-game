@@ -4,14 +4,12 @@ Overlay displayed when the game is paused.
 
 ## Features
 
-- Shows a "Paused" label with resume, restart, menu and mute buttons.
-- Icon sizes scale with screen size for consistency across devices.
+- Shows a centered "PAUSED" label.
+- Gameplay is halted but the interface remains visible for inspection.
 - Triggered from the HUD pause button or the Escape or `P` key.
 - Visible only while the game state is `paused`.
-- Press `R` to restart without using the button.
-- Pressing `M` also toggles audio mute.
-- Press `Q` to return to the menu without clicking the button.
-- Help button (or `H` key) opens a control reference and resumes when closed;
-  `Esc` also closes it.
+- Keyboard shortcuts still work: `R` restarts, `Q` returns to the menu,
+  `M` toggles audio mute and `H` opens the help overlay which resumes when
+  closed; `Esc` also closes it.
 
 See [../../PLAN.md](../../PLAN.md) for UI goals.

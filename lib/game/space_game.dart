@@ -241,7 +241,7 @@ class SpaceGame extends FlameGame
   /// Adds [value] to the current mineral count.
   void addMinerals(int value) => scoreService.addMinerals(value);
 
-  /// Pauses the game and shows the pause overlay.
+  /// Pauses the game and shows the `PAUSED` overlay.
   void pauseGame() => stateMachine.pauseGame();
 
   /// Resumes the game from a paused state.

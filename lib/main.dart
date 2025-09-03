@@ -43,8 +43,7 @@ Future<void> main() async {
         overlayBuilderMap: {
           MenuOverlay.id: (context, SpaceGame game) => MenuOverlay(game: game),
           HudOverlay.id: (context, SpaceGame game) => HudOverlay(game: game),
-          PauseOverlay.id: (context, SpaceGame game) =>
-              PauseOverlay(game: game),
+          PauseOverlay.id: (context, SpaceGame game) => const PauseOverlay(),
           GameOverOverlay.id: (context, SpaceGame game) =>
               GameOverOverlay(game: game),
           HelpOverlay.id: (context, SpaceGame game) => HelpOverlay(game: game),

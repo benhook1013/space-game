@@ -44,9 +44,10 @@ dedicated server or NAT traversal.
 - Player health, minerals and high score displayed in the HUD; health drops on
   collision and minerals increase when collecting pickups from mined asteroids
 - Local high score stored on device using `shared_preferences`
-- Basic sound effects with a mute toggle on menu, HUD, pause and game over
+- Basic sound effects with a mute toggle on menu, HUD and game over
   screens, plus an `M` key shortcut
-- Pause, resume or return to the menu via overlays (including game over screen)
+- Pause or resume via keyboard or HUD button with a centered `PAUSED`
+  indicator that leaves the interface visible
 - Keyboard controls for desktop playtests (`WASD`/arrow keys to move, `Space` to
   shoot, `Escape` or `P` to pause or resume, `M` to mute, `F1` toggles debug
   overlays, `Enter` starts or restarts from the menu or game over, `R` restarts at

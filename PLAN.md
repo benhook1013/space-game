@@ -163,7 +163,7 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
 - Local high score stored on device (e.g., shared preferences)
 - Menu offers a reset button to clear the high score
 - Basic sound effects using `flame_audio` with mute toggle (button or `M` key)
-  available on menu, HUD, pause and game over overlays
+  available on menu, HUD and game over overlays
 - Keyboard controls for desktop playtests (`WASD`/arrow keys to move, `Space` to
   shoot, `Escape` or `P` to pause or resume, `M` to mute, `Enter` starts or
   restarts from the menu or game over, `R` restarts at any time, `Q` returns to
@@ -171,7 +171,8 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
   `H` shows a help overlay that `Esc` also closes)
 - Game works offline after the first load thanks to the service worker
 - Simple parallax starfield background
-- Pause, resume or return to the menu via overlay
+- Pause or resume with a `PAUSED` label overlay; `Q` returns to the menu from
+  pause or game over
 
 ## 🗓️ Milestones
 
