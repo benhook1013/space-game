@@ -49,9 +49,11 @@ jobs:
       - name: Run PSScriptAnalyzer
         shell: pwsh
         run: |
-          [string[]]$ps1 = Get-ChildItem -Path . -Filter *.ps1 -Recurse | Select-Object -ExpandProperty FullName
+          $ps1 = Get-ChildItem -Path . -Filter *.ps1 -Recurse | Select-Object -ExpandProperty FullName
           if ($ps1) {
-            Invoke-ScriptAnalyzer -Path $ps1
+            foreach ($script in $ps1) {
+              Invoke-ScriptAnalyzer -Path $script
+            }
           } else {
             Write-Host 'No PowerShell scripts found'
           }
