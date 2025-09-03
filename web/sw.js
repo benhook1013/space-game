@@ -5,18 +5,20 @@ const CORE_ASSETS = [
   "manifest.json",
   "assets_manifest.json",
   "flutter_bootstrap.js",
-  "main.dart.js",
 ];
 
 async function cacheAssets(cache, assets) {
-  for (const asset of assets) {
-    const url = asset.startsWith("assets/") ? `assets/${asset}` : asset;
-    try {
-      await cache.add(url);
-    } catch (err) {
-      console.warn(`Failed to cache ${url}`, err);
-    }
-  }
+  await Promise.all(
+    assets.map(async (asset) => {
+      const url =
+        asset.startsWith("assets/") ? `assets/${asset}` : asset;
+      try {
+        await cache.add(url);
+      } catch (err) {
+        console.warn(`Failed to cache ${url}`, err);
+      }
+    }),
+  );
 }
 
 self.addEventListener("install", (event) => {
@@ -25,9 +27,7 @@ self.addEventListener("install", (event) => {
   self.skipWaiting();
 
   event.waitUntil(
-    caches.open(CACHE_NAME).then(async (cache) => {
-      await cacheAssets(cache, CORE_ASSETS);
-    }),
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(CORE_ASSETS)),
   );
 
   // Cache additional assets after activation so the install step finishes quickly.
@@ -36,6 +36,7 @@ self.addEventListener("install", (event) => {
       const response = await fetch("assets_manifest.json");
       const manifest = await response.json();
       const assetList = [
+        "main.dart.js",
         ...(manifest.images || []),
         ...(manifest.audio || []),
         ...(manifest.fonts || []),
