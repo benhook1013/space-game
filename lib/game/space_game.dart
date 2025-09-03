@@ -320,8 +320,12 @@ class SpaceGame extends FlameGame
   void _updateJoystickScale() {
     final oldJoystick = joystick;
     joystick = _buildJoystick();
-    oldJoystick.removeFromParent();
     add(joystick);
+    oldJoystick.removeFromParent();
+    // When the game is paused, lifecycle events like component additions are
+    // only processed during updates. Processing them here ensures the new
+    // joystick appears immediately so its scale updates even while paused.
+    processLifecycleEvents();
   }
 
   void _updateHudButtonScale() {
