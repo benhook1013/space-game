@@ -208,12 +208,16 @@ PATH="$(pwd)/$FLUTTER_DIR/bin:$PATH"
 export PATH
 git config --global --add safe.directory "$(pwd)/$FLUTTER_DIR" 2>/dev/null || true
 
-log "Running flutter --version"
-.tooling/flutter/bin/flutter --version || true
-log "Enabling web support"
-.tooling/flutter/bin/flutter config --enable-web || true
-if [ "${SKIP_DOCTOR:-}" != "1" ]; then
-  log "Running flutter doctor"
-  .tooling/flutter/bin/flutter doctor -v || true
+if [ "$needs_download" = true ]; then
+  log "Running flutter --version"
+  .tooling/flutter/bin/flutter --version || true
+  log "Enabling web support"
+  .tooling/flutter/bin/flutter config --enable-web || true
+  if [ "${SKIP_DOCTOR:-}" != "1" ]; then
+    log "Running flutter doctor"
+    .tooling/flutter/bin/flutter doctor -v || true
+  fi
+else
+  log "Flutter SDK already installed; skipping flutter doctor"
 fi
 log "Flutter bootstrap complete"
