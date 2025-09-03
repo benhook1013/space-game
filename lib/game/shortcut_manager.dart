@@ -20,8 +20,6 @@ class ShortcutManager {
         stateMachine.pauseGame();
       } else if (stateMachine.state == GameState.paused) {
         stateMachine.resumeGame();
-      } else if (stateMachine.state == GameState.gameOver) {
-        stateMachine.returnToMenu();
       }
     });
 
@@ -50,13 +48,6 @@ class ShortcutManager {
           stateMachine.state == GameState.playing ||
           stateMachine.state == GameState.paused) {
         stateMachine.startGame();
-      }
-    });
-
-    keyDispatcher.register(LogicalKeyboardKey.keyQ, onDown: () {
-      if (stateMachine.state == GameState.paused ||
-          stateMachine.state == GameState.gameOver) {
-        stateMachine.returnToMenu();
       }
     });
 

@@ -166,9 +166,8 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
   available on menu, HUD and game over overlays
 - Keyboard controls for desktop playtests (`WASD`/arrow keys to move, `Space` to
   shoot, `Escape` or `P` to pause or resume, `M` to mute, `Enter` starts or
-  restarts from the menu or game over, `R` restarts at any time, `Q` returns to
-  the menu from pause or game over, `Esc` also returns to the menu from game over,
-  `H` shows a help overlay that `Esc` also closes)
+  restarts from the menu or game over, `R` restarts at any time, `H` shows a help
+  overlay that `Esc` also closes)
 - Game works offline after the first load thanks to the service worker
 - Simple parallax starfield background
 - Pause or resume with a `PAUSED` overlay prompting players to press `Esc` or

@@ -64,8 +64,6 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
 - [x] Keyboard shortcut `P` pauses or resumes the game.
 - [x] Keyboard shortcuts: `Enter` starts or restarts from the menu or game over;
       `R` restarts during play, pause or game over.
-- [x] Keyboard shortcut `Q` returns to the menu from pause or game over.
-- [x] Keyboard shortcut `Esc` returns to the menu from game over.
 - [x] Help overlay lists controls and can be toggled with a button or the `H` key;
       `Esc` also closes it.
 - [x] HUD displays current score, minerals and health.
