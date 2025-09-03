@@ -7,14 +7,14 @@ Heads-up display shown during play.
 - Shows current score, high score and health using `ValueNotifier`s from
   `SpaceGame`.
 - Displays minerals in a centred pill with an icon and count.
-- Provides auto-aim radius toggle, upgrades, help, mute and pause buttons bound
-  to `SpaceGame` and `AudioService`.
+- Provides auto-aim radius toggle, upgrades, help, mute and pause/resume button
+  bound to `SpaceGame` and `AudioService`.
 - Icon sizes scale with screen size for better usability on different devices.
 - `U` opens the upgrades overlay; `Esc` closes it.
 - `H` opens the help overlay showing controls; `Esc` closes it.
 - `M` key also toggles audio mute.
 - `Escape` or `P` keys also pause or resume.
 - Press `R` to restart the current run without using on-screen buttons.
-- Visible only in the `playing` state.
+- Visible in the `playing` and `paused` states.
 
 See [../../PLAN.md](../../PLAN.md) for UI goals.
