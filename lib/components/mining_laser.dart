@@ -27,7 +27,16 @@ class MiningLaserComponent extends Component with HasGameReference<SpaceGame> {
   @override
   void update(double dt) {
     super.update(dt);
-    if (!player.isMounted) return;
+    if (!player.isMounted) {
+      _target = null;
+      _pulseTimer.stop();
+      _paint.strokeWidth = 2;
+      if (_playingSound) {
+        game.audioService.stopMiningLaser();
+        _playingSound = false;
+      }
+      return;
+    }
 
     final rangeSquared =
         Constants.playerMiningRange * Constants.playerMiningRange;
@@ -75,6 +84,15 @@ class MiningLaserComponent extends Component with HasGameReference<SpaceGame> {
         _playingSound = false;
       }
     }
+  }
+
+  @override
+  void onRemove() {
+    if (_playingSound) {
+      game.audioService.stopMiningLaser();
+      _playingSound = false;
+    }
+    super.onRemove();
   }
 
   @override
