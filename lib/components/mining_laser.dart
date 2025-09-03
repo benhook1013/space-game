@@ -15,9 +15,6 @@ class MiningLaserComponent extends Component with HasGameReference<SpaceGame> {
     _pulseTimer.onTick = () {
       _paint.strokeWidth = 2;
       _target?.takeDamage(Constants.miningPulseDamage);
-      if (_target?.isMounted != true) {
-        _target = null;
-      }
     };
   }
 
@@ -52,11 +49,23 @@ class MiningLaserComponent extends Component with HasGameReference<SpaceGame> {
 
     if (_target != null) {
       _pulseTimer.update(dt);
-      final progress = _pulseTimer.progress;
-      _paint.strokeWidth = 2 + 2 * progress;
-      if (!_playingSound) {
-        unawaited(game.audioService.startMiningLaser());
-        _playingSound = true;
+      if (_target?.isMounted != true || _target?.isRemoving == true) {
+        // Target was destroyed or removed; cancel the audio loop immediately
+        // instead of waiting for the next frame.
+        _target = null;
+        _pulseTimer.stop();
+        _paint.strokeWidth = 2;
+        if (_playingSound) {
+          game.audioService.stopMiningLaser();
+          _playingSound = false;
+        }
+      } else {
+        final progress = _pulseTimer.progress;
+        _paint.strokeWidth = 2 + 2 * progress;
+        if (!_playingSound) {
+          unawaited(game.audioService.startMiningLaser());
+          _playingSound = true;
+        }
       }
     } else {
       _pulseTimer.stop();
