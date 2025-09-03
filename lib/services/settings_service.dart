@@ -8,7 +8,7 @@ class SettingsService {
         joystickScale = ValueNotifier<double>(defaultJoystickScale);
 
   static const double defaultHudButtonScale = 0.75;
-  static const double defaultTextScale = 0.75;
+  static const double defaultTextScale = 1.5;
   static const double defaultJoystickScale = 1;
 
   /// Multiplier applied to HUD buttons and icons.
