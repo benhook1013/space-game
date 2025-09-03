@@ -158,7 +158,7 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
 - Asteroids drop mineral pickups when mined with an auto-targeting laser;
   destroying enemies also grants points
 - Single endless level without progression for now
-- Player health, minerals and high score shown in the HUD with simple
+- Player score, minerals and health shown in the HUD with simple
   start/game‑over screens
 - Local high score stored on device (e.g., shared preferences)
 - Menu offers a reset button to clear the high score

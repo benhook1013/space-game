@@ -4,8 +4,8 @@ Heads-up display shown during play.
 
 ## Features
 
-- Shows current score, high score and health using `ValueNotifier`s from
-  `SpaceGame`.
+- Shows current score and health using pill-shaped displays driven by
+  `ValueNotifier`s from `SpaceGame`.
 - Displays minerals in a centred pill with an icon and count.
 - Provides auto-aim radius toggle, upgrades, help, mute and pause/resume button
   bound to `SpaceGame` and `AudioService`.
