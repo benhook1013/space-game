@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 /// Displays text using a consistent style across game overlays.
 ///
@@ -38,15 +39,36 @@ class GameText extends StatelessWidget {
     fontSize: 18,
   );
 
+  /// Globally applied text scale factor. When attached, all [GameText]
+  /// instances rebuild in response to changes.
+  static ValueListenable<double>? textScale;
+
+  /// Registers a [ValueListenable] that controls text scaling.
+  static void attachTextScale(ValueListenable<double> notifier) {
+    textScale = notifier;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final mergedStyle =
-        _baseStyle.merge(style).copyWith(color: color ?? defaultColor);
-    return AutoSizeText(
-      data,
-      maxLines: maxLines,
-      textAlign: textAlign,
-      style: mergedStyle,
-    );
+    Widget buildText(double scale) {
+      final mergedStyle =
+          _baseStyle.merge(style).copyWith(color: color ?? defaultColor);
+      final baseSize = mergedStyle.fontSize ?? _baseStyle.fontSize!;
+      return AutoSizeText(
+        data,
+        maxLines: maxLines,
+        textAlign: textAlign,
+        style: mergedStyle.copyWith(fontSize: baseSize * scale),
+      );
+    }
+
+    final notifier = textScale;
+    if (notifier != null) {
+      return ValueListenableBuilder<double>(
+        valueListenable: notifier,
+        builder: (context, scale, _) => buildText(scale),
+      );
+    }
+    return buildText(1);
   }
 }

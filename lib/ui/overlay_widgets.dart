@@ -112,3 +112,20 @@ class UpgradeButton extends StatelessWidget {
     );
   }
 }
+
+/// Icon button that opens the runtime settings overlay.
+class SettingsButton extends StatelessWidget {
+  const SettingsButton({super.key, required this.game, required this.iconSize});
+
+  final SpaceGame game;
+  final double iconSize;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      iconSize: iconSize,
+      icon: const Icon(Icons.tune, color: GameText.defaultColor),
+      onPressed: game.toggleSettings,
+    );
+  }
+}

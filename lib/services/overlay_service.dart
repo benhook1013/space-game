@@ -6,6 +6,7 @@ import '../ui/menu_overlay.dart';
 import '../ui/pause_overlay.dart';
 import '../ui/help_overlay.dart';
 import '../ui/upgrades_overlay.dart';
+import '../ui/settings_overlay.dart';
 
 /// Handles showing and hiding Flutter overlays.
 class OverlayService {
@@ -57,4 +58,8 @@ class OverlayService {
       ..remove(UpgradesOverlay.id)
       ..add(HudOverlay.id);
   }
+
+  void showSettings() => game.overlays.add(SettingsOverlay.id);
+
+  void hideSettings() => game.overlays.remove(SettingsOverlay.id);
 }

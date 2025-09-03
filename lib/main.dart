@@ -9,8 +9,11 @@ import 'ui/menu_overlay.dart';
 import 'ui/pause_overlay.dart';
 import 'ui/help_overlay.dart';
 import 'ui/upgrades_overlay.dart';
+import 'ui/settings_overlay.dart';
+import 'ui/game_text.dart';
 import 'services/storage_service.dart';
 import 'services/audio_service.dart';
+import 'services/settings_service.dart';
 
 /// Application entry point.
 Future<void> main() async {
@@ -18,12 +21,15 @@ Future<void> main() async {
   await Assets.load();
   final storage = await StorageService.create();
   final audio = await AudioService.create(storage);
+  final settings = SettingsService();
   final focusNode = FocusNode();
   final game = SpaceGame(
     storageService: storage,
     audioService: audio,
+    settingsService: settings,
     focusNode: focusNode,
   );
+  GameText.attachTextScale(settings.textScale);
   runApp(
     MaterialApp(
       theme: ThemeData(
@@ -49,6 +55,8 @@ Future<void> main() async {
           HelpOverlay.id: (context, SpaceGame game) => HelpOverlay(game: game),
           UpgradesOverlay.id: (context, SpaceGame game) =>
               UpgradesOverlay(game: game),
+          SettingsOverlay.id: (context, SpaceGame game) =>
+              SettingsOverlay(game: game),
         },
       ),
     ),
