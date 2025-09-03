@@ -6,6 +6,7 @@ Current suites verify:
 
 - Storage and audio services
 - Object pooling for bullets, asteroids and enemies
+- OverlayService overlay transitions
 - Player shot cooldown logic
 - Help overlay pause behaviour
 
