@@ -41,7 +41,7 @@ dedicated server or NAT traversal.
   each hit drops a mineral nearby
 - A blue Tractor Aura draws nearby pickups toward the ship
 - Single endless level with quick restart
-- Player health, minerals and high score displayed in the HUD; health drops on
+- Player score, health and minerals displayed in the HUD; health drops on
   collision and minerals increase when collecting pickups from mined asteroids
 - Local high score stored on device using `shared_preferences`
 - Basic sound effects with a mute toggle on menu, HUD and game over
