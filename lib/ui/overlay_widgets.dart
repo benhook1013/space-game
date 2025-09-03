@@ -137,7 +137,7 @@ class SettingsButton extends StatelessWidget {
       iconSize: iconSize,
       icon: ImageIcon(
         AssetImage('assets/images/${Assets.settingsIcon}'),
-        color: GameText.defaultColor,
+        color: primary,
       ),
       onPressed: game.toggleSettings,
     );
