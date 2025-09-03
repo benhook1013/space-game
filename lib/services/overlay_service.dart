@@ -31,9 +31,7 @@ class OverlayService {
   }
 
   void showPause() {
-    game.overlays
-      ..remove(HudOverlay.id)
-      ..add(PauseOverlay.id);
+    game.overlays.add(PauseOverlay.id);
   }
 
   void showGameOver() {
