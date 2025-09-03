@@ -37,6 +37,7 @@ class _TestGame extends SpaceGame {
     await add(joystick);
     player = _TestPlayer(joystick: joystick, keyDispatcher: keyDispatcher);
     await add(player);
+    await player.onLoad();
     onGameResize(
       Vector2.all(
         Constants.playerSize *
@@ -75,5 +76,5 @@ void main() {
     enemy.reset(game.player.position - Vector2(100, 0));
     game.update(0.5);
     expect(game.player.angle, closeTo(-math.pi / 2, 0.001));
-  }, skip: true);
+  });
 }
