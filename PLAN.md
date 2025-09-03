@@ -171,8 +171,8 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
   `H` shows a help overlay that `Esc` also closes)
 - Game works offline after the first load thanks to the service worker
 - Simple parallax starfield background
-- Pause or resume with a `PAUSED` label overlay; `Q` returns to the menu from
-  pause or game over
+- Pause or resume with a `PAUSED` overlay prompting players to press `Esc` or
+  `P` to resume; `Q` returns to the menu from pause or game over
 
 ## 🗓️ Milestones
 
