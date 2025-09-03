@@ -10,7 +10,7 @@ import 'package:space_game/components/bullet.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('bullet instances are reused from pool', () async {
+  test('bullets are pooled only when released and reset on reuse', () async {
     SharedPreferences.setMockInitialValues({});
     final storage = await StorageService.create();
     final audio = await AudioService.create(storage);
@@ -19,10 +19,18 @@ void main() {
     final bullet1 = game.pools.acquire<BulletComponent>(
       (b) => b.reset(Vector2.zero(), Vector2(0, -1)),
     );
-    game.pools.release(bullet1);
     final bullet2 = game.pools.acquire<BulletComponent>(
-      (b) => b.reset(Vector2.zero(), Vector2(0, -1)),
+      (b) => b.reset(Vector2.all(5), Vector2(0, -1)),
     );
-    expect(identical(bullet1, bullet2), isTrue);
+    // A new instance should be created when the previous bullet hasn't been released.
+    expect(identical(bullet1, bullet2), isFalse);
+
+    // Once released, the same instance can be reused and reset to new values.
+    game.pools.release(bullet1);
+    final bullet3 = game.pools.acquire<BulletComponent>(
+      (b) => b.reset(Vector2.all(10), Vector2(0, -1)),
+    );
+    expect(identical(bullet1, bullet3), isTrue);
+    expect(bullet3.position, Vector2.all(10));
   });
 }
