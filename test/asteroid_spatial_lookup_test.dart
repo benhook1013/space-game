@@ -8,7 +8,6 @@ import 'package:space_game/game/space_game.dart';
 import 'package:space_game/services/audio_service.dart';
 import 'package:space_game/services/storage_service.dart';
 import 'package:space_game/components/asteroid.dart';
-import 'package:space_game/game/event_bus.dart';
 
 class _TestGame extends SpaceGame {
   _TestGame({required StorageService storage, required AudioService audio})
@@ -37,14 +36,8 @@ void main() {
     final a3 = game.pools.acquire<AsteroidComponent>(
       (a) => a.reset(Vector2(500, 500), Vector2.zero()),
     );
-    await game.add(a1);
-    await game.add(a2);
-    await game.add(a3);
-    game.update(0);
-    game.update(0);
-    game.eventBus.emit(ComponentSpawnEvent<AsteroidComponent>(a1));
-    game.eventBus.emit(ComponentSpawnEvent<AsteroidComponent>(a2));
-    game.eventBus.emit(ComponentSpawnEvent<AsteroidComponent>(a3));
+    // Components are tracked by the pool as soon as they are acquired, so
+    // there's no need to add them to the game or emit spawn events.
 
     final nearby = game.pools.nearbyAsteroids(Vector2.zero(), 150).toList();
     expect(nearby.contains(a1), isTrue);
