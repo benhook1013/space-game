@@ -99,6 +99,15 @@ class MiningLaserComponent extends Component with HasGameReference<SpaceGame> {
     }
   }
 
+  /// Stops the mining laser sound and resets the internal flag so it can
+  /// resume later if needed.
+  void stopSound() {
+    if (_playingSound) {
+      game.audioService.stopMiningLaser();
+      _playingSound = false;
+    }
+  }
+
   @override
   void render(Canvas canvas) {
     super.render(canvas);
