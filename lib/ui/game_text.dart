@@ -4,8 +4,8 @@ import 'package:flutter/foundation.dart';
 
 /// Displays text using a consistent style across game overlays.
 ///
-/// Defaults to yellow text with a modest font size but can be customised
-/// via [style], [maxLines] and [textAlign].
+/// Text is rendered without decoration and uses the theme's primary colour by
+/// default, but can be customised via [style], [maxLines] and [textAlign].
 class GameText extends StatelessWidget {
   const GameText(
     this.data, {
@@ -46,8 +46,10 @@ class GameText extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget buildText(double scale) {
       final scheme = Theme.of(context).colorScheme;
-      final mergedStyle =
-          _baseStyle.merge(style).copyWith(color: color ?? scheme.primary);
+      final mergedStyle = _baseStyle.merge(style).copyWith(
+            color: color ?? scheme.primary,
+            decoration: TextDecoration.none,
+          );
       final baseSize = mergedStyle.fontSize ?? _baseStyle.fontSize!;
       return AutoSizeText(
         data,
