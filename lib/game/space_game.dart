@@ -23,6 +23,7 @@ import '../services/storage_service.dart';
 import '../services/audio_service.dart';
 import '../services/targeting_service.dart';
 import '../services/settings_service.dart';
+import '../services/theme_service.dart';
 import '../ui/help_overlay.dart';
 import '../ui/upgrades_overlay.dart';
 import '../ui/settings_overlay.dart';
@@ -43,9 +44,11 @@ class SpaceGame extends FlameGame
   SpaceGame({
     required this.storageService,
     required this.audioService,
+    ThemeService? themeService,
     SettingsService? settingsService,
     FocusNode? focusNode,
-  })  : settingsService = settingsService ?? SettingsService(),
+  })  : themeService = themeService ?? ThemeService(),
+        settingsService = settingsService ?? SettingsService(),
         focusNode = focusNode ?? FocusNode(),
         scoreService = ScoreService(storageService: storageService) {
     debugMode = kDebugMode;
@@ -58,6 +61,9 @@ class SpaceGame extends FlameGame
 
   /// Plays sound effects and handles the mute toggle.
   final AudioService audioService;
+
+  /// Provides the active colour scheme and theme settings.
+  final ThemeService themeService;
 
   /// Provides runtime-adjustable UI settings.
   final SettingsService settingsService;
@@ -82,6 +88,11 @@ class SpaceGame extends FlameGame
   }
 
   late final HudButtonComponent fireButton;
+  late Paint _joystickKnobPaint;
+  late Paint _joystickBackgroundPaint;
+  late Paint _fireButtonPaint;
+  late Paint _fireButtonDownPaint;
+  late VoidCallback _themeListener;
   late final EnemySpawner enemySpawner;
   late final AsteroidSpawner asteroidSpawner;
   late final PoolManager pools;
@@ -120,14 +131,16 @@ class SpaceGame extends FlameGame
     keyDispatcher = KeyDispatcher();
     await add(keyDispatcher);
 
+    _joystickKnobPaint = Paint();
+    _joystickBackgroundPaint = Paint();
     joystick = JoystickComponent(
       knob: CircleComponent(
         radius: 20 * settingsService.joystickScale.value,
-        paint: Paint()..color = const Color(0xffffffff),
+        paint: _joystickKnobPaint,
       ),
       background: CircleComponent(
         radius: 50 * settingsService.joystickScale.value,
-        paint: Paint()..color = const Color(0x66ffffff),
+        paint: _joystickBackgroundPaint,
       ),
       margin: const EdgeInsets.only(left: 40, bottom: 40),
     );
@@ -148,14 +161,16 @@ class SpaceGame extends FlameGame
     miningLaser = MiningLaserComponent(player: player);
     await add(miningLaser);
 
+    _fireButtonPaint = Paint();
+    _fireButtonDownPaint = Paint();
     fireButton = HudButtonComponent(
       button: CircleComponent(
         radius: 30 * settingsService.hudButtonScale.value,
-        paint: Paint()..color = const Color(0x66ffffff),
+        paint: _fireButtonPaint,
       ),
       buttonDown: CircleComponent(
         radius: 30 * settingsService.hudButtonScale.value,
-        paint: Paint()..color = const Color(0xffffffff),
+        paint: _fireButtonDownPaint,
       ),
       anchor: Anchor.bottomRight,
       margin: const EdgeInsets.only(right: 40, bottom: 40),
@@ -192,6 +207,9 @@ class SpaceGame extends FlameGame
 
     settingsService.joystickScale.addListener(_updateJoystickScale);
     settingsService.hudButtonScale.addListener(_updateHudButtonScale);
+    _applyTheme();
+    _themeListener = _applyTheme;
+    themeService.addListener(_themeListener);
   }
 
   @protected
@@ -312,6 +330,14 @@ class SpaceGame extends FlameGame
     }
   }
 
+  @override
+  void onRemove() {
+    settingsService.joystickScale.removeListener(_updateJoystickScale);
+    settingsService.hudButtonScale.removeListener(_updateHudButtonScale);
+    themeService.removeListener(_themeListener);
+    super.onRemove();
+  }
+
   void _updateJoystickScale() {
     final scale = settingsService.joystickScale.value;
     (joystick.knob as CircleComponent).radius = 20 * scale;
@@ -322,6 +348,14 @@ class SpaceGame extends FlameGame
     final scale = settingsService.hudButtonScale.value;
     (fireButton.button as CircleComponent).radius = 30 * scale;
     (fireButton.buttonDown as CircleComponent).radius = 30 * scale;
+  }
+
+  void _applyTheme() {
+    final scheme = themeService.colorScheme;
+    _joystickKnobPaint.color = scheme.primary;
+    _joystickBackgroundPaint.color = scheme.primary.withValues(alpha: 0.4);
+    _fireButtonPaint.color = scheme.primary.withValues(alpha: 0.4);
+    _fireButtonDownPaint.color = scheme.primary;
   }
 
   /// Requests keyboard focus for the surrounding [GameWidget].

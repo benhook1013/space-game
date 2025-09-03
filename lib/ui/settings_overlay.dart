@@ -45,6 +45,19 @@ class SettingsOverlay extends StatelessWidget {
               settings.joystickScale,
               spacing,
             ),
+            AnimatedBuilder(
+              animation: game.themeService,
+              builder: (context, _) => Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const GameText('Dark Theme'),
+                  Switch(
+                    value: game.themeService.themeMode == ThemeMode.dark,
+                    onChanged: (_) => game.themeService.toggleTheme(),
+                  ),
+                ],
+              ),
+            ),
             SizedBox(height: spacing),
             ElevatedButton(
               onPressed: game.toggleSettings,

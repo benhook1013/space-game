@@ -72,7 +72,7 @@ class MenuOverlay extends StatelessWidget {
                         decoration: BoxDecoration(
                           border: Border.all(
                             color: selected == i
-                                ? GameText.defaultColor
+                                ? Theme.of(context).colorScheme.primary
                                 : Colors.transparent,
                             width: 2,
                           ),

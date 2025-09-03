@@ -58,12 +58,9 @@ class PlayerComponent extends SpriteComponent
   bool isMoving = false;
 
   /// Paint used when drawing the auto-aim radius.
-  final Paint _autoAimPaint = Paint()
-    ..color = const Color(0x66ffffff)
-    ..style = PaintingStyle.stroke;
+  final Paint _autoAimPaint = Paint()..style = PaintingStyle.stroke;
 
-  static final _damageFilter =
-      ColorFilter.mode(const Color(0xffff0000), BlendMode.srcATop);
+  late VoidCallback _themeListener;
 
   /// Remaining time for the damage flash effect.
   double _damageFlashTime = 0;
@@ -106,7 +103,10 @@ class PlayerComponent extends SpriteComponent
   /// Triggers a short red flash to indicate damage taken.
   void flashDamage() {
     _damageFlashTime = Constants.playerDamageFlashDuration;
-    paint.colorFilter = _damageFilter;
+    paint.colorFilter = ColorFilter.mode(
+      game.themeService.colorScheme.error,
+      BlendMode.srcATop,
+    );
   }
 
   /// Allows external callers to fire a bullet.
@@ -128,6 +128,7 @@ class PlayerComponent extends SpriteComponent
     await add(_input);
     await add(_autoAim);
     await add(TractorAuraRenderer());
+    _applyTheme();
   }
 
   @override
@@ -139,6 +140,8 @@ class PlayerComponent extends SpriteComponent
     if (!contains(_autoAim)) {
       add(_autoAim);
     }
+    _themeListener = _applyTheme;
+    game.themeService.addListener(_themeListener);
     keyDispatcher.register(
       LogicalKeyboardKey.space,
       onDown: startShooting,
@@ -149,6 +152,7 @@ class PlayerComponent extends SpriteComponent
   @override
   void onRemove() {
     keyDispatcher.unregister(LogicalKeyboardKey.space);
+    game.themeService.removeListener(_themeListener);
     super.onRemove();
   }
 
@@ -176,6 +180,11 @@ class PlayerComponent extends SpriteComponent
         paint.colorFilter = null;
       }
     }
+  }
+
+  void _applyTheme() {
+    final color = game.themeService.colorScheme.primary;
+    _autoAimPaint.color = color.withValues(alpha: 0.4);
   }
 
   @override

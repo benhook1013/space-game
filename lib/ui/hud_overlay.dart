@@ -65,7 +65,10 @@ class HudOverlay extends StatelessWidget {
                     children: [
                       IconButton(
                         iconSize: iconSize,
-                        icon: const Icon(Icons.gps_fixed, color: Colors.white),
+                        icon: Icon(
+                          Icons.gps_fixed,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
                         onPressed: game.toggleAutoAimRadius,
                       ),
                       UpgradeButton(game: game, iconSize: iconSize),
@@ -75,8 +78,10 @@ class HudOverlay extends StatelessWidget {
                       IconButton(
                         iconSize: iconSize,
                         // Mirrors the Escape and P keyboard shortcuts.
-                        icon: const Icon(Icons.pause,
-                            color: GameText.defaultColor),
+                        icon: Icon(
+                          Icons.pause,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
                         onPressed: game.pauseGame,
                       ),
                     ],

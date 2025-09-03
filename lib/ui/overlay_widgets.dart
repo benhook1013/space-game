@@ -35,7 +35,10 @@ class OverlayLayout extends StatelessWidget {
 
         Widget child = Center(child: builder(context, spacing, iconSize));
         if (dimmed) {
-          child = Container(color: Colors.black54, child: child);
+          child = Container(
+            color: Theme.of(context).colorScheme.scrim.withValues(alpha: 0.5),
+            child: child,
+          );
         }
         return child;
       },
@@ -58,7 +61,7 @@ class MuteButton extends StatelessWidget {
         iconSize: iconSize,
         icon: Icon(
           muted ? Icons.volume_off : Icons.volume_up,
-          color: GameText.defaultColor,
+          color: Theme.of(context).colorScheme.primary,
         ),
         onPressed: game.audioService.toggleMute,
       ),
@@ -81,7 +84,10 @@ class HelpButton extends StatelessWidget {
     if (iconSize != null) {
       return IconButton(
         iconSize: iconSize,
-        icon: const Icon(Icons.help_outline, color: GameText.defaultColor),
+        icon: Icon(
+          Icons.help_outline,
+          color: Theme.of(context).colorScheme.primary,
+        ),
         onPressed: game.toggleHelp,
       );
     }
@@ -107,7 +113,10 @@ class UpgradeButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       iconSize: iconSize,
-      icon: const Icon(Icons.upgrade, color: GameText.defaultColor),
+      icon: Icon(
+        Icons.upgrade,
+        color: Theme.of(context).colorScheme.primary,
+      ),
       onPressed: game.toggleUpgrades,
     );
   }
@@ -124,7 +133,10 @@ class SettingsButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       iconSize: iconSize,
-      icon: const Icon(Icons.tune, color: GameText.defaultColor),
+      icon: Icon(
+        Icons.tune,
+        color: Theme.of(context).colorScheme.primary,
+      ),
       onPressed: game.toggleSettings,
     );
   }

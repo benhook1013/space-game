@@ -1,11 +1,12 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 /// Displays text using a consistent style across game overlays.
 ///
-/// Defaults to yellow text with a modest font size but can be customised
-/// via [style], [maxLines] and [textAlign].
+/// The default colour is pulled from the active [Theme]'s
+/// [ColorScheme.primary] to keep text in sync with the app theme, but it can
+/// be overridden via [color], [style], [maxLines] and [textAlign].
 class GameText extends StatelessWidget {
   const GameText(
     this.data, {
@@ -31,13 +32,7 @@ class GameText extends StatelessWidget {
   /// Explicit colour override for the text.
   final Color? color;
 
-  /// Base colour used for in-game text.
-  static const Color defaultColor = Colors.yellow;
-
-  static const _baseStyle = TextStyle(
-    color: defaultColor,
-    fontSize: 18,
-  );
+  static const _baseStyle = TextStyle(fontSize: 18);
 
   /// Globally applied text scale factor. When attached, all [GameText]
   /// instances rebuild in response to changes.
@@ -50,6 +45,7 @@ class GameText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final defaultColor = Theme.of(context).colorScheme.primary;
     Widget buildText(double scale) {
       final mergedStyle =
           _baseStyle.merge(style).copyWith(color: color ?? defaultColor);

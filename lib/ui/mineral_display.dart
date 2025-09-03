@@ -18,9 +18,9 @@ class MineralDisplay extends StatelessWidget {
       builder: (context, value, _) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
         decoration: BoxDecoration(
-          color: Colors.black54,
+          color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.6),
           borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: Colors.white),
+          border: Border.all(color: Theme.of(context).colorScheme.onSurface),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
