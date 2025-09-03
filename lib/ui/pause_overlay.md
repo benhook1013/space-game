@@ -5,7 +5,8 @@ Overlay displayed when the game is paused.
 ## Features
 
 - Shows a centered "PAUSED" label.
-- Gameplay is halted but the interface remains visible for inspection.
+- Gameplay is halted but the interface, including the HUD, remains visible for
+  inspection.
 - Triggered from the HUD pause button or the Escape or `P` key.
 - Visible only while the game state is `paused`.
 - Keyboard shortcuts still work: `R` restarts, `Q` returns to the menu,
