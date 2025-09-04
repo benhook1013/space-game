@@ -65,4 +65,24 @@ void main() {
     final reused = game.pools.acquire<EnemyComponent>((_) {});
     expect(reused.debugMode, isFalse);
   });
+
+  test('toggleDebug updates pooled child debugMode', () async {
+    SharedPreferences.setMockInitialValues({});
+    final storage = await StorageService.create();
+    final audio = await AudioService.create(storage);
+    final game = SpaceGame(storageService: storage, audioService: audio);
+
+    final enemy = game.pools.acquire<EnemyComponent>((_) {});
+    enemy.game = game;
+    await enemy.onLoad();
+    final hitbox = enemy.children.query<CircleHitbox>().first;
+    enemy.debugMode = true;
+    hitbox.debugMode = true;
+    game.pools.release(enemy);
+
+    game.toggleDebug();
+    final reused = game.pools.acquire<EnemyComponent>((_) {});
+    final reusedHitbox = reused.children.query<CircleHitbox>().first;
+    expect(reusedHitbox.debugMode, isFalse);
+  });
 }
