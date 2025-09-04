@@ -87,8 +87,8 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
 - [x] Design a broad upgrade system where minerals purchase new weapon and ship
       upgrades.
 - [x] Implement upgrade effects and apply them to gameplay systems.
-- [ ] Expand the game world beyond the current single-screen map.
-- [ ] Attach a `CameraComponent` that follows the player with no fixed bounds.
+- [x] Expand the game world beyond the current single-screen map.
+- [x] Attach a `CameraComponent` that follows the player with no fixed bounds.
 - [ ] Spawn asteroids, enemies and pickups just ahead of the player and
       despawn those far behind.
 - [ ] Tile the parallax starfield so it scrolls seamlessly.

@@ -63,13 +63,10 @@ class EnemySpawner extends Component with HasGameReference<SpaceGame> {
           rect.top + _random.nextDouble() * rect.height,
         );
     }
-    base.clamp(Vector2.zero(), Constants.worldSize);
-
     for (var i = 0; i < Constants.enemyGroupSize; i++) {
       final offset = (Vector2.random(_random) - Vector2.all(0.5)) *
           (Constants.enemyGroupSpread * 2);
       final position = base + offset;
-      position.clamp(Vector2.zero(), Constants.worldSize);
       game.add(
         game.pools.acquire<EnemyComponent>((e) => e.reset(position)),
       );

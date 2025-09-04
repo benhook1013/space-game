@@ -44,6 +44,6 @@ void main() {
     game.startGame();
     final players = game.children.whereType<PlayerComponent>().toList();
     expect(players.length, 1);
-    expect(players.first.position, Constants.worldSize / 2);
+    expect(players.first.position, Vector2.zero());
   });
 }

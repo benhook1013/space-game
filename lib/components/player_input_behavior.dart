@@ -95,11 +95,6 @@ class PlayerInputBehavior extends Component with HasGameReference<SpaceGame> {
     if (!input.isZero()) {
       input = input.normalized();
       player.position += input * Constants.playerSpeed * dt;
-      final halfSize = Vector2.all(player.size.x / 2);
-      player.position.clamp(
-        halfSize,
-        Constants.worldSize - halfSize,
-      );
       player.targetAngle = math.atan2(input.y, input.x) + math.pi / 2;
       player.isMoving = true;
       return true;
