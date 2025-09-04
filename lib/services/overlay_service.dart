@@ -19,6 +19,7 @@ class OverlayService {
       ..remove(HudOverlay.id)
       ..remove(PauseOverlay.id)
       ..remove(GameOverOverlay.id)
+      ..remove(SettingsOverlay.id)
       ..add(MenuOverlay.id);
   }
 
@@ -27,17 +28,21 @@ class OverlayService {
       ..remove(MenuOverlay.id)
       ..remove(PauseOverlay.id)
       ..remove(GameOverOverlay.id)
+      ..remove(SettingsOverlay.id)
       ..add(HudOverlay.id);
   }
 
   void showPause() {
-    game.overlays.add(PauseOverlay.id);
+    game.overlays
+      ..remove(SettingsOverlay.id)
+      ..add(PauseOverlay.id);
   }
 
   void showGameOver() {
     game.overlays
       ..remove(HudOverlay.id)
       ..remove(PauseOverlay.id)
+      ..remove(SettingsOverlay.id)
       ..add(GameOverOverlay.id);
   }
 
@@ -48,12 +53,14 @@ class OverlayService {
   void showUpgrades() {
     game.overlays
       ..remove(HudOverlay.id)
+      ..remove(SettingsOverlay.id)
       ..add(UpgradesOverlay.id);
   }
 
   void hideUpgrades() {
     game.overlays
       ..remove(UpgradesOverlay.id)
+      ..remove(SettingsOverlay.id)
       ..add(HudOverlay.id);
   }
 

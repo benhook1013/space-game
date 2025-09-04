@@ -67,5 +67,35 @@ void main() {
     expect(game.overlays.isActive(SettingsOverlay.id), isTrue);
     service.hideSettings();
     expect(game.overlays.isActive(SettingsOverlay.id), isFalse);
+
+    service.showSettings();
+    service.showMenu();
+    expect(game.overlays.isActive(SettingsOverlay.id), isFalse);
+    expect(game.overlays.isActive(MenuOverlay.id), isTrue);
+
+    service.showSettings();
+    service.showHud();
+    expect(game.overlays.isActive(SettingsOverlay.id), isFalse);
+    expect(game.overlays.isActive(HudOverlay.id), isTrue);
+
+    service.showSettings();
+    service.showPause();
+    expect(game.overlays.isActive(SettingsOverlay.id), isFalse);
+    expect(game.overlays.isActive(PauseOverlay.id), isTrue);
+
+    service.showSettings();
+    service.showGameOver();
+    expect(game.overlays.isActive(SettingsOverlay.id), isFalse);
+    expect(game.overlays.isActive(GameOverOverlay.id), isTrue);
+
+    service.showSettings();
+    service.showUpgrades();
+    expect(game.overlays.isActive(SettingsOverlay.id), isFalse);
+    expect(game.overlays.isActive(UpgradesOverlay.id), isTrue);
+
+    service.showSettings();
+    service.hideUpgrades();
+    expect(game.overlays.isActive(SettingsOverlay.id), isFalse);
+    expect(game.overlays.isActive(HudOverlay.id), isTrue);
   });
 }
