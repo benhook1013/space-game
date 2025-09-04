@@ -155,8 +155,8 @@ tree spanning weapons and ship systems.
 
 ## Rendering & Camera
 
-- Fixed logical resolution scaled to the device.
-- Camera follows the player via `CameraComponent` and `FixedResolutionViewport`.
+- Camera follows the player via `CameraComponent` and clamps to the
+  `Constants.worldSize` bounds with a `BoundedPositionBehavior` so the starfield edges stay in view.
 - A parallax starfield provides the background.
 
 ## Assets

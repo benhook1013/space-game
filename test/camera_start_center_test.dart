@@ -1,4 +1,6 @@
+import 'package:flame/camera.dart';
 import 'package:flame/components.dart';
+import 'package:flame/experimental.dart';
 import 'package:flame/flame.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -32,5 +34,17 @@ void main() {
 
     expect(game.player.position, Constants.worldSize / 2);
     expect(game.camera.viewfinder.position, game.player.position);
+    final behavior =
+        game.camera.children.whereType<BoundedPositionBehavior>().single;
+    final rect = (behavior.bounds as Rectangle).toRect();
+    expect(
+      rect,
+      Rect.fromLTWH(
+        0,
+        0,
+        Constants.worldSize.x,
+        Constants.worldSize.y,
+      ),
+    );
   });
 }
