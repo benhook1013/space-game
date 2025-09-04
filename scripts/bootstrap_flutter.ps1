@@ -124,8 +124,7 @@ function Download-With-Http { param([string]$Url,[string]$Dest)
   if (Test-Path $tmp) {
     Move-Item -Force $tmp $Dest
   } else {
-    Say "HttpClient download failed, falling back to Invoke-WebRequest"
-    Invoke-WebRequest -Uri $Url -OutFile $Dest -UseBasicParsing
+    throw "HttpClient download failed and fallbacks are temporarily disabled"
   }
 }
 
@@ -231,10 +230,8 @@ function Expand-ZipWithProgress { param([string]$ZipPath,[string]$Destination='.
 $destZip = $ARCHIVE
 $ProgressPreferenceBak = $global:ProgressPreference; $global:ProgressPreference = 'Continue'
 try {
-  switch ($Downloader) {
-    'ranges' { Download-With-Ranges -Url $URL -Dest $destZip }
-    default  { Download-With-Http   -Url $URL -Dest $destZip }
-  }
+  # Temporarily force HttpClient-only downloads; disable other strategies
+  Download-With-Http -Url $URL -Dest $destZip
 
   if ($ExpectedSha256) {
     Say "Verifying SHA256"
