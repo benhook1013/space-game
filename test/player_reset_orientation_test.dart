@@ -12,7 +12,6 @@ import 'package:space_game/ui/game_over_overlay.dart';
 import 'package:space_game/ui/hud_overlay.dart';
 import 'package:space_game/ui/menu_overlay.dart';
 import 'package:space_game/ui/pause_overlay.dart';
-import 'package:space_game/constants.dart';
 import 'test_joystick.dart';
 
 void main() {
@@ -57,11 +56,11 @@ void main() {
     game.update(0);
     game.update(0);
     expect(game.player.angle, 0);
-    expect(game.player.position, Constants.worldSize / 2);
+    expect(game.player.position, Vector2.zero());
 
     // After update with no input, angle and position should remain unchanged.
     game.update(0.1);
     expect(game.player.angle, 0);
-    expect(game.player.position, Constants.worldSize / 2);
+    expect(game.player.position, Vector2.zero());
   });
 }

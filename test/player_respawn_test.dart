@@ -41,6 +41,6 @@ void main() {
     expect(game.stateMachine.state, GameState.gameOver);
 
     game.startGame();
-    expect(game.player.position, Constants.worldSize / 2);
+    expect(game.player.position, Vector2.zero());
   });
 }

@@ -1,8 +1,6 @@
 import 'dart:ui';
 
-import 'package:flame/camera.dart';
 import 'package:flame/components.dart';
-import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flutter/foundation.dart';
@@ -162,21 +160,9 @@ class SpaceGame extends FlameGame
       keyDispatcher: keyDispatcher,
       spritePath: selectedPlayerSprite,
     );
-    player.position = Constants.worldSize / 2;
     await add(player);
     _playerInitialized = true;
     camera.follow(player, snap: true);
-    camera.add(
-      BoundedPositionBehavior(
-        bounds: Rectangle.fromLTWH(
-          0,
-          0,
-          Constants.worldSize.x,
-          Constants.worldSize.y,
-        ),
-        target: camera.viewfinder,
-      ),
-    );
     final laser = MiningLaserComponent(player: player);
     miningLaser = laser;
     await add(laser);

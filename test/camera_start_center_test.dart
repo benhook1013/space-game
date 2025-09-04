@@ -1,13 +1,10 @@
-import 'package:flame/camera.dart';
 import 'package:flame/components.dart';
-import 'package:flame/experimental.dart';
 import 'package:flame/flame.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:space_game/assets.dart';
-import 'package:space_game/constants.dart';
 import 'package:space_game/game/space_game.dart';
 import 'package:space_game/services/audio_service.dart';
 import 'package:space_game/services/storage_service.dart';
@@ -32,19 +29,7 @@ void main() {
     await game.onLoad();
     game.onGameResize(Vector2.all(100));
 
-    expect(game.player.position, Constants.worldSize / 2);
+    expect(game.player.position, Vector2.zero());
     expect(game.camera.viewfinder.position, game.player.position);
-    final behavior =
-        game.camera.children.whereType<BoundedPositionBehavior>().single;
-    final rect = (behavior.bounds as Rectangle).toRect();
-    expect(
-      rect,
-      Rect.fromLTWH(
-        0,
-        0,
-        Constants.worldSize.x,
-        Constants.worldSize.y,
-      ),
-    );
   });
 }

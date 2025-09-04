@@ -15,8 +15,14 @@ class StarfieldComponent extends ParallaxComponent {
 
   @override
   Future<void> onLoad() async {
-    size = Constants.worldSize;
-    parallax = _cachedParallax ??= await _buildParallax(size);
+    parallax = _cachedParallax ??=
+        await _buildParallax(Vector2.all(Constants.starfieldTileSize));
+  }
+
+  @override
+  void onGameResize(Vector2 size) {
+    super.onGameResize(size);
+    this.size = size;
   }
 
   static Future<Parallax> _buildParallax(Vector2 size) async {

@@ -77,7 +77,6 @@ class AsteroidSpawner extends Component with HasGameReference<SpaceGame> {
           (_random.nextDouble() - 0.5) * Constants.asteroidSpeed,
         );
     }
-    position.clamp(Vector2.zero(), Constants.worldSize);
     game.add(
       game.pools.acquire<AsteroidComponent>(
         (a) => a.reset(position, velocity),
