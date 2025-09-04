@@ -11,23 +11,26 @@ class ShortcutManager {
     required KeyDispatcher keyDispatcher,
     required GameStateMachine stateMachine,
     required AudioService audioService,
+    required void Function() pauseGame,
+    required void Function() resumeGame,
+    required void Function() startGame,
     required void Function() toggleHelp,
     required void Function() toggleUpgrades,
     required void Function() toggleDebug,
   }) {
     keyDispatcher.register(LogicalKeyboardKey.escape, onDown: () {
       if (stateMachine.state == GameState.playing) {
-        stateMachine.pauseGame();
+        pauseGame();
       } else if (stateMachine.state == GameState.paused) {
-        stateMachine.resumeGame();
+        resumeGame();
       }
     });
 
     keyDispatcher.register(LogicalKeyboardKey.keyP, onDown: () {
       if (stateMachine.state == GameState.playing) {
-        stateMachine.pauseGame();
+        pauseGame();
       } else if (stateMachine.state == GameState.paused) {
-        stateMachine.resumeGame();
+        resumeGame();
       }
     });
 
@@ -39,7 +42,7 @@ class ShortcutManager {
     keyDispatcher.register(LogicalKeyboardKey.enter, onDown: () {
       if (stateMachine.state == GameState.menu ||
           stateMachine.state == GameState.gameOver) {
-        stateMachine.startGame();
+        startGame();
       }
     });
 
@@ -47,7 +50,7 @@ class ShortcutManager {
       if (stateMachine.state == GameState.gameOver ||
           stateMachine.state == GameState.playing ||
           stateMachine.state == GameState.paused) {
-        stateMachine.startGame();
+        startGame();
       }
     });
 

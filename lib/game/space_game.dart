@@ -210,6 +210,9 @@ class SpaceGame extends FlameGame
       keyDispatcher: keyDispatcher,
       stateMachine: stateMachine,
       audioService: audioService,
+      pauseGame: pauseGame,
+      resumeGame: resumeGame,
+      startGame: startGame,
       toggleHelp: toggleHelp,
       toggleUpgrades: toggleUpgrades,
       toggleDebug: toggleDebug,
@@ -245,6 +248,7 @@ class SpaceGame extends FlameGame
       stateMachine.state = GameState.upgrades;
       overlayService.showUpgrades();
       pauseEngine();
+      miningLaser.stopSound();
     }
   }
 
@@ -261,6 +265,7 @@ class SpaceGame extends FlameGame
       overlayService.showHelp();
       if (_helpWasPlaying) {
         pauseEngine();
+        miningLaser.stopSound();
       }
     }
   }
@@ -286,11 +291,19 @@ class SpaceGame extends FlameGame
   void addMinerals(int value) => scoreService.addMinerals(value);
 
   /// Pauses the game and shows the `PAUSED` overlay.
-  void pauseGame() => stateMachine.pauseGame();
+  void pauseGame() {
+    stateMachine.pauseGame();
+    if (settingsService.muteOnPause.value) {
+      miningLaser.stopSound();
+    } else {
+      audioService.setMasterVolume(Constants.pausedAudioVolumeFactor);
+    }
+  }
 
   /// Resumes the game from a paused state.
   void resumeGame() {
     stateMachine.resumeGame();
+    audioService.setMasterVolume(1);
     focusGame();
   }
 
@@ -298,7 +311,10 @@ class SpaceGame extends FlameGame
   void returnToMenu() => stateMachine.returnToMenu();
 
   /// Starts a new game session.
-  void startGame() => stateMachine.startGame();
+  void startGame() {
+    audioService.setMasterVolume(1);
+    stateMachine.startGame();
+  }
 
   /// Clears the saved high score.
   Future<void> resetHighScore() => scoreService.resetHighScore();

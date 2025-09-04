@@ -69,12 +69,13 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
 - [x] HUD displays current score, minerals and health.
 - [x] Limit player fire rate with a brief cooldown.
 - [x] Keyboard shortcut `F1` toggles debug overlays.
+- [x] Option to mute audio or lower volume when the game is paused.
 - [x] Menu includes button to reset the high score.
 
 ## Next Steps
 
 - [x] Spawn enemy groups on a timer.
-- [ ] Add a mining laser that automatically targets and fires at nearby
+- [x] Add a mining laser that automatically targets and fires at nearby
       asteroids.
 - [x] Drop mineral pickups from asteroids and track the player's total.
 - [x] Pull nearby pickups toward the player with a Tractor Aura.

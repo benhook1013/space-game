@@ -98,7 +98,8 @@ tree spanning weapons and ship systems.
 ## Services
 
 - Small helpers for cross-cutting concerns live under `lib/services/`.
-- `audio_service.dart` will wrap `flame_audio` and expose a mute toggle.
+- `audio_service.dart` wraps `flame_audio`, exposing a mute toggle and master
+  volume so audio can dim when the game is paused.
 - `storage_service.dart` will use `shared_preferences` to persist the local
   high score and can expand for save/load later.
 - Add services only when needed to keep the project lightweight.

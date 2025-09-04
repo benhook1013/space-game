@@ -31,6 +31,7 @@ _Update this file whenever a player-facing feature is added or changed._
 - [ ] Explosion animation and sound play when a ship is destroyed
 - [ ] Mining laser emits a looping sound while active
 - [ ] Game can be paused and resumed
+- [ ] Pausing mutes audio or lowers volume according to settings
 - [ ] Pressing `H` shows a help overlay; `Esc` or `H` closes it and resumes play
 - [ ] Pressing `U` shows an upgrades overlay and pauses the game; `Esc` or `U`
       closes it
