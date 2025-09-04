@@ -235,6 +235,18 @@ in [TASKS.md](TASKS.md).
   toggle at runtime with the `F1` key
 - Add a tiny `log()` helper around `debugPrint` so messages can be silenced in release
 
+## 🌌 World Exploration
+
+The current build uses a single-screen play area. To let players roam, expand
+the world beyond the viewport and have the camera track the ship.
+
+- Treat space as effectively infinite; avoid hard world bounds.
+- Attach a `CameraComponent` that follows the player without clamping.
+- Continuously spawn asteroids, enemies and pickups ahead of the ship and
+  despawn any far behind to keep the scene light.
+- Tile the parallax starfield or otherwise prevent gaps as the camera moves.
+- Navigation aids like a minimap can follow once exploration works.
+
 ## 🔮 Future Ideas
 
 - **Multiplayer** (`networking.md`): host‑authoritative co‑op via WebSocket
