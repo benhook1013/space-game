@@ -55,7 +55,10 @@ Future<void> main() async {
   }
 
   settings.themeMode.addListener(applyTheme);
-  WidgetsBinding.instance.platformDispatcher.onPlatformBrightnessChanged = () {
+  final dispatcher = WidgetsBinding.instance.platformDispatcher;
+  final defaultBrightnessHandler = dispatcher.onPlatformBrightnessChanged;
+  dispatcher.onPlatformBrightnessChanged = () {
+    defaultBrightnessHandler?.call();
     if (settings.themeMode.value == ThemeMode.system) {
       applyTheme();
     }
