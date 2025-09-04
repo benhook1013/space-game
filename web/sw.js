@@ -24,8 +24,6 @@ self.addEventListener("install", (event) => {
     (async () => {
       const cache = await caches.open(CACHE_NAME);
       await cacheAssets(cache, CORE_ASSETS);
-
-      let manifestCached = false;
       try {
         const response = await fetch("assets_manifest.json");
         const manifest = await response.json();
@@ -35,14 +33,12 @@ self.addEventListener("install", (event) => {
           ...(manifest.fonts || []),
         ];
         await cacheAssets(cache, assetList);
-        manifestCached = true;
       } catch (err) {
         console.error("Asset manifest fetch failed", err);
-      }
-
-      if (manifestCached) {
-        // Activate the new service worker only after optional assets are cached
-        // so the previous worker (and its cache) remains until we're ready.
+      } finally {
+        // Activate the new service worker after attempting to cache optional
+        // assets. If caching fails, still activate to avoid blocking updates
+        // indefinitely.
         self.skipWaiting();
       }
     })(),
