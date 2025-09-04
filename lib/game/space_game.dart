@@ -84,7 +84,7 @@ class SpaceGame extends FlameGame
 
   late final KeyDispatcher keyDispatcher;
   late PlayerComponent player;
-  late MiningLaserComponent miningLaser;
+  MiningLaserComponent? miningLaser;
   late JoystickComponent _joystick;
   JoystickComponent get joystick => _joystick;
   set joystick(JoystickComponent value) {
@@ -161,8 +161,9 @@ class SpaceGame extends FlameGame
     await add(player);
     _playerInitialized = true;
     camera.follow(player, snap: true);
-    miningLaser = MiningLaserComponent(player: player);
-    await add(miningLaser);
+    final laser = MiningLaserComponent(player: player);
+    miningLaser = laser;
+    await add(laser);
 
     final upButton = CircleComponent(
       radius: 30 * settingsService.hudButtonScale.value,
@@ -179,6 +180,7 @@ class SpaceGame extends FlameGame
       margin: const EdgeInsets.only(right: 40, bottom: 40),
       onPressed: player.startShooting,
       onReleased: player.stopShooting,
+      onCancelled: player.stopShooting,
     );
     await add(fireButton);
     void updateFireButtonColors() {
@@ -210,6 +212,9 @@ class SpaceGame extends FlameGame
       keyDispatcher: keyDispatcher,
       stateMachine: stateMachine,
       audioService: audioService,
+      pauseGame: pauseGame,
+      resumeGame: resumeGame,
+      startGame: startGame,
       toggleHelp: toggleHelp,
       toggleUpgrades: toggleUpgrades,
       toggleDebug: toggleDebug,
@@ -245,6 +250,7 @@ class SpaceGame extends FlameGame
       stateMachine.state = GameState.upgrades;
       overlayService.showUpgrades();
       pauseEngine();
+      miningLaser.stopSound();
     }
   }
 
@@ -261,6 +267,7 @@ class SpaceGame extends FlameGame
       overlayService.showHelp();
       if (_helpWasPlaying) {
         pauseEngine();
+        miningLaser.stopSound();
       }
     }
   }
@@ -286,11 +293,19 @@ class SpaceGame extends FlameGame
   void addMinerals(int value) => scoreService.addMinerals(value);
 
   /// Pauses the game and shows the `PAUSED` overlay.
-  void pauseGame() => stateMachine.pauseGame();
+  void pauseGame() {
+    stateMachine.pauseGame();
+    if (settingsService.muteOnPause.value) {
+      miningLaser.stopSound();
+    } else {
+      audioService.setMasterVolume(Constants.pausedAudioVolumeFactor);
+    }
+  }
 
   /// Resumes the game from a paused state.
   void resumeGame() {
     stateMachine.resumeGame();
+    audioService.setMasterVolume(1);
     focusGame();
   }
 
@@ -298,7 +313,10 @@ class SpaceGame extends FlameGame
   void returnToMenu() => stateMachine.returnToMenu();
 
   /// Starts a new game session.
-  void startGame() => stateMachine.startGame();
+  void startGame() {
+    audioService.setMasterVolume(1);
+    stateMachine.startGame();
+  }
 
   /// Clears the saved high score.
   Future<void> resetHighScore() => scoreService.resetHighScore();

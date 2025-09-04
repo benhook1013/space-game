@@ -129,7 +129,10 @@ class _AppLifecycleObserver extends WidgetsBindingObserver {
         state == AppLifecycleState.inactive ||
         state == AppLifecycleState.detached) {
       game.pauseEngine();
-      game.miningLaser.stopSound();
+      final laser = game.miningLaser;
+      if (laser != null && laser.isMounted) {
+        laser.stopSound();
+      }
       game.audioService.stopAll();
     } else if (state == AppLifecycleState.resumed) {
       game.resumeEngine();

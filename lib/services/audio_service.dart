@@ -42,6 +42,17 @@ class AudioService {
   /// the audio plugin is unavailable.
   final AudioPool? _shootPool;
 
+  double _masterVolume = 1;
+
+  /// Current global volume multiplier applied to all effects.
+  double get masterVolume => _masterVolume;
+
+  /// Sets the global volume multiplier (0-1) and updates active loops.
+  void setMasterVolume(double volume) {
+    _masterVolume = volume.clamp(0, 1);
+    _miningLoop?.setVolume(Constants.miningLaserVolume * _masterVolume);
+  }
+
   /// Toggles the mute flag and persists the new value.
   Future<void> toggleMute() async {
     muted.value = !muted.value;
@@ -75,7 +86,7 @@ class AudioService {
     if (muted.value || _miningLoop != null) return;
     _miningLoop = await FlameAudio.loop(
       Assets.miningLaserSfx,
-      volume: Constants.miningLaserVolume,
+      volume: Constants.miningLaserVolume * _masterVolume,
     );
   }
 
