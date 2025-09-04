@@ -26,11 +26,14 @@ class StarfieldComponent extends ParallaxComponent<FlameGame> {
     this.size = size;
   }
 
-  @override
-  void update(double dt) {
-    super.update(dt);
-    position = game.camera.viewfinder.position - size / 2;
-  }
+  // The starfield should behave like a distant background anchored in the
+  // game world. Previously the component followed the camera, which caused the
+  // stars to appear fixed to the player's ship. By letting the `Camera` handle
+  // translation we allow the starfield to scroll naturally as the player moves
+  // through space.
+
+  // No explicit update override is needed; the component remains at world
+  // coordinates and the camera movement provides the desired parallax effect.
 
   static Future<Parallax> _buildParallax(Vector2 size) async {
     final random = Random();
