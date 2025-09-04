@@ -40,6 +40,7 @@ class MiningLaserComponent extends Component with HasGameReference<SpaceGame> {
   @override
   void update(double dt) {
     super.update(dt);
+    _pulseTimer.limit = game.upgradeService.miningPulseInterval;
     if (!player.isMounted) {
       _target = null;
       _pulseTimer.stop();

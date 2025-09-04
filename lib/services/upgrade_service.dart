@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import '../constants.dart';
 import 'score_service.dart';
 
 /// Simple upgrade data.
@@ -30,6 +31,24 @@ class UpgradeService {
 
   bool canAfford(Upgrade upgrade) =>
       scoreService.minerals.value >= upgrade.cost && !isPurchased(upgrade.id);
+
+  /// Current bullet cooldown factoring in purchased upgrades.
+  double get bulletCooldown {
+    var cooldown = Constants.bulletCooldown;
+    if (isPurchased('fireRate1')) {
+      cooldown *= Constants.bulletCooldownUpgradeFactor;
+    }
+    return cooldown;
+  }
+
+  /// Current mining pulse interval factoring in purchased upgrades.
+  double get miningPulseInterval {
+    var interval = Constants.miningPulseInterval;
+    if (isPurchased('miningSpeed1')) {
+      interval *= Constants.miningPulseIntervalUpgradeFactor;
+    }
+    return interval;
+  }
 
   /// Attempts to buy [upgrade], returning `true` on success.
   bool buy(Upgrade upgrade) {
