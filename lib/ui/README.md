@@ -21,8 +21,8 @@ Flutter overlays and HUD widgets.
   restart (button or `Enter`/`R`), menu, help and mute options.
 - [HelpOverlay](help_overlay.md) – lists all controls; toggled with `H` and
   pauses gameplay when opened mid-run; `Esc` also closes it.
-- [UpgradesOverlay](upgrades_overlay.md) – placeholder screen for future ship
-  upgrades; opened with `U` and pauses gameplay.
+- [UpgradesOverlay](upgrades_overlay.md) – lists purchasable ship upgrades;
+  opened with `U` and pauses gameplay.
 - [SettingsOverlay](settings_overlay.md) – adjust HUD, text and joystick scale
   and toggle the dark theme; opened via HUD button.
 - The `M` key toggles mute in any overlay; `F1` toggles debug overlays;
