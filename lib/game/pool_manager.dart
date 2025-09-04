@@ -77,6 +77,22 @@ class PoolManager {
   /// Returns the active components for type [T].
   List<T> components<T extends Component>() => _active[T] as List<T>? ?? <T>[];
 
+  /// Updates the debug flag on all pooled and active components.
+  void applyDebugMode(bool enabled) {
+    for (final list in _active.values) {
+      for (final component in list as List<Component>) {
+        component.debugMode = enabled;
+      }
+    }
+    for (final pool in _pools.values) {
+      for (final obj in pool.items) {
+        if (obj is Component) {
+          obj.debugMode = enabled;
+        }
+      }
+    }
+  }
+
   void updateAsteroidPosition(
     AsteroidComponent asteroid,
     Vector2 previousPosition,
