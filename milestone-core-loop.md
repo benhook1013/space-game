@@ -27,5 +27,6 @@ See [PLAN.md](PLAN.md) for overall project goals and
 - [x] Equip the player with an auto-firing mining laser for nearby asteroids.
 - [x] Drop minerals from mined asteroids and track the currency.
 - [x] Auto-aim the main weapon at the closest enemy.
-- [ ] Design a broad upgrade system where minerals purchase new weapon and ship
+- [x] Design a broad upgrade system where minerals purchase new weapon and ship
   upgrades.
+- [ ] Implement upgrade effects and apply them to gameplay systems.

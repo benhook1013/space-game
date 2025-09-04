@@ -84,7 +84,8 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
 - [x] Pull nearby pickups toward the player with a Tractor Aura.
 - [x] Auto-aim the primary weapon at the closest enemy when stationary.
 - [x] Refine auto-aim targeting behaviour for smoother updates.
-- [ ] Design a broad upgrade system where minerals purchase new weapon and ship
+- [x] Design a broad upgrade system where minerals purchase new weapon and ship
       upgrades.
+- [ ] Implement upgrade effects and apply them to gameplay systems.
 - [ ] Add a minimap or other navigation aid for exploring the larger world.
 - [ ] Evaluate camera dead zones or world wrapping to handle map edges.

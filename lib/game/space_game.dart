@@ -23,6 +23,7 @@ import '../services/overlay_service.dart';
 import '../services/storage_service.dart';
 import '../services/audio_service.dart';
 import '../services/targeting_service.dart';
+import '../services/upgrade_service.dart';
 import '../services/settings_service.dart';
 import '../theme/game_theme.dart';
 import '../ui/help_overlay.dart';
@@ -58,6 +59,7 @@ class SpaceGame extends FlameGame
     debugMode = kDebugMode;
     pools = createPoolManager();
     targetingService = TargetingService(eventBus);
+    upgradeService = UpgradeService(scoreService: scoreService);
   }
 
   /// Handles persistence for the high score.
@@ -113,6 +115,7 @@ class SpaceGame extends FlameGame
   ValueNotifier<int> get highScore => scoreService.highScore;
   ValueNotifier<int> get minerals => scoreService.minerals;
   ValueNotifier<int> get health => scoreService.health;
+  late final UpgradeService upgradeService;
 
   /// Selected player sprite index for menu selection.
   final ValueNotifier<int> selectedPlayerIndex = ValueNotifier<int>(0);

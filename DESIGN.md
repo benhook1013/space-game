@@ -106,6 +106,8 @@ tree spanning weapons and ship systems.
 - `overlay_service.dart` shows and hides the Flutter overlays.
 - `settings_service.dart` holds tweakable UI scale values and theme mode.
 - `targeting_service.dart` assists auto-aim queries.
+- `upgrade_service.dart` manages purchasing upgrades with minerals and exposes
+  a `ValueListenable` for bought upgrade ids.
 - Add services only when needed to keep the project lightweight.
 
 ## State and Data
@@ -122,6 +124,7 @@ tree spanning weapons and ship systems.
   milestones.
 - Design upgrades to modify mining efficiency, combat power and utility systems
   without bloating the core game loop.
+- `UpgradeService` tracks available upgrades and purchases using minerals.
 
 ## Game State Flow
 
