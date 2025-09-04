@@ -2,13 +2,14 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flame/components.dart';
+import 'package:flame/game.dart';
 import 'package:flame/parallax.dart';
 import 'package:flutter/painting.dart' show ImageRepeat;
 
 import '../constants.dart';
 
 /// Persistent parallax starfield that caches its layers after the first build.
-class StarfieldComponent extends ParallaxComponent {
+class StarfieldComponent extends ParallaxComponent<FlameGame> {
   StarfieldComponent() : super(priority: -1);
 
   static Parallax? _cachedParallax;
@@ -23,6 +24,12 @@ class StarfieldComponent extends ParallaxComponent {
   void onGameResize(Vector2 size) {
     super.onGameResize(size);
     this.size = size;
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+    position = game.camera.viewfinder.position - size / 2;
   }
 
   static Future<Parallax> _buildParallax(Vector2 size) async {
