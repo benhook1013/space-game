@@ -16,10 +16,10 @@ class HealthDisplay extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
     return HudValueDisplay(
       valueListenable: game.health,
-      icon: ImageIcon(
+      iconBuilder: (size) => ImageIcon(
         AssetImage('assets/images/${Assets.healthIcon}'),
         color: scheme.error,
-        size: 24,
+        size: size,
       ),
     );
   }

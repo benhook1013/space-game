@@ -88,4 +88,4 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
       upgrades.
 - [x] Implement upgrade effects and apply them to gameplay systems.
 - [ ] Add a minimap or other navigation aid for exploring the larger world.
-- [ ] Evaluate camera dead zones or world wrapping to handle map edges.
+- [x] Clamp camera to world bounds to keep the starfield edges in view.

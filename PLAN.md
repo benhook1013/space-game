@@ -136,9 +136,8 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
   `HasGameReference<SpaceGame>` instead of using global singletons
 - Keep Flutter UI widgets separate from game state updates
 - If saving is needed later, add IDs and JSON‑serializable state
-- Fixed logical resolution scaled to device for consistent gameplay
-- Camera follows the player via `CameraComponent` and a `FixedResolutionViewport`
-  for consistent scaling across devices
+  - Camera follows the player via `CameraComponent` and clamps to the
+    `Constants.worldSize` bounds so blank space beyond the starfield isn't shown
 - Use `HasCollisionDetection` for collisions with simple `CircleHitbox`/`RectangleHitbox`
   shapes and a timer-based spawner
 - Top‑down view with a simple parallax starfield background using Flame's

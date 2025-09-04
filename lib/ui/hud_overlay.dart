@@ -28,39 +28,60 @@ class HudOverlay extends StatelessWidget {
           child: SizedBox.expand(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: Stack(
                 children: [
-                  Expanded(
-                    child: Align(
-                      alignment: Alignment.topCenter,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8),
-                            child: ScoreDisplay(game: game),
-                          ),
-                          const SizedBox(width: 8),
-                          MineralDisplay(game: game),
-                          const SizedBox(width: 8),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8),
-                            child: HealthDisplay(game: game),
-                          ),
-                        ],
-                      ),
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: ScoreDisplay(game: game),
+                        ),
+                        const SizedBox(width: 8),
+                        MineralDisplay(game: game),
+                        const SizedBox(width: 8),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: HealthDisplay(game: game),
+                        ),
+                      ],
                     ),
                   ),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        iconSize: iconSize,
-                        icon: Icon(
-                          Icons.gps_fixed,
-                          color: Theme.of(context).colorScheme.onSurface,
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: Wrap(
+                      alignment: WrapAlignment.end,
+                      children: [
+                        IconButton(
+                          iconSize: iconSize,
+                          icon: Icon(
+                            Icons.gps_fixed,
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
+                          onPressed: game.toggleAutoAimRadius,
+                        ),
+                        UpgradeButton(game: game, iconSize: iconSize),
+                        HelpButton(game: game, iconSize: iconSize),
+                        SettingsButton(game: game, iconSize: iconSize),
+                        MuteButton(game: game, iconSize: iconSize),
+                        ValueListenableBuilder<GameState>(
+                          valueListenable: game.stateMachine.stateNotifier,
+                          builder: (context, state, _) {
+                            final paused = state == GameState.paused;
+                            return IconButton(
+                              iconSize: iconSize,
+                              // Mirrors the Escape and P keyboard shortcuts.
+                              icon: Icon(
+                                paused ? Icons.play_arrow : Icons.pause,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                              onPressed:
+                                  paused ? game.resumeGame : game.pauseGame,
+                            );
+                          },
                         ),
                         // Shows or hides targeting, tractor and mining range rings.
                         onPressed: game.toggleAutoAimRadius,
