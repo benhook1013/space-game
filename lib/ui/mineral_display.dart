@@ -15,7 +15,9 @@ class MineralDisplay extends StatelessWidget {
   Widget build(BuildContext context) {
     return HudValueDisplay(
       valueListenable: game.minerals,
-      baseIconSize: 48,
+      // Mineral icon now tightly fits its contents, so the HUD no longer needs
+      // an oversized base to compensate for transparent padding.
+      baseIconSize: 24,
       iconBuilder: (size) => Image.asset(
         'assets/images/${Assets.mineralIcon}',
         width: size,

@@ -137,7 +137,10 @@ class Constants {
   static const double mineralSize = 16;
 
   /// Extra scale applied on top of [spriteScale] for mineral sprites.
-  static const double mineralScale = 0;
+  // The mineral icon was cropped from 256x256 to 180x180, reducing empty
+  // padding. Shrink the in-game sprite slightly to keep its on-screen size
+  // consistent with the previous version.
+  static const double mineralScale = -0.9;
 
   /// Distance from an asteroid where mineral drops may appear.
   static const double mineralDropRadius = 16;
