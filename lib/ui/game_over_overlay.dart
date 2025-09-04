@@ -25,6 +25,7 @@ class GameOverOverlay extends StatelessWidget {
               'Game Over',
               style: Theme.of(context).textTheme.headlineMedium,
               maxLines: 1,
+              textAlign: TextAlign.center,
             ),
             SizedBox(height: spacing),
             ValueListenableBuilder<int>(
@@ -32,6 +33,7 @@ class GameOverOverlay extends StatelessWidget {
               builder: (context, value, _) => GameText(
                 'Final Score: $value',
                 maxLines: 1,
+                textAlign: TextAlign.center,
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
@@ -41,12 +43,13 @@ class GameOverOverlay extends StatelessWidget {
               builder: (context, value, _) => GameText(
                 'High Score: $value',
                 maxLines: 1,
+                textAlign: TextAlign.center,
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
             SizedBox(height: spacing),
             Row(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
                   // Mirrors the Enter and R keyboard shortcuts.
