@@ -373,6 +373,10 @@ class SpaceGame extends FlameGame
   /// Toggles rendering of the player's range rings.
   void toggleAutoAimRadius() {
     player.toggleAutoAimRadius();
+    if (paused) {
+      // Step the engine once so the visibility change is rendered while paused.
+      stepEngine(stepTime: 0);
+    }
   }
 
   /// Shows or hides the runtime settings overlay.
