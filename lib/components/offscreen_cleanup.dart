@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flame/components.dart';
 
 import '../constants.dart';
@@ -26,7 +28,11 @@ class _OffscreenCleanupBehavior extends Component {
         _host.y > Constants.worldSize.y + _host.height ||
         _host.x < -_host.width ||
         _host.x > Constants.worldSize.x + _host.width) {
-      _host.removeFromParent();
+      // Removing a component during the update cycle can trigger concurrent
+      // modification errors if collision detection is iterating over the
+      // component tree. Scheduling the removal defers it until after the
+      // current microtask, avoiding those issues.
+      scheduleMicrotask(_host.removeFromParent);
     }
   }
 }

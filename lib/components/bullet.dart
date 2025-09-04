@@ -36,6 +36,7 @@ class BulletComponent extends SpriteComponent
 
   @override
   Future<void> onLoad() async {
+    await super.onLoad();
     sprite = await Sprite.load(Assets.bullet);
     add(CircleHitbox());
   }
