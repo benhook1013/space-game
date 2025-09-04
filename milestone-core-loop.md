@@ -23,8 +23,5 @@ See [PLAN.md](PLAN.md) for overall project goals and
 
 ## Next Steps
 
-- Spawn enemy groups in timed waves.
-- Equip the player with an auto-firing mining laser for nearby asteroids.
-- Drop minerals from mined asteroids and track the currency.
-- Auto-aim the main weapon at the closest enemy.
-- Outline a mineral-based upgrade system for weapons and ship systems.
+- Design a broad upgrade system where minerals purchase new weapon and ship
+  upgrades.
