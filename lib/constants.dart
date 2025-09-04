@@ -35,6 +35,9 @@ class Constants {
   /// Volume for the mining laser sound effect (0-1).
   static const double miningLaserVolume = 0.25;
 
+  /// Volume multiplier used when audio is dimmed instead of muted on pause.
+  static const double pausedAudioVolumeFactor = 0.2;
+
   /// Starting health for the player.
   static const int playerMaxHealth = 3;
 

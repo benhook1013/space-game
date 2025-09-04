@@ -6,7 +6,8 @@ class SettingsService {
       : hudButtonScale = ValueNotifier<double>(defaultHudButtonScale),
         textScale = ValueNotifier<double>(defaultTextScale),
         joystickScale = ValueNotifier<double>(defaultJoystickScale),
-        themeMode = ValueNotifier<ThemeMode>(ThemeMode.light);
+        themeMode = ValueNotifier<ThemeMode>(ThemeMode.light),
+        muteOnPause = ValueNotifier<bool>(true);
 
   static const double defaultHudButtonScale = 0.75;
   static const double defaultTextScale = 1.5;
@@ -23,4 +24,7 @@ class SettingsService {
 
   /// Currently selected theme mode.
   final ValueNotifier<ThemeMode> themeMode;
+
+  /// Whether audio should fully mute when the game is paused.
+  final ValueNotifier<bool> muteOnPause;
 }
