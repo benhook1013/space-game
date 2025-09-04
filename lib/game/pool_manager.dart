@@ -78,18 +78,29 @@ class PoolManager {
   List<T> components<T extends Component>() => _active[T] as List<T>? ?? <T>[];
 
   /// Updates the debug flag on all pooled and active components.
+  ///
+  /// Components can have children that also render debug information. Ensure
+  /// the flag is applied recursively so pooled objects don't retain stale
+  /// debug state between spawns.
   void applyDebugMode(bool enabled) {
     for (final list in _active.values) {
-      for (final component in list as List<Component>) {
-        component.debugMode = enabled;
+      for (final component in list.cast<Component>()) {
+        _applyDebugRecursively(component, enabled);
       }
     }
     for (final pool in _pools.values) {
       for (final obj in pool.items) {
         if (obj is Component) {
-          obj.debugMode = enabled;
+          _applyDebugRecursively(obj, enabled);
         }
       }
+    }
+  }
+
+  void _applyDebugRecursively(Component component, bool enabled) {
+    component.debugMode = enabled;
+    for (final child in component.children) {
+      _applyDebugRecursively(child, enabled);
     }
   }
 
