@@ -20,31 +20,33 @@ async function cacheAssets(cache, assets) {
 }
 
 self.addEventListener("install", (event) => {
-  // Activate the new service worker as soon as it's finished installing so
-  // `navigator.serviceWorker.ready` resolves without waiting for a page reload.
-  self.skipWaiting();
-
   event.waitUntil(
-    caches.open(CACHE_NAME).then(async (cache) => {
+    (async () => {
+      const cache = await caches.open(CACHE_NAME);
       await cacheAssets(cache, CORE_ASSETS);
-    }),
-  );
 
-  // Cache additional assets after activation so the install step finishes quickly.
-  caches.open(CACHE_NAME).then(async (cache) => {
-    try {
-      const response = await fetch("assets_manifest.json");
-      const manifest = await response.json();
-      const assetList = [
-        ...(manifest.images || []),
-        ...(manifest.audio || []),
-        ...(manifest.fonts || []),
-      ];
-      await cacheAssets(cache, assetList);
-    } catch (err) {
-      console.error("Asset manifest fetch failed", err);
-    }
-  });
+      let manifestCached = false;
+      try {
+        const response = await fetch("assets_manifest.json");
+        const manifest = await response.json();
+        const assetList = [
+          ...(manifest.images || []),
+          ...(manifest.audio || []),
+          ...(manifest.fonts || []),
+        ];
+        await cacheAssets(cache, assetList);
+        manifestCached = true;
+      } catch (err) {
+        console.error("Asset manifest fetch failed", err);
+      }
+
+      if (manifestCached) {
+        // Activate the new service worker only after optional assets are cached
+        // so the previous worker (and its cache) remains until we're ready.
+        self.skipWaiting();
+      }
+    })(),
+  );
 });
 
 self.addEventListener("activate", (event) => {
