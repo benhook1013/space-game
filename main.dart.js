@@ -72673,9 +72673,15 @@ s.a8i(q.x)},
 HV(a,b){var s,r
 a.x=b
 for(s=a.gd5().b,r=s.$ti,r=new A.ep(new A.c5(s,A.c([],r.h("t<cn<1,2>>")),s.c,r.h("c5<1,2>")));r.p();)this.HV(r.b.gG(),b)},
-afR(){var s=this.Z
+afR(){var s,r=this,q=r.Z
+q===$&&A.a()
+q.aR=!q.aR
+if(r.fx$){r.fx$=!1
+q=r.db$
+if(q!=null){q=q.B
+if(q!=null){s=q.c
 s===$&&A.a()
-s.aR=!s.aR},
+if(s.a==null)q.a.$1(0)}}r.fx$=!0}},
 afV(){var s="settingsOverlay",r=this.gfq().wG(s),q=this.aD
 if(r){q===$&&A.a()
 q.a.gfq().t(0,s)}else{q===$&&A.a()
