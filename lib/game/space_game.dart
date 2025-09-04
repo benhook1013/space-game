@@ -250,7 +250,7 @@ class SpaceGame extends FlameGame
       stateMachine.state = GameState.upgrades;
       overlayService.showUpgrades();
       pauseEngine();
-      miningLaser.stopSound();
+      miningLaser?.stopSound();
     }
   }
 
@@ -267,7 +267,7 @@ class SpaceGame extends FlameGame
       overlayService.showHelp();
       if (_helpWasPlaying) {
         pauseEngine();
-        miningLaser.stopSound();
+        miningLaser?.stopSound();
       }
     }
   }
@@ -296,7 +296,7 @@ class SpaceGame extends FlameGame
   void pauseGame() {
     stateMachine.pauseGame();
     if (settingsService.muteOnPause.value) {
-      miningLaser.stopSound();
+      miningLaser?.stopSound();
     } else {
       audioService.setMasterVolume(Constants.pausedAudioVolumeFactor);
     }
