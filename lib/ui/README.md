@@ -14,7 +14,7 @@ Flutter overlays and HUD widgets.
 - [MenuOverlay](menu_overlay.md) – start button (or `Enter`), high score with
   reset, help (`H`) and mute toggle.
 - [HudOverlay](hud_overlay.md) – shows score, minerals (with icon) and health
-    with auto-aim radius toggle, help, upgrades, mute and pause buttons.
+    with range rings toggle, help, upgrades, mute and pause buttons.
 - [PauseOverlay](pause_overlay.md) – displays a centered "PAUSED" label with
   instructions to press `Esc` or `P` to resume while the game is paused.
 - [GameOverOverlay](game_over_overlay.md) – shows final and high scores with
@@ -23,8 +23,8 @@ Flutter overlays and HUD widgets.
   pauses gameplay when opened mid-run; `Esc` also closes it.
 - [UpgradesOverlay](upgrades_overlay.md) – lists purchasable ship upgrades;
   opened with `U` and pauses gameplay.
-- [SettingsOverlay](settings_overlay.md) – adjust HUD, text and joystick scale
-  and toggle the dark theme; opened via HUD button.
+- [SettingsOverlay](settings_overlay.md) – adjust HUD, text, joystick scale and
+  gameplay ranges, and toggle the dark theme; opened via HUD button.
 - The `M` key toggles mute in any overlay; `F1` toggles debug overlays;
   `Enter` starts or restarts from the menu or game over; `R` restarts at any
   time; `Escape` or `P` pauses or resumes; `H` shows or hides the help overlay,

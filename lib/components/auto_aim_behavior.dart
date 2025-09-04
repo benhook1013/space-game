@@ -2,7 +2,6 @@ import 'dart:math' as math;
 
 import 'package:flame/components.dart';
 
-import '../constants.dart';
 import '../game/space_game.dart';
 import '../util/nearest_component.dart';
 import 'enemy.dart';
@@ -20,7 +19,7 @@ class AutoAimBehavior extends Component
     final enemies = game.pools.components<EnemyComponent>();
     final target = enemies.findClosest(
       parent.position,
-      Constants.playerAutoAimRange,
+      game.settingsService.targetingRange.value,
     );
     if (target != null) {
       parent.targetAngle = _normalizeAngle(

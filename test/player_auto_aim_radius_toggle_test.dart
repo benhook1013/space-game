@@ -46,7 +46,7 @@ class _TestGame extends SpaceGame {
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('toggle auto-aim radius', () async {
+  test('toggle range rings', () async {
     SharedPreferences.setMockInitialValues({});
     await Flame.images.loadAll([...Assets.players]);
     final storage = await StorageService.create();

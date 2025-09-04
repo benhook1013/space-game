@@ -48,7 +48,7 @@ class PlayerComponent extends SpriteComponent
 
   String _spritePath;
 
-  /// Whether to render the auto-aim radius around the player.
+  /// Whether to render range rings around the player.
   bool showAutoAimRadius = false;
 
   /// Angle the ship should currently rotate towards.
@@ -57,9 +57,20 @@ class PlayerComponent extends SpriteComponent
   /// Whether the player moved during the latest update.
   bool isMoving = false;
 
-  /// Paint used when drawing the auto-aim radius.
-  final Paint _autoAimPaint = Paint()..style = PaintingStyle.stroke;
-  late void Function() _autoAimColorListener;
+  /// Paint used when drawing the targeting range.
+  final Paint _targetingPaint = Paint()
+    ..style = PaintingStyle.stroke
+    ..color = const Color(0x66ff0000);
+
+  /// Paint used when drawing the Tractor Aura range.
+  final Paint _tractorPaint = Paint()
+    ..style = PaintingStyle.stroke
+    ..color = const Color(0x660000ff);
+
+  /// Paint used when drawing the mining laser range.
+  final Paint _miningPaint = Paint()
+    ..style = PaintingStyle.stroke
+    ..color = const Color(0x66ffff00);
 
   static final _damageFilter =
       ColorFilter.mode(const Color(0xffff0000), BlendMode.srcATop);
@@ -97,7 +108,7 @@ class PlayerComponent extends SpriteComponent
     _input.joystick = joystick;
   }
 
-  /// Toggles visibility of the auto-aim radius.
+  /// Toggles visibility of the player's range rings.
   void toggleAutoAimRadius() {
     showAutoAimRadius = !showAutoAimRadius;
   }
@@ -138,14 +149,6 @@ class PlayerComponent extends SpriteComponent
     if (!contains(_autoAim)) {
       add(_autoAim);
     }
-    void updateAutoAimColor() {
-      _autoAimPaint.color =
-          game.colorScheme.value.primary.withValues(alpha: 0.4);
-    }
-
-    updateAutoAimColor();
-    _autoAimColorListener = updateAutoAimColor;
-    game.colorScheme.addListener(_autoAimColorListener);
     keyDispatcher.register(
       LogicalKeyboardKey.space,
       onDown: startShooting,
@@ -156,7 +159,6 @@ class PlayerComponent extends SpriteComponent
   @override
   void onRemove() {
     keyDispatcher.unregister(LogicalKeyboardKey.space);
-    game.colorScheme.removeListener(_autoAimColorListener);
     super.onRemove();
   }
 
@@ -190,10 +192,21 @@ class PlayerComponent extends SpriteComponent
   void render(Canvas canvas) {
     super.render(canvas);
     if (showAutoAimRadius) {
+      final center = Offset(size.x / 2, size.y / 2);
       canvas.drawCircle(
-        Offset(size.x / 2, size.y / 2),
-        Constants.playerAutoAimRange,
-        _autoAimPaint,
+        center,
+        game.settingsService.targetingRange.value,
+        _targetingPaint,
+      );
+      canvas.drawCircle(
+        center,
+        game.settingsService.tractorRange.value,
+        _tractorPaint,
+      );
+      canvas.drawCircle(
+        center,
+        game.settingsService.miningRange.value,
+        _miningPaint,
       );
     }
   }

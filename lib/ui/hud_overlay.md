@@ -6,7 +6,7 @@ Heads-up display shown during play.
 
 - Shows current score, minerals and health using centred pill-shaped displays
   driven by `ValueNotifier`s from `SpaceGame`.
-- Provides auto-aim radius toggle, upgrades, help, mute and pause/resume button
+- Provides range rings toggle, upgrades, help, mute and pause/resume button
   bound to `SpaceGame` and `AudioService`.
 - Icon sizes scale with screen size for better usability on different devices.
 - `U` opens the upgrades overlay; `Esc` closes it.

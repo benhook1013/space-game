@@ -8,7 +8,7 @@ Optional helpers for cross-cutting concerns.
   `shared_preferences`.
 - `score_service.dart` tracks score, minerals and health values.
 - `overlay_service.dart` shows and hides overlays on the `GameWidget`.
-- `settings_service.dart` holds UI scale values and theme mode.
+- `settings_service.dart` holds UI scale values, theme mode and gameplay ranges.
 - `targeting_service.dart` assists auto-aim queries.
 - `upgrade_service.dart` manages purchasing upgrades with minerals and
   derives gameplay modifiers like fire rate and mining speed.

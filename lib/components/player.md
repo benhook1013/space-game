@@ -12,6 +12,8 @@ Controllable ship for the player.
 - When stationary, periodically rotates to face the nearest enemy within range.
 - Collects `MineralComponent`s on contact to increase the mineral counter.
 - A blue Tractor Aura pulls nearby pickups toward the ship.
+- HUD button toggles coloured rings for targeting, Tractor Aura and mining
+  ranges.
 - Pulls sprites from `assets.dart` and tuning values from `constants.dart`.
 - Uses `CircleHitbox` and `HasGameReference<SpaceGame>`.
 
