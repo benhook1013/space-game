@@ -179,6 +179,7 @@ class SpaceGame extends FlameGame
       margin: const EdgeInsets.only(right: 40, bottom: 40),
       onPressed: player.startShooting,
       onReleased: player.stopShooting,
+      onCancelled: player.stopShooting,
     );
     await add(fireButton);
     void updateFireButtonColors() {
