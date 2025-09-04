@@ -56,6 +56,7 @@ class AsteroidComponent extends SpriteComponent
 
   @override
   Future<void> onLoad() async {
+    await super.onLoad();
     add(CircleHitbox());
   }
 
