@@ -36817,6 +36817,7 @@ $1(a){var s
 if(a.a===this.a.c){s=a.b
 s.p2.f9()
 s.p1.sbw(s)
+s.R8.$0()
 return!0}return!1},
 $S:426}
 A.Zi.prototype={
@@ -64461,16 +64462,17 @@ a=A.Q8(null,null,null,null,A.aN(),null,null,null,30*k,null)
 k=a2.a
 a0=A.Q8(null,null,null,null,A.aN(),null,null,null,30*k,null)
 k=q.Y
-j=a.ay
-if(j==null)j=a.ay
-i=A.fx()
-h=j
-g=new A.dC(d,new Float32Array(2))
-g.bA(h)
-g.I()
-h=A.am(A.c9(null),null,!1,a3)
-k=new A.Cw(null,null,a,a0,k.gwf(),k.gwi(),null,i,g,B.bH,0,new A.bc(h,0,0,a5),null,new A.ay([]),new A.ay([]))
-k.fX(B.bH,null,null,null,0,null,null,null,j)
+j=k.gwi()
+i=a.ay
+if(i==null)i=a.ay
+h=A.fx()
+g=i
+f=new A.dC(d,new Float32Array(2))
+f.bA(g)
+f.I()
+g=A.am(A.c9(null),null,!1,a3)
+k=new A.Cw(null,null,a,a0,k.gwf(),j,j,h,f,B.bH,0,new A.bc(g,0,0,a5),null,new A.ay([]),new A.ay([]))
+k.fX(B.bH,null,null,null,0,null,null,null,i)
 k.jD$=B.zk
 q.bM!==$&&A.be()
 q.bM=k
