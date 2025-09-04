@@ -55,6 +55,7 @@ class HudOverlay extends StatelessWidget {
                     child: Wrap(
                       alignment: WrapAlignment.end,
                       children: [
+                        // Shows or hides targeting, tractor and mining range rings.
                         IconButton(
                           iconSize: iconSize,
                           icon: Icon(
@@ -83,30 +84,8 @@ class HudOverlay extends StatelessWidget {
                             );
                           },
                         ),
-                        // Shows or hides targeting, tractor and mining range rings.
-                        onPressed: game.toggleAutoAimRadius,
-                      ),
-                      UpgradeButton(game: game, iconSize: iconSize),
-                      HelpButton(game: game, iconSize: iconSize),
-                      SettingsButton(game: game, iconSize: iconSize),
-                      MuteButton(game: game, iconSize: iconSize),
-                      ValueListenableBuilder<GameState>(
-                        valueListenable: game.stateMachine.stateNotifier,
-                        builder: (context, state, _) {
-                          final paused = state == GameState.paused;
-                          return IconButton(
-                            iconSize: iconSize,
-                            // Mirrors the Escape and P keyboard shortcuts.
-                            icon: Icon(
-                              paused ? Icons.play_arrow : Icons.pause,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                            onPressed:
-                                paused ? game.resumeGame : game.pauseGame,
-                          );
-                        },
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ],
               ),
