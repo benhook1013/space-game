@@ -62,6 +62,7 @@ class HudOverlay extends StatelessWidget {
                           Icons.gps_fixed,
                           color: Theme.of(context).colorScheme.onSurface,
                         ),
+                        // Shows or hides targeting, tractor and mining range rings.
                         onPressed: game.toggleAutoAimRadius,
                       ),
                       UpgradeButton(game: game, iconSize: iconSize),

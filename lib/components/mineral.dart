@@ -52,8 +52,8 @@ class MineralComponent extends SpriteComponent
     }
     final toPlayer = playerPos - position;
     final distanceSquared = toPlayer.length2;
-    final rangeSquared =
-        Constants.playerTractorAuraRadius * Constants.playerTractorAuraRadius;
+    final range = game.settingsService.tractorRange.value;
+    final rangeSquared = range * range;
     if (distanceSquared == 0 || distanceSquared > rangeSquared) {
       return;
     }

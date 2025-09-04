@@ -9,7 +9,7 @@ _Update this file whenever a player-facing feature is added or changed._
 - [ ] Player can shoot and destroy a basic enemy
 - [ ] Bullets travel in the direction the ship is facing
 - [ ] When stationary, the ship rotates toward the nearest enemy within range
-- [ ] Target button toggles auto-aim radius display
+- [ ] Target button toggles range rings display
 - [ ] Asteroids spawn randomly and drift across the screen
 - [ ] Enemies and asteroids show varied sprites
 - [ ] Shooting an asteroid destroys it and increases the on-screen score
@@ -35,8 +35,8 @@ _Update this file whenever a player-facing feature is added or changed._
 - [ ] Pressing `H` shows a help overlay; `Esc` or `H` closes it and resumes play
 - [ ] Pressing `U` shows an upgrades overlay and pauses the game; `Esc` or `U`
       closes it
-- [ ] Settings overlay sliders adjust HUD button, text and joystick sizes
-      (default 0.75 for buttons and text)
+- [ ] Settings overlay sliders adjust HUD button, text, joystick sizes and
+      gameplay ranges (default 0.75 for buttons and text)
 - [ ] Local high score persists between sessions
 - [ ] PWA installability and offline play after initial load
 - [ ] Performance acceptable on target devices

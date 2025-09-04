@@ -52,18 +52,18 @@ class MiningLaserComponent extends Component with HasGameReference<SpaceGame> {
       return;
     }
 
-    final rangeSquared =
-        Constants.playerMiningRange * Constants.playerMiningRange;
+    final miningRange = game.settingsService.miningRange.value;
+    final rangeSquared = miningRange * miningRange;
     if (_target == null ||
         !_target!.isMounted ||
         _target!.position.distanceToSquared(player.position) > rangeSquared) {
       final asteroids = game.pools.nearbyAsteroids(
         player.position,
-        Constants.playerMiningRange,
+        miningRange,
       );
       _target = asteroids.findClosest(
         player.position,
-        Constants.playerMiningRange,
+        miningRange,
       );
       _pulseTimer
         ..stop()

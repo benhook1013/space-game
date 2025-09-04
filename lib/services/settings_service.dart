@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 
-/// Holds tweakable UI scale values for live prototyping.
+import '../constants.dart';
+
+/// Holds tweakable UI scale values and gameplay ranges for live prototyping.
 class SettingsService {
   SettingsService()
       : hudButtonScale = ValueNotifier<double>(defaultHudButtonScale),
         textScale = ValueNotifier<double>(defaultTextScale),
         joystickScale = ValueNotifier<double>(defaultJoystickScale),
         themeMode = ValueNotifier<ThemeMode>(ThemeMode.system),
-        muteOnPause = ValueNotifier<bool>(true);
+        muteOnPause = ValueNotifier<bool>(true),
+        targetingRange = ValueNotifier<double>(Constants.playerAutoAimRange),
+        tractorRange = ValueNotifier<double>(Constants.playerTractorAuraRadius),
+        miningRange = ValueNotifier<double>(Constants.playerMiningRange);
 
   static const double defaultHudButtonScale = 0.75;
   static const double defaultTextScale = 1.5;
@@ -27,4 +32,13 @@ class SettingsService {
 
   /// Whether audio should fully mute when the game is paused.
   final ValueNotifier<bool> muteOnPause;
+
+  /// Distance used to auto-aim enemies when stationary.
+  final ValueNotifier<double> targetingRange;
+
+  /// Radius of the player's Tractor Aura in pixels.
+  final ValueNotifier<double> tractorRange;
+
+  /// Maximum distance to auto-mine asteroids, in pixels.
+  final ValueNotifier<double> miningRange;
 }

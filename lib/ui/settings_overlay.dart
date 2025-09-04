@@ -4,7 +4,7 @@ import '../game/space_game.dart';
 import 'game_text.dart';
 import 'overlay_widgets.dart';
 
-/// Overlay providing runtime UI scaling sliders.
+/// Overlay providing runtime UI scaling and range sliders.
 class SettingsOverlay extends StatelessWidget {
   const SettingsOverlay({super.key, required this.game});
 
@@ -43,6 +43,30 @@ class SettingsOverlay extends StatelessWidget {
               'Joypad',
               settings.joystickScale,
               spacing,
+            ),
+            _buildSlider(
+              context,
+              'Targeting Range',
+              settings.targetingRange,
+              spacing,
+              min: 50,
+              max: 600,
+            ),
+            _buildSlider(
+              context,
+              'Tractor Range',
+              settings.tractorRange,
+              spacing,
+              min: 50,
+              max: 600,
+            ),
+            _buildSlider(
+              context,
+              'Mining Range',
+              settings.miningRange,
+              spacing,
+              min: 50,
+              max: 600,
             ),
             ValueListenableBuilder<ThemeMode>(
               valueListenable: settings.themeMode,
@@ -100,8 +124,10 @@ class SettingsOverlay extends StatelessWidget {
     BuildContext context,
     String label,
     ValueNotifier<double> notifier,
-    double spacing,
-  ) {
+    double spacing, {
+    double min = 0.5,
+    double max = 2.0,
+  }) {
     return ValueListenableBuilder<double>(
       valueListenable: notifier,
       builder: (context, value, _) => Column(
@@ -110,8 +136,8 @@ class SettingsOverlay extends StatelessWidget {
           GameText('$label: ${value.toStringAsFixed(2)}'),
           Slider(
             value: value,
-            min: 0.5,
-            max: 2.0,
+            min: min,
+            max: max,
             onChanged: (v) => notifier.value = v,
           ),
           SizedBox(height: spacing),

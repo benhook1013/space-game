@@ -11,7 +11,6 @@ import 'package:space_game/game/key_dispatcher.dart';
 import 'package:space_game/game/space_game.dart';
 import 'package:space_game/services/audio_service.dart';
 import 'package:space_game/services/storage_service.dart';
-import 'package:space_game/constants.dart';
 
 class _TestGame extends SpaceGame {
   _TestGame({required StorageService storage, required AudioService audio})
@@ -51,7 +50,7 @@ void main() {
     game.update(0);
     game.update(0);
 
-    final start = Vector2(Constants.playerTractorAuraRadius - 10, 0);
+    final start = Vector2(game.settingsService.tractorRange.value - 10, 0);
     final pickup = game.pools.acquire<MineralComponent>(
       (m) => m.reset(start.clone()),
     );
@@ -78,7 +77,7 @@ void main() {
     game.update(0);
     game.update(0);
 
-    final start = Vector2(Constants.playerTractorAuraRadius + 10, 0);
+    final start = Vector2(game.settingsService.tractorRange.value + 10, 0);
     final pickup = game.pools.acquire<MineralComponent>(
       (m) => m.reset(start.clone()),
     );
