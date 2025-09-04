@@ -49,7 +49,7 @@ void main() {
     await game.ready();
 
     final laser = _TestMiningLaser(player: game.player);
-    game.miningLaser.removeFromParent();
+    game.miningLaser?.removeFromParent();
     game.miningLaser = laser;
     await game.add(laser);
     await game.ready();
@@ -92,7 +92,7 @@ void main() {
     await game.ready();
 
     final laser = _TestMiningLaser(player: game.player);
-    game.miningLaser.removeFromParent();
+    game.miningLaser?.removeFromParent();
     game.miningLaser = laser;
     await game.add(laser);
     await game.ready();

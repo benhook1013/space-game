@@ -52,10 +52,19 @@ class KeyDispatcher extends Component with KeyboardHandler {
       return false;
     }
     var handled = false;
-    if (event is KeyDownEvent || event is KeyRepeatEvent) {
-      // Treat repeat events like additional down events but only fire the
-      // callback on the first press. Some browsers emit a repeat without an
-      // initial down event for keys like the spacebar.
+    if (event is KeyDownEvent) {
+      // Always fire the down callback on explicit down events. This avoids
+      // missing actions when a prior key up was skipped (e.g. focus loss).
+      _pressed.add(key);
+      final callback = _down[key];
+      if (callback != null) {
+        callback();
+        handled = true;
+      }
+    } else if (event is KeyRepeatEvent) {
+      // Treat repeat events like down events only if we haven't seen a
+      // preceding down. Some browsers emit repeats without an initial down
+      // (e.g. spacebar on web).
       final firstPress = _pressed.add(key);
       if (firstPress) {
         final callback = _down[key];
