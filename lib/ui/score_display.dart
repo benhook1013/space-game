@@ -18,10 +18,10 @@ class ScoreDisplay extends StatelessWidget {
   Widget build(BuildContext context) {
     return HudValueDisplay(
       valueListenable: game.score,
-      icon: ImageIcon(
+      iconBuilder: (size) => ImageIcon(
         AssetImage('assets/images/${Assets.scoreIcon}'),
-        color:  _goldColor,
-        size: 24,
+        color: _goldColor,
+        size: size,
       ),
     );
   }
