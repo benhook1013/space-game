@@ -46,9 +46,10 @@ class LifecycleManager {
         player.resetInput();
       }
       // Recreate the mining laser for the new player.
-      game.miningLaser.removeFromParent();
-      game.miningLaser = MiningLaserComponent(player: player);
-      game.add(game.miningLaser);
+      game.miningLaser?.removeFromParent();
+      final laser = MiningLaserComponent(player: player);
+      game.miningLaser = laser;
+      game.add(laser);
       // Update fire button callbacks.
       game.fireButton
         ..onPressed = player.startShooting

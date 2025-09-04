@@ -84,7 +84,7 @@ class SpaceGame extends FlameGame
 
   late final KeyDispatcher keyDispatcher;
   late PlayerComponent player;
-  late MiningLaserComponent miningLaser;
+  MiningLaserComponent? miningLaser;
   late JoystickComponent _joystick;
   JoystickComponent get joystick => _joystick;
   set joystick(JoystickComponent value) {
@@ -161,8 +161,9 @@ class SpaceGame extends FlameGame
     await add(player);
     _playerInitialized = true;
     camera.follow(player, snap: true);
-    miningLaser = MiningLaserComponent(player: player);
-    await add(miningLaser);
+    final laser = MiningLaserComponent(player: player);
+    miningLaser = laser;
+    await add(laser);
 
     final upButton = CircleComponent(
       radius: 30 * settingsService.hudButtonScale.value,
