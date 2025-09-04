@@ -72,8 +72,7 @@ class PlayerComponent extends SpriteComponent
     ..style = PaintingStyle.stroke
     ..color = const Color(0x66ffff00);
 
-  static final _damageFilter =
-      ColorFilter.mode(const Color(0xffff0000), BlendMode.srcATop);
+  static const _damageColor = Color(0xffff0000);
 
   /// Remaining time for the damage flash effect.
   double _damageFlashTime = 0;
@@ -113,10 +112,10 @@ class PlayerComponent extends SpriteComponent
     showAutoAimRadius = !showAutoAimRadius;
   }
 
-  /// Triggers a short red flash to indicate damage taken.
+  /// Triggers a short red flash that fades out to indicate damage taken.
   void flashDamage() {
     _damageFlashTime = Constants.playerDamageFlashDuration;
-    paint.colorFilter = _damageFilter;
+    paint.colorFilter = ColorFilter.mode(_damageColor, BlendMode.srcATop);
   }
 
   /// Allows external callers to fire a bullet.
@@ -184,6 +183,15 @@ class PlayerComponent extends SpriteComponent
       _damageFlashTime -= dt;
       if (_damageFlashTime <= 0) {
         paint.colorFilter = null;
+      } else {
+        final alpha =
+            (255 * (_damageFlashTime / Constants.playerDamageFlashDuration))
+                .clamp(0, 255)
+                .toInt();
+        paint.colorFilter = ColorFilter.mode(
+          _damageColor.withAlpha(alpha),
+          BlendMode.srcATop,
+        );
       }
     }
   }

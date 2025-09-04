@@ -8,7 +8,7 @@ Controllable ship for the player.
 - Fires `BulletComponent`s with a short cooldown when the shoot button or space
   bar is pressed, in the direction the ship is facing.
 - Colliding with enemies or asteroids reduces health via `SpaceGame.hitPlayer`
-  and briefly tints the ship red to show damage.
+  and briefly tints the ship red with a quick fade to show damage.
 - When stationary, periodically rotates to face the nearest enemy within range.
 - Collects `MineralComponent`s on contact to increase the mineral counter.
 - A blue Tractor Aura pulls nearby pickups toward the ship.
