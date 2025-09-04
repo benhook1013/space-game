@@ -71,6 +71,9 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
 - [x] Keyboard shortcut `F1` toggles debug overlays.
 - [x] Option to mute audio or lower volume when the game is paused.
 - [x] Menu includes button to reset the high score.
+- [x] Upgrades overlay placeholder accessible via HUD button or the `U` key.
+- [x] Settings overlay with sliders for HUD, text and joystick scale plus a
+      dark theme toggle.
 
 ## Next Steps
 
