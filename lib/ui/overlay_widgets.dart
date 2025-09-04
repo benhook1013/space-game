@@ -35,6 +35,12 @@ class OverlayLayout extends StatelessWidget {
         final iconSize = responsiveIconSize(constraints);
 
         Widget child = Center(child: builder(context, spacing, iconSize));
+        // Ensure overlays have a Material ancestor so widgets like ListTile
+        // don't paint an opaque background that covers the game.
+        child = Material(
+          type: MaterialType.transparency,
+          child: child,
+        );
         if (dimmed) {
           final scheme = Theme.of(context).colorScheme;
           child = Container(
