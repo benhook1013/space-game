@@ -15,10 +15,11 @@ class MineralDisplay extends StatelessWidget {
   Widget build(BuildContext context) {
     return HudValueDisplay(
       valueListenable: game.minerals,
-      icon: Image.asset(
+      baseIconSize: 48,
+      iconBuilder: (size) => Image.asset(
         'assets/images/${Assets.mineralIcon}',
-        width: 48,
-        height: 48,
+        width: size,
+        height: size,
       ),
     );
   }
