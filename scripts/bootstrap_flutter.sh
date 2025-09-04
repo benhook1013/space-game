@@ -121,7 +121,7 @@ if [ "$needs_download" = true ]; then
   done
   local start_time
   start_time=$(date +%s)
-  while jobs -p >/dev/null 2>&1; do
+  while [[ -n "$(jobs -p)" ]]; do
     local size=0
     for f in "${tmpfiles[@]}"; do
       if [ -f "$f" ]; then
