@@ -108,6 +108,10 @@ class SpaceGame extends FlameGame
   FpsTextComponent? _fpsText;
   bool _playerInitialized = false;
 
+  /// Whether [onLoad] has finished and late fields are initialised.
+  bool _isLoaded = false;
+  bool get isLoaded => _isLoaded;
+
   late void Function() _updateFireButtonColors;
   late void Function() _updateJoystickColors;
 
@@ -225,6 +229,7 @@ class SpaceGame extends FlameGame
 
     settingsService.joystickScale.addListener(_updateJoystickScale);
     settingsService.hudButtonScale.addListener(_updateHudButtonScale);
+    _isLoaded = true;
   }
 
   @override

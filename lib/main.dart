@@ -139,7 +139,7 @@ class _AppLifecycleObserver extends WidgetsBindingObserver {
       }
       game.audioService.stopAll();
     } else if (state == AppLifecycleState.resumed) {
-      if (game.stateMachine.state == GameState.playing) {
+      if (game.isLoaded && game.stateMachine.state == GameState.playing) {
         game.resumeEngine();
         game.focusGame();
       }
