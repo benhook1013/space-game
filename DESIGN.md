@@ -100,8 +100,12 @@ tree spanning weapons and ship systems.
 - Small helpers for cross-cutting concerns live under `lib/services/`.
 - `audio_service.dart` wraps `flame_audio`, exposing a mute toggle and master
   volume so audio can dim when the game is paused.
-- `storage_service.dart` will use `shared_preferences` to persist the local
-  high score and can expand for save/load later.
+- `storage_service.dart` uses `shared_preferences` to persist the local
+  high score and settings.
+- `score_service.dart` tracks score, minerals and health values.
+- `overlay_service.dart` shows and hides the Flutter overlays.
+- `settings_service.dart` holds tweakable UI scale values and theme mode.
+- `targeting_service.dart` assists auto-aim queries.
 - Add services only when needed to keep the project lightweight.
 
 ## State and Data
@@ -133,6 +137,10 @@ tree spanning weapons and ship systems.
 - On player death, a game over overlay appears with restart, menu and mute buttons.
 - A help overlay lists controls and can be toggled with the `H` key, pausing the
   game when opened mid-run. `Esc` also closes it without triggering pause.
+- An upgrades overlay (placeholder) opens with the `U` key or HUD button and
+  pauses gameplay until dismissed.
+- A settings overlay provides sliders for HUD, text and joystick scale along
+  with a dark theme toggle.
 - A `GameState` enum tracks the current phase.
 
 ## Input
