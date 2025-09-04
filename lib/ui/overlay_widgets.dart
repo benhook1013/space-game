@@ -132,12 +132,11 @@ class SettingsButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final primary = Theme.of(context).colorScheme.primary;
     return IconButton(
       iconSize: iconSize,
       icon: ImageIcon(
         AssetImage('assets/images/${Assets.settingsIcon}'),
-        color: GameText.defaultColor,
+        color: Theme.of(context).colorScheme.primary,
       ),
       onPressed: game.toggleSettings,
     );
