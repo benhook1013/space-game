@@ -16,7 +16,6 @@ class SettingsOverlay extends StatelessWidget {
   Widget build(BuildContext context) {
     final settings = game.settingsService;
     return OverlayLayout(
-      dimmed: true,
       builder: (context, spacing, iconSize) {
         return Column(
           mainAxisSize: MainAxisSize.min,
