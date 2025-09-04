@@ -2,7 +2,7 @@
 
 CI/CD automation for the project.
 
-- `ci.yml` – formats code, runs static analysis and tests.
+- `analyze.yml` – runs static analysis and tests.
 - `deploy.yml` – builds the web release and publishes it. It runs on
   pushes to `main` and `develop` and can be triggered manually from the
   GitHub Actions tab.
