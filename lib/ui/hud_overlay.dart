@@ -25,54 +25,66 @@ class HudOverlay extends StatelessWidget {
       builder: (context, scale, _) {
         final iconSize = responsiveIconSizeFromContext(context) * scale;
         return SafeArea(
-          child: Align(
-            alignment: Alignment.topCenter,
+          child: SizedBox.expand(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: Stack(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8),
+                  Align(
+                    alignment: Alignment.topCenter,
                     child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        ScoreDisplay(game: game),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: ScoreDisplay(game: game),
+                        ),
                         const SizedBox(width: 8),
-                        HealthDisplay(game: game),
+                        MineralDisplay(game: game),
+                        const SizedBox(width: 8),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: HealthDisplay(game: game),
+                        ),
                       ],
                     ),
                   ),
-                  MineralDisplay(game: game),
-                  Row(
-                    children: [
-                      IconButton(
-                        iconSize: iconSize,
-                        icon: Icon(Icons.gps_fixed,
-                            color: Theme.of(context).colorScheme.onSurface),
-                        onPressed: game.toggleAutoAimRadius,
-                      ),
-                      UpgradeButton(game: game, iconSize: iconSize),
-                      HelpButton(game: game, iconSize: iconSize),
-                      SettingsButton(game: game, iconSize: iconSize),
-                      MuteButton(game: game, iconSize: iconSize),
-                      ValueListenableBuilder<GameState>(
-                        valueListenable: game.stateMachine.stateNotifier,
-                        builder: (context, state, _) {
-                          final paused = state == GameState.paused;
-                          return IconButton(
-                            iconSize: iconSize,
-                            // Mirrors the Escape and P keyboard shortcuts.
-                            icon: Icon(
-                              paused ? Icons.play_arrow : Icons.pause,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                            onPressed:
-                                paused ? game.resumeGame : game.pauseGame,
-                          );
-                        },
-                      ),
-                    ],
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          iconSize: iconSize,
+                          icon: Icon(
+                            Icons.gps_fixed,
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
+                          onPressed: game.toggleAutoAimRadius,
+                        ),
+                        UpgradeButton(game: game, iconSize: iconSize),
+                        HelpButton(game: game, iconSize: iconSize),
+                        SettingsButton(game: game, iconSize: iconSize),
+                        MuteButton(game: game, iconSize: iconSize),
+                        ValueListenableBuilder<GameState>(
+                          valueListenable: game.stateMachine.stateNotifier,
+                          builder: (context, state, _) {
+                            final paused = state == GameState.paused;
+                            return IconButton(
+                              iconSize: iconSize,
+                              // Mirrors the Escape and P keyboard shortcuts.
+                              icon: Icon(
+                                paused ? Icons.play_arrow : Icons.pause,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                              onPressed:
+                                  paused ? game.resumeGame : game.pauseGame,
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
