@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'assets.dart';
 import 'game/space_game.dart';
+import 'game/game_state.dart';
 import 'theme/game_theme.dart';
 import 'ui/game_over_overlay.dart';
 import 'ui/hud_overlay.dart';
@@ -138,8 +139,10 @@ class _AppLifecycleObserver extends WidgetsBindingObserver {
       }
       game.audioService.stopAll();
     } else if (state == AppLifecycleState.resumed) {
-      game.resumeEngine();
-      game.focusGame();
+      if (game.stateMachine.state == GameState.playing) {
+        game.resumeEngine();
+        game.focusGame();
+      }
     }
   }
 }
