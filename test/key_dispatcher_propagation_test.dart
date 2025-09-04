@@ -6,7 +6,8 @@ import 'package:space_game/game/key_dispatcher.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('KeyDispatcher tracks pressed and released keys', () {
+  test('KeyDispatcher tracks key state but lets unhandled events propagate',
+      () {
     final dispatcher = KeyDispatcher();
 
     final handledDown = dispatcher.onKeyEvent(
@@ -17,7 +18,7 @@ void main() {
       ),
       {LogicalKeyboardKey.space},
     );
-    expect(handledDown, isTrue);
+    expect(handledDown, isFalse);
     expect(dispatcher.isPressed(LogicalKeyboardKey.space), isTrue);
 
     final handledUp = dispatcher.onKeyEvent(
@@ -28,7 +29,7 @@ void main() {
       ),
       <LogicalKeyboardKey>{},
     );
-    expect(handledUp, isTrue);
+    expect(handledUp, isFalse);
     expect(dispatcher.isPressed(LogicalKeyboardKey.space), isFalse);
   });
 }

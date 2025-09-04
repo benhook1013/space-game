@@ -38,4 +38,17 @@ void main() {
     );
     expect(result, isFalse);
   });
+
+  test('unhandled keys propagate', () {
+    final dispatcher = KeyDispatcher();
+    final result = dispatcher.onKeyEvent(
+      KeyDownEvent(
+        logicalKey: LogicalKeyboardKey.space,
+        physicalKey: PhysicalKeyboardKey.space,
+        timeStamp: Duration.zero,
+      ),
+      {LogicalKeyboardKey.space},
+    );
+    expect(result, isFalse);
+  });
 }
