@@ -166,7 +166,7 @@ class SpaceGame extends FlameGame
     );
     await add(player);
     _playerInitialized = true;
-    camera.follow(player, snap: true);
+    camera.viewfinder.position = player.position;
     final laser = MiningLaserComponent(player: player);
     miningLaser = laser;
     await add(laser);
@@ -408,6 +408,13 @@ class SpaceGame extends FlameGame
     final scale = settingsService.hudButtonScale.value;
     (fireButton.button as CircleComponent).radius = 30 * scale;
     (fireButton.buttonDown as CircleComponent).radius = 30 * scale;
+  }
+
+  /// Ensures the camera stays centred on the player.
+  @override
+  void update(double dt) {
+    super.update(dt);
+    camera.viewfinder.position = player.position;
   }
 
   @override

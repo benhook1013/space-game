@@ -58,7 +58,7 @@ class LifecycleManager {
       game.player.setSprite(game.selectedPlayerSprite);
       game.player.reset();
     }
-    game.camera.follow(game.player, snap: true);
+    game.camera.viewfinder.position = game.player.position;
     game.enemySpawner
       ..stop()
       ..start();
