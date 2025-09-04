@@ -32,6 +32,10 @@ class Constants {
   /// Seconds between mining laser pulses.
   static const double miningPulseInterval = 0.5;
 
+  /// Multiplier applied to [miningPulseInterval] when the mining speed
+  /// upgrade is purchased.
+  static const double miningPulseIntervalUpgradeFactor = 0.8;
+
   /// Volume for the mining laser sound effect (0-1).
   static const double miningLaserVolume = 0.25;
 
@@ -58,6 +62,10 @@ class Constants {
 
   /// Minimum time between player shots in seconds.
   static const double bulletCooldown = 0.2;
+
+  /// Multiplier applied to [bulletCooldown] when the fire rate upgrade is
+  /// purchased.
+  static const double bulletCooldownUpgradeFactor = 0.8;
 
   /// Damage dealt by player bullets.
   static const int bulletDamage = 1;

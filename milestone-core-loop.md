@@ -29,4 +29,4 @@ See [PLAN.md](PLAN.md) for overall project goals and
 - [x] Auto-aim the main weapon at the closest enemy.
 - [x] Design a broad upgrade system where minerals purchase new weapon and ship
   upgrades.
-- [ ] Implement upgrade effects and apply them to gameplay systems.
+- [x] Implement upgrade effects and apply them to gameplay systems.

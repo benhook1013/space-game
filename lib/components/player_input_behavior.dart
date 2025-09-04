@@ -121,7 +121,7 @@ class PlayerInputBehavior extends Component with HasGameReference<SpaceGame> {
     );
     game.add(bullet);
     game.audioService.playShoot();
-    _shootCooldown = Constants.bulletCooldown;
+    _shootCooldown = game.upgradeService.bulletCooldown;
   }
 
   /// Begins continuous shooting and fires immediately.

@@ -86,6 +86,6 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
 - [x] Refine auto-aim targeting behaviour for smoother updates.
 - [x] Design a broad upgrade system where minerals purchase new weapon and ship
       upgrades.
-- [ ] Implement upgrade effects and apply them to gameplay systems.
+- [x] Implement upgrade effects and apply them to gameplay systems.
 - [ ] Add a minimap or other navigation aid for exploring the larger world.
 - [ ] Evaluate camera dead zones or world wrapping to handle map edges.
