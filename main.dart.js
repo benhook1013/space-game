@@ -72372,7 +72372,7 @@ return s},
 $S:479}
 A.a3B.prototype={
 $0(){var s,r,q,p,o=null,n=new A.O(new Float32Array(2))
-n.e4(48)
+n.e4(33.6)
 s=B.b0.jG()
 r=A.fZ()
 q=n
@@ -73002,7 +73002,7 @@ $0(){this.a.c.mc.sq(B.h.eI(this.b,0,1))
 return null},
 $S:0}
 A.FY.prototype={
-R(a){return new A.ps(new A.a1u(),48,this.c.ae.d,null)}}
+R(a){return new A.ps(new A.a1u(),24,this.c.ae.d,null)}}
 A.a1u.prototype={
 $1(a){return A.anz("assets/images/icons/mineral.png",B.ca,null,a,a)},
 $S:503}
