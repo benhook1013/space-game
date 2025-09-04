@@ -47,11 +47,30 @@ class SettingsOverlay extends StatelessWidget {
             ),
             ValueListenableBuilder<ThemeMode>(
               valueListenable: settings.themeMode,
-              builder: (context, mode, _) => SwitchListTile(
-                title: const GameText('Dark Theme', maxLines: 1),
-                value: mode == ThemeMode.dark,
-                onChanged: (v) => settings.themeMode.value =
-                    v ? ThemeMode.dark : ThemeMode.light,
+              builder: (context, mode, _) => ListTile(
+                title: const GameText('Theme', maxLines: 1),
+                trailing: DropdownButton<ThemeMode>(
+                  value: mode,
+                  onChanged: (newMode) {
+                    if (newMode != null) {
+                      settings.themeMode.value = newMode;
+                    }
+                  },
+                  items: const [
+                    DropdownMenuItem(
+                      value: ThemeMode.system,
+                      child: GameText('System', maxLines: 1),
+                    ),
+                    DropdownMenuItem(
+                      value: ThemeMode.light,
+                      child: GameText('Light', maxLines: 1),
+                    ),
+                    DropdownMenuItem(
+                      value: ThemeMode.dark,
+                      child: GameText('Dark', maxLines: 1),
+                    ),
+                  ],
+                ),
               ),
             ),
             SizedBox(height: spacing),

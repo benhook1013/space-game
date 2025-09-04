@@ -6,7 +6,7 @@ class SettingsService {
       : hudButtonScale = ValueNotifier<double>(defaultHudButtonScale),
         textScale = ValueNotifier<double>(defaultTextScale),
         joystickScale = ValueNotifier<double>(defaultJoystickScale),
-        themeMode = ValueNotifier<ThemeMode>(ThemeMode.light);
+        themeMode = ValueNotifier<ThemeMode>(ThemeMode.system);
 
   static const double defaultHudButtonScale = 0.75;
   static const double defaultTextScale = 1.5;

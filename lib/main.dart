@@ -27,19 +27,40 @@ Future<void> main() async {
 
   final lightScheme = ColorScheme.fromSeed(seedColor: Colors.deepPurple);
   final darkScheme = ColorScheme.fromSeed(
-      seedColor: Colors.deepPurple, brightness: Brightness.dark);
-  final colorScheme = ValueNotifier<ColorScheme>(lightScheme);
-  final gameColors = ValueNotifier<GameColors>(GameColors.light);
+    seedColor: Colors.deepPurple,
+    brightness: Brightness.dark,
+  );
+  final initialBrightness =
+      WidgetsBinding.instance.platformDispatcher.platformBrightness;
+  final colorScheme = ValueNotifier<ColorScheme>(
+    initialBrightness == Brightness.dark ? darkScheme : lightScheme,
+  );
+  final gameColors = ValueNotifier<GameColors>(
+    initialBrightness == Brightness.dark ? GameColors.dark : GameColors.light,
+  );
 
-  settings.themeMode.addListener(() {
-    if (settings.themeMode.value == ThemeMode.dark) {
+  void applyTheme() {
+    final brightness = settings.themeMode.value == ThemeMode.system
+        ? WidgetsBinding.instance.platformDispatcher.platformBrightness
+        : (settings.themeMode.value == ThemeMode.dark
+            ? Brightness.dark
+            : Brightness.light);
+    if (brightness == Brightness.dark) {
       colorScheme.value = darkScheme;
       gameColors.value = GameColors.dark;
     } else {
       colorScheme.value = lightScheme;
       gameColors.value = GameColors.light;
     }
-  });
+  }
+
+  settings.themeMode.addListener(applyTheme);
+  WidgetsBinding.instance.platformDispatcher.onPlatformBrightnessChanged = () {
+    if (settings.themeMode.value == ThemeMode.system) {
+      applyTheme();
+    }
+  };
+  applyTheme();
 
   final game = SpaceGame(
     storageService: storage,
