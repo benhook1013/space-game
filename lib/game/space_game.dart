@@ -410,6 +410,12 @@ class SpaceGame extends FlameGame
     (fireButton.buttonDown as CircleComponent).radius = 30 * scale;
   }
 
+  @override
+  void onGameResize(Vector2 size) {
+    super.onGameResize(size);
+    camera.viewfinder.anchor = Anchor.center;
+  }
+
   /// Requests keyboard focus for the surrounding [GameWidget].
   void focusGame() => focusNode.requestFocus();
 }
