@@ -35,6 +35,9 @@ void main() {
     game.joystick.removeFromParent();
     game.joystick = TestJoystick();
     await game.add(game.joystick);
+    game.player
+      ..setJoystick(game.joystick)
+      ..resetInput();
     game.update(0);
     game.update(0);
 
