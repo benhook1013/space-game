@@ -1,5 +1,3 @@
-import 'package:meta/meta.dart';
-
 /// Generic object pool to minimise allocations by reusing instances.
 class ObjectPool<T> {
   ObjectPool(this._create);
@@ -7,9 +5,8 @@ class ObjectPool<T> {
   final T Function() _create;
   final List<T> _items = [];
 
-  /// Retrieves an instance from the pool, applying [reset] if provided.
-  @visibleForTesting
-  List<T> get items => _items;
+  /// Returns the cached items currently in the pool.
+  Iterable<T> get items => _items;
 
   T acquire([void Function(T)? reset]) {
     final obj = _items.isNotEmpty ? _items.removeLast() : _create();

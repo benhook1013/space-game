@@ -350,6 +350,10 @@ class SpaceGame extends FlameGame
       _applyDebugMode(child, debugMode);
     }
 
+    // Ensure pooled components also reflect the new debug mode so reused
+    // instances don't retain stale debug flags.
+    pools.applyDebugMode(debugMode);
+
     if (debugMode) {
       if (_fpsText != null && !_fpsText!.isMounted) {
         add(_fpsText!);
