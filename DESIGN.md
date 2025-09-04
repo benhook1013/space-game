@@ -155,9 +155,12 @@ tree spanning weapons and ship systems.
 
 ## Rendering & Camera
 
-- Camera follows the player via `CameraComponent` and clamps to the
-  `Constants.worldSize` bounds with a `BoundedPositionBehavior` so the starfield edges stay in view.
-- A parallax starfield provides the background.
+- The world extends beyond the initial viewport and has no fixed bounds. A
+  `CameraComponent` tracks the player without clamping while content streams in
+  around them.
+- Entities that move far outside a cleanup radius despawn; new ones spawn near
+  the player to maintain activity ahead of their flight path.
+- A parallax starfield is tiled procedurally to appear endless.
 
 ## Assets
 
