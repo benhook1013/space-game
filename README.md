@@ -45,6 +45,9 @@ dedicated server or NAT traversal.
 - Player score, health and minerals displayed in the HUD; health drops on
   collision and minerals increase when collecting pickups from mined asteroids
 - Toggable top-left minimap shows nearby asteroids, enemies and pickups
+- HUD button toggles coloured range rings showing targeting, Tractor Aura and mining radii
+- Placeholder upgrades overlay accessible via a HUD button or the `U` key
+- Settings overlay adjusts HUD, text and joystick scale and offers light or dark themes
 - Local high score stored on device using `shared_preferences`
 - Basic sound effects with a mute toggle on menu, HUD and game over
   screens, plus an `M` key shortcut

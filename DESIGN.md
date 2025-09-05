@@ -136,8 +136,8 @@ tree spanning weapons and ship systems.
 - Players can pause the game from the HUD or with the Escape or `P` key,
   showing a centered `PAUSED` label with a hint to press `Esc` or `P` to
   resume while gameplay halts.
-- During play the HUD provides score, minerals, health, a minimap toggle, pause
-  and mute controls.
+- During play the HUD provides score, minerals, health, a minimap toggle, range
+  rings toggle, pause and mute controls.
 - On player death, a game over overlay appears with restart, menu and mute buttons.
 - A help overlay lists controls and can be toggled with the `H` key, pausing the
   game when opened mid-run. `Esc` also closes it without triggering pause.
@@ -152,6 +152,7 @@ tree spanning weapons and ship systems.
 - On-screen joystick and fire button mirror keyboard controls (WASD + Space).
 - Input handling stays isolated from rendering for easier testing.
 - `N` toggles a minimap overlay for navigation.
+- HUD button toggles range rings showing targeting, Tractor Aura and mining radii.
 - `H` toggles a help overlay for quick reference, and `Esc` closes it when
   visible.
 
