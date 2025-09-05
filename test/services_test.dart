@@ -35,5 +35,16 @@ void main() {
       expect(audio.muted.value, isTrue);
       expect(storage.isMuted(), isTrue);
     });
+
+    test('mute state persists across instances', () async {
+      SharedPreferences.setMockInitialValues({});
+      var storage = await StorageService.create();
+      var audio = await AudioService.create(storage);
+      await audio.toggleMute();
+
+      storage = await StorageService.create();
+      audio = await AudioService.create(storage);
+      expect(audio.muted.value, isTrue);
+    });
   });
 }
