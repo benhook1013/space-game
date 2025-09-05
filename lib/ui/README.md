@@ -7,6 +7,8 @@ Flutter overlays and HUD widgets.
   game loop.
 - UI reads and updates game state through simple `ValueNotifier`s or
   callbacks exposed by `SpaceGame`.
+- Text is rendered with `GameText` to keep styling consistent and honour the
+  global text scale factor.
 - Keep rendering separate from gameplay logic to simplify testing.
 
 ## Overlays

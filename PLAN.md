@@ -96,7 +96,8 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
   - `assets.dart` – central asset registry that preloads sprites, audio and fonts
   - `constants.dart` – central place for tunable values
   - `log.dart` – tiny `log()` helper wrapping `debugPrint`
-  - `services/` – optional helpers such as storage or audio, added only when needed
+  - `ui/game_text.dart` – text widget applying global scaling for consistent style
+  - `services/` – storage, audio, settings and other helpers added only when needed
 - `assets/` – images, audio and fonts
 - `web/` – PWA manifest, icons and service worker
 - `test/` – placeholder for future automated tests

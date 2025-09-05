@@ -58,7 +58,12 @@ tree spanning weapons and ship systems.
 
 - `main.dart` starts the Flutter app using the Flutter SDK pinned via FVM (3.32.8).
 - It wraps `SpaceGame` in a `GameWidget`, ensures the PWA manifest loads and
-  preloads assets through `Assets.load()` before play.
+- preloads assets through `Assets.load()` before play.
+- It initialises `StorageService`, `AudioService` and `SettingsService`, applies
+  light or dark `ColorScheme`s, and attaches global text scaling via
+  `GameText.attachTextScale`.
+- An app lifecycle observer pauses the engine and audio when the window loses
+  focus.
 - Run all development commands through FVM (`fvm flutter`, `fvm dart`) to keep
   the toolchain consistent.
 
@@ -72,6 +77,8 @@ tree spanning weapons and ship systems.
   and scoring. Hooks for resource mining, inventory, networking and save/load
   will slot in later milestones.
 - Flutter overlays handle menus and the HUD so UI stays outside the game loop.
+- A shared `GameText` widget standardises overlay text styling and listens for
+  global text scale changes.
 - A `GameState` enum tracks **menu → playing → paused → game over** transitions.
 - `SpaceGame` exposes `ValueNotifier`s for score, minerals, health and high
   score so overlays can react without touching the game loop.
@@ -105,7 +112,8 @@ tree spanning weapons and ship systems.
   high score and settings.
 - `score_service.dart` tracks score, minerals and health values.
 - `overlay_service.dart` shows and hides the Flutter overlays.
-- `settings_service.dart` holds tweakable UI scale values and theme mode.
+- `settings_service.dart` holds tweakable UI and text scale values, gameplay
+  range multipliers and theme mode.
 - `targeting_service.dart` assists auto-aim queries.
 - `upgrade_service.dart` manages purchasing upgrades with minerals and exposes
   a `ValueListenable` for bought upgrade ids.
