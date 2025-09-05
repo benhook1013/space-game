@@ -1,0 +1,73 @@
+import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:space_game/services/audio_service.dart';
+import 'package:space_game/services/storage_service.dart';
+import 'package:flame_audio/flame_audio.dart';
+
+void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  test('master volume clamped between 0 and 1', () async {
+    SharedPreferences.setMockInitialValues({});
+    final storage = await StorageService.create();
+    final service = await AudioService.create(storage);
+
+    service.setMasterVolume(1.5);
+    expect(service.masterVolume, 1);
+
+    service.setMasterVolume(-0.5);
+    expect(service.masterVolume, 0);
+  });
+
+  test('toggleMute flips flag', () async {
+    SharedPreferences.setMockInitialValues({});
+    final storage = await StorageService.create();
+    final service = await AudioService.create(storage);
+
+    expect(service.muted.value, isFalse);
+    await service.toggleMute();
+    expect(service.muted.value, isTrue);
+  });
+
+  test('start/stop mining laser loop and mute prevents playback', () async {
+    SharedPreferences.setMockInitialValues({});
+    final storage = await StorageService.create();
+    final player = _FakeAudioPlayer();
+    final service = await AudioService.create(
+      storage,
+      loop: (_, {double volume = 1}) async {
+        return player;
+      },
+    );
+
+    await service.startMiningLaser();
+    expect(service.miningLoop, isNotNull);
+
+    service.stopMiningLaser();
+    expect(player.stopped, isTrue);
+    expect(service.miningLoop, isNull);
+
+    await service.startMiningLaser();
+    await service.toggleMute();
+    expect(player.stopped, isTrue);
+    expect(service.miningLoop, isNull);
+
+    await service.startMiningLaser();
+    expect(service.miningLoop, isNull);
+  });
+}
+
+class _FakeAudioPlayer implements AudioPlayer {
+  bool stopped = false;
+
+  @override
+  Future<void> stop() async {
+    stopped = true;
+  }
+
+  @override
+  Future<void> setVolume(double volume) async {}
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}

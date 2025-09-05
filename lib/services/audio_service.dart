@@ -8,8 +8,10 @@ import '../constants.dart';
 import 'storage_service.dart';
 
 /// Wrapper around `flame_audio` providing sound effects with a mute toggle.
+typedef _LoopCallback = Future<AudioPlayer> Function(String, {double volume});
+
 class AudioService {
-  AudioService._(this._storage, this.muted, this._shootPool);
+  AudioService._(this._storage, this.muted, this._shootPool, this._loop);
 
   /// Asynchronously create the service and load the persisted mute flag.
   ///
@@ -17,7 +19,10 @@ class AudioService {
   /// cached players instead of fetching the asset every time. If the pool
   /// cannot be created (e.g. when the audio plugin isn't available in tests),
   /// a fallback is used that plays the clip directly for each shot.
-  static Future<AudioService> create(StorageService storage) async {
+  static Future<AudioService> create(
+    StorageService storage, {
+    _LoopCallback? loop,
+  }) async {
     final muted = ValueNotifier<bool>(storage.isMuted());
     AudioPool? shootPool;
     if (kIsWeb) {
@@ -30,7 +35,14 @@ class AudioService {
         shootPool = null;
       }
     }
-    return AudioService._(storage, muted, shootPool);
+    return AudioService._(
+      storage,
+      muted,
+      shootPool,
+      loop ??
+          (String file, {double volume = 1}) =>
+              FlameAudio.loop(file, volume: volume),
+    );
   }
 
   final StorageService _storage;
@@ -41,6 +53,7 @@ class AudioService {
   /// Pool for the rapidly-fired shoot sound effect. May be null in tests where
   /// the audio plugin is unavailable.
   final AudioPool? _shootPool;
+  final _LoopCallback _loop;
 
   double _masterVolume = 1;
 
@@ -81,10 +94,13 @@ class AudioService {
 
   AudioPlayer? _miningLoop;
 
+  @visibleForTesting
+  AudioPlayer? get miningLoop => _miningLoop;
+
   /// Starts the looping mining laser sound if not muted.
   Future<void> startMiningLaser() async {
     if (muted.value || _miningLoop != null) return;
-    _miningLoop = await FlameAudio.loop(
+    _miningLoop = await _loop(
       Assets.miningLaserSfx,
       volume: Constants.miningLaserVolume * _masterVolume,
     );

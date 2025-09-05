@@ -75,4 +75,7 @@ class EnemySpawner extends Component with HasGameReference<SpaceGame> {
 
   @visibleForTesting
   void spawnNow() => _spawn();
+
+  @visibleForTesting
+  bool get isRunning => _timer.isRunning();
 }
