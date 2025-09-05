@@ -12,7 +12,7 @@ See [PLAN.md](PLAN.md) for overall project goals and
 - [x] Implement `storage_service.dart` using `shared_preferences`
       to persist the local high score.
 - [x] Simple HUD and menus layered with Flutter overlays.
-- [x] Option to mute or dim audio when the game is paused.
+- [x] Audio dims when the game is paused.
 
 ## Design Notes
 

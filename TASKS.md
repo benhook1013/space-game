@@ -74,8 +74,7 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
 - [x] Upgrades overlay placeholder accessible via HUD button or the `U` key.
 - [x] HUD button toggles range rings for targeting, Tractor Aura and mining.
 - [x] Settings overlay with sliders for HUD, text, joystick, targeting,
-      Tractor Aura and mining ranges, plus a dark theme selector and
-      "mute on pause" toggle.
+      Tractor Aura and mining ranges, plus a dark theme selector.
 
 ## Next Steps
 

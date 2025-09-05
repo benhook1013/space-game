@@ -171,11 +171,12 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
   shoot, `Escape` or `P` to pause or resume, `M` to mute, `N` toggles the
   minimap, `F1` toggles debug overlays, `Enter` starts or restarts from the
   menu or game over, `R` restarts at any time, `H` shows a help overlay that
-  `Esc` also closes, `U` opens an upgrades overlay that `Esc` also closes)
+  `Esc` also closes, `U` opens an upgrades overlay that `Esc` also closes`)
+
 - Upgrades overlay placeholder opened with a HUD button or the `U` key and
   pausing gameplay for future ship upgrades
 - Settings overlay with sliders for HUD, text, joystick, targeting, Tractor Aura
-  and mining ranges, plus a dark theme selector and "mute on pause" toggle
+  and mining ranges, plus a dark theme selector
 - Game works offline after the first load thanks to the service worker
 - Simple parallax starfield background
 - Pause or resume with a `PAUSED` overlay prompting players to press `Esc` or

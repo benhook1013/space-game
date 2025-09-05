@@ -9,7 +9,6 @@ class SettingsService {
         textScale = ValueNotifier<double>(defaultTextScale),
         joystickScale = ValueNotifier<double>(defaultJoystickScale),
         themeMode = ValueNotifier<ThemeMode>(ThemeMode.system),
-        muteOnPause = ValueNotifier<bool>(true),
         targetingRange = ValueNotifier<double>(Constants.playerAutoAimRange),
         tractorRange = ValueNotifier<double>(Constants.playerTractorAuraRadius),
         miningRange = ValueNotifier<double>(Constants.playerMiningRange);
@@ -29,9 +28,6 @@ class SettingsService {
 
   /// Currently selected theme mode.
   final ValueNotifier<ThemeMode> themeMode;
-
-  /// Whether audio should fully mute when the game is paused.
-  final ValueNotifier<bool> muteOnPause;
 
   /// Distance used to auto-aim enemies when stationary.
   final ValueNotifier<double> targetingRange;
