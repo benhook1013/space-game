@@ -43,9 +43,11 @@ if ((Test-Path $flutterBat) -and -not $Force) {
   $currentVersion = $null
   $currentChannel = $null
   if ($versionOutput) { Say ("flutter --version output: " + ($versionOutput -replace "\r?\n"," ")) }
-  if ($versionOutput -match 'Flutter\s+([^\s]+)\s+•\s+channel\s+([^\s]+)') {
-    $currentVersion = $matches[1]
-    $currentChannel = $matches[2]
+  # Be lenient about separators (console encoding may mangle the bullet character)
+  $m = [regex]::Match($versionOutput, 'Flutter\s+([^\s]+)\s+.*?channel\s+([^\s]+)')
+  if ($m.Success) {
+    $currentVersion = $m.Groups[1].Value
+    $currentChannel = $m.Groups[2].Value
     Say "Parsed installed Flutter: version=$currentVersion channel=$currentChannel"
   } else {
     Say "Unable to parse Flutter version; will reinstall"

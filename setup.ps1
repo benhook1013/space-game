@@ -25,7 +25,7 @@ function Invoke-WingetInstall {
     param($Line)
     try { winget $Line | Out-Null } catch {}
   } -ArgumentList $ArgsLine
-  if (-not (Wait-Job $job -Timeout $using:installTimeoutSec)) {
+  if (-not (Wait-Job $job -Timeout $installTimeoutSec)) {
     try { Stop-Job $job -Force } catch {}
     Write-Host "[setup] winget install $Name timed out; continuing"
     return
@@ -103,12 +103,8 @@ if (-not (Get-Command markdownlint -ErrorAction SilentlyContinue)) {
 }
 
 # Ensure ImageMagick and FFmpeg are available for asset tooling.
-if (-not (Get-Command ffmpeg -ErrorAction SilentlyContinue)) {
-  Invoke-WingetInstall -ArgsLine 'install -e --id FFmpeg.FFmpeg --silent --accept-package-agreements --accept-source-agreements' -Name 'FFmpeg'
-}
-if (-not (Get-Command magick -ErrorAction SilentlyContinue) -and -not (Get-Command convert -ErrorAction SilentlyContinue)) {
-  Invoke-WingetInstall -ArgsLine 'install -e --id ImageMagick.ImageMagick --silent --accept-package-agreements --accept-source-agreements' -Name 'ImageMagick'
-}
+## FFmpeg install removed per request
+## ImageMagick install removed per request
 
 if (-not (Get-Command google-chrome -ErrorAction SilentlyContinue) -and `
     -not (Get-Command chrome -ErrorAction SilentlyContinue) -and `
