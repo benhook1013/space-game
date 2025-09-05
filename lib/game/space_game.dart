@@ -213,8 +213,9 @@ class SpaceGame extends FlameGame
     stateMachine = GameStateMachine(
       overlays: overlayService,
       onStart: lifecycle.onStart,
-      onPause: pauseEngine,
-      onResume: resumeEngine,
+      // Keep the engine running when paused so HUD tweaks render live.
+      onPause: () {},
+      onResume: () {},
       onGameOver: lifecycle.onGameOver,
       onMenu: lifecycle.onMenu,
     );
@@ -370,10 +371,6 @@ class SpaceGame extends FlameGame
   /// Toggles rendering of the player's range rings.
   void toggleAutoAimRadius() {
     player.toggleAutoAimRadius();
-    if (paused) {
-      // Step the engine once so the visibility change is rendered while paused.
-      stepEngine(stepTime: 0);
-    }
   }
 
   /// Shows or hides the runtime settings overlay.
@@ -402,12 +399,10 @@ class SpaceGame extends FlameGame
   }
 
   void _updateJoystickScale() {
-    final oldJoystick = joystick;
-    final newJoystick = _buildJoystick();
-    joystick = newJoystick;
-    add(newJoystick);
+    final scale = settingsService.joystickScale.value;
+    (joystick.knob as CircleComponent).radius = 20 * scale;
+    (joystick.background as CircleComponent).radius = 50 * scale;
     _updateJoystickColors();
-    oldJoystick.removeFromParent();
   }
 
   void _updateHudButtonScale() {
@@ -419,7 +414,11 @@ class SpaceGame extends FlameGame
   /// Ensures the camera stays centred on the player.
   @override
   void update(double dt) {
-    super.update(dt);
+    final shouldFreeze = _isLoaded &&
+        (stateMachine.state == GameState.paused ||
+            stateMachine.state == GameState.upgrades);
+    final effectiveDt = shouldFreeze ? 0.0 : dt;
+    super.update(effectiveDt);
     if (_playerInitialized) {
       camera.viewfinder.position = player.position;
     }
