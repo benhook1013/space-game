@@ -10,6 +10,9 @@ import 'package:space_game/constants.dart';
 import 'package:space_game/game/key_dispatcher.dart';
 import 'package:space_game/game/pool_manager.dart';
 import 'package:space_game/game/space_game.dart';
+import 'package:space_game/game/game_state_machine.dart';
+import 'package:space_game/game/game_state.dart';
+import 'package:space_game/services/overlay_service.dart';
 import 'package:space_game/services/audio_service.dart';
 import 'package:space_game/services/storage_service.dart';
 
@@ -69,6 +72,15 @@ class _TestGame extends SpaceGame {
     await add(joystick);
     player = _TestPlayer(joystick: joystick, keyDispatcher: keyDispatcher);
     await add(player);
+    overlayService = OverlayService(this);
+    stateMachine = GameStateMachine(
+      overlays: overlayService,
+      onStart: () {},
+      onPause: pauseEngine,
+      onResume: resumeEngine,
+      onGameOver: () {},
+      onMenu: () {},
+    );
     player.inputBehavior.game = this;
   }
 }
@@ -131,6 +143,7 @@ void main() {
     game.onGameResize(Vector2.all(500));
     await game.ready();
 
+    game.stateMachine.state = GameState.playing;
     game.player.startShooting();
     game.player.inputBehavior.update(0);
     expect(game.children.whereType<BulletComponent>().length, 1);

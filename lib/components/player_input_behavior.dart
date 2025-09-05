@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 
 import '../constants.dart';
 import '../game/key_dispatcher.dart';
+import '../game/game_state.dart';
 import '../game/space_game.dart';
 import 'bullet.dart';
 import 'player.dart';
@@ -104,7 +105,7 @@ class PlayerInputBehavior extends Component with HasGameReference<SpaceGame> {
 
   /// Fires a bullet from the player's current position.
   void shoot() {
-    if (_shootCooldown > 0) {
+    if (game.stateMachine.state != GameState.playing || _shootCooldown > 0) {
       return;
     }
     final direction = Vector2(
@@ -121,6 +122,9 @@ class PlayerInputBehavior extends Component with HasGameReference<SpaceGame> {
 
   /// Begins continuous shooting and fires immediately.
   void startShooting() {
+    if (game.stateMachine.state != GameState.playing) {
+      return;
+    }
     _isShooting = true;
     shoot();
   }
