@@ -10,7 +10,7 @@ import 'package:space_game/ui/settings_overlay.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('slider and toggle modify settings', (tester) async {
+  testWidgets('slider modifies settings', (tester) async {
     SharedPreferences.setMockInitialValues({});
     final view = tester.view;
     view.physicalSize = const Size(800, 1200);
@@ -29,11 +29,5 @@ void main() {
     await tester.drag(slider, const Offset(50, 0));
     await tester.pump();
     expect(game.settingsService.hudButtonScale.value, isNot(initial));
-
-    final toggle = find.byType(Switch);
-    expect(game.settingsService.muteOnPause.value, isTrue);
-    await tester.tap(toggle, warnIfMissed: false);
-    await tester.pump();
-    expect(game.settingsService.muteOnPause.value, isFalse);
   });
 }

@@ -19,8 +19,6 @@ class SettingsService {
         themeMode = ValueNotifier<ThemeMode>(ThemeMode.values[
             storage?.getInt(_themeModeKey, ThemeMode.system.index) ??
                 ThemeMode.system.index]),
-        muteOnPause = ValueNotifier<bool>(
-            storage?.getBool(_muteOnPauseKey, true) ?? true),
         targetingRange = ValueNotifier<double>(storage?.getDouble(
                 _targetingRangeKey, Constants.playerAutoAimRange) ??
             Constants.playerAutoAimRange),
@@ -38,8 +36,6 @@ class SettingsService {
         () => _storage?.setDouble(_joystickScaleKey, joystickScale.value));
     themeMode.addListener(
         () => _storage?.setInt(_themeModeKey, themeMode.value.index));
-    muteOnPause.addListener(
-        () => _storage?.setBool(_muteOnPauseKey, muteOnPause.value));
     targetingRange.addListener(
         () => _storage?.setDouble(_targetingRangeKey, targetingRange.value));
     tractorRange.addListener(
@@ -64,9 +60,6 @@ class SettingsService {
   /// Currently selected theme mode.
   final ValueNotifier<ThemeMode> themeMode;
 
-  /// Whether audio should fully mute when the game is paused.
-  final ValueNotifier<bool> muteOnPause;
-
   /// Distance used to auto-aim enemies when stationary.
   final ValueNotifier<double> targetingRange;
 
@@ -82,7 +75,6 @@ class SettingsService {
   static const _textScaleKey = 'textScale';
   static const _joystickScaleKey = 'joystickScale';
   static const _themeModeKey = 'themeMode';
-  static const _muteOnPauseKey = 'muteOnPause';
   static const _targetingRangeKey = 'targetingRange';
   static const _tractorRangeKey = 'tractorRange';
   static const _miningRangeKey = 'miningRange';
