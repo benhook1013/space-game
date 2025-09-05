@@ -62,4 +62,7 @@ class AsteroidSpawner extends Component with HasGameReference<SpaceGame> {
 
   @visibleForTesting
   bool get isRunning => _timer.isRunning();
+
+  @visibleForTesting
+  void spawn() => _spawn();
 }
