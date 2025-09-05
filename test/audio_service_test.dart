@@ -19,14 +19,16 @@ void main() {
     expect(service.masterVolume, 0);
   });
 
-  test('toggleMute flips flag', () async {
+  test('toggleMute flips flag and updates storage', () async {
     SharedPreferences.setMockInitialValues({});
     final storage = await StorageService.create();
     final service = await AudioService.create(storage);
 
     expect(service.muted.value, isFalse);
+    expect(storage.isMuted(), isFalse);
     await service.toggleMute();
     expect(service.muted.value, isTrue);
+    expect(storage.isMuted(), isTrue);
   });
 
   test('start/stop mining laser loop and mute prevents playback', () async {
