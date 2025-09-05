@@ -156,9 +156,12 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
 - Enemy groups spawn periodically; the main weapon smoothly auto-aims at the closest foe
 - Asteroids drop mineral pickups when mined with an auto-targeting laser;
   destroying enemies also grants points
+- A blue Tractor Aura around the ship pulls in nearby pickups
 - Single endless level without progression for now
 - Player score, minerals and health shown in the HUD with simple
   start/game‑over screens
+- Toggable top-left minimap shows nearby asteroids, enemies and pickups
+- HUD button toggles coloured range rings showing targeting, Tractor Aura and mining radii
 - Local high score stored on device (e.g., shared preferences)
 - Menu offers a reset button to clear the high score
 - Basic sound effects using `flame_audio` with mute toggle (button or `M` key)
