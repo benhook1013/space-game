@@ -10,6 +10,9 @@ class SettingsService {
         hudButtonScale = ValueNotifier<double>(
             storage?.getDouble(_hudScaleKey, defaultHudButtonScale) ??
                 defaultHudButtonScale),
+        minimapScale = ValueNotifier<double>(
+            storage?.getDouble(_minimapScaleKey, defaultMinimapScale) ??
+                defaultMinimapScale),
         textScale = ValueNotifier<double>(
             storage?.getDouble(_textScaleKey, defaultTextScale) ??
                 defaultTextScale),
@@ -32,6 +35,8 @@ class SettingsService {
                 Constants.playerMiningRange) {
     hudButtonScale.addListener(
         () => _storage?.setDouble(_hudScaleKey, hudButtonScale.value));
+    minimapScale.addListener(
+        () => _storage?.setDouble(_minimapScaleKey, minimapScale.value));
     textScale
         .addListener(() => _storage?.setDouble(_textScaleKey, textScale.value));
     joystickScale.addListener(
@@ -51,9 +56,13 @@ class SettingsService {
   static const double defaultHudButtonScale = 0.75;
   static const double defaultTextScale = 1.5;
   static const double defaultJoystickScale = 1;
+  static const double defaultMinimapScale = 0.75;
 
   /// Multiplier applied to HUD buttons and icons.
   final ValueNotifier<double> hudButtonScale;
+
+  /// Multiplier applied to the minimap widget.
+  final ValueNotifier<double> minimapScale;
 
   /// Multiplier applied to in-game text sizes.
   final ValueNotifier<double> textScale;
@@ -88,6 +97,8 @@ class SettingsService {
     _storage = storage;
     hudButtonScale.value =
         storage.getDouble(_hudScaleKey, hudButtonScale.value);
+    minimapScale.value =
+        storage.getDouble(_minimapScaleKey, minimapScale.value);
     textScale.value = storage.getDouble(_textScaleKey, textScale.value);
     joystickScale.value =
         storage.getDouble(_joystickScaleKey, joystickScale.value);
@@ -104,6 +115,7 @@ class SettingsService {
   static const _hudScaleKey = 'hudButtonScale';
   static const _textScaleKey = 'textScale';
   static const _joystickScaleKey = 'joystickScale';
+  static const _minimapScaleKey = 'minimapScale';
   static const _themeModeKey = 'themeMode';
   static const _muteOnPauseKey = 'muteOnPause';
   static const _targetingRangeKey = 'targetingRange';

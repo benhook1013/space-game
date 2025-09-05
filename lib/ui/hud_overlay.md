@@ -10,6 +10,7 @@ Heads-up display shown during play.
   bound to `SpaceGame` and `AudioService`.
 - Toggles a top-left minimap for navigation.
 - Icon sizes scale with screen size for better usability on different devices.
+- Minimap size scales via the SettingsOverlay.
 - `U` opens the upgrades overlay; `Esc` closes it.
 - `H` opens the help overlay showing controls; `Esc` closes it.
 - `M` key also toggles audio mute.

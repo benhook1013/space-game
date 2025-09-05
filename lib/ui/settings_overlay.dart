@@ -46,6 +46,12 @@ class SettingsOverlay extends StatelessWidget {
             ),
             _buildSlider(
               context,
+              'Minimap',
+              settings.minimapScale,
+              spacing,
+            ),
+            _buildSlider(
+              context,
               'Targeting Range',
               settings.targetingRange,
               spacing,

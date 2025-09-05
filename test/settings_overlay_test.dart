@@ -30,6 +30,12 @@ void main() {
     await tester.pump();
     expect(game.settingsService.hudButtonScale.value, isNot(initial));
 
+    final minimapSlider = find.byType(Slider).at(3);
+    final minimapInitial = game.settingsService.minimapScale.value;
+    await tester.drag(minimapSlider, const Offset(50, 0));
+    await tester.pump();
+    expect(game.settingsService.minimapScale.value, isNot(minimapInitial));
+
     final toggle = find.byType(Switch);
     expect(game.settingsService.muteOnPause.value, isTrue);
     await tester.tap(toggle, warnIfMissed: false);

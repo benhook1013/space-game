@@ -10,7 +10,8 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   test('SpaceGame attaches storage to provided SettingsService', () async {
-    SharedPreferences.setMockInitialValues({'hudButtonScale': 0.8});
+    SharedPreferences.setMockInitialValues(
+        {'hudButtonScale': 0.8, 'minimapScale': 0.9});
     final storage = await StorageService.create();
     final audio = await AudioService.create(storage);
     final settings = SettingsService();
@@ -23,10 +24,13 @@ void main() {
 
     expect(game.settingsService, same(settings));
     expect(settings.hudButtonScale.value, 0.8);
+    expect(settings.minimapScale.value, 0.9);
 
     settings.hudButtonScale.value = 1.3;
+    settings.minimapScale.value = 1.2;
     await Future.delayed(Duration.zero);
     final reloaded = SettingsService(storage: storage);
     expect(reloaded.hudButtonScale.value, 1.3);
+    expect(reloaded.minimapScale.value, 1.2);
   });
 }
