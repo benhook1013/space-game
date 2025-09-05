@@ -5,11 +5,33 @@ $ErrorActionPreference = 'Stop'
 Push-Location $PSScriptRoot
 try {
 Write-Host "[setup] Bootstrapping Flutter SDK"
-& "$PSScriptRoot/scripts/bootstrap_flutter.ps1"
+# Forward -Verbose to bootstrap if this script is running verbose
+$bootstrapArgs = @()
+if ($VerbosePreference -eq 'Continue') { $bootstrapArgs += '-Verbose' }
+& "$PSScriptRoot/scripts/bootstrap_flutter.ps1" @bootstrapArgs
 
 $repoRoot = Resolve-Path $PSScriptRoot
 $pubCacheBin = Join-Path $HOME '.pub-cache/bin'
 $flutterBin = Join-Path $repoRoot '.tooling/flutter/bin'
+$installTimeoutSec = 300
+function Invoke-WingetInstall {
+  param([string]$ArgsLine,[string]$Name)
+  if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
+    Write-Host "[setup] Skipping $Name install: winget not found"
+    return
+  }
+  Write-Host "[setup] Installing $Name"
+  $job = Start-Job -ScriptBlock {
+    param($Line)
+    try { winget $Line | Out-Null } catch {}
+  } -ArgumentList $ArgsLine
+  if (-not (Wait-Job $job -Timeout $installTimeoutSec)) {
+    try { Stop-Job $job -Force } catch {}
+    Write-Host "[setup] winget install $Name timed out; continuing"
+    return
+  }
+  try { Receive-Job $job -ErrorAction Stop | Out-Null } catch { Write-Host "[setup] winget install $Name failed" }
+}
 
 # Use repo-local cache for FVM.
 $env:FVM_HOME = Join-Path $repoRoot '.fvm'
@@ -81,33 +103,14 @@ if (-not (Get-Command markdownlint -ErrorAction SilentlyContinue)) {
 }
 
 # Ensure ImageMagick and FFmpeg are available for asset tooling.
-if (-not (Get-Command ffmpeg -ErrorAction SilentlyContinue)) {
-  Write-Host "[setup] Installing FFmpeg"
-  if (Get-Command winget -ErrorAction SilentlyContinue) {
-    try { winget install -e --id FFmpeg.FFmpeg | Out-Null } catch { Write-Host "[setup] winget install FFmpeg failed" }
-  } else {
-    Write-Host "[setup] Skipping FFmpeg install: winget not found"
-  }
-}
-if (-not (Get-Command magick -ErrorAction SilentlyContinue) -and -not (Get-Command convert -ErrorAction SilentlyContinue)) {
-  Write-Host "[setup] Installing ImageMagick"
-  if (Get-Command winget -ErrorAction SilentlyContinue) {
-    try { winget install -e --id ImageMagick.ImageMagick | Out-Null } catch { Write-Host "[setup] winget install ImageMagick failed" }
-  } else {
-    Write-Host "[setup] Skipping ImageMagick install: winget not found"
-  }
-}
+## FFmpeg install removed per request
+## ImageMagick install removed per request
 
 if (-not (Get-Command google-chrome -ErrorAction SilentlyContinue) -and `
     -not (Get-Command chrome -ErrorAction SilentlyContinue) -and `
     -not (Get-Command chromium -ErrorAction SilentlyContinue) -and `
     -not (Get-Command msedge -ErrorAction SilentlyContinue)) {
-  Write-Host "[setup] Installing Chromium"
-  if (Get-Command winget -ErrorAction SilentlyContinue) {
-    try { winget install -e --id Chromium.Chromium | Out-Null } catch { Write-Host "[setup] winget install failed" }
-  } else {
-    Write-Host "[setup] Skipping Chrome install: winget not found"
-  }
+  Invoke-WingetInstall -ArgsLine 'install -e --id Chromium.Chromium --silent --accept-package-agreements --accept-source-agreements' -Name 'Chromium'
 }
 
 $chromePath = $null

@@ -3,12 +3,10 @@ set -euo pipefail
 
 FORCE=false
 QUIET=false
-DOWNLOADER=http
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --force) FORCE=true ;;
     --quiet) QUIET=true ;;
-    --downloader) DOWNLOADER="$2"; shift ;;
     *) echo "Unknown option: $1" >&2; exit 1 ;;
   esac
   shift
@@ -37,16 +35,26 @@ if [ -x "$FLUTTER_DIR/bin/flutter" ]; then
     rm -rf "$FLUTTER_DIR"
   else
     log "Existing Flutter installation detected; checking version"
-    current_info="$("$FLUTTER_DIR/bin/flutter" --version 2>/dev/null | head -n1 || true)"
-    current_version="$(echo "$current_info" | awk '{print $2}')"
-    current_channel="$(echo "$current_info" | awk '{print $5}')"
-    if [ "$current_version" = "$FLUTTER_VERSION" ] && \
-       [ "$current_channel" = "$FLUTTER_CHANNEL" ]; then
-      log "Flutter $current_version ($current_channel) already installed"
-      needs_download=false
+    if current_info="$("$FLUTTER_DIR/bin/flutter" --version 2>/dev/null | tr '\n' ' ')"; then
+      log "flutter --version output: $current_info"
     else
-      log "Flutter $current_version ($current_channel) found, but $FLUTTER_VERSION ($FLUTTER_CHANNEL) required"
-      log "Removing old Flutter installation"
+      current_info=""
+    fi
+    # Try to parse: Flutter <ver> ... channel <chan>
+    if [[ "$current_info" =~ Flutter[[:space:]]+([^[:space:]]+).*channel[[:space:]]+([^[:space:]]+) ]]; then
+      current_version="${BASH_REMATCH[1]}"
+      current_channel="${BASH_REMATCH[2]}"
+      log "Parsed installed Flutter: version=$current_version channel=$current_channel"
+      if [ "$current_version" = "$FLUTTER_VERSION" ] && [ "$current_channel" = "$FLUTTER_CHANNEL" ]; then
+        log "Installed Flutter matches required version/channel"
+        needs_download=false
+      else
+        log "Installed=$current_version ($current_channel); required=$FLUTTER_VERSION ($FLUTTER_CHANNEL). Will (re)install."
+        log "Removing old Flutter installation"
+        rm -rf "$FLUTTER_DIR"
+      fi
+    else
+      log "Unable to parse Flutter version; will reinstall"
       rm -rf "$FLUTTER_DIR"
     fi
   fi
@@ -85,7 +93,7 @@ if [ "$needs_download" = true ]; then
     BASE_URL="https://storage.googleapis.com/flutter_infra_release/releases"
   fi
   URL="${BASE_URL}/${FLUTTER_CHANNEL}/$(lower "$OS_SLUG")/${ARCHIVE}"
-  log "Downloading: $URL (downloader=$DOWNLOADER)"
+  log "Downloading: $URL (downloader=http)"
 
   download_http() {
     local url="$1" dest="$2"
@@ -97,68 +105,13 @@ if [ "$needs_download" = true ]; then
     mv "$tmp" "$dest"
   }
 
-  download_ranges() {
-  local url="$1" dest="$2" parts=8
-  local len
-  len=$(curl -sI "$url" | awk '/Content-Length/ {print $2}' | tr -d '\r')
-  if [[ -z "$len" ]]; then
-    log "Server did not return length; falling back to single stream"
-    download_http "$url" "$dest"
-    return
-  fi
-  local chunk=$(( (len + parts - 1) / parts ))
-  local tmpfiles=()
-  for ((i=0;i<parts;i++)); do
-    local start=$(( i * chunk ))
-    local end=$(( start + chunk - 1 ))
-    (( start > len - 1 )) && break
-    (( end > len - 1 )) && end=$(( len - 1 ))
-    local tmp="part-$i"
-    tmpfiles+=("$tmp")
-    local curl_opts=(--fail --location --retry 3 --retry-delay 2 -r "${start}-${end}")
-    if [ "$QUIET" = true ]; then curl_opts+=(--silent --show-error); fi
-    curl "${curl_opts[@]}" "$url" -o "$tmp" &
-  done
-  local start_time
-  start_time=$(date +%s)
-  while [[ -n "$(jobs -p)" ]]; do
-    local size=0
-    for f in "${tmpfiles[@]}"; do
-      if [ -f "$f" ]; then
-        if stat -c%s "$f" >/dev/null 2>&1; then
-          size=$(( size + $(stat -c%s "$f") ))
-        else
-          size=$(( size + $(stat -f%z "$f") ))
-        fi
-      fi
-    done
-    local elapsed=$(( $(date +%s) - start_time ))
-    (( elapsed == 0 )) && elapsed=1
-    local mb_read
-    mb_read=$(awk "BEGIN {printf \"%.1f\", $size/1048576}")
-    local mb_tot
-    mb_tot=$(awk "BEGIN {printf \"%.1f\", $len/1048576}")
-    local speed
-    speed=$(awk "BEGIN {printf \"%.2f\", ($size/1048576)/$elapsed}")
-    local pct=$(( size*100/len ))
-    if [ "$QUIET" != true ]; then
-      printf "\rDownloading Flutter (ranges): %s/%s MB (%d%%) @ %s MB/s" \
-        "$mb_read" "$mb_tot" "$pct" "$speed"
-    fi
-    sleep 0.2
-  done
-  wait
-  if [ "$QUIET" != true ]; then printf "\n"; fi
-  cat "${tmpfiles[@]}" > "$dest"
-  rm -f "${tmpfiles[@]}"
-  }
 
   extract_with_progress() {
-  python3 - "$1" "$QUIET" <<'PY'
+  python3 - "$1" "$2" "$QUIET" <<'PY'
 import sys, zipfile, tarfile
 archive = sys.argv[1]
-quiet = sys.argv[2] == 'true'
-dest = '.'
+dest = sys.argv[2]
+quiet = sys.argv[3] == 'true'
 def progress(i, total):
     if quiet: return
     pct = int(i*100/total)
@@ -183,10 +136,31 @@ PY
   }
 
   dest="$ARCHIVE"
-  case "$DOWNLOADER" in
-    ranges) download_ranges "$URL" "$dest" ;;
-    *)      download_http   "$URL" "$dest" ;;
-  esac
+  # Reuse existing archive if present and checksum matches (if provided)
+  if [ -f "$dest" ] && [ -n "${FLUTTER_SHA256:-}" ]; then
+    log "Existing archive found; verifying SHA256"
+    actual=$(sha256sum "$dest" | awk '{print $1}')
+    if [ "${actual,,}" = "${FLUTTER_SHA256,,}" ]; then
+      log "Existing archive checksum OK; reusing download"
+      reuse=true
+    else
+      log "Existing archive checksum mismatch (actual=$actual); re-downloading"
+      rm -f "$dest"
+      reuse=false
+    fi
+  elif [ -f "$dest" ]; then
+    log "Existing archive found; reusing download (no checksum configured)"
+    reuse=true
+  else
+    reuse=false
+  fi
+
+  if [ "$reuse" != true ]; then
+    # Clean stale artifacts before a fresh download
+    rm -f "$dest" "$dest.partial"
+    rm -rf "$FLUTTER_DIR" "_extract_flutter_tmp"
+    download_http "$URL" "$dest"
+  fi
 
   if [ -n "${FLUTTER_SHA256:-}" ]; then
     log "Verifying SHA256"
@@ -197,7 +171,19 @@ PY
     fi
   fi
 
-  extract_with_progress "$dest"
+  # Extract to temp dir and move atomically into place
+  tmpdir="_extract_flutter_tmp"
+  rm -rf "$tmpdir" && mkdir -p "$tmpdir"
+  extract_with_progress "$dest" "$tmpdir"
+  if [ -d "$tmpdir/flutter" ]; then
+    rm -rf "$FLUTTER_DIR"
+    mv "$tmpdir/flutter" "$FLUTTER_DIR"
+  else
+    echo "Extracted archive missing 'flutter' directory" >&2
+    rm -rf "$tmpdir"
+    exit 1
+  fi
+  rm -rf "$tmpdir"
   rm -f "$dest"
 
   popd >/dev/null

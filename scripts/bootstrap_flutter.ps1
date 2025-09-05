@@ -3,7 +3,7 @@
 param(
   [switch]$Force,
   [switch]$Quiet,
-  [ValidateSet('http','ranges')]
+  [ValidateSet('http')]
   [string]$Downloader = 'http'
 )
 
@@ -18,6 +18,7 @@ $ErrorActionPreference = 'Stop'
 $FLUTTER_VERSION = if ($env:FLUTTER_VERSION) { $env:FLUTTER_VERSION } else { '3.32.8' }
 $FLUTTER_CHANNEL = if ($env:FLUTTER_CHANNEL) { $env:FLUTTER_CHANNEL } else { 'stable' }
 $FLUTTER_DIR = '.tooling/flutter'
+$FLUTTER_DIR_FULL = [System.IO.Path]::GetFullPath($FLUTTER_DIR)
 
 $flutterBinDir = Join-Path $FLUTTER_DIR 'bin'
 try { $flutterBinDir = (Resolve-Path $flutterBinDir).Path } catch {}
@@ -29,24 +30,38 @@ $needsDownload = $true
 # If already present, ensure version/channel match; otherwise upgrade
 if ((Test-Path $flutterBat) -and -not $Force) {
   Say "Existing Flutter installation detected; checking version"
-  $versionOutput = & $flutterBat --version
+  $versionOutput = $null
+  try {
+    $versionOutput = & $flutterBat --version 2>&1
+    if ($LASTEXITCODE -ne 0) { throw "flutter --version exited with code $LASTEXITCODE" }
+  } catch {
+    Say "Flutter binary present but failed to run; treating as corrupt and reinstalling"
+    try { if (Test-Path $FLUTTER_DIR_FULL) { Remove-Item $FLUTTER_DIR_FULL -Recurse -Force -ErrorAction SilentlyContinue } } catch {}
+    $needsDownload = $true
+    $versionOutput = $null
+  }
   $currentVersion = $null
   $currentChannel = $null
-  if ($versionOutput -match 'Flutter\s+([^\s]+)\s+•\s+channel\s+([^\s]+)') {
-    $currentVersion = $matches[1]
-    $currentChannel = $matches[2]
+  if ($versionOutput) { Say ("flutter --version output: " + ($versionOutput -replace "\r?\n"," ")) }
+  # Be lenient about separators (console encoding may mangle the bullet character)
+  $m = [regex]::Match($versionOutput, 'Flutter\s+([^\s]+)\s+.*?channel\s+([^\s]+)')
+  if ($m.Success) {
+    $currentVersion = $m.Groups[1].Value
+    $currentChannel = $m.Groups[2].Value
+    Say "Parsed installed Flutter: version=$currentVersion channel=$currentChannel"
   } else {
-    Say "Unable to parse Flutter version from output: $versionOutput"
+    Say "Unable to parse Flutter version; will reinstall"
   }
-  if (($currentVersion -eq $FLUTTER_VERSION) -and ($currentChannel -eq $FLUTTER_CHANNEL)) {
-    Say "Flutter $currentVersion ($currentChannel) already installed"
+  if (($currentVersion -ne $null) -and ($currentChannel -ne $null) -and ($currentVersion -eq $FLUTTER_VERSION) -and ($currentChannel -eq $FLUTTER_CHANNEL)) {
+    Say "Installed Flutter matches required version/channel"
     $needsDownload = $false
   } else {
     $cv = if ($null -ne $currentVersion) { $currentVersion } else { 'unknown' }
     $cc = if ($null -ne $currentChannel) { $currentChannel } else { 'unknown' }
-    Say "Flutter $cv ($cc) found, but $FLUTTER_VERSION ($FLUTTER_CHANNEL) required"
+    Say "Installed=$cv ($cc); required=$FLUTTER_VERSION ($FLUTTER_CHANNEL). Will (re)install."
     Say "Removing old Flutter installation"
-    Remove-Item $FLUTTER_DIR -Recurse -Force
+    try { if (Test-Path $FLUTTER_DIR_FULL) { Remove-Item $FLUTTER_DIR_FULL -Recurse -Force -ErrorAction SilentlyContinue } } catch {}
+    $needsDownload = $true
   }
 } else {
   Say "No Flutter installation found"
@@ -62,6 +77,7 @@ $BASE_URL  = if ($env:FLUTTER_DOWNLOAD_MIRROR) { $env:FLUTTER_DOWNLOAD_MIRROR.Tr
 $ARCHIVE   = "flutter_windows_${FLUTTER_VERSION}-${FLUTTER_CHANNEL}.zip"
 $URL       = "$BASE_URL/$FLUTTER_CHANNEL/windows/$ARCHIVE"
 $ExpectedSha256 = $env:FLUTTER_SHA256
+$WorkDir = (Get-Location).Path
 
 Say "Downloading: $URL (downloader=$Downloader)"
 
@@ -84,118 +100,64 @@ function Write-ProgressLine([string]$activity,[long]$read,[Nullable[long]]$total
 }
 
 # --- Download strategies ---
-function Download-With-Http { param([string]$Url,[string]$Dest)
+function Invoke-HttpDownload { param([string]$Url,[string]$Dest)
   Say "Using HttpClient (streaming)"
   Add-Type -AssemblyName System.Net.Http
   $client = [System.Net.Http.HttpClient]::new()
   $client.Timeout = [TimeSpan]::FromMinutes(30)
 
-  $tmp = "$Dest.partial"
-  $existing = if (Test-Path $tmp) { (Get-Item $tmp).Length } else { 0 }
+  $destFull = [System.IO.Path]::GetFullPath($Dest)
+  $tmpFull  = $destFull + '.partial'
+  $existing = if (Test-Path $tmpFull) { (Get-Item $tmpFull).Length } else { 0 }
   $req = [System.Net.Http.HttpRequestMessage]::new([System.Net.Http.HttpMethod]::Get, $Url)
   if ($existing -gt 0) { $req.Headers.Range = [System.Net.Http.Headers.RangeHeaderValue]::new($existing, $null) }
 
-  $resp = $client.SendAsync($req, [System.Net.Http.HttpCompletionOption]::ResponseHeadersRead).GetAwaiter().GetResult()
-  if (-not $resp.IsSuccessStatusCode -and $resp.StatusCode -ne 206) { throw "HTTP $($resp.StatusCode) downloading $Url" }
-  $total = $resp.Content.Headers.ContentLength
-  # PowerShell 5's HttpContent lacks a synchronous ReadAsStream method.
-  # ReadAsStreamAsync() is available across .NET versions, so synchronously
-  # wait for the stream to accommodate older runtimes.
-  $in    = $resp.Content.ReadAsStreamAsync().GetAwaiter().GetResult()
-  $outMode = if ($existing -gt 0) {[System.IO.FileMode]::Append} else {[System.IO.FileMode]::Create}
-  $out  = [System.IO.File]::Open($tmp, $outMode, [System.IO.FileAccess]::Write, [System.IO.FileShare]::None)
-
+  $resp = $null
+  $in = $null
+  $out = $null
   try {
-    $sw=[System.Diagnostics.Stopwatch]::StartNew()
-    $buf = New-Object byte[] (64KB)
-    $read= $existing
-    $last= 0
-    while (($n = $in.Read($buf,0,$buf.Length)) -gt 0) {
-      $out.Write($buf,0,$n); $read += $n
-      if ($sw.ElapsedMilliseconds - $last -ge 100) {
-        $last = $sw.ElapsedMilliseconds
-        $grandTotal = if ($total) { $existing + $total } else { $null }
-        Write-ProgressLine "Downloading Flutter" $read $grandTotal ($sw.Elapsed.TotalSeconds)
-      }
-    }
-    Write-Progress -Activity "Downloading Flutter" -Completed
-  } finally { $out.Dispose(); $in.Dispose(); $client.Dispose() }
+    $resp = $client.SendAsync($req, [System.Net.Http.HttpCompletionOption]::ResponseHeadersRead).GetAwaiter().GetResult()
+    if (-not $resp.IsSuccessStatusCode -and $resp.StatusCode -ne 206) { throw "HTTP $($resp.StatusCode) downloading $Url" }
+    $total = $resp.Content.Headers.ContentLength
+    # PowerShell 5's HttpContent lacks a synchronous ReadAsStream method.
+    # ReadAsStreamAsync() is available across .NET versions, so synchronously
+    # wait for the stream to accommodate older runtimes.
+    $in = $resp.Content.ReadAsStreamAsync().GetAwaiter().GetResult()
+    $outMode = if ($existing -gt 0) {[System.IO.FileMode]::Append} else {[System.IO.FileMode]::Create}
+    $out = [System.IO.File]::Open($tmpFull, $outMode, [System.IO.FileAccess]::Write, [System.IO.FileShare]::None)
 
-  if (Test-Path $tmp) {
-    Move-Item -Force $tmp $Dest
-  } else {
-    throw "HttpClient download failed and fallbacks are temporarily disabled"
+    try {
+      $sw=[System.Diagnostics.Stopwatch]::StartNew()
+      $buf = New-Object byte[] (64KB)
+      $read= $existing
+      $last= 0
+      while (($n = $in.Read($buf,0,$buf.Length)) -gt 0) {
+        $out.Write($buf,0,$n); $read += $n
+        if ($sw.ElapsedMilliseconds - $last -ge 100) {
+          $last = $sw.ElapsedMilliseconds
+          $grandTotal = if ($total) { $existing + $total } else { $null }
+          Write-ProgressLine "Downloading Flutter" $read $grandTotal ($sw.Elapsed.TotalSeconds)
+        }
+      }
+      Write-Progress -Activity "Downloading Flutter" -Completed
+    } finally {
+      if ($out) { $out.Dispose() }
+      if ($in) { $in.Dispose() }
+      if ($client) { $client.Dispose() }
+    }
+
+    if (Test-Path $tmpFull) {
+      Move-Item -Force $tmpFull $destFull
+    } else {
+      throw "HttpClient download failed and fallbacks are temporarily disabled"
+    }
+  } catch {
+    try { if (Test-Path $tmpFull) { Remove-Item -Force $tmpFull } } catch {}
+    throw
   }
 }
 
-function Download-With-Ranges { param([string]$Url,[string]$Dest,[int]$Parts=8)
-  Say "Using parallel HTTP ranges ($Parts parts)"
-  Add-Type -AssemblyName System.Net.Http
-  $client = [System.Net.Http.HttpClient]::new()
-  $client.Timeout = [TimeSpan]::FromMinutes(30)
-
-  # HEAD to get length
-  $req0 = [System.Net.Http.HttpRequestMessage]::new([System.Net.Http.HttpMethod]::Head, $Url)
-  $resp0 = $client.SendAsync($req0).GetAwaiter().GetResult()
-  if (-not $resp0.IsSuccessStatusCode) { throw "HEAD HTTP $($resp0.StatusCode)" }
-  $len = $resp0.Content.Headers.ContentLength
-  if (-not $len) { Say "Server did not return length; falling back to single stream"; $client.Dispose(); return Download-With-Http -Url $Url -Dest $Dest }
-
-  # plan ranges
-  $chunk = [Math]::Ceiling($len / $Parts)
-  $tmpFiles = @()
-  $jobs = 0..($Parts-1) | ForEach-Object {
-    $start = $_ * $chunk
-    $end   = [Math]::Min($start + $chunk - 1, $len - 1)
-    if ($start -gt $end) { return $null }
-    $tmp = [System.IO.Path]::GetTempFileName()
-    $tmpFiles += $tmp
-    Start-Job -ScriptBlock {
-      param($Url,$Start,$End,$Tmp)
-      Add-Type -AssemblyName System.Net.Http
-      $client = [System.Net.Http.HttpClient]::new()
-      $client.Timeout = [TimeSpan]::FromMinutes(30)
-      $req = [System.Net.Http.HttpRequestMessage]::new([System.Net.Http.HttpMethod]::Get, $Url)
-      $req.Headers.Range = [System.Net.Http.Headers.RangeHeaderValue]::new($Start, $End)
-      $resp = $client.SendAsync($req, [System.Net.Http.HttpCompletionOption]::ResponseHeadersRead).GetAwaiter().GetResult()
-      if (-not $resp.IsSuccessStatusCode -and $resp.StatusCode -ne 206) { throw "HTTP $($resp.StatusCode)" }
-      # Use ReadAsStreamAsync() for compatibility with older .NET/PowerShell versions
-      $in = $resp.Content.ReadAsStreamAsync().GetAwaiter().GetResult()
-      $out=[System.IO.File]::Open($Tmp,[System.IO.FileMode]::Create,[System.IO.FileAccess]::Write,[System.IO.FileShare]::None)
-      try {
-        $buf = New-Object byte[] (64KB)
-        while (($n=$in.Read($buf,0,$buf.Length)) -gt 0) { $out.Write($buf,0,$n) }
-      } finally { $out.Dispose(); $in.Dispose(); $client.Dispose() }
-    } -ArgumentList $Url,$start,$end,$tmp
-  } | Where-Object { $_ -ne $null }
-
-  # simple progress (poll sizes)
-  $sw=[System.Diagnostics.Stopwatch]::StartNew()
-  do {
-    $sizes = 0
-    foreach ($f in $tmpFiles) { if (Test-Path $f) { $sizes += (Get-Item $f).Length } }
-    Write-ProgressLine "Downloading Flutter (parallel ranges)" $sizes $len ($sw.Elapsed.TotalSeconds)
-    Start-Sleep -Milliseconds 200
-    $states = $jobs | ForEach-Object { $_.State }
-  } while ($states -contains 'Running')
-
-  Receive-Job -Job $jobs -ErrorAction Stop | Out-Null
-  Write-Progress -Activity "Downloading Flutter (parallel ranges)" -Completed
-
-  # concatenate
-  $out=[System.IO.File]::Open($Dest,[System.IO.FileMode]::Create,[System.IO.FileAccess]::Write,[System.IO.FileShare]::None)
-  try {
-    for ($i=0; $i -lt $tmpFiles.Count; $i++) {
-      $in=[System.IO.File]::OpenRead($tmpFiles[$i])
-      try {
-        $buf = New-Object byte[] (1MB)
-        while (($n=$in.Read($buf,0,$buf.Length)) -gt 0) { $out.Write($buf,0,$n) }
-      } finally { $in.Dispose() }
-      Remove-Item $tmpFiles[$i] -Force
-    }
-  } finally { $out.Dispose() }
-  $client.Dispose()
-}
+function Invoke-HttpRangeDownload { param([string]$Url,[string]$Dest,[int]$Parts=8) }
 
 function Expand-ZipWithProgress { param([string]$ZipPath,[string]$Destination='.')
   Say "Extracting archive with progress"
@@ -227,11 +189,36 @@ function Expand-ZipWithProgress { param([string]$ZipPath,[string]$Destination='.
 }
 
 # --- Orchestrate ---
-$destZip = $ARCHIVE
+$destZip = Join-Path $WorkDir $ARCHIVE
 $ProgressPreferenceBak = $global:ProgressPreference; $global:ProgressPreference = 'Continue'
 try {
-  # Temporarily force HttpClient-only downloads; disable other strategies
-  Download-With-Http -Url $URL -Dest $destZip
+  # HttpClient-only, with reuse of existing archive if present
+  $shouldDownload = $true
+  if (Test-Path $destZip) {
+    if ($ExpectedSha256) {
+      Say "Existing archive found; verifying SHA256"
+      $actualExisting = Get-FileSha256 $destZip
+      if ($actualExisting -and ($actualExisting -eq $ExpectedSha256.ToLowerInvariant())) {
+        Say "Existing archive checksum OK; reusing download"
+        $shouldDownload = $false
+      } else {
+        Say "Existing archive checksum mismatch; re-downloading"
+        try { Remove-Item -Force $destZip } catch {}
+      }
+    } else {
+      Say "Existing archive found; reusing download"
+      $shouldDownload = $false
+    }
+  }
+  if ($shouldDownload) {
+    # Clean any stale artifacts before starting a fresh download/extract
+    try { if (Test-Path $destZip) { Remove-Item -Force $destZip -ErrorAction SilentlyContinue } } catch {}
+    try { if (Test-Path "$destZip.partial") { Remove-Item -Force "$destZip.partial" -ErrorAction SilentlyContinue } } catch {}
+    try { if (Test-Path $FLUTTER_DIR_FULL) { Remove-Item -Recurse -Force $FLUTTER_DIR_FULL -ErrorAction SilentlyContinue } } catch {}
+    $preExtractTmp = Join-Path $WorkDir "_extract_flutter_tmp"
+    try { if (Test-Path $preExtractTmp) { Remove-Item -Recurse -Force $preExtractTmp -ErrorAction SilentlyContinue } } catch {}
+    Invoke-HttpDownload -Url $URL -Dest $destZip
+  }
 
   if ($ExpectedSha256) {
     Say "Verifying SHA256"
@@ -241,7 +228,25 @@ try {
     }
   }
 
-  Expand-ZipWithProgress -ZipPath $destZip -Destination '.'
+  # Extract to a temp directory first for atomic install
+  $extractRoot = Join-Path $WorkDir "_extract_flutter_tmp"
+  try { if (Test-Path $extractRoot) { Remove-Item -Recurse -Force $extractRoot } } catch {}
+  New-Item -ItemType Directory -Force -Path $extractRoot | Out-Null
+  try {
+    Expand-ZipWithProgress -ZipPath $destZip -Destination $extractRoot
+    # The zip contains a top-level 'flutter' directory
+    $tempFlutter = Join-Path $extractRoot 'flutter'
+    if (-not (Test-Path $tempFlutter)) { throw "Extracted archive missing 'flutter' directory" }
+    # Replace existing installation
+    try { if (Test-Path $FLUTTER_DIR_FULL) { Remove-Item -Recurse -Force $FLUTTER_DIR_FULL } } catch {}
+    Move-Item -Force $tempFlutter $FLUTTER_DIR_FULL
+  } catch {
+    # Cleanup temp on failure to avoid future corruption
+    try { if (Test-Path $extractRoot) { Remove-Item -Recurse -Force $extractRoot } } catch {}
+    throw
+  }
+  # Cleanup temp after successful move
+  try { if (Test-Path $extractRoot) { Remove-Item -Recurse -Force $extractRoot } } catch {}
 } finally {
   $global:ProgressPreference = $ProgressPreferenceBak
 }
