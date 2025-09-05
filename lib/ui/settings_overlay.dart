@@ -114,15 +114,6 @@ class SettingsOverlay extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: spacing),
-                  ValueListenableBuilder<bool>(
-                    valueListenable: settings.muteOnPause,
-                    builder: (context, muted, _) => SwitchListTile(
-                      title: const GameText('Mute on Pause', maxLines: 1),
-                      value: muted,
-                      onChanged: (v) => settings.muteOnPause.value = v,
-                    ),
-                  ),
-                  SizedBox(height: spacing),
                   ElevatedButton(
                     onPressed: game.toggleSettings,
                     child: const GameText(

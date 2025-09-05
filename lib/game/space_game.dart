@@ -310,11 +310,7 @@ class SpaceGame extends FlameGame
   /// Pauses the game and shows the `PAUSED` overlay.
   void pauseGame() {
     stateMachine.pauseGame();
-    if (settingsService.muteOnPause.value) {
-      miningLaser?.stopSound();
-    } else {
-      audioService.setMasterVolume(Constants.pausedAudioVolumeFactor);
-    }
+    audioService.setMasterVolume(Constants.pausedAudioVolumeFactor);
   }
 
   /// Resumes the game from a paused state.

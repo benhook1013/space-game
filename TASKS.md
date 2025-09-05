@@ -69,13 +69,12 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
 - [x] HUD displays current score, minerals and health.
 - [x] Limit player fire rate with a brief cooldown.
 - [x] Keyboard shortcut `F1` toggles debug overlays.
-- [x] Option to mute audio or lower volume when the game is paused.
+- [x] Audio volume lowers when the game is paused.
 - [x] Menu includes button to reset the high score.
 - [x] Upgrades overlay placeholder accessible via HUD button or the `U` key.
 - [x] HUD button toggles range rings for targeting, Tractor Aura and mining.
 - [x] Settings overlay with sliders for HUD, text, joystick, targeting,
-      Tractor Aura and mining ranges, plus a dark theme selector and
-      "mute on pause" toggle.
+      Tractor Aura and mining ranges, plus a dark theme selector.
 
 ## Next Steps
 
