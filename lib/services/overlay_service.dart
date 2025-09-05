@@ -32,11 +32,8 @@ class OverlayService {
       ..add(HudOverlay.id);
   }
 
-  void showPause() {
-    game.overlays
-      ..remove(SettingsOverlay.id)
-      ..add(PauseOverlay.id);
-  }
+  /// Shows the pause overlay without affecting other active overlays.
+  void showPause() => game.overlays.add(PauseOverlay.id);
 
   void showGameOver() {
     game.overlays
