@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flame/components.dart';
+import 'package:meta/meta.dart';
 
 import '../constants.dart';
 import '../game/space_game.dart';
@@ -83,4 +84,7 @@ class AsteroidSpawner extends Component with HasGameReference<SpaceGame> {
       ),
     );
   }
+
+  @visibleForTesting
+  bool get isRunning => _timer.isRunning();
 }
