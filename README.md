@@ -44,6 +44,7 @@ dedicated server or NAT traversal.
 - Single endless level with quick restart
 - Player score, health and minerals displayed in the HUD; health drops on
   collision and minerals increase when collecting pickups from mined asteroids
+- Toggable top-left minimap shows nearby asteroids, enemies and pickups
 - Local high score stored on device using `shared_preferences`
 - Basic sound effects with a mute toggle on menu, HUD and game over
   screens, plus an `M` key shortcut

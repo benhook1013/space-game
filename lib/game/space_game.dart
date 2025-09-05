@@ -107,6 +107,7 @@ class SpaceGame extends FlameGame
   StarfieldComponent? _starfield;
   FpsTextComponent? _fpsText;
   bool _playerInitialized = false;
+  final ValueNotifier<bool> showMinimap = ValueNotifier<bool>(true);
 
   /// Whether [onLoad] has finished and late fields are initialised.
   bool _isLoaded = false;
@@ -128,6 +129,10 @@ class SpaceGame extends FlameGame
 
   void selectPlayer(int index) {
     selectedPlayerIndex.value = index.clamp(0, Assets.players.length - 1);
+  }
+
+  void toggleMinimap() {
+    showMinimap.value = !showMinimap.value;
   }
 
   /// Tracks whether the game was playing when the help overlay opened.

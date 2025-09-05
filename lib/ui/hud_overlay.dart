@@ -7,6 +7,7 @@ import 'overlay_widgets.dart';
 import 'mineral_display.dart';
 import 'score_display.dart';
 import 'health_display.dart';
+import 'minimap_display.dart';
 
 /// Simple heads-up display shown during play.
 class HudOverlay extends StatelessWidget {
@@ -30,6 +31,21 @@ class HudOverlay extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
               child: Stack(
                 children: [
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: ValueListenableBuilder<bool>(
+                      valueListenable: game.showMinimap,
+                      builder: (context, show, _) {
+                        if (!show) {
+                          return const SizedBox.shrink();
+                        }
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 8, left: 8),
+                          child: MiniMapDisplay(game: game, size: 80 * scale),
+                        );
+                      },
+                    ),
+                  ),
                   Align(
                     alignment: Alignment.topCenter,
                     child: Row(
@@ -67,6 +83,7 @@ class HudOverlay extends StatelessWidget {
                           ),
                           onPressed: game.toggleAutoAimRadius,
                         ),
+                        MinimapButton(game: game, iconSize: iconSize),
                         UpgradeButton(game: game, iconSize: iconSize),
                         HelpButton(game: game, iconSize: iconSize),
                         SettingsButton(game: game, iconSize: iconSize),

@@ -148,3 +148,23 @@ class SettingsButton extends StatelessWidget {
     );
   }
 }
+
+/// Icon button that toggles the minimap visibility.
+class MinimapButton extends StatelessWidget {
+  const MinimapButton({super.key, required this.game, required this.iconSize});
+
+  final SpaceGame game;
+  final double iconSize;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      iconSize: iconSize,
+      icon: Icon(
+        Icons.map,
+        color: Theme.of(context).colorScheme.onSurface,
+      ),
+      onPressed: game.toggleMinimap,
+    );
+  }
+}
