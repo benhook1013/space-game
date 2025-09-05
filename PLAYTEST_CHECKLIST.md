@@ -10,6 +10,7 @@ _Update this file whenever a player-facing feature is added or changed._
 - [ ] Bullets travel in the direction the ship is facing
 - [ ] When stationary, the ship rotates toward the nearest enemy within range
 - [ ] Target button toggles range rings display
+- [ ] Minimap icon or `N` key toggles minimap visibility
 - [ ] Asteroids spawn randomly and drift across the screen
 - [ ] Enemies and asteroids show varied sprites
 - [ ] Shooting an asteroid destroys it and increases the on-screen score

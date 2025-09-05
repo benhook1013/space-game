@@ -22,7 +22,8 @@ Milestone goals are detailed in [milestone-setup.md](milestone-setup.md),
 Space Miner focuses on hunting asteroids for mineral pickups while timed enemy
 groups add bursts of combat. The ship mounts an auto-firing mining laser that
 locks onto nearby rocks and a primary cannon that automatically targets the
-closest enemy. Minerals gathered during play will later fund a wide upgrade
+closest enemy. A blue Tractor Aura around the ship pulls in nearby pickups.
+Minerals gathered during play will later fund a wide upgrade
 tree spanning weapons and ship systems.
 
 ## Design Principles
@@ -150,6 +151,7 @@ tree spanning weapons and ship systems.
 
 - On-screen joystick and fire button mirror keyboard controls (WASD + Space).
 - Input handling stays isolated from rendering for easier testing.
+- `N` toggles a minimap overlay for navigation.
 - `H` toggles a help overlay for quick reference, and `Esc` closes it when
   visible.
 

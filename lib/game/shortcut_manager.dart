@@ -17,6 +17,7 @@ class ShortcutManager {
     required void Function() toggleHelp,
     required void Function() toggleUpgrades,
     required void Function() toggleDebug,
+    required void Function() toggleMinimap,
   }) {
     keyDispatcher.register(LogicalKeyboardKey.escape, onDown: () {
       if (stateMachine.state == GameState.playing) {
@@ -67,6 +68,11 @@ class ShortcutManager {
     keyDispatcher.register(
       LogicalKeyboardKey.f1,
       onDown: toggleDebug,
+    );
+
+    keyDispatcher.register(
+      LogicalKeyboardKey.keyN,
+      onDown: toggleMinimap,
     );
   }
 }

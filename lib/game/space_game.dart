@@ -229,6 +229,7 @@ class SpaceGame extends FlameGame
       toggleHelp: toggleHelp,
       toggleUpgrades: toggleUpgrades,
       toggleDebug: toggleDebug,
+      toggleMinimap: toggleMinimap,
     );
     stateMachine.returnToMenu();
 

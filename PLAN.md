@@ -164,9 +164,10 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
 - Basic sound effects using `flame_audio` with mute toggle (button or `M` key)
   available on menu, HUD and game over overlays
 - Keyboard controls for desktop playtests (`WASD`/arrow keys to move, `Space` to
-  shoot, `Escape` or `P` to pause or resume, `M` to mute, `Enter` starts or
-  restarts from the menu or game over, `R` restarts at any time, `H` shows a help
-  overlay that `Esc` also closes)
+  shoot, `Escape` or `P` to pause or resume, `M` to mute, `N` toggles the
+  minimap, `F1` toggles debug overlays, `Enter` starts or restarts from the
+  menu or game over, `R` restarts at any time, `H` shows a help overlay that
+  `Esc` also closes, `U` opens an upgrades overlay that `Esc` also closes)
 - Upgrades overlay placeholder opened with a HUD button or the `U` key and
   pausing gameplay for future ship upgrades
 - Settings overlay with sliders for HUD, text and joystick scale plus a dark
