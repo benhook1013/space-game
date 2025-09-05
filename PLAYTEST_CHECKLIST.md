@@ -17,6 +17,7 @@ _Update this file whenever a player-facing feature is added or changed._
 - [ ] Score resets when restarting the game
 - [ ] Minerals reset when restarting the game
 - [ ] HUD shows current score, minerals and health during play
+- [ ] HUD displays a minimap with nearby asteroids and enemies
 - [ ] Collisions reduce player health; game over when health reaches zero
 - [ ] Player ship flashes red when taking damage
 - [ ] Game states transition: menu → playing → upgrades → paused → game over

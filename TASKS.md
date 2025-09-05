@@ -92,4 +92,4 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
 - [x] Spawn asteroids and enemies just ahead of the player and despawn those
       far behind.
 - [x] Tile the parallax starfield so it scrolls seamlessly.
-- [ ] Add a minimap or other navigation aid for exploring the larger world.
+- [x] Add a minimap or other navigation aid for exploring the larger world.

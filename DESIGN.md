@@ -135,7 +135,7 @@ tree spanning weapons and ship systems.
 - Players can pause the game from the HUD or with the Escape or `P` key,
   showing a centered `PAUSED` label with a hint to press `Esc` or `P` to
   resume while gameplay halts.
-- During play the HUD provides score, minerals, health, pause and
+- During play the HUD provides score, minerals, health, a minimap, pause and
   mute controls.
 - On player death, a game over overlay appears with restart, menu and mute buttons.
 - A help overlay lists controls and can be toggled with the `H` key, pausing the

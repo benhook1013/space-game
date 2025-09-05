@@ -7,6 +7,7 @@ import 'overlay_widgets.dart';
 import 'mineral_display.dart';
 import 'score_display.dart';
 import 'health_display.dart';
+import 'minimap.dart';
 
 /// Simple heads-up display shown during play.
 class HudOverlay extends StatelessWidget {
@@ -30,6 +31,13 @@ class HudOverlay extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
               child: Stack(
                 children: [
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Minimap(game: game),
+                    ),
+                  ),
                   Align(
                     alignment: Alignment.topCenter,
                     child: Row(

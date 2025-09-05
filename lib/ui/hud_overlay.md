@@ -6,6 +6,7 @@ Heads-up display shown during play.
 
 - Shows current score, minerals and health using centred pill-shaped displays
   driven by `ValueNotifier`s from `SpaceGame`.
+- Includes a minimap showing nearby asteroids and enemies to aid navigation.
 - Provides range rings toggle, upgrades, help, mute and pause/resume button
   bound to `SpaceGame` and `AudioService`.
 - Icon sizes scale with screen size for better usability on different devices.
