@@ -152,8 +152,7 @@ tree spanning weapons and ship systems.
 - An upgrades overlay (placeholder) opens with the `U` key or HUD button and
   pauses gameplay until dismissed.
 - A settings overlay provides sliders for HUD, text, joystick, targeting,
-  Tractor Aura and mining ranges plus a dark theme selector and
-  "mute on pause" toggle.
+  Tractor Aura and mining ranges plus a dark theme selector.
 - A `GameState` enum tracks the current phase.
 
 ## Input

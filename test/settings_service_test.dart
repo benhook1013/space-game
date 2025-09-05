@@ -63,11 +63,9 @@ void main() {
     final storage = await StorageService.create();
     var settings = SettingsService(storage: storage);
     settings.hudButtonScale.value = 1.2;
-    settings.muteOnPause.value = false;
     await Future.delayed(Duration.zero);
     settings = SettingsService(storage: storage);
     expect(settings.hudButtonScale.value, 1.2);
-    expect(settings.muteOnPause.value, isFalse);
   });
 
   test('attachStorage injects storage into existing instance', () async {
