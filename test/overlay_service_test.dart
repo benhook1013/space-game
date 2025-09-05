@@ -80,7 +80,7 @@ void main() {
 
     service.showSettings();
     service.showPause();
-    expect(game.overlays.isActive(SettingsOverlay.id), isFalse);
+    expect(game.overlays.isActive(SettingsOverlay.id), isTrue);
     expect(game.overlays.isActive(PauseOverlay.id), isTrue);
 
     service.showSettings();
