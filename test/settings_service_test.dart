@@ -69,4 +69,18 @@ void main() {
     expect(settings.hudButtonScale.value, 1.2);
     expect(settings.muteOnPause.value, isFalse);
   });
+
+  test('attachStorage injects storage into existing instance', () async {
+    SharedPreferences.setMockInitialValues({'hudButtonScale': 0.9});
+    final storage = await StorageService.create();
+    final settings = SettingsService();
+    expect(
+        settings.hudButtonScale.value, SettingsService.defaultHudButtonScale);
+    settings.attachStorage(storage);
+    expect(settings.hudButtonScale.value, 0.9);
+    settings.hudButtonScale.value = 1.4;
+    await Future.delayed(Duration.zero);
+    final reloaded = SettingsService(storage: storage);
+    expect(reloaded.hudButtonScale.value, 1.4);
+  });
 }
