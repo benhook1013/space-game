@@ -1,6 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:space_game/constants.dart';
 import 'package:space_game/services/settings_service.dart';
+import 'package:space_game/services/storage_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -54,5 +56,17 @@ void main() {
     expect(settings.targetingRange.value, 350);
     expect(settings.tractorRange.value, 250);
     expect(settings.miningRange.value, 180);
+  });
+
+  test('values persist across sessions', () async {
+    SharedPreferences.setMockInitialValues({});
+    final storage = await StorageService.create();
+    var settings = SettingsService(storage: storage);
+    settings.hudButtonScale.value = 1.2;
+    settings.muteOnPause.value = false;
+    await Future.delayed(Duration.zero);
+    settings = SettingsService(storage: storage);
+    expect(settings.hudButtonScale.value, 1.2);
+    expect(settings.muteOnPause.value, isFalse);
   });
 }
