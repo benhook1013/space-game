@@ -89,7 +89,7 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
 - [x] Implement upgrade effects and apply them to gameplay systems.
 - [x] Expand the game world beyond the current single-screen map.
 - [x] Attach a `CameraComponent` that follows the player with no fixed bounds.
-- [ ] Spawn asteroids, enemies and pickups just ahead of the player and
-      despawn those far behind.
-- [ ] Tile the parallax starfield so it scrolls seamlessly.
+- [x] Spawn asteroids and enemies just ahead of the player and despawn those
+      far behind.
+- [x] Tile the parallax starfield so it scrolls seamlessly.
 - [ ] Add a minimap or other navigation aid for exploring the larger world.

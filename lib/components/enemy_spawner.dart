@@ -1,4 +1,4 @@
-import 'dart:math';
+import 'dart:math' as math;
 
 import 'package:flame/components.dart';
 import 'package:meta/meta.dart';
@@ -11,7 +11,7 @@ import 'enemy.dart';
 class EnemySpawner extends Component with HasGameReference<SpaceGame> {
   EnemySpawner();
 
-  final Random _random = Random();
+  final math.Random _random = math.Random();
   final Timer _timer = Timer(Constants.enemySpawnInterval, repeat: true);
 
   /// Starts spawning enemies.
@@ -33,35 +33,18 @@ class EnemySpawner extends Component with HasGameReference<SpaceGame> {
   }
 
   void _spawn() {
-    final spawnDistance =
-        Constants.enemySize * (Constants.spriteScale + Constants.enemyScale);
-    final rect = game.camera.visibleWorldRect;
-    final edge = _random.nextInt(4);
-    late Vector2 base;
-    switch (edge) {
-      case 0: // top
-        base = Vector2(
-          rect.left + _random.nextDouble() * rect.width,
-          rect.top - spawnDistance,
-        );
-        break;
-      case 1: // bottom
-        base = Vector2(
-          rect.left + _random.nextDouble() * rect.width,
-          rect.bottom + spawnDistance,
-        );
-        break;
-      case 2: // left
-        base = Vector2(
-          rect.left - spawnDistance,
-          rect.top + _random.nextDouble() * rect.height,
-        );
-        break;
-      default: // right
-        base = Vector2(
-          rect.right + spawnDistance,
-          rect.top + _random.nextDouble() * rect.height,
-        );
+    final spawnDistance = Constants.despawnRadius * 0.9;
+    Vector2 base;
+    if (game.player.isMoving) {
+      final dir = Vector2(
+        math.cos(game.player.angle - math.pi / 2),
+        math.sin(game.player.angle - math.pi / 2),
+      );
+      base = game.player.position + dir * spawnDistance;
+    } else {
+      final angle = _random.nextDouble() * math.pi * 2;
+      base = game.player.position +
+          Vector2(math.cos(angle), math.sin(angle)) * spawnDistance;
     }
     for (var i = 0; i < Constants.enemyGroupSize; i++) {
       final offset = (Vector2.random(_random) - Vector2.all(0.5)) *
