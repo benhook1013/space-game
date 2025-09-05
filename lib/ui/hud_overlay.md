@@ -8,6 +8,7 @@ Heads-up display shown during play.
   driven by `ValueNotifier`s from `SpaceGame`.
 - Provides range rings toggle, upgrades, help, mute and pause/resume button
   bound to `SpaceGame` and `AudioService`.
+- Toggles a top-left minimap for navigation.
 - Icon sizes scale with screen size for better usability on different devices.
 - `U` opens the upgrades overlay; `Esc` closes it.
 - `H` opens the help overlay showing controls; `Esc` closes it.

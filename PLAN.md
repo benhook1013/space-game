@@ -245,7 +245,7 @@ the world beyond the viewport and have the camera track the ship.
 - Continuously spawn asteroids, enemies and pickups ahead of the ship and
   despawn any far behind to keep the scene light.
 - Tile the parallax starfield or otherwise prevent gaps as the camera moves.
-- Navigation aids like a minimap can follow once exploration works.
+- A small togglable minimap in the top-left aids navigation through the endless world.
 
 ## 🔮 Future Ideas
 
