@@ -1,18 +1,52 @@
 import 'package:flutter/material.dart';
 
 import '../constants.dart';
+import 'storage_service.dart';
 
 /// Holds tweakable UI scale values and gameplay ranges for live prototyping.
 class SettingsService {
-  SettingsService()
-      : hudButtonScale = ValueNotifier<double>(defaultHudButtonScale),
-        textScale = ValueNotifier<double>(defaultTextScale),
-        joystickScale = ValueNotifier<double>(defaultJoystickScale),
-        themeMode = ValueNotifier<ThemeMode>(ThemeMode.system),
-        muteOnPause = ValueNotifier<bool>(true),
-        targetingRange = ValueNotifier<double>(Constants.playerAutoAimRange),
-        tractorRange = ValueNotifier<double>(Constants.playerTractorAuraRadius),
-        miningRange = ValueNotifier<double>(Constants.playerMiningRange);
+  SettingsService({StorageService? storage})
+      : _storage = storage,
+        hudButtonScale = ValueNotifier<double>(
+            storage?.getDouble(_hudScaleKey, defaultHudButtonScale) ??
+                defaultHudButtonScale),
+        textScale = ValueNotifier<double>(
+            storage?.getDouble(_textScaleKey, defaultTextScale) ??
+                defaultTextScale),
+        joystickScale = ValueNotifier<double>(
+            storage?.getDouble(_joystickScaleKey, defaultJoystickScale) ??
+                defaultJoystickScale),
+        themeMode = ValueNotifier<ThemeMode>(ThemeMode.values[
+            storage?.getInt(_themeModeKey, ThemeMode.system.index) ??
+                ThemeMode.system.index]),
+        muteOnPause = ValueNotifier<bool>(
+            storage?.getBool(_muteOnPauseKey, true) ?? true),
+        targetingRange = ValueNotifier<double>(storage?.getDouble(
+                _targetingRangeKey, Constants.playerAutoAimRange) ??
+            Constants.playerAutoAimRange),
+        tractorRange = ValueNotifier<double>(storage?.getDouble(
+                _tractorRangeKey, Constants.playerTractorAuraRadius) ??
+            Constants.playerTractorAuraRadius),
+        miningRange = ValueNotifier<double>(
+            storage?.getDouble(_miningRangeKey, Constants.playerMiningRange) ??
+                Constants.playerMiningRange) {
+    hudButtonScale.addListener(
+        () => _storage?.setDouble(_hudScaleKey, hudButtonScale.value));
+    textScale
+        .addListener(() => _storage?.setDouble(_textScaleKey, textScale.value));
+    joystickScale.addListener(
+        () => _storage?.setDouble(_joystickScaleKey, joystickScale.value));
+    themeMode.addListener(
+        () => _storage?.setInt(_themeModeKey, themeMode.value.index));
+    muteOnPause.addListener(
+        () => _storage?.setBool(_muteOnPauseKey, muteOnPause.value));
+    targetingRange.addListener(
+        () => _storage?.setDouble(_targetingRangeKey, targetingRange.value));
+    tractorRange.addListener(
+        () => _storage?.setDouble(_tractorRangeKey, tractorRange.value));
+    miningRange.addListener(
+        () => _storage?.setDouble(_miningRangeKey, miningRange.value));
+  }
 
   static const double defaultHudButtonScale = 0.75;
   static const double defaultTextScale = 1.5;
@@ -41,4 +75,15 @@ class SettingsService {
 
   /// Maximum distance to auto-mine asteroids, in pixels.
   final ValueNotifier<double> miningRange;
+
+  final StorageService? _storage;
+
+  static const _hudScaleKey = 'hudButtonScale';
+  static const _textScaleKey = 'textScale';
+  static const _joystickScaleKey = 'joystickScale';
+  static const _themeModeKey = 'themeMode';
+  static const _muteOnPauseKey = 'muteOnPause';
+  static const _targetingRangeKey = 'targetingRange';
+  static const _tractorRangeKey = 'tractorRange';
+  static const _miningRangeKey = 'miningRange';
 }

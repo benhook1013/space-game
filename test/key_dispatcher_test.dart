@@ -153,5 +153,19 @@ void main() {
         isFalse,
       );
     });
+
+    test('register with no callbacks leaves key unhandled', () {
+      final dispatcher = KeyDispatcher();
+      dispatcher.register(LogicalKeyboardKey.space);
+      final handled = dispatcher.onKeyEvent(
+        const KeyDownEvent(
+          logicalKey: LogicalKeyboardKey.space,
+          physicalKey: PhysicalKeyboardKey.space,
+          timeStamp: Duration.zero,
+        ),
+        {LogicalKeyboardKey.space},
+      );
+      expect(handled, isFalse);
+    });
   });
 }
