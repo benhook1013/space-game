@@ -76,7 +76,30 @@ class SettingsService {
   /// Maximum distance to auto-mine asteroids, in pixels.
   final ValueNotifier<double> miningRange;
 
-  final StorageService? _storage;
+  StorageService? _storage;
+
+  /// Attaches a [StorageService] after construction and loads any persisted
+  /// values into the existing notifiers. If storage has already been provided,
+  /// this call is ignored.
+  void attachStorage(StorageService storage) {
+    if (_storage != null) {
+      return;
+    }
+    _storage = storage;
+    hudButtonScale.value =
+        storage.getDouble(_hudScaleKey, hudButtonScale.value);
+    textScale.value = storage.getDouble(_textScaleKey, textScale.value);
+    joystickScale.value =
+        storage.getDouble(_joystickScaleKey, joystickScale.value);
+    themeMode.value =
+        ThemeMode.values[storage.getInt(_themeModeKey, themeMode.value.index)];
+    muteOnPause.value = storage.getBool(_muteOnPauseKey, muteOnPause.value);
+    targetingRange.value =
+        storage.getDouble(_targetingRangeKey, targetingRange.value);
+    tractorRange.value =
+        storage.getDouble(_tractorRangeKey, tractorRange.value);
+    miningRange.value = storage.getDouble(_miningRangeKey, miningRange.value);
+  }
 
   static const _hudScaleKey = 'hudButtonScale';
   static const _textScaleKey = 'textScale';

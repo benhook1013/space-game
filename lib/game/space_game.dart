@@ -53,10 +53,10 @@ class SpaceGame extends FlameGame
   })  : colorScheme = colorScheme ??
             ValueNotifier(ColorScheme.fromSeed(seedColor: Colors.deepPurple)),
         gameColors = gameColors ?? ValueNotifier(GameColors.light),
-        settingsService =
-            settingsService ?? SettingsService(storage: storageService),
+        settingsService = settingsService ?? SettingsService(),
         focusNode = focusNode ?? FocusNode(),
         scoreService = ScoreService(storageService: storageService) {
+    this.settingsService.attachStorage(storageService);
     debugMode = kDebugMode;
     pools = createPoolManager();
     targetingService = TargetingService(eventBus);
