@@ -12,11 +12,11 @@ void main() {
 
   testWidgets('slider and toggle modify settings', (tester) async {
     SharedPreferences.setMockInitialValues({});
-    final binding = TestWidgetsFlutterBinding.ensureInitialized();
-    binding.window.physicalSizeTestValue = const Size(800, 1200);
-    binding.window.devicePixelRatioTestValue = 1;
-    addTearDown(binding.window.clearPhysicalSizeTestValue);
-    addTearDown(binding.window.clearDevicePixelRatioTestValue);
+    final view = tester.view;
+    view.physicalSize = const Size(800, 1200);
+    view.devicePixelRatio = 1;
+    addTearDown(view.resetPhysicalSize);
+    addTearDown(view.resetDevicePixelRatio);
 
     final storage = await StorageService.create();
     final audio = await AudioService.create(storage);
