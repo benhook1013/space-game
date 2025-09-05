@@ -1,4 +1,4 @@
-import 'dart:math';
+import 'dart:math' as math;
 
 import 'package:flame/components.dart';
 import 'package:meta/meta.dart';
@@ -11,7 +11,7 @@ import 'asteroid.dart';
 class AsteroidSpawner extends Component with HasGameReference<SpaceGame> {
   AsteroidSpawner();
 
-  final Random _random = Random();
+  final math.Random _random = math.Random();
   final Timer _timer = Timer(Constants.asteroidSpawnInterval, repeat: true);
 
   void start() => _timer.start();
@@ -31,52 +31,27 @@ class AsteroidSpawner extends Component with HasGameReference<SpaceGame> {
   }
 
   void _spawn() {
-    final spawnDistance = Constants.asteroidSize *
-        (Constants.spriteScale + Constants.asteroidScale);
-    final rect = game.camera.visibleWorldRect;
-    final edge = _random.nextInt(4);
-    late Vector2 position;
-    late Vector2 velocity;
-    switch (edge) {
-      case 0: // top
-        position = Vector2(
-          rect.left + _random.nextDouble() * rect.width,
-          rect.top - spawnDistance,
-        );
-        velocity = Vector2(
-          (_random.nextDouble() - 0.5) * Constants.asteroidSpeed,
-          Constants.asteroidSpeed,
-        );
-        break;
-      case 1: // bottom
-        position = Vector2(
-          rect.left + _random.nextDouble() * rect.width,
-          rect.bottom + spawnDistance,
-        );
-        velocity = Vector2(
-          (_random.nextDouble() - 0.5) * Constants.asteroidSpeed,
-          -Constants.asteroidSpeed,
-        );
-        break;
-      case 2: // left
-        position = Vector2(
-          rect.left - spawnDistance,
-          rect.top + _random.nextDouble() * rect.height,
-        );
-        velocity = Vector2(
-          Constants.asteroidSpeed,
-          (_random.nextDouble() - 0.5) * Constants.asteroidSpeed,
-        );
-        break;
-      default: // right
-        position = Vector2(
-          rect.right + spawnDistance,
-          rect.top + _random.nextDouble() * rect.height,
-        );
-        velocity = Vector2(
-          -Constants.asteroidSpeed,
-          (_random.nextDouble() - 0.5) * Constants.asteroidSpeed,
-        );
+    final spawnDistance = Constants.despawnRadius * 0.9;
+    final spread = Constants.despawnRadius * 0.2;
+    Vector2 position;
+    Vector2 velocity;
+    if (game.player.isMoving) {
+      final dir = Vector2(
+        math.cos(game.player.angle - math.pi / 2),
+        math.sin(game.player.angle - math.pi / 2),
+      );
+      position = game.player.position + dir * spawnDistance;
+      position += (Vector2.random(_random) - Vector2.all(0.5)) * spread;
+      velocity = (Vector2.random(_random) - Vector2.all(0.5))
+        ..normalize()
+        ..scale(Constants.asteroidSpeed);
+    } else {
+      final angle = _random.nextDouble() * math.pi * 2;
+      position = game.player.position +
+          Vector2(math.cos(angle), math.sin(angle)) * spawnDistance;
+      velocity = (Vector2.random(_random) - Vector2.all(0.5))
+        ..normalize()
+        ..scale(Constants.asteroidSpeed);
     }
     game.add(
       game.pools.acquire<AsteroidComponent>(

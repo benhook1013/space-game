@@ -158,8 +158,10 @@ tree spanning weapons and ship systems.
 - The world extends beyond the initial viewport and has no fixed bounds. A
   `CameraComponent` tracks the player without clamping while content streams in
   around them.
-- Entities that move far outside a cleanup radius despawn; new ones spawn near
-  the player to maintain activity ahead of their flight path.
+- Entities that move far outside a cleanup radius despawn via an
+  `OffscreenCleanup` mixin. Asteroid and enemy spawners place new objects ahead
+  of the player's current heading using this same radius so action stays in
+  front of the ship.
 - A parallax starfield is tiled procedurally to appear endless.
 
 ## Assets

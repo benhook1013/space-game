@@ -414,7 +414,9 @@ class SpaceGame extends FlameGame
   @override
   void update(double dt) {
     super.update(dt);
-    camera.viewfinder.position = player.position;
+    if (_playerInitialized) {
+      camera.viewfinder.position = player.position;
+    }
   }
 
   @override
