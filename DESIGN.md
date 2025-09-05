@@ -143,8 +143,9 @@ tree spanning weapons and ship systems.
   game when opened mid-run. `Esc` also closes it without triggering pause.
 - An upgrades overlay (placeholder) opens with the `U` key or HUD button and
   pauses gameplay until dismissed.
-- A settings overlay provides sliders for HUD, text and joystick scale along
-  with a dark theme toggle.
+- A settings overlay provides sliders for HUD, text, joystick, targeting,
+  Tractor Aura and mining ranges plus a dark theme selector and
+  "mute on pause" toggle.
 - A `GameState` enum tracks the current phase.
 
 ## Input
