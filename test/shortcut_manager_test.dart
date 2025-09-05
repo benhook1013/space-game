@@ -97,6 +97,7 @@ class _Harness {
       toggleHelp: () => helpCalled = true,
       toggleUpgrades: () => upgradesCalled = true,
       toggleDebug: () => debugCalled = true,
+      toggleMinimap: () => minimapCalled = true,
     );
   }
 
@@ -109,6 +110,7 @@ class _Harness {
   bool helpCalled = false;
   bool upgradesCalled = false;
   bool debugCalled = false;
+  bool minimapCalled = false;
 
   void press(LogicalKeyboardKey logical, PhysicalKeyboardKey physical) {
     dispatcher.onKeyEvent(
@@ -203,6 +205,12 @@ void main() {
       final h = _Harness();
       h.press(LogicalKeyboardKey.f1, PhysicalKeyboardKey.f1);
       expect(h.debugCalled, isTrue);
+    });
+
+    test('N toggles minimap', () {
+      final h = _Harness();
+      h.press(LogicalKeyboardKey.keyN, PhysicalKeyboardKey.keyN);
+      expect(h.minimapCalled, isTrue);
     });
   });
 }

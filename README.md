@@ -51,10 +51,10 @@ dedicated server or NAT traversal.
 - Pause or resume via keyboard or HUD button with a `PAUSED` indicator and a
   hint to press `Esc` or `P` to resume, leaving the interface visible
 - Keyboard controls for desktop playtests (`WASD`/arrow keys to move, `Space` to
-  shoot, `Escape` or `P` to pause or resume, `M` to mute, `F1` toggles debug
-  overlays, `Enter` starts or restarts from the menu or game over, `R` restarts at
-  any time, `H` shows a help overlay that `Esc` also closes, `U`
-  opens an upgrades overlay that `Esc` also closes)
+  shoot, `Escape` or `P` to pause or resume, `M` to mute, `N` toggles the
+  minimap, `F1` toggles debug overlays, `Enter` starts or restarts from the
+  menu or game over, `R` restarts at any time, `H` shows a help overlay that
+  `Esc` also closes, `U` opens an upgrades overlay that `Esc` also closes)
 - Game works offline after the first load
 - Parallax starfield background
 
