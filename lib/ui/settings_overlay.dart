@@ -11,110 +11,130 @@ class SettingsOverlay extends StatelessWidget {
   final SpaceGame game;
 
   static const String id = 'settingsOverlay';
+  static const double _maxWidthFraction = 0.8;
+  static const double _fullWidthBreakpoint = 600;
 
   @override
   Widget build(BuildContext context) {
     final settings = game.settingsService;
     return OverlayLayout(
       builder: (context, spacing, iconSize) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            GameText(
-              'UI Settings',
-              style: Theme.of(context).textTheme.headlineSmall,
-              maxLines: 1,
-            ),
-            SizedBox(height: spacing),
-            _buildSlider(
-              context,
-              'HUD Buttons',
-              settings.hudButtonScale,
-              spacing,
-            ),
-            _buildSlider(
-              context,
-              'Text',
-              settings.textScale,
-              spacing,
-            ),
-            _buildSlider(
-              context,
-              'Joypad',
-              settings.joystickScale,
-              spacing,
-            ),
-            _buildSlider(
-              context,
-              'Targeting Range',
-              settings.targetingRange,
-              spacing,
-              min: 50,
-              max: 600,
-            ),
-            _buildSlider(
-              context,
-              'Tractor Range',
-              settings.tractorRange,
-              spacing,
-              min: 50,
-              max: 600,
-            ),
-            _buildSlider(
-              context,
-              'Mining Range',
-              settings.miningRange,
-              spacing,
-              min: 50,
-              max: 600,
-            ),
-            ValueListenableBuilder<ThemeMode>(
-              valueListenable: settings.themeMode,
-              builder: (context, mode, _) => ListTile(
-                title: const GameText('Theme', maxLines: 1),
-                trailing: DropdownButton<ThemeMode>(
-                  value: mode,
-                  onChanged: (newMode) {
-                    if (newMode != null) {
-                      settings.themeMode.value = newMode;
-                    }
-                  },
-                  items: const [
-                    DropdownMenuItem(
-                      value: ThemeMode.system,
-                      child: GameText('System', maxLines: 1),
-                    ),
-                    DropdownMenuItem(
-                      value: ThemeMode.light,
-                      child: GameText('Light', maxLines: 1),
-                    ),
-                    DropdownMenuItem(
-                      value: ThemeMode.dark,
-                      child: GameText('Dark', maxLines: 1),
-                    ),
-                  ],
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            final width = constraints.maxWidth;
+            final maxWidth = width > _fullWidthBreakpoint
+                ? width * _maxWidthFraction
+                : width;
+            return Container(
+              width: maxWidth,
+              padding: EdgeInsets.all(spacing),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Theme.of(context).colorScheme.outline,
                 ),
+                borderRadius: BorderRadius.circular(spacing),
               ),
-            ),
-            SizedBox(height: spacing),
-            ValueListenableBuilder<bool>(
-              valueListenable: settings.muteOnPause,
-              builder: (context, muted, _) => SwitchListTile(
-                title: const GameText('Mute on Pause', maxLines: 1),
-                value: muted,
-                onChanged: (v) => settings.muteOnPause.value = v,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  GameText(
+                    'UI Settings',
+                    style: Theme.of(context).textTheme.headlineSmall,
+                    maxLines: 1,
+                  ),
+                  SizedBox(height: spacing),
+                  _buildSlider(
+                    context,
+                    'HUD Buttons',
+                    settings.hudButtonScale,
+                    spacing,
+                  ),
+                  _buildSlider(
+                    context,
+                    'Text',
+                    settings.textScale,
+                    spacing,
+                  ),
+                  _buildSlider(
+                    context,
+                    'Joypad',
+                    settings.joystickScale,
+                    spacing,
+                  ),
+                  _buildSlider(
+                    context,
+                    'Targeting Range',
+                    settings.targetingRange,
+                    spacing,
+                    min: 50,
+                    max: 600,
+                  ),
+                  _buildSlider(
+                    context,
+                    'Tractor Range',
+                    settings.tractorRange,
+                    spacing,
+                    min: 50,
+                    max: 600,
+                  ),
+                  _buildSlider(
+                    context,
+                    'Mining Range',
+                    settings.miningRange,
+                    spacing,
+                    min: 50,
+                    max: 600,
+                  ),
+                  ValueListenableBuilder<ThemeMode>(
+                    valueListenable: settings.themeMode,
+                    builder: (context, mode, _) => ListTile(
+                      title: const GameText('Theme', maxLines: 1),
+                      trailing: DropdownButton<ThemeMode>(
+                        value: mode,
+                        onChanged: (newMode) {
+                          if (newMode != null) {
+                            settings.themeMode.value = newMode;
+                          }
+                        },
+                        items: const [
+                          DropdownMenuItem(
+                            value: ThemeMode.system,
+                            child: GameText('System', maxLines: 1),
+                          ),
+                          DropdownMenuItem(
+                            value: ThemeMode.light,
+                            child: GameText('Light', maxLines: 1),
+                          ),
+                          DropdownMenuItem(
+                            value: ThemeMode.dark,
+                            child: GameText('Dark', maxLines: 1),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: spacing),
+                  ValueListenableBuilder<bool>(
+                    valueListenable: settings.muteOnPause,
+                    builder: (context, muted, _) => SwitchListTile(
+                      title: const GameText('Mute on Pause', maxLines: 1),
+                      value: muted,
+                      onChanged: (v) => settings.muteOnPause.value = v,
+                    ),
+                  ),
+                  SizedBox(height: spacing),
+                  ElevatedButton(
+                    onPressed: game.toggleSettings,
+                    child: const GameText(
+                      'Close',
+                      maxLines: 1,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
               ),
-            ),
-            SizedBox(height: spacing),
-            ElevatedButton(
-              onPressed: game.toggleSettings,
-              child: const GameText(
-                'Close',
-                maxLines: 1,
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ),
-          ],
+            );
+          },
         );
       },
     );
