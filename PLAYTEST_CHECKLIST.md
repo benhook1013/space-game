@@ -8,6 +8,7 @@ _Update this file whenever a player-facing feature is added or changed._
 - [ ] Touch and keyboard controls move the player
 - [ ] Player can shoot and destroy a basic enemy
 - [ ] Bullets travel in the direction the ship is facing
+- [ ] Bullets spawn from the front of the player's ship
 - [ ] When stationary, the ship rotates toward the nearest enemy within range
 - [ ] Target button toggles range rings display
 - [ ] Minimap icon or `N` key toggles minimap visibility

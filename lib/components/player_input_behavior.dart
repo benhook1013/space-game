@@ -111,8 +111,10 @@ class PlayerInputBehavior extends Component with HasGameReference<SpaceGame> {
       math.cos(player.angle - math.pi / 2),
       math.sin(player.angle - math.pi / 2),
     );
+    final spawnOffset =
+        direction * (player.height / 2 + Constants.bulletSize / 2);
     final bullet = game.pools.acquire<BulletComponent>(
-      (b) => b.reset(player.position.clone(), direction),
+      (b) => b.reset(player.position + spawnOffset, direction),
     );
     game.add(bullet);
     game.audioService.playShoot();
