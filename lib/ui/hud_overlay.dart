@@ -43,12 +43,12 @@ class HudOverlay extends StatelessWidget {
                         const SizedBox(width: 8),
                         Padding(
                           padding: const EdgeInsets.only(top: 8),
-                          child: MineralDisplay(game: game),
+                          child: HealthDisplay(game: game),
                         ),
                         const SizedBox(width: 8),
                         Padding(
                           padding: const EdgeInsets.only(top: 8),
-                          child: HealthDisplay(game: game),
+                          child: MineralDisplay(game: game),
                         ),
                       ],
                     ),
