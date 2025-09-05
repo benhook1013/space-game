@@ -2,7 +2,8 @@
 
 CI/CD automation for the project.
 
-- `analyze.yml` – runs static analysis and tests.
+- `analyze.yml` – runs static analysis and tests on pull requests and
+  pushes to `main`.
 - `deploy.yml` – builds the web release and publishes it. It runs on
   pushes to `main` and `develop` and can be triggered manually from the
   GitHub Actions tab.
