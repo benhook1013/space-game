@@ -65,6 +65,7 @@ fi
 if [ "$needs_download" = true ]; then
   log "Bootstrapping Flutter $FLUTTER_VERSION ($FLUTTER_CHANNEL)"
   mkdir -p .tooling
+  mkdir -p "$FLUTTER_DIR"
   pushd .tooling >/dev/null
 
   OS_NAME="$(uname -s)"
