@@ -6,6 +6,7 @@ Handles local persistence using `shared_preferences`.
 
 - Save and load the local high score.
 - Store settings such as the mute flag.
+- Persist the selected player sprite index.
 - Provide simple async getters and setters.
 - Future expansion can add save/load for other data.
 

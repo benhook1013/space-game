@@ -22,5 +22,13 @@ void main() {
       await storage.resetHighScore();
       expect(storage.getHighScore(), 0);
     });
+
+    test('persists selected player sprite index', () async {
+      SharedPreferences.setMockInitialValues({});
+      final storage = await StorageService.create();
+      expect(storage.getPlayerSpriteIndex(), 0);
+      await storage.setPlayerSpriteIndex(1);
+      expect(storage.getPlayerSpriteIndex(), 1);
+    });
   });
 }

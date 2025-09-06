@@ -168,6 +168,7 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
 - HUD button toggles coloured range rings showing targeting, Tractor Aura and mining radii
 - Local high score stored on device (e.g., shared preferences)
 - Menu offers a reset button to clear the high score
+- Menu allows choosing between multiple ship sprites and remembers the selection
 - Basic sound effects using `flame_audio` with mute toggle (button or `M` key)
   available on menu, HUD and game over overlays
 - Keyboard controls for desktop playtests (`WASD`/arrow keys to move, `Space` to

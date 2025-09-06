@@ -48,6 +48,7 @@ dedicated server or NAT traversal.
 - HUD button toggles coloured range rings showing targeting, Tractor Aura and mining radii
 - Placeholder upgrades overlay accessible via a HUD button or the `U` key
 - Settings overlay adjusts HUD, text and joystick scale
+- Menu allows choosing between multiple ship sprites and remembers the selection
 - Local high score stored on device using `shared_preferences`
 - Basic sound effects with a mute toggle on menu, HUD and game over
   screens, plus an `M` key shortcut

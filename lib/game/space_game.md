@@ -19,7 +19,8 @@ Main FlameGame subclass managing world setup, state transitions and the update l
   closes it).
 - Expose helpers to pause, resume or return to the menu.
 - Drive the update cycle while delegating work to components and services.
-- Persist and load the high score through `StorageService`.
+- Persist and load the high score and selected player sprite index through
+  `StorageService`.
 - Exposes `ValueNotifier<int>`s for the current score, minerals, health and
   persisted high score so Flutter overlays can render values without touching
   the game loop.
