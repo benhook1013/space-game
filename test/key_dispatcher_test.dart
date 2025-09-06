@@ -167,5 +167,27 @@ void main() {
       );
       expect(handled, isFalse);
     });
+
+    test('re-registering a key replaces previous callbacks', () {
+      final dispatcher = KeyDispatcher();
+      var count = 0;
+      dispatcher.register(
+        LogicalKeyboardKey.space,
+        onDown: () => count++,
+      );
+      dispatcher.register(
+        LogicalKeyboardKey.space,
+        onDown: () => count += 10,
+      );
+      dispatcher.onKeyEvent(
+        const KeyDownEvent(
+          logicalKey: LogicalKeyboardKey.space,
+          physicalKey: PhysicalKeyboardKey.space,
+          timeStamp: Duration.zero,
+        ),
+        {LogicalKeyboardKey.space},
+      );
+      expect(count, 10);
+    });
   });
 }

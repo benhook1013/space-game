@@ -63,9 +63,19 @@ void main() {
     final storage = await StorageService.create();
     var settings = SettingsService(storage: storage);
     settings.hudButtonScale.value = 1.2;
+    settings.textScale.value = 1.1;
+    settings.joystickScale.value = 1.3;
+    settings.targetingRange.value = 350;
+    settings.tractorRange.value = 250;
+    settings.miningRange.value = 180;
     await Future.delayed(Duration.zero);
     settings = SettingsService(storage: storage);
     expect(settings.hudButtonScale.value, 1.2);
+    expect(settings.textScale.value, 1.1);
+    expect(settings.joystickScale.value, 1.3);
+    expect(settings.targetingRange.value, 350);
+    expect(settings.tractorRange.value, 250);
+    expect(settings.miningRange.value, 180);
   });
 
   test('attachStorage injects storage into existing instance', () async {
