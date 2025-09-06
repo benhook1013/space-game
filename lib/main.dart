@@ -26,12 +26,11 @@ Future<void> main() async {
   final settings = SettingsService();
   final focusNode = FocusNode();
 
-  final darkScheme = ColorScheme.fromSeed(
+  final colorScheme = ColorScheme.fromSeed(
     seedColor: Colors.deepPurple,
     brightness: Brightness.dark,
   );
-  final colorScheme = ValueNotifier<ColorScheme>(darkScheme);
-  final gameColors = ValueNotifier<GameColors>(GameColors.dark);
+  const gameColors = GameColors.dark;
 
   final game = SpaceGame(
     storageService: storage,
@@ -51,7 +50,7 @@ Future<void> main() async {
   runApp(
     MaterialApp(
       theme: ThemeData(
-        colorScheme: darkScheme,
+        colorScheme: colorScheme,
         useMaterial3: true,
         extensions: const [GameColors.dark],
       ),

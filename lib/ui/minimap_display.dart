@@ -57,11 +57,11 @@ class _MiniMapPainter extends CustomPainter {
     final radius = size.width / 2;
     final center = Offset(radius, radius);
     final borderPaint = Paint()
-      ..color = game.colorScheme.value.primary
+      ..color = game.colorScheme.primary
       ..style = PaintingStyle.stroke;
     canvas.drawCircle(center, radius, borderPaint);
 
-    final playerPaint = Paint()..color = game.colorScheme.value.primary;
+    final playerPaint = Paint()..color = game.colorScheme.primary;
     canvas.drawCircle(center, 3, playerPaint);
 
     final enemyPaint = Paint()..color = Colors.redAccent;

@@ -21,20 +21,13 @@ class MiningLaserComponent extends Component with HasGameReference<SpaceGame> {
   final PlayerComponent player;
   AsteroidComponent? _target;
   final Paint _paint = Paint();
-  late void Function() _colorListener;
   final Timer _pulseTimer = Timer(Constants.miningPulseInterval, repeat: true);
   bool _playingSound = false;
 
   @override
   void onMount() {
     super.onMount();
-    void updateColor() {
-      _paint.color = game.gameColors.value.playerLaser.withValues(alpha: 0.4);
-    }
-
-    updateColor();
-    _colorListener = updateColor;
-    game.gameColors.addListener(_colorListener);
+    _paint.color = game.gameColors.playerLaser.withValues(alpha: 0.4);
   }
 
   @override
@@ -126,7 +119,6 @@ class MiningLaserComponent extends Component with HasGameReference<SpaceGame> {
       game.audioService.stopMiningLaser();
       _playingSound = false;
     }
-    game.gameColors.removeListener(_colorListener);
     super.onRemove();
   }
 }
