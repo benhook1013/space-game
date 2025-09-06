@@ -50,7 +50,9 @@ class SpaceGame extends FlameGame
     GameColors? gameColors,
     SettingsService? settingsService,
     FocusNode? focusNode,
-  })  : colorScheme =
+  })  : selectedPlayerIndex =
+            ValueNotifier<int>(storageService.getPlayerSpriteIndex()),
+        colorScheme =
             colorScheme ?? ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         gameColors = gameColors ?? GameColors.dark,
         settingsService = settingsService ?? SettingsService(),
@@ -121,12 +123,14 @@ class SpaceGame extends FlameGame
   late final UpgradeService upgradeService;
 
   /// Selected player sprite index for menu selection.
-  final ValueNotifier<int> selectedPlayerIndex = ValueNotifier<int>(0);
+  final ValueNotifier<int> selectedPlayerIndex;
 
   String get selectedPlayerSprite => Assets.players[selectedPlayerIndex.value];
 
   void selectPlayer(int index) {
-    selectedPlayerIndex.value = index.clamp(0, Assets.players.length - 1);
+    final clamped = index.clamp(0, Assets.players.length - 1);
+    selectedPlayerIndex.value = clamped;
+    storageService.setPlayerSpriteIndex(clamped);
   }
 
   void toggleMinimap() {

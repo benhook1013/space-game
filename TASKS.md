@@ -72,6 +72,7 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
 - [x] Keyboard shortcut `F1` toggles debug overlays.
 - [x] Audio volume lowers when the game is paused.
 - [x] Menu includes button to reset the high score.
+- [x] Menu allows choosing between multiple ship sprites and persists the selection.
 - [x] Upgrades overlay placeholder accessible via HUD button or the `U` key.
 - [x] HUD button toggles range rings for targeting, Tractor Aura and mining.
 - [x] Settings overlay with sliders for HUD, text, joystick, targeting,

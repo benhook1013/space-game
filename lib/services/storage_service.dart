@@ -2,8 +2,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 /// Simple wrapper around [SharedPreferences] for persisting small bits of data.
 ///
-/// Currently only stores and retrieves the local high score but can expand to
-/// handle additional settings in the future.
+/// Stores the local high score, mute flag and selected player sprite index.
+/// Additional getters/setters expose primitive types for future expansion.
 class StorageService {
   StorageService(this._prefs);
 
@@ -17,6 +17,7 @@ class StorageService {
 
   static const _highScoreKey = 'highScore';
   static const _mutedKey = 'muted';
+  static const _playerSpriteKey = 'playerSpriteIndex';
 
   /// Returns the stored high score or `0` if none exists.
   int getHighScore() => _prefs.getInt(_highScoreKey) ?? 0;
@@ -37,6 +38,14 @@ class StorageService {
   /// Persists the mute flag.
   Future<void> setMuted(bool value) async {
     await _prefs.setBool(_mutedKey, value);
+  }
+
+  /// Returns the selected player sprite index or `0` if unset.
+  int getPlayerSpriteIndex() => _prefs.getInt(_playerSpriteKey) ?? 0;
+
+  /// Persists the selected player sprite index.
+  Future<void> setPlayerSpriteIndex(int value) async {
+    await _prefs.setInt(_playerSpriteKey, value);
   }
 
   /// Retrieves a double value for [key] or returns [defaultValue] if unset.

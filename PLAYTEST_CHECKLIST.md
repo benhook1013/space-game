@@ -24,6 +24,7 @@ _Update this file whenever a player-facing feature is added or changed._
 - [ ] Game states transition: menu → playing → upgrades → paused → game over
       → restart or menu
 - [ ] Player can choose a ship from the menu before starting
+- [ ] Selected ship persists between sessions
 - [ ] Enter starts or restarts from the menu or game over; `R` restarts at any time
 - [ ] Escape or `P` key pauses or resumes the game
 - [ ] Parallax starfield renders behind gameplay

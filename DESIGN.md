@@ -140,6 +140,8 @@ tree spanning weapons and ship systems.
 - Play centres on searching for asteroids to mine while surviving periodic enemy
   waves.
 - The game starts in a menu overlay that also exposes a mute toggle.
+- Players can choose between multiple ship sprites from the menu, and the
+  selection persists via `StorageService`.
 - `SpaceGame` transitions to `playing` when the user taps start.
 - Players can pause the game from the HUD or with the Escape or `P` key,
   showing a centered `PAUSED` label with a hint to press `Esc` or `P` to
