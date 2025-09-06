@@ -45,7 +45,7 @@ dedicated server or NAT traversal.
 - Player score, health and minerals displayed in the HUD; health drops on
   collision and minerals increase when collecting pickups from mined asteroids
 - Toggable top-left minimap shows nearby asteroids, enemies and pickups
-- HUD button toggles coloured range rings showing targeting, Tractor Aura and mining radii
+- HUD button or `B` key toggles coloured range rings showing targeting, Tractor Aura and mining radii
 - Placeholder upgrades overlay accessible via a HUD button or the `U` key
 - Settings overlay adjusts HUD, text and joystick scale
 - Menu allows choosing between multiple ship sprites and remembers the selection
@@ -55,10 +55,11 @@ dedicated server or NAT traversal.
 - Pause or resume via keyboard or HUD button with a `PAUSED` indicator and a
   hint to press `Esc` or `P` to resume, leaving the interface visible
 - Keyboard controls for desktop playtests (`WASD`/arrow keys to move, `Space` to
-  shoot, `Escape` or `P` to pause or resume, `M` to mute, `N` toggles the
-  minimap, `F1` toggles debug overlays, `Enter` starts or restarts from the
-  menu or game over, `R` restarts at any time, `H` shows a help overlay that
-  `Esc` also closes, `U` opens an upgrades overlay that `Esc` also closes)
+  shoot, `Escape` or `P` to pause or resume, `M` to mute, `B` toggles range
+  rings, `N` toggles the minimap, `F1` toggles debug overlays, `Enter` starts
+  or restarts from the menu or game over, `R` restarts at any time, `H` shows a
+  help overlay that `Esc` also closes, `U` opens an upgrades overlay that `Esc`
+  also closes)
 - Game works offline after the first load
 - Parallax starfield background
 

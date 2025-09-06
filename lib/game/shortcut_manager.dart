@@ -7,7 +7,7 @@ import 'key_dispatcher.dart';
 
 /// Registers global keyboard shortcuts and wires them to actions.
 ///
-/// Supported keys: `Esc`, `P`, `M`, `Enter`, `R`, `H`, `U`, `F1`, `N` and
+/// Supported keys: `Esc`, `P`, `M`, `Enter`, `R`, `H`, `U`, `F1`, `N`, `B` and
 /// `Q`.
 class ShortcutManager {
   ShortcutManager({
@@ -21,6 +21,7 @@ class ShortcutManager {
     required void Function() toggleUpgrades,
     required void Function() toggleDebug,
     required void Function() toggleMinimap,
+    required void Function() toggleRangeRings,
     required void Function() returnToMenu,
   }) {
     keyDispatcher.register(LogicalKeyboardKey.escape, onDown: () {
@@ -77,6 +78,11 @@ class ShortcutManager {
     keyDispatcher.register(
       LogicalKeyboardKey.keyN,
       onDown: toggleMinimap,
+    );
+
+    keyDispatcher.register(
+      LogicalKeyboardKey.keyB,
+      onDown: toggleRangeRings,
     );
 
     keyDispatcher.register(LogicalKeyboardKey.keyQ, onDown: () {

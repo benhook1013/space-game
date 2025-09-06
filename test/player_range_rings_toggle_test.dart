@@ -54,10 +54,10 @@ void main() {
     final game = _TestGame(storage: storage, audio: audio);
     await game.onLoad();
 
-    expect(game.player.showAutoAimRadius, isFalse);
-    game.toggleAutoAimRadius();
-    expect(game.player.showAutoAimRadius, isTrue);
-    game.toggleAutoAimRadius();
-    expect(game.player.showAutoAimRadius, isFalse);
+    expect(game.player.showRangeRings, isFalse);
+    game.toggleRangeRings();
+    expect(game.player.showRangeRings, isTrue);
+    game.toggleRangeRings();
+    expect(game.player.showRangeRings, isFalse);
   });
 }

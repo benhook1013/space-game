@@ -215,6 +215,7 @@ class SpaceGame extends FlameGame
       toggleUpgrades: toggleUpgrades,
       toggleDebug: toggleDebug,
       toggleMinimap: toggleMinimap,
+      toggleRangeRings: toggleRangeRings,
       returnToMenu: returnToMenu,
     );
     stateMachine.returnToMenu();
@@ -342,8 +343,8 @@ class SpaceGame extends FlameGame
   }
 
   /// Toggles rendering of the player's range rings.
-  void toggleAutoAimRadius() {
-    player.toggleAutoAimRadius();
+  void toggleRangeRings() {
+    player.toggleRangeRings();
   }
 
   /// Shows or hides the runtime settings overlay.

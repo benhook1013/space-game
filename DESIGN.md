@@ -164,7 +164,8 @@ tree spanning weapons and ship systems.
 - On-screen joystick and fire button mirror keyboard controls (WASD + Space).
 - Input handling stays isolated from rendering for easier testing.
 - `N` toggles a minimap overlay for navigation.
-- HUD button toggles range rings showing targeting, Tractor Aura and mining radii.
+- `B` or a HUD button toggles range rings showing targeting, Tractor Aura and
+  mining radii.
 - `H` toggles a help overlay for quick reference, and `Esc` closes it when
   visible.
 

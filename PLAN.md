@@ -165,7 +165,7 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
 - Player score, minerals and health shown in the HUD with simple
   start/game‑over screens
 - Toggable top-left minimap shows nearby asteroids, enemies and pickups
-- HUD button toggles coloured range rings showing targeting, Tractor Aura and mining radii
+- HUD button or `B` key toggles coloured range rings showing targeting, Tractor Aura and mining radii
 - Local high score stored on device (e.g., shared preferences)
 - Menu offers a reset button to clear the high score
 - Menu allows choosing between multiple ship sprites and remembers the selection
@@ -175,7 +175,8 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
   shoot, `Escape` or `P` to pause or resume, `M` to mute, `N` toggles the
   minimap, `F1` toggles debug overlays, `Enter` starts or restarts from the
   menu or game over, `R` restarts at any time, `H` shows a help overlay that
-  `Esc` also closes, `U` opens an upgrades overlay that `Esc` also closes)
+  `Esc` also closes, `U` opens an upgrades overlay that `Esc` also closes, `B`
+  toggles range rings)
 - Upgrades overlay placeholder opened with a HUD button or the `U` key and
   pausing gameplay for future ship upgrades
 - Settings overlay with sliders for HUD, text, joystick, targeting, Tractor Aura

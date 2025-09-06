@@ -48,8 +48,8 @@ class PlayerComponent extends SpriteComponent
 
   String _spritePath;
 
-  /// Whether to render range rings around the player.
-  bool showAutoAimRadius = false;
+  /// Whether to render targeting, tractor and mining range rings.
+  bool showRangeRings = false;
 
   /// Angle the ship should currently rotate towards.
   double targetAngle = 0;
@@ -108,8 +108,8 @@ class PlayerComponent extends SpriteComponent
   }
 
   /// Toggles visibility of the player's range rings.
-  void toggleAutoAimRadius() {
-    showAutoAimRadius = !showAutoAimRadius;
+  void toggleRangeRings() {
+    showRangeRings = !showRangeRings;
   }
 
   /// Triggers a short red flash that fades out to indicate damage taken.
@@ -199,7 +199,7 @@ class PlayerComponent extends SpriteComponent
   @override
   void render(Canvas canvas) {
     super.render(canvas);
-    if (showAutoAimRadius) {
+    if (showRangeRings) {
       final center = Offset(size.x / 2, size.y / 2);
       canvas.drawCircle(
         center,
