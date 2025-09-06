@@ -178,6 +178,7 @@ PY
   extract_with_progress "$dest" "$tmpdir"
   if [ -d "$tmpdir/flutter" ]; then
     rm -rf "$FLUTTER_DIR"
+    mkdir -p "$FLUTTER_DIR"
     mv "$tmpdir/flutter" "$FLUTTER_DIR"
   else
     echo "Extracted archive missing 'flutter' directory" >&2
