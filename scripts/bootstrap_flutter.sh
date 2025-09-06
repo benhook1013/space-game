@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# --------------------------
+# ----------------------------------
 # Flags
-# --------------------------
+# ----------------------------------
 FORCE=false
 QUIET=false
 DOWNLOADER=http
@@ -17,9 +17,9 @@ while [[ $# -gt 0 ]]; do
   shift
 done
 
-# --------------------------
+# ----------------------------------
 # Config
-# --------------------------
+# ----------------------------------
 : "${FLUTTER_VERSION:=3.32.8}"   # Pin your version here
 : "${FLUTTER_CHANNEL:=stable}"   # stable | beta
 : "${FLUTTER_DOWNLOAD_MIRROR:=https://storage.googleapis.com/flutter_infra_release}"
@@ -33,12 +33,13 @@ mkdir -p "$FLUTTER_PARENT" "$CACHE_DIR"
 
 log() { if [ "$QUIET" != true ]; then echo "[bootstrap_flutter] $*"; fi; }
 lower() { echo "$1" | tr '[:upper:]' '[:lower:]'; }
+head_ok() { curl -sfI "$1" >/dev/null 2>&1; }
 
 log "Ensuring Flutter $FLUTTER_VERSION ($FLUTTER_CHANNEL) in $FLUTTER_DIR_REL"
 
-# --------------------------
+# ----------------------------------
 # Early exit if we already have the right SDK
-# --------------------------
+# ----------------------------------
 needs_download=true
 if [[ -x "$FLUTTER_DIR/bin/flutter" && "$FORCE" != true ]]; then
   current_info="$("$FLUTTER_DIR/bin/flutter" --version 2>/dev/null | tr '\n' ' ' || true)"
@@ -61,9 +62,9 @@ elif [[ "$FORCE" == true ]]; then
   rm -rf "$FLUTTER_DIR"
 fi
 
-# --------------------------
+# ----------------------------------
 # Download + extract
-# --------------------------
+# ----------------------------------
 if [[ "$needs_download" == true ]]; then
   OS_NAME="$(uname -s)"
   case "$OS_NAME" in
@@ -74,9 +75,24 @@ if [[ "$needs_download" == true ]]; then
   esac
 
   BASE_URL="${FLUTTER_DOWNLOAD_MIRROR%/}"
-  URL="${BASE_URL}/${FLUTTER_CHANNEL}/$(lower "$OS_SLUG")/${ARCHIVE}"
-  DEST="${CACHE_DIR}/${ARCHIVE}"
 
+  # Correct path (has /releases/)
+  URL="${BASE_URL}/releases/${FLUTTER_CHANNEL}/$(lower "$OS_SLUG")/${ARCHIVE}"
+
+  # Fallback for mirrors that already bake in /releases or have legacy layout
+  if ! head_ok "$URL"; then
+    ALT_URL="${BASE_URL}/${FLUTTER_CHANNEL}/$(lower "$OS_SLUG")/${ARCHIVE}"
+    if head_ok "$ALT_URL"; then
+      URL="$ALT_URL"
+    else
+      echo "Failed to locate Flutter archive at:
+  1) $URL
+  2) $ALT_URL" >&2
+      exit 1
+    fi
+  fi
+
+  DEST="${CACHE_DIR}/${ARCHIVE}"
   log "Downloading: $URL (downloader=$DOWNLOADER)"
 
   download_http() {
@@ -116,7 +132,7 @@ if [[ "$needs_download" == true ]]; then
     rm -f "${tmpfiles[@]}"
   }
 
-  # reuse existing archive if present unless --force
+  # Reuse existing archive if present unless --force
   if [[ ! -f "$DEST" || "$FORCE" == true ]]; then
     rm -f "$DEST" "${DEST}.partial"
     case "$DOWNLOADER" in
@@ -127,7 +143,7 @@ if [[ "$needs_download" == true ]]; then
     log "Reusing cached archive: ${DEST##*/}"
   fi
 
-  # Extract with native tools (faster than Python tarfile/zipfile)
+  # Extract with native tools
   rm -rf "${FLUTTER_DIR}" "${FLUTTER_PARENT}/_extract_flutter_tmp"
   mkdir -p "${FLUTTER_PARENT}/_extract_flutter_tmp"
   if [[ "$DEST" == *.tar.xz ]]; then
@@ -151,9 +167,9 @@ if [[ "$needs_download" == true ]]; then
   log "Flutter SDK installed at $FLUTTER_DIR_REL"
 fi
 
-# --------------------------
+# ----------------------------------
 # Post-install
-# --------------------------
+# ----------------------------------
 export PATH="$FLUTTER_DIR/bin:$PATH"
 git config --global --add safe.directory "$FLUTTER_DIR" 2>/dev/null || true
 
