@@ -98,6 +98,8 @@ lib/
   components/           # Game entities/components
   ui/                   # Flutter widgets for menus/HUD
   services/             # Storage, networking, audio
+  theme/                # Game-specific color theme extension
+  util/                 # Reusable helpers (object pools, spatial grid)
 web/                    # PWA manifest, service worker
 .github/workflows/      # CI/CD configs
 ```

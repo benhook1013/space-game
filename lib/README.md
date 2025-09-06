@@ -27,5 +27,7 @@ the pinned SDK.
 - [ui/](ui/) – Flutter widgets for menus and HUD displayed using Flame overlays.
 - [services/](services/) – optional helpers for audio, storage
   (`shared_preferences`) and other utilities added as needed.
+- [theme/](theme/) – `GameColors` extension and theming helpers.
+- [util/](util/) – shared utilities like object pools and spatial queries.
 
 See [../PLAN.md](../PLAN.md) for the broader roadmap.
