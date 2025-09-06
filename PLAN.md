@@ -175,7 +175,7 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
 - Upgrades overlay placeholder opened with a HUD button or the `U` key and
   pausing gameplay for future ship upgrades
 - Settings overlay with sliders for HUD, text, joystick, targeting, Tractor Aura
-  and mining ranges, plus a dark theme selector
+  and mining ranges
 - Game works offline after the first load thanks to the service worker
 - Simple parallax starfield background
 - Pause or resume with a `PAUSED` overlay prompting players to press `Esc` or

@@ -26,45 +26,12 @@ Future<void> main() async {
   final settings = SettingsService();
   final focusNode = FocusNode();
 
-  final lightScheme = ColorScheme.fromSeed(seedColor: Colors.deepPurple);
   final darkScheme = ColorScheme.fromSeed(
     seedColor: Colors.deepPurple,
     brightness: Brightness.dark,
   );
-  final initialBrightness =
-      WidgetsBinding.instance.platformDispatcher.platformBrightness;
-  final colorScheme = ValueNotifier<ColorScheme>(
-    initialBrightness == Brightness.dark ? darkScheme : lightScheme,
-  );
-  final gameColors = ValueNotifier<GameColors>(
-    initialBrightness == Brightness.dark ? GameColors.dark : GameColors.light,
-  );
-
-  void applyTheme() {
-    final brightness = settings.themeMode.value == ThemeMode.system
-        ? WidgetsBinding.instance.platformDispatcher.platformBrightness
-        : (settings.themeMode.value == ThemeMode.dark
-            ? Brightness.dark
-            : Brightness.light);
-    if (brightness == Brightness.dark) {
-      colorScheme.value = darkScheme;
-      gameColors.value = GameColors.dark;
-    } else {
-      colorScheme.value = lightScheme;
-      gameColors.value = GameColors.light;
-    }
-  }
-
-  settings.themeMode.addListener(applyTheme);
-  final dispatcher = WidgetsBinding.instance.platformDispatcher;
-  final defaultBrightnessHandler = dispatcher.onPlatformBrightnessChanged;
-  dispatcher.onPlatformBrightnessChanged = () {
-    defaultBrightnessHandler?.call();
-    if (settings.themeMode.value == ThemeMode.system) {
-      applyTheme();
-    }
-  };
-  applyTheme();
+  final colorScheme = ValueNotifier<ColorScheme>(darkScheme);
+  final gameColors = ValueNotifier<GameColors>(GameColors.dark);
 
   final game = SpaceGame(
     storageService: storage,
@@ -82,41 +49,30 @@ Future<void> main() async {
   GameText.attachTextScale(settings.textScale);
 
   runApp(
-    ValueListenableBuilder<ThemeMode>(
-      valueListenable: settings.themeMode,
-      builder: (context, mode, _) => MaterialApp(
-        theme: ThemeData(
-          colorScheme: lightScheme,
-          useMaterial3: true,
-          extensions: const [GameColors.light],
-        ),
-        darkTheme: ThemeData(
-          colorScheme: darkScheme,
-          useMaterial3: true,
-          extensions: const [GameColors.dark],
-        ),
-        themeMode: mode,
-        home: GameWidget<SpaceGame>(
-          game: game,
-          focusNode: focusNode,
-          // Automatically request keyboard focus so web players can use WASD
-          // without tapping the canvas first.
-          autofocus: true,
-          overlayBuilderMap: {
-            MenuOverlay.id: (context, SpaceGame game) =>
-                MenuOverlay(game: game),
-            HudOverlay.id: (context, SpaceGame game) => HudOverlay(game: game),
-            PauseOverlay.id: (context, SpaceGame game) => const PauseOverlay(),
-            GameOverOverlay.id: (context, SpaceGame game) =>
-                GameOverOverlay(game: game),
-            HelpOverlay.id: (context, SpaceGame game) =>
-                HelpOverlay(game: game),
-            UpgradesOverlay.id: (context, SpaceGame game) =>
-                UpgradesOverlay(game: game),
-            SettingsOverlay.id: (context, SpaceGame game) =>
-                SettingsOverlay(game: game),
-          },
-        ),
+    MaterialApp(
+      theme: ThemeData(
+        colorScheme: darkScheme,
+        useMaterial3: true,
+        extensions: const [GameColors.dark],
+      ),
+      home: GameWidget<SpaceGame>(
+        game: game,
+        focusNode: focusNode,
+        // Automatically request keyboard focus so web players can use WASD
+        // without tapping the canvas first.
+        autofocus: true,
+        overlayBuilderMap: {
+          MenuOverlay.id: (context, SpaceGame game) => MenuOverlay(game: game),
+          HudOverlay.id: (context, SpaceGame game) => HudOverlay(game: game),
+          PauseOverlay.id: (context, SpaceGame game) => const PauseOverlay(),
+          GameOverOverlay.id: (context, SpaceGame game) =>
+              GameOverOverlay(game: game),
+          HelpOverlay.id: (context, SpaceGame game) => HelpOverlay(game: game),
+          UpgradesOverlay.id: (context, SpaceGame game) =>
+              UpgradesOverlay(game: game),
+          SettingsOverlay.id: (context, SpaceGame game) =>
+              SettingsOverlay(game: game),
+        },
       ),
     ),
   );

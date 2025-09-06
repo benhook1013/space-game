@@ -7,7 +7,7 @@ Entry point launching the Flutter app and `SpaceGame`.
 - Bootstraps the Flutter app using the FVM-pinned SDK.
 - Preloads assets via `Assets.load()` before gameplay.
 - Creates core services (`StorageService`, `AudioService`, `SettingsService`).
-- Configures light and dark `ColorScheme`s based on the selected theme.
+- Configures a dark `ColorScheme` for the app.
 - Attaches global text scaling via `GameText.attachTextScale`.
 - Wraps `SpaceGame` in a `GameWidget` so overlays can render Flutter UI and
   registers overlay builders for menus, HUD and dialogs.
