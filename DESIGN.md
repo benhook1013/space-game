@@ -6,9 +6,11 @@ live in [lib/README.md](lib/README.md), [assets/README.md](assets/README.md),
 [web/README.md](web/README.md) and [test/README.md](test/README.md).
 Design notes for the central helper files are in
 [lib/main.md](lib/main.md), [lib/assets.md](lib/assets.md),
-[lib/constants.md](lib/constants.md) and [lib/log.md](lib/log.md).
+[lib/constants.md](lib/constants.md), [lib/log.md](lib/log.md) and
+[lib/theme/game_theme.dart](lib/theme/game_theme.dart).
 Modules such as `space_game`, components, overlays and services have dedicated
-docs in their respective subfolders.
+docs in their respective subfolders, and shared utilities live under
+[lib/util](lib/util).
 Milestone goals are detailed in [milestone-setup.md](milestone-setup.md),
 [milestone-core-loop.md](milestone-core-loop.md) and
 [milestone-polish.md](milestone-polish.md), with the day-to-day backlog in
@@ -60,8 +62,8 @@ tree spanning weapons and ship systems.
 - It wraps `SpaceGame` in a `GameWidget`, ensures the PWA manifest loads and
 - preloads assets through `Assets.load()` before play.
 - It initialises `StorageService`, `AudioService` and `SettingsService`, applies
-  a static dark `ColorScheme`, and attaches global text scaling via
-  `GameText.attachTextScale`.
+  a static dark `ColorScheme` with extra hues from the `GameColors` theme
+  extension, and attaches global text scaling via `GameText.attachTextScale`.
 - An app lifecycle observer pauses the engine and audio when the window loses
   focus.
 - Run all development commands through FVM (`fvm flutter`, `fvm dart`) to keep

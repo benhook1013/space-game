@@ -83,6 +83,8 @@ lib/                    # Game source code
   constants.dart        # Tunable values for balancing
   log.dart              # Tiny log() wrapper around debugPrint
   services/             # Optional helpers (see lib/services/README.md)
+  theme/                # Game-specific color extensions
+  util/                 # Shared helpers (object pools, spatial grid)
 web/                    # PWA configuration (see web/README.md)
 test/                   # Automated tests for services and game logic (see test/README.md)
 assets_manifest.json    # List of bundled asset files for caching (see assets_manifest.md)

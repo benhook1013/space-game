@@ -99,6 +99,8 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
   - `log.dart` – tiny `log()` helper wrapping `debugPrint`
   - `ui/game_text.dart` – text widget applying global scaling for consistent style
   - `services/` – storage, audio, settings and other helpers added only when needed
+  - `theme/` – `GameColors` extension with game-specific colour values
+  - `util/` – shared helpers like object pools and spatial queries
 - `assets/` – images, audio and fonts
 - `web/` – PWA manifest, icons and service worker
 - `test/` – placeholder for future automated tests
