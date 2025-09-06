@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 import '../constants.dart';
 import 'storage_service.dart';
@@ -19,9 +19,6 @@ class SettingsService {
         minimapScale = ValueNotifier<double>(
             storage?.getDouble(_minimapScaleKey, defaultMinimapScale) ??
                 defaultMinimapScale),
-        themeMode = ValueNotifier<ThemeMode>(ThemeMode.values[
-            storage?.getInt(_themeModeKey, ThemeMode.system.index) ??
-                ThemeMode.system.index]),
         targetingRange = ValueNotifier<double>(storage?.getDouble(
                 _targetingRangeKey, Constants.playerAutoAimRange) ??
             Constants.playerAutoAimRange),
@@ -39,8 +36,6 @@ class SettingsService {
         () => _storage?.setDouble(_joystickScaleKey, joystickScale.value));
     minimapScale.addListener(
         () => _storage?.setDouble(_minimapScaleKey, minimapScale.value));
-    themeMode.addListener(
-        () => _storage?.setInt(_themeModeKey, themeMode.value.index));
     targetingRange.addListener(
         () => _storage?.setDouble(_targetingRangeKey, targetingRange.value));
     tractorRange.addListener(
@@ -65,9 +60,6 @@ class SettingsService {
 
   /// Multiplier applied to the minimap size.
   final ValueNotifier<double> minimapScale;
-
-  /// Currently selected theme mode.
-  final ValueNotifier<ThemeMode> themeMode;
 
   /// Distance used to auto-aim enemies when stationary.
   final ValueNotifier<double> targetingRange;
@@ -95,8 +87,6 @@ class SettingsService {
         storage.getDouble(_joystickScaleKey, joystickScale.value);
     minimapScale.value =
         storage.getDouble(_minimapScaleKey, minimapScale.value);
-    themeMode.value =
-        ThemeMode.values[storage.getInt(_themeModeKey, themeMode.value.index)];
     targetingRange.value =
         storage.getDouble(_targetingRangeKey, targetingRange.value);
     tractorRange.value =
@@ -108,7 +98,6 @@ class SettingsService {
   static const _textScaleKey = 'textScale';
   static const _joystickScaleKey = 'joystickScale';
   static const _minimapScaleKey = 'minimapScale';
-  static const _themeModeKey = 'themeMode';
   static const _targetingRangeKey = 'targetingRange';
   static const _tractorRangeKey = 'tractorRange';
   static const _miningRangeKey = 'miningRange';

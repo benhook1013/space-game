@@ -112,8 +112,8 @@ tree spanning weapons and ship systems.
   high score and settings.
 - `score_service.dart` tracks score, minerals and health values.
 - `overlay_service.dart` shows and hides the Flutter overlays.
-- `settings_service.dart` holds tweakable UI and text scale values, gameplay
-  range multipliers and theme mode.
+- `settings_service.dart` holds tweakable UI and text scale values and gameplay
+  range multipliers.
 - `targeting_service.dart` assists auto-aim queries.
 - `upgrade_service.dart` manages purchasing upgrades with minerals and exposes
   a `ValueListenable` for bought upgrade ids.
@@ -152,7 +152,7 @@ tree spanning weapons and ship systems.
 - An upgrades overlay (placeholder) opens with the `U` key or HUD button and
   pauses gameplay until dismissed.
 - A settings overlay provides sliders for HUD, text, joystick, targeting,
-  Tractor Aura and mining ranges plus a dark theme selector.
+  Tractor Aura and mining ranges.
 - A `GameState` enum tracks the current phase.
 
 ## Input

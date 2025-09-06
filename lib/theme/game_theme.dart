@@ -28,12 +28,6 @@ class GameColors extends ThemeExtension<GameColors> {
     );
   }
 
-  /// Light theme values.
-  static const GameColors light = GameColors(
-    playerLaser: Color(0xffffffff),
-    enemyLaser: Color(0xffff6666),
-  );
-
   /// Dark theme values.
   static const GameColors dark = GameColors(
     playerLaser: Color(0xffffffff),

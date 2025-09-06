@@ -23,7 +23,7 @@ dedicated server or NAT traversal.
 - Code and asset base kept tiny and easy to maintain
 - Ship quickly and iterate in small increments
 - Responsive scaling for phones, tablets and desktop
-- Centralised colour theming with light and dark palettes
+- Centralised colour theming with a dark palette
 - Solo-friendly workflow with minimal tooling
 - Fun, casual tone with cartoony visuals
 - Modular game logic built with Flame (pinned for stability)
@@ -47,7 +47,7 @@ dedicated server or NAT traversal.
 - Toggable top-left minimap shows nearby asteroids, enemies and pickups
 - HUD button toggles coloured range rings showing targeting, Tractor Aura and mining radii
 - Placeholder upgrades overlay accessible via a HUD button or the `U` key
-- Settings overlay adjusts HUD, text and joystick scale and offers light or dark themes
+- Settings overlay adjusts HUD, text and joystick scale
 - Local high score stored on device using `shared_preferences`
 - Basic sound effects with a mute toggle on menu, HUD and game over
   screens, plus an `M` key shortcut

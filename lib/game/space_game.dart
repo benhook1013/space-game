@@ -52,7 +52,7 @@ class SpaceGame extends FlameGame
     FocusNode? focusNode,
   })  : colorScheme = colorScheme ??
             ValueNotifier(ColorScheme.fromSeed(seedColor: Colors.deepPurple)),
-        gameColors = gameColors ?? ValueNotifier(GameColors.light),
+        gameColors = gameColors ?? ValueNotifier(GameColors.dark),
         settingsService = settingsService ?? SettingsService(),
         focusNode = focusNode ?? FocusNode(),
         scoreService = ScoreService(storageService: storageService) {
