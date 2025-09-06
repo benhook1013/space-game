@@ -6,7 +6,7 @@ Main FlameGame subclass managing world setup, state transitions and the update l
 
 - Preload assets via the central registry before entering gameplay.
 - Configure the parallax background, set up a fixed-resolution camera that
-  follows the player, and register component spawners.
+  follows the player via `camera.follow`, and register component spawners.
 - Spawn the player and register enemy or asteroid generators.
 - Provide small bullet, asteroid, enemy and mineral pickup pools to limit allocations.
 - Maintain `GameState` values (`menu`, `playing`, `paused`, `gameOver`)

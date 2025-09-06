@@ -172,7 +172,7 @@ class SpaceGame extends FlameGame
     );
     await add(player);
     _playerInitialized = true;
-    camera.viewfinder.position = player.position;
+    camera.follow(player, snap: true);
     final laser = MiningLaserComponent(player: player);
     miningLaser = laser;
     await add(laser);
@@ -417,9 +417,6 @@ class SpaceGame extends FlameGame
             stateMachine.state == GameState.upgrades);
     final effectiveDt = shouldFreeze ? 0.0 : dt;
     super.update(effectiveDt);
-    if (_playerInitialized) {
-      camera.viewfinder.position = player.position;
-    }
   }
 
   @override
