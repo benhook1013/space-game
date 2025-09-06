@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Theme extension holding game-specific colour roles.
+/// Defines custom colours used throughout the game.
 @immutable
 class GameColors extends ThemeExtension<GameColors> {
   const GameColors({required this.playerLaser, required this.enemyLaser});
@@ -28,7 +28,7 @@ class GameColors extends ThemeExtension<GameColors> {
     );
   }
 
-  /// Dark theme values.
+  /// Default colour values.
   static const GameColors dark = GameColors(
     playerLaser: Color(0xffffffff),
     enemyLaser: Color(0xffff8888),
