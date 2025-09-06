@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 
 /// Displays text using a consistent style across game overlays.
 ///
-/// Text is rendered without decoration and uses the theme's primary colour by
+/// Text is rendered without decoration and uses the game's primary colour by
 /// default, but can be customised via [style], [maxLines] and [textAlign].
 class GameText extends StatelessWidget {
   const GameText(

@@ -60,7 +60,7 @@ tree spanning weapons and ship systems.
 - It wraps `SpaceGame` in a `GameWidget`, ensures the PWA manifest loads and
 - preloads assets through `Assets.load()` before play.
 - It initialises `StorageService`, `AudioService` and `SettingsService`, applies
-  light or dark `ColorScheme`s, and attaches global text scaling via
+  a static dark `ColorScheme`, and attaches global text scaling via
   `GameText.attachTextScale`.
 - An app lifecycle observer pauses the engine and audio when the window loses
   focus.

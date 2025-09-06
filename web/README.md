@@ -2,8 +2,7 @@
 
 PWA configuration and static web files.
 
-- `manifest.json` defines PWA metadata like `start_url`, `display` and theme
-  colours.
+- `manifest.json` defines PWA metadata like `start_url`, `display` and colour values.
 - `icons/` holds 192x192 and 512x512 app icons.
 - `index.html` bootstraps the Flutter app and registers `sw.js`.
 - `sw.js` precaches assets listed in `assets_manifest.json` and provides a
