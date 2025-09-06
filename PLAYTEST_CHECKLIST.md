@@ -10,7 +10,7 @@ _Update this file whenever a player-facing feature is added or changed._
 - [ ] Bullets travel in the direction the ship is facing
 - [ ] Bullets spawn from the front of the player's ship
 - [ ] When stationary, the ship rotates toward the nearest enemy within range
-- [ ] Target button toggles range rings display
+- [ ] Target button or `B` key toggles range rings display
 - [ ] Minimap icon or `N` key toggles minimap visibility
 - [ ] Asteroids spawn randomly and drift across the screen
 - [ ] Enemies and asteroids show varied sprites

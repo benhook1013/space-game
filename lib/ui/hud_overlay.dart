@@ -81,14 +81,14 @@ class HudOverlay extends StatelessWidget {
                     child: Wrap(
                       alignment: WrapAlignment.end,
                       children: [
-                        // Shows or hides targeting, tractor and mining range rings.
+                        // Shows or hides targeting, tractor and mining range rings (also via "B").
                         IconButton(
                           iconSize: iconSize,
                           icon: Icon(
                             Icons.gps_fixed,
                             color: Theme.of(context).colorScheme.onSurface,
                           ),
-                          onPressed: game.toggleAutoAimRadius,
+                          onPressed: game.toggleRangeRings,
                         ),
                         MinimapButton(game: game, iconSize: iconSize),
                         UpgradeButton(game: game, iconSize: iconSize),

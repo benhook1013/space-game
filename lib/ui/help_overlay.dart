@@ -34,7 +34,7 @@ class HelpOverlay extends StatelessWidget {
               'Mute: M\n'
               'Toggle Minimap: N or HUD button\n'
               'Toggle Debug: F1\n'
-              'Auto-aim Radius: Target Button\n'
+              'Toggle Range Rings: B or HUD button\n'
               'Upgrades: U or HUD button\n'
               'Settings: HUD button\n'
               'Pause/Resume: Esc or P\n'

@@ -16,6 +16,7 @@ Heads-up display shown during play.
 - `Escape` or `P` keys also pause or resume.
 - Press `R` to restart the current run without using on-screen buttons.
 - Press `N` to toggle the minimap without tapping the icon.
+- Press `B` to toggle range rings without tapping the icon.
 - Visible in the `playing` and `paused` states.
 
 See [../../PLAN.md](../../PLAN.md) for UI goals.
