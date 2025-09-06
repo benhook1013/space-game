@@ -25,7 +25,8 @@ mkdir -p "$PUB_CACHE"
 # Bootstrap Flutter (download + extract)
 # --------------------------
 log "Bootstrapping Flutter SDK"
-./bootstrap_flutter.sh
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+"$SCRIPT_DIR/scripts/bootstrap_flutter.sh"
 
 # --------------------------
 # Provide an FVM-shaped view without installing FVM
