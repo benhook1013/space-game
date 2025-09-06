@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# --------------------------
+# Options
+# --------------------------
 FORCE=false
 QUIET=false
 while [[ $# -gt 0 ]]; do
@@ -12,22 +15,27 @@ while [[ $# -gt 0 ]]; do
   shift
 done
 
-# === Config ===
+# --------------------------
+# Config
+# --------------------------
 : "${FLUTTER_VERSION:=3.32.8}"   # Pin your version here
 : "${FLUTTER_CHANNEL:=stable}"   # stable | beta
-FLUTTER_DIR=".tooling/flutter"
+: "${FLUTTER_DIR_REL:=.tooling/flutter}"
 
-log() {
-  if [ "$QUIET" != true ]; then
-    echo "[bootstrap_flutter] $1"
-  fi
-}
+ROOT_DIR="$(pwd)"
+FLUTTER_DIR="${ROOT_DIR}/${FLUTTER_DIR_REL}"
+FLUTTER_PARENT="$(dirname "$FLUTTER_DIR")"
 
-# Helper: lowercase
+log() { if [ "$QUIET" != true ]; then echo "[bootstrap_flutter] $1"; fi; }
 lower() { echo "$1" | tr '[:upper:]' '[:lower:]'; }
 
-log "Ensuring Flutter $FLUTTER_VERSION ($FLUTTER_CHANNEL) in $FLUTTER_DIR"
+log "Ensuring Flutter $FLUTTER_VERSION ($FLUTTER_CHANNEL) in $FLUTTER_DIR_REL"
 
+mkdir -p "$FLUTTER_PARENT"
+
+# --------------------------
+# Detect existing install
+# --------------------------
 needs_download=true
 if [ -x "$FLUTTER_DIR/bin/flutter" ]; then
   if [ "$FORCE" = true ]; then
@@ -40,7 +48,6 @@ if [ -x "$FLUTTER_DIR/bin/flutter" ]; then
     else
       current_info=""
     fi
-    # Try to parse: Flutter <ver> ... channel <chan>
     if [[ "$current_info" =~ Flutter[[:space:]]+([^[:space:]]+).*channel[[:space:]]+([^[:space:]]+) ]]; then
       current_version="${BASH_REMATCH[1]}"
       current_channel="${BASH_REMATCH[2]}"
@@ -50,7 +57,6 @@ if [ -x "$FLUTTER_DIR/bin/flutter" ]; then
         needs_download=false
       else
         log "Installed=$current_version ($current_channel); required=$FLUTTER_VERSION ($FLUTTER_CHANNEL). Will (re)install."
-        log "Removing old Flutter installation"
         rm -rf "$FLUTTER_DIR"
       fi
     else
@@ -62,12 +68,10 @@ else
   log "No Flutter installation found"
 fi
 
+# --------------------------
+# Download + Extract
+# --------------------------
 if [ "$needs_download" = true ]; then
-  log "Bootstrapping Flutter $FLUTTER_VERSION ($FLUTTER_CHANNEL)"
-  mkdir -p .tooling
-  mkdir -p "$FLUTTER_DIR"
-  pushd .tooling >/dev/null
-
   OS_NAME="$(uname -s)"
   case "$OS_NAME" in
     Linux)
@@ -79,13 +83,10 @@ if [ "$needs_download" = true ]; then
       OS_SLUG="macos"
       ;;
     CYGWIN*|MINGW*|MSYS*)
-      echo "Windows bootstrap via bash is not supported here. Use scripts/bootstrap_flutter.ps1."
+      echo "Windows bootstrap via bash is not supported here. Use scripts/bootstrap_flutter.ps1." >&2
       exit 1
       ;;
-    *)
-      echo "Unsupported OS: $OS_NAME"
-      exit 1
-      ;;
+    *) echo "Unsupported OS: $OS_NAME" >&2; exit 1 ;;
   esac
 
   if [ -n "${FLUTTER_DOWNLOAD_MIRROR:-}" ]; then
@@ -94,6 +95,9 @@ if [ "$needs_download" = true ]; then
     BASE_URL="https://storage.googleapis.com/flutter_infra_release/releases"
   fi
   URL="${BASE_URL}/${FLUTTER_CHANNEL}/$(lower "$OS_SLUG")/${ARCHIVE}"
+  DEST="${FLUTTER_PARENT}/${ARCHIVE}"
+  TMPDIR="${FLUTTER_PARENT}/_extract_flutter_tmp"
+
   log "Downloading: $URL (downloader=http)"
 
   download_http() {
@@ -106,17 +110,17 @@ if [ "$needs_download" = true ]; then
     mv "$tmp" "$dest"
   }
 
-
   extract_with_progress() {
-  python3 - "$1" "$2" "$QUIET" <<'PY'
-import sys, zipfile, tarfile
+    python3 - "$1" "$2" "$QUIET" <<'PY'
+import sys, zipfile, tarfile, os
 archive = sys.argv[1]
 dest = sys.argv[2]
 quiet = sys.argv[3] == 'true'
 def progress(i, total):
     if quiet: return
-    pct = int(i*100/total)
+    pct = int(i*100/total) if total else 100
     print(f"\rExtracting Flutter SDK: {i}/{total} ({pct}%)", end="")
+os.makedirs(dest, exist_ok=True)
 if archive.endswith('.tar.xz'):
     with tarfile.open(archive, 'r:xz') as tar:
         members = tar.getmembers()
@@ -136,36 +140,32 @@ if not quiet:
 PY
   }
 
-  dest="$ARCHIVE"
-  # Reuse existing archive if present and checksum matches (if provided)
-  if [ -f "$dest" ] && [ -n "${FLUTTER_SHA256:-}" ]; then
+  # Reuse archive if present and checksum matches (if provided)
+  reuse=false
+  if [ -f "$DEST" ] && [ -n "${FLUTTER_SHA256:-}" ]; then
     log "Existing archive found; verifying SHA256"
-    actual=$(sha256sum "$dest" | awk '{print $1}')
+    actual=$(sha256sum "$DEST" | awk '{print $1}')
     if [ "${actual,,}" = "${FLUTTER_SHA256,,}" ]; then
       log "Existing archive checksum OK; reusing download"
       reuse=true
     else
       log "Existing archive checksum mismatch (actual=$actual); re-downloading"
-      rm -f "$dest"
-      reuse=false
+      rm -f "$DEST"
     fi
-  elif [ -f "$dest" ]; then
+  elif [ -f "$DEST" ]; then
     log "Existing archive found; reusing download (no checksum configured)"
     reuse=true
-  else
-    reuse=false
   fi
 
   if [ "$reuse" != true ]; then
-    # Clean stale artifacts before a fresh download
-    rm -f "$dest" "$dest.partial"
-    rm -rf "$FLUTTER_DIR" "_extract_flutter_tmp"
-    download_http "$URL" "$dest"
+    rm -f "$DEST" "${DEST}.partial"
+    rm -rf "$TMPDIR" "$FLUTTER_DIR"
+    download_http "$URL" "$DEST"
   fi
 
   if [ -n "${FLUTTER_SHA256:-}" ]; then
     log "Verifying SHA256"
-    actual=$(sha256sum "$dest" | awk '{print $1}')
+    actual=$(sha256sum "$DEST" | awk '{print $1}')
     if [ "${actual,,}" != "${FLUTTER_SHA256,,}" ]; then
       echo "Checksum mismatch for $ARCHIVE" >&2
       exit 1
@@ -173,39 +173,39 @@ PY
   fi
 
   # Extract to temp dir and move atomically into place
-  tmpdir="_extract_flutter_tmp"
-  rm -rf "$tmpdir" && mkdir -p "$tmpdir"
-  extract_with_progress "$dest" "$tmpdir"
-  if [ -d "$tmpdir/flutter" ]; then
+  rm -rf "$TMPDIR" && mkdir -p "$TMPDIR"
+  extract_with_progress "$DEST" "$TMPDIR"
+
+  if [ -d "$TMPDIR/flutter" ]; then
     rm -rf "$FLUTTER_DIR"
-    mkdir -p "$FLUTTER_DIR"
-    mv "$tmpdir/flutter" "$FLUTTER_DIR"
+    mv "$TMPDIR/flutter" "$FLUTTER_DIR"
   else
     echo "Extracted archive missing 'flutter' directory" >&2
-    rm -rf "$tmpdir"
+    rm -rf "$TMPDIR"
     exit 1
   fi
-  rm -rf "$tmpdir"
-  rm -f "$dest"
 
-  popd >/dev/null
-  log "Flutter SDK installed at $FLUTTER_DIR"
+  rm -rf "$TMPDIR" "$DEST"
+  log "Flutter SDK installed at $FLUTTER_DIR_REL"
 fi
 
-PATH="$(pwd)/$FLUTTER_DIR/bin:$PATH"
-export PATH
-git config --global --add safe.directory "$(pwd)/$FLUTTER_DIR" 2>/dev/null || true
+# --------------------------
+# Post-install setup
+# --------------------------
+export PATH="$FLUTTER_DIR/bin:$PATH"
+git config --global --add safe.directory "$FLUTTER_DIR" 2>/dev/null || true
 
 if [ "$needs_download" = true ]; then
   log "Running flutter --version"
-  .tooling/flutter/bin/flutter --version || true
+  "$FLUTTER_DIR/bin/flutter" --version || true
   log "Enabling web support"
-  .tooling/flutter/bin/flutter config --enable-web || true
+  "$FLUTTER_DIR/bin/flutter" config --enable-web || true
   if [ "${SKIP_DOCTOR:-}" != "1" ]; then
     log "Running flutter doctor"
-    .tooling/flutter/bin/flutter doctor -v || true
+    "$FLUTTER_DIR/bin/flutter" doctor -v || true
   fi
 else
   log "Flutter SDK already installed; skipping flutter doctor"
 fi
+
 log "Flutter bootstrap complete"
