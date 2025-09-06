@@ -41,7 +41,7 @@ Future<int> _getPixel(ui.Image image, int x, int y) async {
   final g = data.getUint8(offset + 1);
   final b = data.getUint8(offset + 2);
   final a = data.getUint8(offset + 3);
-  return Color.fromARGB(a, r, g, b).value;
+  return Color.fromARGB(a, r, g, b).toARGB32();
 }
 
 void main() {
@@ -78,11 +78,11 @@ void main() {
         .painter!;
     var image = await _paintToImage(painter, 100);
     var pixel = await _getPixel(image, 55, 50);
-    expect(pixel, equals(Colors.redAccent.value));
+    expect(pixel, equals(Colors.redAccent.toARGB32()));
 
     enemy.position = Vector2(2000, 0);
     image = await _paintToImage(painter, 100);
     pixel = await _getPixel(image, 55, 50);
-    expect(pixel, isNot(equals(Colors.redAccent.value)));
+    expect(pixel, isNot(equals(Colors.redAccent.toARGB32())));
   }, skip: true);
 }

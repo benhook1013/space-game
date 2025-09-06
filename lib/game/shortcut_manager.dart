@@ -6,6 +6,9 @@ import 'game_state.dart';
 import 'key_dispatcher.dart';
 
 /// Registers global keyboard shortcuts and wires them to actions.
+///
+/// Supported keys: `Esc`, `P`, `M`, `Enter`, `R`, `H`, `U`, `F1`, `N` and
+/// `Q`.
 class ShortcutManager {
   ShortcutManager({
     required KeyDispatcher keyDispatcher,
@@ -18,6 +21,7 @@ class ShortcutManager {
     required void Function() toggleUpgrades,
     required void Function() toggleDebug,
     required void Function() toggleMinimap,
+    required void Function() returnToMenu,
   }) {
     keyDispatcher.register(LogicalKeyboardKey.escape, onDown: () {
       if (stateMachine.state == GameState.playing) {
@@ -74,5 +78,12 @@ class ShortcutManager {
       LogicalKeyboardKey.keyN,
       onDown: toggleMinimap,
     );
+
+    keyDispatcher.register(LogicalKeyboardKey.keyQ, onDown: () {
+      if (stateMachine.state == GameState.paused ||
+          stateMachine.state == GameState.gameOver) {
+        returnToMenu();
+      }
+    });
   }
 }
