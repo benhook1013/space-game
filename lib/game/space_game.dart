@@ -46,13 +46,13 @@ class SpaceGame extends FlameGame
   SpaceGame({
     required this.storageService,
     required this.audioService,
-    ValueNotifier<ColorScheme>? colorScheme,
-    ValueNotifier<GameColors>? gameColors,
+    ColorScheme? colorScheme,
+    GameColors? gameColors,
     SettingsService? settingsService,
     FocusNode? focusNode,
-  })  : colorScheme = colorScheme ??
-            ValueNotifier(ColorScheme.fromSeed(seedColor: Colors.deepPurple)),
-        gameColors = gameColors ?? ValueNotifier(GameColors.dark),
+  })  : colorScheme =
+            colorScheme ?? ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        gameColors = gameColors ?? GameColors.dark,
         settingsService = settingsService ?? SettingsService(),
         focusNode = focusNode ?? FocusNode(),
         scoreService = ScoreService(storageService: storageService) {
@@ -73,10 +73,10 @@ class SpaceGame extends FlameGame
   final SettingsService settingsService;
 
   /// Active colour scheme shared with Flutter widgets.
-  final ValueNotifier<ColorScheme> colorScheme;
+  final ColorScheme colorScheme;
 
   /// Game-specific colours from [GameColors] extension.
-  final ValueNotifier<GameColors> gameColors;
+  final GameColors gameColors;
 
   /// Focus node used to capture keyboard input.
   final FocusNode focusNode;
@@ -114,9 +114,6 @@ class SpaceGame extends FlameGame
   bool _isLoaded = false;
   bool get isLoaded => _isLoaded;
 
-  late void Function() _updateFireButtonColors;
-  late void Function() _updateJoystickColors;
-
   ValueNotifier<int> get score => scoreService.score;
   ValueNotifier<int> get highScore => scoreService.highScore;
   ValueNotifier<int> get minerals => scoreService.minerals;
@@ -151,16 +148,6 @@ class SpaceGame extends FlameGame
 
     joystick = _buildJoystick();
     await add(joystick);
-    void updateJoystickColors() {
-      (joystick.knob as CircleComponent).paint.color =
-          colorScheme.value.primary;
-      (joystick.background as CircleComponent).paint.color =
-          colorScheme.value.primary.withValues(alpha: 0.4);
-    }
-
-    updateJoystickColors();
-    _updateJoystickColors = updateJoystickColors;
-    colorScheme.addListener(_updateJoystickColors);
 
     _starfield = await StarfieldComponent();
     await add(_starfield!);
@@ -179,11 +166,11 @@ class SpaceGame extends FlameGame
 
     final upButton = CircleComponent(
       radius: 30 * settingsService.hudButtonScale.value,
-      paint: Paint(),
+      paint: Paint()..color = colorScheme.primary.withValues(alpha: 0.4),
     );
     final downButton = CircleComponent(
       radius: 30 * settingsService.hudButtonScale.value,
-      paint: Paint(),
+      paint: Paint()..color = colorScheme.primary,
     );
     fireButton = HudButtonComponent(
       button: upButton,
@@ -195,14 +182,6 @@ class SpaceGame extends FlameGame
       onCancelled: player.stopShooting,
     );
     await add(fireButton);
-    void updateFireButtonColors() {
-      upButton.paint.color = colorScheme.value.primary.withValues(alpha: 0.4);
-      downButton.paint.color = colorScheme.value.primary;
-    }
-
-    updateFireButtonColors();
-    _updateFireButtonColors = updateFireButtonColors;
-    colorScheme.addListener(_updateFireButtonColors);
 
     enemySpawner = EnemySpawner();
     asteroidSpawner = AsteroidSpawner();
@@ -239,14 +218,6 @@ class SpaceGame extends FlameGame
     settingsService.joystickScale.addListener(_updateJoystickScale);
     settingsService.hudButtonScale.addListener(_updateHudButtonScale);
     _isLoaded = true;
-  }
-
-  @override
-  void onRemove() {
-    colorScheme
-      ..removeListener(_updateFireButtonColors)
-      ..removeListener(_updateJoystickColors);
-    super.onRemove();
   }
 
   @protected
@@ -382,7 +353,7 @@ class SpaceGame extends FlameGame
 
   JoystickComponent _buildJoystick() {
     final scale = settingsService.joystickScale.value;
-    final scheme = colorScheme.value;
+    final scheme = colorScheme;
     return JoystickComponent(
       knob: CircleComponent(
         radius: 20 * scale,
@@ -400,7 +371,6 @@ class SpaceGame extends FlameGame
     final scale = settingsService.joystickScale.value;
     (joystick.knob as CircleComponent).radius = 20 * scale;
     (joystick.background as CircleComponent).radius = 50 * scale;
-    _updateJoystickColors();
   }
 
   void _updateHudButtonScale() {

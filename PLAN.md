@@ -14,6 +14,7 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
 - Code and asset base kept tiny and easy to maintain
 - Ship quickly and iterate in small increments
 - Responsive scaling so the same build works on phones, tablets and desktop
+- Static dark colour palette; no runtime theme switching
 - Solo-friendly workflow with minimal tooling
 - Core loop focused on mining asteroids for minerals while fending off enemy
   groups
