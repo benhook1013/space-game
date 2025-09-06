@@ -12,6 +12,7 @@ void main() {
 
     expect(
         settings.hudButtonScale.value, SettingsService.defaultHudButtonScale);
+    expect(settings.minimapScale.value, SettingsService.defaultMinimapScale);
     expect(settings.textScale.value, SettingsService.defaultTextScale);
     expect(settings.joystickScale.value, SettingsService.defaultJoystickScale);
     expect(settings.targetingRange.value, Constants.playerAutoAimRange);
@@ -23,6 +24,7 @@ void main() {
     final settings = SettingsService();
 
     var hudNotified = false;
+    var minimapNotified = false;
     var textNotified = false;
     var joystickNotified = false;
     var targetingNotified = false;
@@ -30,6 +32,7 @@ void main() {
     var miningNotified = false;
 
     settings.hudButtonScale.addListener(() => hudNotified = true);
+    settings.minimapScale.addListener(() => minimapNotified = true);
     settings.textScale.addListener(() => textNotified = true);
     settings.joystickScale.addListener(() => joystickNotified = true);
     settings.targetingRange.addListener(() => targetingNotified = true);
@@ -37,6 +40,7 @@ void main() {
     settings.miningRange.addListener(() => miningNotified = true);
 
     settings.hudButtonScale.value = 1.2;
+    settings.minimapScale.value = 1.4;
     settings.textScale.value = 1.3;
     settings.joystickScale.value = 1.1;
     settings.targetingRange.value = 350;
@@ -44,6 +48,7 @@ void main() {
     settings.miningRange.value = 180;
 
     expect(hudNotified, isTrue);
+    expect(minimapNotified, isTrue);
     expect(textNotified, isTrue);
     expect(joystickNotified, isTrue);
     expect(targetingNotified, isTrue);
@@ -51,6 +56,7 @@ void main() {
     expect(miningNotified, isTrue);
 
     expect(settings.hudButtonScale.value, 1.2);
+    expect(settings.minimapScale.value, 1.4);
     expect(settings.textScale.value, 1.3);
     expect(settings.joystickScale.value, 1.1);
     expect(settings.targetingRange.value, 350);
@@ -63,9 +69,11 @@ void main() {
     final storage = await StorageService.create();
     var settings = SettingsService(storage: storage);
     settings.hudButtonScale.value = 1.2;
+    settings.minimapScale.value = 1.3;
     await Future.delayed(Duration.zero);
     settings = SettingsService(storage: storage);
     expect(settings.hudButtonScale.value, 1.2);
+    expect(settings.minimapScale.value, 1.3);
   });
 
   test('attachStorage injects storage into existing instance', () async {
@@ -77,8 +85,10 @@ void main() {
     settings.attachStorage(storage);
     expect(settings.hudButtonScale.value, 0.9);
     settings.hudButtonScale.value = 1.4;
+    settings.minimapScale.value = 1.2;
     await Future.delayed(Duration.zero);
     final reloaded = SettingsService(storage: storage);
     expect(reloaded.hudButtonScale.value, 1.4);
+    expect(reloaded.minimapScale.value, 1.2);
   });
 }

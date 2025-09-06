@@ -41,7 +41,14 @@ class HudOverlay extends StatelessWidget {
                         }
                         return Padding(
                           padding: const EdgeInsets.only(top: 8, left: 8),
-                          child: MiniMapDisplay(game: game, size: 80 * scale),
+                          child: ValueListenableBuilder<double>(
+                            valueListenable: game.settingsService.minimapScale,
+                            builder: (context, minimapScale, _) =>
+                                MiniMapDisplay(
+                              game: game,
+                              size: 80 * scale * minimapScale,
+                            ),
+                          ),
                         );
                       },
                     ),

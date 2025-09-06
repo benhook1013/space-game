@@ -16,6 +16,9 @@ class SettingsService {
         joystickScale = ValueNotifier<double>(
             storage?.getDouble(_joystickScaleKey, defaultJoystickScale) ??
                 defaultJoystickScale),
+        minimapScale = ValueNotifier<double>(
+            storage?.getDouble(_minimapScaleKey, defaultMinimapScale) ??
+                defaultMinimapScale),
         themeMode = ValueNotifier<ThemeMode>(ThemeMode.values[
             storage?.getInt(_themeModeKey, ThemeMode.system.index) ??
                 ThemeMode.system.index]),
@@ -34,6 +37,8 @@ class SettingsService {
         .addListener(() => _storage?.setDouble(_textScaleKey, textScale.value));
     joystickScale.addListener(
         () => _storage?.setDouble(_joystickScaleKey, joystickScale.value));
+    minimapScale.addListener(
+        () => _storage?.setDouble(_minimapScaleKey, minimapScale.value));
     themeMode.addListener(
         () => _storage?.setInt(_themeModeKey, themeMode.value.index));
     targetingRange.addListener(
@@ -47,6 +52,7 @@ class SettingsService {
   static const double defaultHudButtonScale = 0.75;
   static const double defaultTextScale = 1.5;
   static const double defaultJoystickScale = 1;
+  static const double defaultMinimapScale = 1;
 
   /// Multiplier applied to HUD buttons and icons.
   final ValueNotifier<double> hudButtonScale;
@@ -56,6 +62,9 @@ class SettingsService {
 
   /// Multiplier applied to on-screen joystick elements.
   final ValueNotifier<double> joystickScale;
+
+  /// Multiplier applied to the minimap size.
+  final ValueNotifier<double> minimapScale;
 
   /// Currently selected theme mode.
   final ValueNotifier<ThemeMode> themeMode;
@@ -84,6 +93,8 @@ class SettingsService {
     textScale.value = storage.getDouble(_textScaleKey, textScale.value);
     joystickScale.value =
         storage.getDouble(_joystickScaleKey, joystickScale.value);
+    minimapScale.value =
+        storage.getDouble(_minimapScaleKey, minimapScale.value);
     themeMode.value =
         ThemeMode.values[storage.getInt(_themeModeKey, themeMode.value.index)];
     targetingRange.value =
@@ -96,6 +107,7 @@ class SettingsService {
   static const _hudScaleKey = 'hudButtonScale';
   static const _textScaleKey = 'textScale';
   static const _joystickScaleKey = 'joystickScale';
+  static const _minimapScaleKey = 'minimapScale';
   static const _themeModeKey = 'themeMode';
   static const _targetingRangeKey = 'targetingRange';
   static const _tractorRangeKey = 'tractorRange';
