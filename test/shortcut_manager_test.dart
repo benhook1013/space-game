@@ -98,6 +98,7 @@ class _Harness {
       toggleUpgrades: () => upgradesCalled = true,
       toggleDebug: () => debugCalled = true,
       toggleMinimap: () => minimapCalled = true,
+      returnToMenu: () => menuCalled = true,
     );
   }
 
@@ -111,6 +112,7 @@ class _Harness {
   bool upgradesCalled = false;
   bool debugCalled = false;
   bool minimapCalled = false;
+  bool menuCalled = false;
 
   void press(LogicalKeyboardKey logical, PhysicalKeyboardKey physical) {
     dispatcher.onKeyEvent(
@@ -211,6 +213,17 @@ void main() {
       final h = _Harness();
       h.press(LogicalKeyboardKey.keyN, PhysicalKeyboardKey.keyN);
       expect(h.minimapCalled, isTrue);
+    });
+
+    test('Q returns to menu from pause or game over', () {
+      final h = _Harness()..stateMachine.state = GameState.paused;
+      h.press(LogicalKeyboardKey.keyQ, PhysicalKeyboardKey.keyQ);
+      expect(h.menuCalled, isTrue);
+
+      h.menuCalled = false;
+      h.stateMachine.state = GameState.gameOver;
+      h.press(LogicalKeyboardKey.keyQ, PhysicalKeyboardKey.keyQ);
+      expect(h.menuCalled, isTrue);
     });
   });
 }
