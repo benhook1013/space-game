@@ -58,7 +58,9 @@ class LifecycleManager {
       game.player.setSprite(game.selectedPlayerSprite);
       game.player.reset();
     }
-    game.camera.viewfinder.position = game.player.position;
+    // Rebind the camera to the active player each run so it doesn't
+    // follow a removed instance after respawns.
+    game.camera.follow(game.player, snap: true);
     game.enemySpawner
       ..stop()
       ..start();
