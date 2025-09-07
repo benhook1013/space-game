@@ -179,23 +179,7 @@ class SpaceGame extends FlameGame
     miningLaser = laser;
     await add(laser);
 
-    final upButton = CircleComponent(
-      radius: 30 * settingsService.joystickScale.value,
-      paint: Paint()..color = colorScheme.primary.withValues(alpha: 0.4),
-    );
-    final downButton = CircleComponent(
-      radius: 30 * settingsService.joystickScale.value,
-      paint: Paint()..color = colorScheme.primary,
-    );
-    fireButton = HudButtonComponent(
-      button: upButton,
-      buttonDown: downButton,
-      anchor: Anchor.bottomRight,
-      margin: const EdgeInsets.only(right: 40, bottom: 40),
-      onPressed: player.startShooting,
-      onReleased: player.stopShooting,
-      onCancelled: player.stopShooting,
-    );
+    fireButton = _buildFireButton(settingsService.joystickScale.value);
     await add(fireButton);
 
     enemySpawner = EnemySpawner();
@@ -383,6 +367,25 @@ class SpaceGame extends FlameGame
     )..anchor = Anchor.bottomLeft;
   }
 
+  HudButtonComponent _buildFireButton(double scale) {
+    final scheme = colorScheme;
+    return HudButtonComponent(
+      button: CircleComponent(
+        radius: 30 * scale,
+        paint: Paint()..color = scheme.primary.withValues(alpha: 0.4),
+      ),
+      buttonDown: CircleComponent(
+        radius: 30 * scale,
+        paint: Paint()..color = scheme.primary,
+      ),
+      anchor: Anchor.bottomRight,
+      margin: const EdgeInsets.only(right: 40, bottom: 40),
+      onPressed: player.startShooting,
+      onReleased: player.stopShooting,
+      onCancelled: player.stopShooting,
+    )..size = Vector2.all(60 * scale);
+  }
+
   void _updateJoystickScale() {
     final scale = settingsService.joystickScale.value;
     // Rebuild the joystick to ensure the knob stays centred and scaling
@@ -392,9 +395,12 @@ class SpaceGame extends FlameGame
     add(joystick);
     joystick.onGameResize(size);
 
-    // Scale the fire button to match the joystick.
+    // Scale the fire button to match the joystick and stay anchored
+    // to the bottom-right corner.
     (fireButton.button as CircleComponent).radius = 30 * scale;
     (fireButton.buttonDown as CircleComponent).radius = 30 * scale;
+    fireButton.size = Vector2.all(60 * scale);
+    fireButton.anchor = Anchor.bottomRight;
     fireButton.onGameResize(size);
   }
 
