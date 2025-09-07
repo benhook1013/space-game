@@ -144,7 +144,11 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
     and the deterministic world-space starfield spans chunks to avoid blank space
 - Use `HasCollisionDetection` for collisions with simple `CircleHitbox`/`RectangleHitbox`
   shapes and a timer-based spawner
-- Top‑down view with a deterministic world-space starfield generated per chunk using Poisson-disk sampling seeded by chunk coordinates and modulated by Simplex noise, rendered with a cached `CustomPainter`
+- Top‑down view with a deterministic world-space starfield generated per chunk
+  via Poisson-disk sampling seeded by chunk coordinates. Low-frequency Simplex
+  noise modulates density for clusters, and a cached `CustomPainter` draws
+  faint-to-bright circle stars based on a weighted size/brightness distribution
+  with subtle colour jitter.
 - Aim for 60 FPS and avoid heavy per‑frame allocations
 - For frequently spawned objects, bullets, asteroids and enemies use simple
   object pools to reduce garbage collection overhead
@@ -187,7 +191,10 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
 - Settings overlay with sliders for HUD, text, joystick, targeting, Tractor Aura
   and mining ranges, plus a reset button
 - Game works offline after the first load thanks to the service worker
-- Deterministic world-space starfield with Poisson-disk sampling and Simplex-noise clusters
+- Deterministic world-space starfield seeded by chunk coordinates using
+  Poisson-disk sampling. Density varies with Simplex noise; stars use a
+  weighted size/brightness spread and optional colour jitter and are drawn by a
+  cached `CustomPainter` so the player moves over a static field.
 - Pause or resume with a `PAUSED` overlay prompting players to press `Esc` or
   `P` to resume; `Q` returns to the menu from pause or game over
 
