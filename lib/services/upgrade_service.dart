@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 
 import '../constants.dart';
 import 'score_service.dart';
+import 'storage_service.dart';
 
 /// Simple upgrade data.
 class Upgrade {
@@ -14,9 +15,15 @@ class Upgrade {
 
 /// Handles purchasing upgrades with minerals.
 class UpgradeService {
-  UpgradeService({required this.scoreService});
+  UpgradeService({required this.scoreService, required this.storageService}) {
+    final saved = storageService.getStringList(_purchasedUpgradesKey, []);
+    _purchased.value = saved.toSet();
+  }
 
   final ScoreService scoreService;
+  final StorageService storageService;
+
+  static const _purchasedUpgradesKey = 'purchasedUpgrades';
 
   final List<Upgrade> upgrades = [
     Upgrade(id: 'fireRate1', name: 'Faster Cannon', cost: 10),
@@ -58,6 +65,10 @@ class UpgradeService {
     scoreService.addMinerals(-upgrade.cost);
     final newSet = Set<String>.from(_purchased.value)..add(upgrade.id);
     _purchased.value = newSet;
+    storageService.setStringList(
+      _purchasedUpgradesKey,
+      _purchased.value.toList(),
+    );
     return true;
   }
 }

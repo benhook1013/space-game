@@ -73,10 +73,13 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
 - [x] Audio volume lowers when the game is paused.
 - [x] Menu includes button to reset the high score.
 - [x] Menu allows choosing between multiple ship sprites and persists the selection.
-- [x] Upgrades overlay placeholder accessible via HUD button or the `U` key.
+- [x] Upgrades overlay accessible via HUD button or the `U` key where purchases
+      persist across sessions.
 - [x] HUD button or `B` key toggles range rings for targeting, Tractor Aura and mining.
 - [x] Settings overlay with sliders for HUD, text, joystick, targeting,
       Tractor Aura and mining ranges.
+
+- [x] Persist purchased upgrades across sessions using `StorageService`.
 
 ## Next Steps
 

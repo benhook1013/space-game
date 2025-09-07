@@ -10,8 +10,9 @@ Optional helpers for cross-cutting concerns.
 - `overlay_service.dart` shows and hides overlays on the `GameWidget`.
 - `settings_service.dart` holds UI scale values and gameplay ranges.
 - `targeting_service.dart` assists auto-aim queries.
-- `upgrade_service.dart` manages purchasing upgrades with minerals and
-  derives gameplay modifiers like fire rate and mining speed.
+- `upgrade_service.dart` manages purchasing upgrades with minerals,
+  persists bought upgrades via `StorageService`, and derives gameplay modifiers
+  like fire rate and mining speed.
 - Keep services lightweight; add them only when a milestone needs them.
 
 See [../../PLAN.md](../../PLAN.md) for the broader roadmap.

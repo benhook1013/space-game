@@ -74,4 +74,13 @@ class StorageService {
   Future<void> setInt(String key, int value) async {
     await _prefs.setInt(key, value);
   }
+
+  /// Retrieves a list of strings for [key] or returns [defaultValue] if unset.
+  List<String> getStringList(String key, List<String> defaultValue) =>
+      _prefs.getStringList(key) ?? defaultValue;
+
+  /// Persists a list of strings [value] for [key].
+  Future<void> setStringList(String key, List<String> value) async {
+    await _prefs.setStringList(key, value);
+  }
 }
