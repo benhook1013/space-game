@@ -62,7 +62,10 @@ class SpaceGame extends FlameGame
     debugMode = kDebugMode;
     pools = createPoolManager();
     targetingService = TargetingService(eventBus);
-    upgradeService = UpgradeService(scoreService: scoreService);
+    upgradeService = UpgradeService(
+      scoreService: scoreService,
+      storageService: storageService,
+    );
   }
 
   /// Handles persistence for the high score.

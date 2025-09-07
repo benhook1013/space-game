@@ -46,7 +46,8 @@ dedicated server or NAT traversal.
   collision and minerals increase when collecting pickups from mined asteroids
 - Toggable top-left minimap shows nearby asteroids, enemies and pickups
 - HUD button or `B` key toggles coloured range rings showing targeting, Tractor Aura and mining radii
-- Placeholder upgrades overlay accessible via a HUD button or the `U` key
+- Upgrades overlay lets you buy simple upgrades with minerals that persist
+  between sessions, accessible via a HUD button or the `U` key
 - Settings overlay adjusts HUD, text and joystick scale
 - Menu allows choosing between multiple ship sprites and remembers the selection
 - Local high score stored on device using `shared_preferences`

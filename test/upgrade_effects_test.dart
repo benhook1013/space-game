@@ -13,7 +13,10 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     final storage = await StorageService.create();
     final score = ScoreService(storageService: storage);
-    final service = UpgradeService(scoreService: score);
+    final service = UpgradeService(
+      scoreService: score,
+      storageService: storage,
+    );
     final upgrade = service.upgrades.firstWhere((u) => u.id == 'fireRate1');
     expect(service.bulletCooldown, Constants.bulletCooldown);
     score.addMinerals(upgrade.cost);
@@ -25,7 +28,10 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     final storage = await StorageService.create();
     final score = ScoreService(storageService: storage);
-    final service = UpgradeService(scoreService: score);
+    final service = UpgradeService(
+      scoreService: score,
+      storageService: storage,
+    );
     final upgrade = service.upgrades.firstWhere((u) => u.id == 'miningSpeed1');
     expect(service.miningPulseInterval, Constants.miningPulseInterval);
     score.addMinerals(upgrade.cost);

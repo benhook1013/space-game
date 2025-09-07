@@ -117,8 +117,9 @@ tree spanning weapons and ship systems.
 - `settings_service.dart` holds tweakable UI and text scale values and gameplay
   range multipliers.
 - `targeting_service.dart` assists auto-aim queries.
-- `upgrade_service.dart` manages purchasing upgrades with minerals and exposes
-  a `ValueListenable` for bought upgrade ids.
+- `upgrade_service.dart` manages purchasing upgrades with minerals, persists
+  them via `StorageService` and exposes a `ValueListenable` for bought upgrade
+  ids.
 - Add services only when needed to keep the project lightweight.
 
 ## State and Data
@@ -153,8 +154,8 @@ tree spanning weapons and ship systems.
 - On player death, a game over overlay appears with restart, menu and mute buttons.
 - A help overlay lists controls and can be toggled with the `H` key, pausing the
   game when opened mid-run. `Esc` also closes it without triggering pause.
-- An upgrades overlay (placeholder) opens with the `U` key or HUD button and
-  pauses gameplay until dismissed.
+- An upgrades overlay opens with the `U` key or HUD button and pauses gameplay
+  while letting players buy basic upgrades that persist between sessions.
 - A settings overlay provides sliders for HUD, text, joystick, targeting,
   Tractor Aura and mining ranges.
 - A `GameState` enum tracks the current phase.

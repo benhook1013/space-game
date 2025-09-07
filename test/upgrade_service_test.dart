@@ -12,7 +12,10 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     final storage = await StorageService.create();
     final score = ScoreService(storageService: storage);
-    final service = UpgradeService(scoreService: score);
+    final service = UpgradeService(
+      scoreService: score,
+      storageService: storage,
+    );
     score.addMinerals(20);
     final upgrade = service.upgrades.first;
     final success = service.buy(upgrade);
@@ -25,10 +28,33 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     final storage = await StorageService.create();
     final score = ScoreService(storageService: storage);
-    final service = UpgradeService(scoreService: score);
+    final service = UpgradeService(
+      scoreService: score,
+      storageService: storage,
+    );
     final upgrade = service.upgrades.first;
     final success = service.buy(upgrade);
     expect(success, isFalse);
     expect(score.minerals.value, 0);
+  });
+
+  test('purchased upgrades persist to storage', () async {
+    SharedPreferences.setMockInitialValues({});
+    final storage = await StorageService.create();
+    final score = ScoreService(storageService: storage);
+    final service = UpgradeService(
+      scoreService: score,
+      storageService: storage,
+    );
+    final upgrade = service.upgrades.first;
+    score.addMinerals(upgrade.cost);
+    service.buy(upgrade);
+
+    final score2 = ScoreService(storageService: storage);
+    final service2 = UpgradeService(
+      scoreService: score2,
+      storageService: storage,
+    );
+    expect(service2.isPurchased(upgrade.id), isTrue);
   });
 }
