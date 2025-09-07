@@ -73,6 +73,7 @@ class SpaceGame extends FlameGame
     upgradeService = UpgradeService(
       scoreService: scoreService,
       storageService: storageService,
+      settingsService: this.settingsService,
     );
   }
 

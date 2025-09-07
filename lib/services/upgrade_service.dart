@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 
 import '../constants.dart';
 import 'score_service.dart';
+import 'settings_service.dart';
 import 'storage_service.dart';
 
 /// Simple upgrade data.
@@ -15,13 +16,18 @@ class Upgrade {
 
 /// Handles purchasing upgrades with minerals.
 class UpgradeService {
-  UpgradeService({required this.scoreService, required this.storageService}) {
+  UpgradeService({
+    required this.scoreService,
+    required this.storageService,
+    required this.settingsService,
+  }) {
     final saved = storageService.getStringList(_purchasedUpgradesKey, []);
     _purchased.value = saved.toSet();
   }
 
   final ScoreService scoreService;
   final StorageService storageService;
+  final SettingsService settingsService;
 
   static const _purchasedUpgradesKey = 'purchasedUpgrades';
 
@@ -61,7 +67,7 @@ class UpgradeService {
 
   /// Current auto-aim targeting range factoring in purchased upgrades.
   double get targetingRange {
-    var range = Constants.playerAutoAimRange;
+    var range = settingsService.targetingRange.value;
     if (isPurchased('targetingRange1')) {
       range *= Constants.targetingRangeUpgradeFactor;
     }
@@ -70,7 +76,7 @@ class UpgradeService {
 
   /// Current Tractor Aura radius factoring in purchased upgrades.
   double get tractorRange {
-    var range = Constants.playerTractorAuraRadius;
+    var range = settingsService.tractorRange.value;
     if (isPurchased('tractorRange1')) {
       range *= Constants.tractorRangeUpgradeFactor;
     }
