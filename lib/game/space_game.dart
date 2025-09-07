@@ -180,11 +180,11 @@ class SpaceGame extends FlameGame
     await add(laser);
 
     final upButton = CircleComponent(
-      radius: 30 * settingsService.hudButtonScale.value,
+      radius: 30 * settingsService.joystickScale.value,
       paint: Paint()..color = colorScheme.primary.withValues(alpha: 0.4),
     );
     final downButton = CircleComponent(
-      radius: 30 * settingsService.hudButtonScale.value,
+      radius: 30 * settingsService.joystickScale.value,
       paint: Paint()..color = colorScheme.primary,
     );
     fireButton = HudButtonComponent(
@@ -232,7 +232,6 @@ class SpaceGame extends FlameGame
     stateMachine.returnToMenu();
 
     settingsService.joystickScale.addListener(_updateJoystickScale);
-    settingsService.hudButtonScale.addListener(_updateHudButtonScale);
     _isLoaded = true;
   }
 
@@ -380,19 +379,22 @@ class SpaceGame extends FlameGame
         paint: Paint()..color = scheme.primary.withValues(alpha: 0.4),
       ),
       margin: const EdgeInsets.only(left: 40, bottom: 40),
-    );
+    )..anchor = Anchor.bottomLeft;
   }
 
   void _updateJoystickScale() {
     final scale = settingsService.joystickScale.value;
-    (joystick.knob as CircleComponent).radius = 20 * scale;
-    (joystick.background as CircleComponent).radius = 50 * scale;
-  }
+    // Rebuild the joystick to ensure the knob stays centred and scaling
+    // expands from the bottom-left corner.
+    joystick.removeFromParent();
+    joystick = _buildJoystick();
+    add(joystick);
+    joystick.onGameResize(size);
 
-  void _updateHudButtonScale() {
-    final scale = settingsService.hudButtonScale.value;
+    // Scale the fire button to match the joystick.
     (fireButton.button as CircleComponent).radius = 30 * scale;
     (fireButton.buttonDown as CircleComponent).radius = 30 * scale;
+    fireButton.onGameResize(size);
   }
 
   /// Ensures the camera stays centred on the player.
