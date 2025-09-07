@@ -76,13 +76,17 @@ void main() {
             of: find.byType(MiniMapDisplay),
             matching: find.byType(CustomPaint)))
         .painter!;
-    var image = await _paintToImage(painter, 100);
-    var pixel = await _getPixel(image, 55, 50);
+    ui.Image? image = await tester.runAsync(() => _paintToImage(painter, 100));
+    var pixel = await tester.runAsync(() => _getPixel(image!, 55, 50));
     expect(pixel, equals(Colors.redAccent.toARGB32()));
 
     enemy.position = Vector2(2000, 0);
-    image = await _paintToImage(painter, 100);
-    pixel = await _getPixel(image, 55, 50);
+    await tester.pump();
+    image = await tester.runAsync(() => _paintToImage(painter, 100));
+    pixel = await tester.runAsync(() => _getPixel(image!, 55, 50));
     expect(pixel, isNot(equals(Colors.redAccent.toARGB32())));
-  }, skip: true);
+
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
+  });
 }
