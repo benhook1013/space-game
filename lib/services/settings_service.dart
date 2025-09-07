@@ -5,43 +5,16 @@ import 'storage_service.dart';
 
 /// Holds tweakable UI scale values and gameplay ranges for live prototyping.
 class SettingsService {
-  SettingsService({StorageService? storage})
-      : _storage = storage,
-        hudButtonScale = ValueNotifier<double>(
-            storage?.getDouble(_hudScaleKey, defaultHudButtonScale) ??
-                defaultHudButtonScale),
-        textScale = ValueNotifier<double>(
-            storage?.getDouble(_textScaleKey, defaultTextScale) ??
-                defaultTextScale),
-        joystickScale = ValueNotifier<double>(
-            storage?.getDouble(_joystickScaleKey, defaultJoystickScale) ??
-                defaultJoystickScale),
-        minimapScale = ValueNotifier<double>(
-            storage?.getDouble(_minimapScaleKey, defaultMinimapScale) ??
-                defaultMinimapScale),
-        targetingRange = ValueNotifier<double>(storage?.getDouble(
-                _targetingRangeKey, Constants.playerAutoAimRange) ??
-            Constants.playerAutoAimRange),
-        tractorRange = ValueNotifier<double>(storage?.getDouble(
-                _tractorRangeKey, Constants.playerTractorAuraRadius) ??
-            Constants.playerTractorAuraRadius),
-        miningRange = ValueNotifier<double>(
-            storage?.getDouble(_miningRangeKey, Constants.playerMiningRange) ??
-                Constants.playerMiningRange) {
-    hudButtonScale.addListener(
-        () => _storage?.setDouble(_hudScaleKey, hudButtonScale.value));
-    textScale
-        .addListener(() => _storage?.setDouble(_textScaleKey, textScale.value));
-    joystickScale.addListener(
-        () => _storage?.setDouble(_joystickScaleKey, joystickScale.value));
-    minimapScale.addListener(
-        () => _storage?.setDouble(_minimapScaleKey, minimapScale.value));
-    targetingRange.addListener(
-        () => _storage?.setDouble(_targetingRangeKey, targetingRange.value));
-    tractorRange.addListener(
-        () => _storage?.setDouble(_tractorRangeKey, tractorRange.value));
-    miningRange.addListener(
-        () => _storage?.setDouble(_miningRangeKey, miningRange.value));
+  SettingsService({StorageService? storage}) : _storage = storage {
+    hudButtonScale = _initNotifier(_hudScaleKey, defaultHudButtonScale);
+    textScale = _initNotifier(_textScaleKey, defaultTextScale);
+    joystickScale = _initNotifier(_joystickScaleKey, defaultJoystickScale);
+    minimapScale = _initNotifier(_minimapScaleKey, defaultMinimapScale);
+    targetingRange =
+        _initNotifier(_targetingRangeKey, Constants.playerAutoAimRange);
+    tractorRange =
+        _initNotifier(_tractorRangeKey, Constants.playerTractorAuraRadius);
+    miningRange = _initNotifier(_miningRangeKey, Constants.playerMiningRange);
   }
 
   static const double defaultHudButtonScale = 0.75;
@@ -50,25 +23,25 @@ class SettingsService {
   static const double defaultMinimapScale = 1;
 
   /// Multiplier applied to HUD buttons and icons.
-  final ValueNotifier<double> hudButtonScale;
+  late final ValueNotifier<double> hudButtonScale;
 
   /// Multiplier applied to in-game text sizes.
-  final ValueNotifier<double> textScale;
+  late final ValueNotifier<double> textScale;
 
   /// Multiplier applied to on-screen joystick elements.
-  final ValueNotifier<double> joystickScale;
+  late final ValueNotifier<double> joystickScale;
 
   /// Multiplier applied to the minimap size.
-  final ValueNotifier<double> minimapScale;
+  late final ValueNotifier<double> minimapScale;
 
   /// Distance used to auto-aim enemies when stationary.
-  final ValueNotifier<double> targetingRange;
+  late final ValueNotifier<double> targetingRange;
 
   /// Radius of the player's Tractor Aura in pixels.
-  final ValueNotifier<double> tractorRange;
+  late final ValueNotifier<double> tractorRange;
 
   /// Maximum distance to auto-mine asteroids, in pixels.
-  final ValueNotifier<double> miningRange;
+  late final ValueNotifier<double> miningRange;
 
   StorageService? _storage;
 
@@ -112,4 +85,11 @@ class SettingsService {
   static const _targetingRangeKey = 'targetingRange';
   static const _tractorRangeKey = 'tractorRange';
   static const _miningRangeKey = 'miningRange';
+
+  ValueNotifier<double> _initNotifier(String key, double defaultValue) {
+    final notifier = ValueNotifier<double>(
+        _storage?.getDouble(key, defaultValue) ?? defaultValue);
+    notifier.addListener(() => _storage?.setDouble(key, notifier.value));
+    return notifier;
+  }
 }
