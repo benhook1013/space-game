@@ -4,7 +4,8 @@ import '../game/space_game.dart';
 import 'game_text.dart';
 import 'overlay_widgets.dart';
 
-/// Overlay providing runtime UI scaling and range sliders.
+/// Overlay providing runtime UI scaling and range sliders, grouped into
+/// sections for clarity.
 class SettingsOverlay extends StatelessWidget {
   const SettingsOverlay({super.key, required this.game});
 
@@ -43,6 +44,12 @@ class SettingsOverlay extends StatelessWidget {
                     maxLines: 1,
                   ),
                   SizedBox(height: spacing),
+                  GameText(
+                    'HUD Scaling',
+                    style: Theme.of(context).textTheme.titleMedium,
+                    maxLines: 1,
+                  ),
+                  SizedBox(height: spacing),
                   _buildSlider(
                     context,
                     'HUD Buttons',
@@ -67,6 +74,12 @@ class SettingsOverlay extends StatelessWidget {
                     settings.joystickScale,
                     spacing,
                   ),
+                  GameText(
+                    'Range Scaling',
+                    style: Theme.of(context).textTheme.titleMedium,
+                    maxLines: 1,
+                  ),
+                  SizedBox(height: spacing),
                   _buildSlider(
                     context,
                     'Targeting Range',
