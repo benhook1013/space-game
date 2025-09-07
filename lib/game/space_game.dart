@@ -228,6 +228,7 @@ class SpaceGame extends FlameGame
       toggleMinimap: toggleMinimap,
       toggleRangeRings: toggleRangeRings,
       returnToMenu: returnToMenu,
+      isHelpVisible: () => overlays.isActive(HelpOverlay.id),
     );
     stateMachine.returnToMenu();
 

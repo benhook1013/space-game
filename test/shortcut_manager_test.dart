@@ -100,6 +100,7 @@ class _Harness {
       toggleMinimap: () => minimapCalled = true,
       toggleRangeRings: () => rangeRingsCalled = true,
       returnToMenu: () => menuCalled = true,
+      isHelpVisible: () => helpVisible,
     );
   }
 
@@ -115,6 +116,7 @@ class _Harness {
   bool minimapCalled = false;
   bool rangeRingsCalled = false;
   bool menuCalled = false;
+  bool helpVisible = false;
 
   void press(LogicalKeyboardKey logical, PhysicalKeyboardKey physical) {
     dispatcher.onKeyEvent(
@@ -142,6 +144,15 @@ void main() {
       h.stateMachine.state = GameState.paused;
       h.press(LogicalKeyboardKey.escape, PhysicalKeyboardKey.escape);
       expect(h.resumeCalled, isTrue);
+      expect(h.pauseCalled, isFalse);
+    });
+
+    test('escape hides help when visible', () {
+      final h = _Harness()..stateMachine.state = GameState.playing;
+      h.helpVisible = true;
+
+      h.press(LogicalKeyboardKey.escape, PhysicalKeyboardKey.escape);
+      expect(h.helpCalled, isTrue);
       expect(h.pauseCalled, isFalse);
     });
 
