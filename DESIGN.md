@@ -185,7 +185,7 @@ tree spanning weapons and ship systems.
   `OffscreenCleanup` mixin. Asteroid and enemy spawners place new objects ahead
   of the player's current heading using this same radius so action stays in
   front of the ship.
-- A parallax starfield is tiled procedurally to appear endless.
+- A deterministic world-space starfield generates stars per chunk using Poisson-disk sampling seeded by chunk coordinates. Low-frequency Simplex noise modulates density to create clusters and voids, and a cached `CustomPainter` renders small circle stars that stay static as the player moves.
 
 ## Assets
 

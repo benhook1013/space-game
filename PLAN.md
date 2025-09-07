@@ -141,11 +141,10 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
 - Keep Flutter UI widgets separate from game state updates
 - If saving is needed later, add IDs and JSON‑serializable state
   - Camera follows the player via `CameraComponent` with no world bounds,
-    and the parallax starfield tiles infinitely to avoid blank space
+    and the deterministic world-space starfield spans chunks to avoid blank space
 - Use `HasCollisionDetection` for collisions with simple `CircleHitbox`/`RectangleHitbox`
   shapes and a timer-based spawner
-- Top‑down view with a simple parallax starfield background using Flame's
-  `ParallaxComponent`
+- Top‑down view with a deterministic world-space starfield generated per chunk using Poisson-disk sampling seeded by chunk coordinates and modulated by Simplex noise, rendered with a cached `CustomPainter`
 - Aim for 60 FPS and avoid heavy per‑frame allocations
 - For frequently spawned objects, bullets, asteroids and enemies use simple
   object pools to reduce garbage collection overhead
@@ -188,7 +187,7 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
 - Settings overlay with sliders for HUD, text, joystick, targeting, Tractor Aura
   and mining ranges, plus a reset button
 - Game works offline after the first load thanks to the service worker
-- Simple parallax starfield background
+- Deterministic world-space starfield with Poisson-disk sampling and Simplex-noise clusters
 - Pause or resume with a `PAUSED` overlay prompting players to press `Esc` or
   `P` to resume; `Q` returns to the menu from pause or game over
 
@@ -196,7 +195,7 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
 
 - **Setup** – basic project scaffolding runs in the browser with placeholder assets
 - **Core Loop** – player moves and shoots, one enemy type, basic scoring
-- **Polish** – starfield background, sound effects, and local high score
+- **Polish** – deterministic world-space starfield, sound effects, and local high score
 
 Detailed tasks for each milestone live in
 [milestone-setup.md](milestone-setup.md),
@@ -260,7 +259,7 @@ the world beyond the viewport and have the camera track the ship.
 - Attach a `CameraComponent` that follows the player without clamping.
 - Continuously spawn asteroids, enemies and pickups ahead of the ship and
   despawn any far behind to keep the scene light.
-- Tile the parallax starfield or otherwise prevent gaps as the camera moves.
+- Generate and cache stars per world-space chunk so no gaps appear as the camera moves.
 - A small togglable minimap in the top-left aids navigation through the endless world.
 
 ## 🔮 Future Ideas

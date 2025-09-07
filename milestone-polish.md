@@ -6,7 +6,7 @@ See [PLAN.md](PLAN.md) for overall project goals and
 
 ## Tasks
 
-- [x] Parallax starfield background renders behind gameplay.
+- [x] Deterministic world-space starfield background renders behind gameplay.
 - [x] Implement `audio_service.dart` wrapping `flame_audio` with a
       mute toggle.
 - [x] Implement `storage_service.dart` using `shared_preferences`
@@ -19,7 +19,7 @@ See [PLAN.md](PLAN.md) for overall project goals and
 
 ## Design Notes
 
-- A parallax starfield uses Flame's `ParallaxComponent` for the background.
+- Background stars are generated per world-space chunk using Poisson-disk sampling seeded by chunk coordinates. Low-frequency Simplex noise modulates density for clusters and voids, and a cached `CustomPainter` draws small circle stars that stay static as the player moves.
 - Centralise audio assets in `assets.dart` and play them through a small
   audio service.
 - Persist the high score with `shared_preferences` using a lightweight storage
