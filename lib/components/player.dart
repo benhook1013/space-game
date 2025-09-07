@@ -203,12 +203,12 @@ class PlayerComponent extends SpriteComponent
       final center = Offset(size.x / 2, size.y / 2);
       canvas.drawCircle(
         center,
-        game.settingsService.targetingRange.value,
+        game.upgradeService.targetingRange,
         _targetingPaint,
       );
       canvas.drawCircle(
         center,
-        game.settingsService.tractorRange.value,
+        game.upgradeService.tractorRange,
         _tractorPaint,
       );
       canvas.drawCircle(

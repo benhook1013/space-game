@@ -14,7 +14,7 @@ class TractorAuraRenderer extends Component
   void render(Canvas canvas) {
     super.render(canvas);
     final auraCenter = Offset(parent.size.x / 2, parent.size.y / 2);
-    final auraRadius = game.settingsService.tractorRange.value;
+    final auraRadius = game.upgradeService.tractorRange;
     _paint.shader = Gradient.radial(
       auraCenter,
       auraRadius,

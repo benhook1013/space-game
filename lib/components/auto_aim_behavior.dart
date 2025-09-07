@@ -19,7 +19,7 @@ class AutoAimBehavior extends Component
     final enemies = game.pools.components<EnemyComponent>();
     final target = enemies.findClosest(
       parent.position,
-      game.settingsService.targetingRange.value,
+      game.upgradeService.targetingRange,
     );
     if (target != null) {
       parent.targetAngle = _normalizeAngle(
