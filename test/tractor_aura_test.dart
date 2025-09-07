@@ -50,7 +50,7 @@ void main() {
     game.update(0);
     game.update(0);
 
-    final start = Vector2(game.settingsService.tractorRange.value - 10, 0);
+    final start = Vector2(game.upgradeService.tractorRange - 10, 0);
     final pickup = game.pools.acquire<MineralComponent>(
       (m) => m.reset(start.clone()),
     );
@@ -77,7 +77,7 @@ void main() {
     game.update(0);
     game.update(0);
 
-    final start = Vector2(game.settingsService.tractorRange.value + 10, 0);
+    final start = Vector2(game.upgradeService.tractorRange + 10, 0);
     final pickup = game.pools.acquire<MineralComponent>(
       (m) => m.reset(start.clone()),
     );
@@ -89,5 +89,38 @@ void main() {
     final before = pickup.position.clone();
     game.update(0.1);
     expect(pickup.position, equals(before));
+  });
+
+  test('Tractor Booster upgrade extends pull radius', () async {
+    SharedPreferences.setMockInitialValues({});
+    await Flame.images.loadAll([Assets.mineralIcon, ...Assets.players]);
+    final storage = await StorageService.create();
+    final audio = await AudioService.create(storage);
+    final game = _TestGame(storage: storage, audio: audio);
+    await game.onLoad();
+    await game.ready();
+    game.onGameResize(Vector2.all(100));
+    game.eventBus.emit(ComponentSpawnEvent<PlayerComponent>(game.player));
+    game.update(0);
+    game.update(0);
+
+    final baseRange = game.upgradeService.tractorRange;
+    final start = Vector2(baseRange + 10, 0);
+    final pickup = game.pools.acquire<MineralComponent>(
+      (m) => m.reset(start.clone()),
+    );
+    await game.add(pickup);
+    await game.ready();
+    game.update(0);
+    game.update(0);
+
+    final upgrade =
+        game.upgradeService.upgrades.firstWhere((u) => u.id == 'tractorRange1');
+    game.scoreService.addMinerals(upgrade.cost);
+    game.upgradeService.buy(upgrade);
+
+    final before = pickup.position.clone();
+    game.update(0.1);
+    expect(pickup.position.x, lessThan(before.x));
   });
 }
