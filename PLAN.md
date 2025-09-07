@@ -149,6 +149,11 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
 - Aim for 60 FPS and avoid heavy per‑frame allocations
 - For frequently spawned objects, bullets, asteroids and enemies use simple
   object pools to reduce garbage collection overhead
+- A lightweight `GameEventBus` emits component spawn and remove events so
+  systems like the targeting service and pool manager can react without
+  direct references
+- `PoolManager` owns these pools and keeps a spatial grid of asteroids for
+  efficient proximity queries
 - Movement and animations should be time‑based using `dt` to stay consistent
   across frame rates
 - Rely on Flame's `update`/`render` lifecycle; avoid custom game loops

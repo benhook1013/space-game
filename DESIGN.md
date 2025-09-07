@@ -78,6 +78,10 @@ tree spanning weapons and ship systems.
 - It owns small system classes for input, physics/collisions, entity spawners
   and scoring. Hooks for resource mining, inventory, networking and save/load
   will slot in later milestones.
+- A lightweight `GameEventBus` broadcasts component spawn and remove events so
+  systems can react without direct references.
+- `PoolManager` reuses bullets, enemies, minerals and asteroids and keeps a
+  spatial grid of asteroids for efficient proximity queries.
 - Flutter overlays handle menus and the HUD so UI stays outside the game loop.
 - A shared `GameText` widget standardises overlay text styling and listens for
   global text scale changes.
@@ -91,6 +95,8 @@ tree spanning weapons and ship systems.
 
 - Player, enemy, asteroid and bullet components live under `lib/components/`.
 - Components mix in `HasGameReference<SpaceGame>` when they need game context.
+- The `SpawnRemoveEmitter` mixin fires events to the `GameEventBus` whenever a
+  component is added or removed, enabling pooling and targeting helpers.
 - Use simple hit boxes (`CircleHitbox`, `RectangleHitbox`) and
   `HasCollisionDetection`.
 - An `EnemySpawner` system releases groups of enemies at timed intervals.

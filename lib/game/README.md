@@ -12,6 +12,10 @@ Core game class and shared systems.
   - Input uses Flame's `JoystickComponent`, `ButtonComponent` and a
     custom `KeyDispatcher` (via `KeyboardHandler`) that supports helpers like
     `isAnyPressed` for grouped key queries.
+- Broadcasts component spawn and remove events through a lightweight
+  `GameEventBus` so systems can react without tight coupling.
+- `PoolManager` reuses bullets, enemies, minerals and asteroids while keeping
+  a spatial grid of rocks for quick proximity queries.
 - Hooks exist for resource mining, inventory, networking and save/load in later
   milestones.
 - Keep this layer lean and delegate work to components or services.
@@ -27,9 +31,11 @@ Core game class and shared systems.
 - Schedule the update tick and other timers.
 - Route input from joystick, fire button or keyboard to the player component.
 
-## Planned Files
+## Key Files
 
 - [space_game.dart](space_game.md) – main game class.
 - [game_state.dart](game_state.md) – enum describing the game's phases.
+- [event_bus.dart](event_bus.md) – typed hub for spawn/remove events.
+- [pool_manager.dart](pool_manager.md) – central object pools and spatial grid.
 
 See [../../PLAN.md](../../PLAN.md) for the broader roadmap.
