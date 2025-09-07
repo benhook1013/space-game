@@ -63,7 +63,7 @@ dedicated server or NAT traversal.
   help overlay that `Esc` also closes, `U` opens an upgrades overlay that `Esc`
   also closes)
 - Game works offline after the first load
-- Parallax starfield background
+- Deterministic world-space starfield with Poisson-disk sampling and Simplex noise clustering
 
 ## 🔮 Future Plans
 

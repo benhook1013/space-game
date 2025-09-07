@@ -1,12 +1,10 @@
+
 # Starfield
 
-Background starfield using Flame's `ParallaxComponent`.
+Deterministic world-space starfield drawn with `CustomPainter`.
 
-- Generates three random star layers with speeds from `constants.dart` for
-  parallax depth.
-- Stars are rendered once into images and the parallax system manages scroll
-  and wrapping.
-- Recenters on the camera each frame to keep the starfield visible as the
-  player moves.
-- Added to `SpaceGame` with a negative priority so it always renders beneath
-  gameplay components.
+- Stars are generated per world-space chunk using Poisson-disk sampling seeded by chunk coordinates.
+- Low-frequency Simplex noise modulates spawn density to create clusters and voids.
+- Star radius and brightness follow a weighted distribution; subtle colour jitter adds variation.
+- Generated stars are cached per chunk and rendered as tiny circles so the player moves over a static field.
+- Added to `SpaceGame` with a negative priority so it always renders beneath gameplay components.
