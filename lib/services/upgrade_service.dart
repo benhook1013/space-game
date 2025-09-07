@@ -28,6 +28,8 @@ class UpgradeService {
   final List<Upgrade> upgrades = [
     Upgrade(id: 'fireRate1', name: 'Faster Cannon', cost: 10),
     Upgrade(id: 'miningSpeed1', name: 'Efficient Mining', cost: 15),
+    Upgrade(id: 'targetingRange1', name: 'Targeting Computer', cost: 20),
+    Upgrade(id: 'tractorRange1', name: 'Tractor Booster', cost: 25),
   ];
 
   final ValueNotifier<Set<String>> _purchased =
@@ -55,6 +57,24 @@ class UpgradeService {
       interval *= Constants.miningPulseIntervalUpgradeFactor;
     }
     return interval;
+  }
+
+  /// Current auto-aim targeting range factoring in purchased upgrades.
+  double get targetingRange {
+    var range = Constants.playerAutoAimRange;
+    if (isPurchased('targetingRange1')) {
+      range *= Constants.targetingRangeUpgradeFactor;
+    }
+    return range;
+  }
+
+  /// Current Tractor Aura radius factoring in purchased upgrades.
+  double get tractorRange {
+    var range = Constants.playerTractorAuraRadius;
+    if (isPurchased('tractorRange1')) {
+      range *= Constants.tractorRangeUpgradeFactor;
+    }
+    return range;
   }
 
   /// Attempts to buy [upgrade], returning `true` on success.

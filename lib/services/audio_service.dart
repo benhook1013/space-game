@@ -11,7 +11,13 @@ import 'storage_service.dart';
 typedef _LoopCallback = Future<AudioPlayer> Function(String, {double volume});
 
 class AudioService {
-  AudioService._(this._storage, this.muted, this._shootPool, this._loop);
+  AudioService._(
+    this._storage,
+    this.muted,
+    this._shootPool,
+    this._loop,
+    this._masterVolume,
+  );
 
   /// Asynchronously create the service and load the persisted mute flag.
   ///
@@ -24,6 +30,7 @@ class AudioService {
     _LoopCallback? loop,
   }) async {
     final muted = ValueNotifier<bool>(storage.isMuted());
+    final volume = storage.getDouble(_masterVolumeKey, 1);
     AudioPool? shootPool;
     if (kIsWeb) {
       try {
@@ -42,6 +49,7 @@ class AudioService {
       loop ??
           (String file, {double volume = 1}) =>
               FlameAudio.loop(file, volume: volume),
+      volume,
     );
   }
 
@@ -55,7 +63,9 @@ class AudioService {
   final AudioPool? _shootPool;
   final _LoopCallback _loop;
 
-  double _masterVolume = 1;
+  static const _masterVolumeKey = 'masterVolume';
+
+  double _masterVolume;
 
   /// Current global volume multiplier applied to all effects.
   double get masterVolume => _masterVolume;
@@ -63,6 +73,7 @@ class AudioService {
   /// Sets the global volume multiplier (0-1) and updates active loops.
   void setMasterVolume(double volume) {
     _masterVolume = volume.clamp(0, 1);
+    _storage.setDouble(_masterVolumeKey, _masterVolume);
     _miningLoop?.setVolume(Constants.miningLaserVolume * _masterVolume);
   }
 

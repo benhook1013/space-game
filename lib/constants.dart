@@ -24,6 +24,10 @@ class Constants {
   /// Maximum distance to auto-aim enemies when stationary, in pixels.
   static const double playerAutoAimRange = 300;
 
+  /// Multiplier applied to [playerAutoAimRange] when the targeting range
+  /// upgrade is purchased.
+  static const double targetingRangeUpgradeFactor = 1.5;
+
   /// Maximum distance to auto-mine asteroids, in pixels.
   static const double playerMiningRange = playerAutoAimRange;
 
@@ -51,6 +55,10 @@ class Constants {
 
   /// Radius of the player's Tractor Aura in pixels.
   static const double playerTractorAuraRadius = 150;
+
+  /// Multiplier applied to [playerTractorAuraRadius] when the Tractor Aura
+  /// range upgrade is purchased.
+  static const double tractorRangeUpgradeFactor = 1.5;
 
   /// Speed pickups move toward the player within the Tractor Aura.
   static const double tractorAuraPullSpeed = 200;
