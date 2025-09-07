@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:flame/components.dart';
@@ -50,14 +51,21 @@ class SpaceGame extends FlameGame
     GameColors? gameColors,
     SettingsService? settingsService,
     FocusNode? focusNode,
-  })  : selectedPlayerIndex =
-            ValueNotifier<int>(storageService.getPlayerSpriteIndex()),
+  })  : selectedPlayerIndex = ValueNotifier<int>(
+          storageService
+              .getPlayerSpriteIndex()
+              .clamp(0, Assets.players.length - 1),
+        ),
         colorScheme =
             colorScheme ?? ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         gameColors = gameColors ?? GameColors.dark,
         settingsService = settingsService ?? SettingsService(),
         focusNode = focusNode ?? FocusNode(),
         scoreService = ScoreService(storageService: storageService) {
+    final storedIndex = storageService.getPlayerSpriteIndex();
+    if (storedIndex != selectedPlayerIndex.value) {
+      unawaited(storageService.setPlayerSpriteIndex(selectedPlayerIndex.value));
+    }
     this.settingsService.attachStorage(storageService);
     debugMode = kDebugMode;
     pools = createPoolManager();
