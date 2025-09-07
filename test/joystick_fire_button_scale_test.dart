@@ -17,8 +17,7 @@ import 'package:space_game/ui/upgrades_overlay.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('joystick scale updates fire button and keeps bottom-left anchor',
-      () async {
+  test('joystick scale updates fire button and keeps anchors', () async {
     SharedPreferences.setMockInitialValues({});
     final storage = await StorageService.create();
     final audio = await AudioService.create(storage);
@@ -44,5 +43,6 @@ void main() {
     expect(fire.radius, 30 * 1.2);
     expect(game.joystick.position.x, 40);
     expect(game.joystick.position.y, game.size.y - 40);
+    expect(game.fireButton.anchor, Anchor.bottomRight);
   });
 }
