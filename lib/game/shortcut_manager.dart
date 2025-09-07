@@ -23,8 +23,13 @@ class ShortcutManager {
     required void Function() toggleMinimap,
     required void Function() toggleRangeRings,
     required void Function() returnToMenu,
+    required bool Function() isHelpVisible,
   }) {
     keyDispatcher.register(LogicalKeyboardKey.escape, onDown: () {
+      if (isHelpVisible()) {
+        toggleHelp();
+        return;
+      }
       if (stateMachine.state == GameState.playing) {
         pauseGame();
       } else if (stateMachine.state == GameState.paused) {
