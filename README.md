@@ -63,11 +63,14 @@ dedicated server or NAT traversal.
   help overlay that `Esc` also closes, `U` opens an upgrades overlay that `Esc`
   also closes)
 - Game works offline after the first load
-- Deterministic world-space starfield seeded by chunk coordinates using
-  Poisson-disk sampling. Simplex noise modulates density for clusters, and
-  stars use a weighted size/brightness spread with subtle colour jitter,
-  rendered via a cached `CustomPainter` so the player moves over a static field
-  with consistent spacing.
+- Deterministic world-space starfield replaces the parallax background:
+  - Stars spawn per chunk via Poisson-disk sampling seeded by chunk coordinates.
+  - Simplex noise modulates density for subtle clusters.
+  - Weighted radius/brightness spread (≈80% tiny, 19% small, 1% medium) with optional
+    colour jitter adds variation.
+  - Cache star data per chunk and draw via a `CustomPainter`, translating by
+    `-playerPosition` so the player flies over a static field. Draw faint stars
+    first for smoother blending.
 
 ## 🔮 Future Plans
 

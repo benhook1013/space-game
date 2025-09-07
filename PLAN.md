@@ -191,10 +191,14 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
 - Settings overlay with sliders for HUD, text, joystick, targeting, Tractor Aura
   and mining ranges, plus a reset button
 - Game works offline after the first load thanks to the service worker
-- Deterministic world-space starfield seeded by chunk coordinates using
-  Poisson-disk sampling. Density varies with Simplex noise; stars use a
-  weighted size/brightness spread and optional colour jitter and are drawn by a
-  cached `CustomPainter` so the player moves over a static field.
+- Deterministic world-space starfield replaces the parallax background:
+  - Stars spawn per chunk via Poisson-disk sampling seeded by chunk coordinates.
+  - Simplex noise modulates density for subtle clusters.
+  - Weighted size/brightness spread (≈80% tiny, 19% small, 1% medium) with optional
+    colour jitter adds variety.
+  - Cache star data per chunk and draw via a `CustomPainter`, translating by
+    `-playerPosition` so the player flies over a static backdrop. Draw faint stars
+    first for smoother blending.
 - Pause or resume with a `PAUSED` overlay prompting players to press `Esc` or
   `P` to resume; `Q` returns to the menu from pause or game over
 
