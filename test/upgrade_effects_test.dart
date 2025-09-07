@@ -39,4 +39,36 @@ void main() {
     expect(
         service.miningPulseInterval, lessThan(Constants.miningPulseInterval));
   });
+
+  test('Targeting Computer increases auto-aim range', () async {
+    SharedPreferences.setMockInitialValues({});
+    final storage = await StorageService.create();
+    final score = ScoreService(storageService: storage);
+    final service = UpgradeService(
+      scoreService: score,
+      storageService: storage,
+    );
+    final upgrade =
+        service.upgrades.firstWhere((u) => u.id == 'targetingRange1');
+    expect(service.targetingRange, Constants.playerAutoAimRange);
+    score.addMinerals(upgrade.cost);
+    service.buy(upgrade);
+    expect(service.targetingRange, greaterThan(Constants.playerAutoAimRange));
+  });
+
+  test('Tractor Booster extends Tractor Aura radius', () async {
+    SharedPreferences.setMockInitialValues({});
+    final storage = await StorageService.create();
+    final score = ScoreService(storageService: storage);
+    final service = UpgradeService(
+      scoreService: score,
+      storageService: storage,
+    );
+    final upgrade = service.upgrades.firstWhere((u) => u.id == 'tractorRange1');
+    expect(service.tractorRange, Constants.playerTractorAuraRadius);
+    score.addMinerals(upgrade.cost);
+    service.buy(upgrade);
+    expect(
+        service.tractorRange, greaterThan(Constants.playerTractorAuraRadius));
+  });
 }

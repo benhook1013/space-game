@@ -57,6 +57,33 @@ void main() {
     await service.startMiningLaser();
     expect(service.miningLoop, isNull);
   });
+
+  test('master volume persists across sessions', () async {
+    SharedPreferences.setMockInitialValues({});
+    final storage = await StorageService.create();
+    var service = await AudioService.create(storage);
+    service.setMasterVolume(0.3);
+
+    service = await AudioService.create(storage);
+    expect(service.masterVolume, closeTo(0.3, 1e-9));
+  });
+
+  test('stopAll halts active loops', () async {
+    SharedPreferences.setMockInitialValues({});
+    final storage = await StorageService.create();
+    final player = _FakeAudioPlayer();
+    final service = await AudioService.create(
+      storage,
+      loop: (_, {double volume = 1}) async => player,
+    );
+
+    await service.startMiningLaser();
+    expect(service.miningLoop, isNotNull);
+
+    service.stopAll();
+    expect(player.stopped, isTrue);
+    expect(service.miningLoop, isNull);
+  });
 }
 
 class _FakeAudioPlayer implements AudioPlayer {

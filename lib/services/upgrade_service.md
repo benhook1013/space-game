@@ -9,7 +9,7 @@ Manages purchasing upgrades using collected minerals.
 - Persist purchased upgrades via `StorageService` so they survive app restarts.
 - Deduct mineral costs via `ScoreService` when buying.
 - Provide a `ValueListenable` of purchased upgrade ids for UI widgets.
-- Provide derived values like bullet cooldown and mining pulse interval based
-  on purchased upgrades.
+- Provide derived values like bullet cooldown, mining pulse interval, targeting
+  range and Tractor Aura radius based on purchased upgrades.
 
 See [../../PLAN.md](../../PLAN.md) for progression goals.
