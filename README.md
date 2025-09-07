@@ -63,7 +63,11 @@ dedicated server or NAT traversal.
   help overlay that `Esc` also closes, `U` opens an upgrades overlay that `Esc`
   also closes)
 - Game works offline after the first load
-- Deterministic world-space starfield with Poisson-disk sampling and Simplex noise clustering
+- Deterministic world-space starfield seeded by chunk coordinates using
+  Poisson-disk sampling. Simplex noise modulates density for clusters, and
+  stars use a weighted size/brightness spread with subtle colour jitter,
+  rendered via a cached `CustomPainter` so the player moves over a static field
+  with consistent spacing.
 
 ## 🔮 Future Plans
 
