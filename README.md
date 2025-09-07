@@ -48,7 +48,8 @@ dedicated server or NAT traversal.
 - HUD button or `B` key toggles coloured range rings showing targeting, Tractor Aura and mining radii
 - Upgrades overlay lets you buy simple upgrades with minerals that persist
   between sessions, accessible via a HUD button or the `U` key
-- Settings overlay adjusts HUD, text and joystick scale
+- Settings overlay adjusts HUD, minimap, text and joystick scales and gameplay
+  ranges, and includes a reset button
 - Menu allows choosing between multiple ship sprites and remembers the selection
 - Local high score stored on device using `shared_preferences`
 - Basic sound effects with a mute toggle on menu, HUD and game over

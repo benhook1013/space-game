@@ -157,7 +157,7 @@ tree spanning weapons and ship systems.
 - An upgrades overlay opens with the `U` key or HUD button and pauses gameplay
   while letting players buy basic upgrades that persist between sessions.
 - A settings overlay provides sliders for HUD, text, joystick, targeting,
-  Tractor Aura and mining ranges.
+  Tractor Aura and mining ranges and includes a reset button.
 - A `GameState` enum tracks the current phase.
 
 ## Input

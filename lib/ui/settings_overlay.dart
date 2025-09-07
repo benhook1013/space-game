@@ -93,6 +93,14 @@ class SettingsOverlay extends StatelessWidget {
                   ),
                   SizedBox(height: spacing),
                   ElevatedButton(
+                    onPressed: settings.reset,
+                    child: const GameText(
+                      'Reset',
+                      maxLines: 1,
+                    ),
+                  ),
+                  SizedBox(height: spacing),
+                  ElevatedButton(
                     onPressed: game.toggleSettings,
                     child: const GameText(
                       'Close',
