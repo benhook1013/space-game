@@ -138,5 +138,44 @@ void main() {
       expect(overlays.showMenuCalled, isTrue);
       expect(menuCalled, isTrue);
     });
+
+    test('pauseGame ignored when not playing', () {
+      final overlays = _FakeOverlayService();
+      var pauseCalled = false;
+      final stateMachine = GameStateMachine(
+        overlays: overlays,
+        onStart: () {},
+        onPause: () => pauseCalled = true,
+        onResume: () {},
+        onGameOver: () {},
+        onMenu: () {},
+      );
+
+      stateMachine.pauseGame();
+
+      expect(stateMachine.state, GameState.menu);
+      expect(overlays.showPauseCalled, isFalse);
+      expect(pauseCalled, isFalse);
+    });
+
+    test('resumeGame ignored when not paused', () {
+      final overlays = _FakeOverlayService();
+      var resumeCalled = false;
+      final stateMachine = GameStateMachine(
+        overlays: overlays,
+        onStart: () {},
+        onPause: () {},
+        onResume: () => resumeCalled = true,
+        onGameOver: () {},
+        onMenu: () {},
+      )..startGame();
+
+      overlays.showHudCalled = false;
+      stateMachine.resumeGame();
+
+      expect(stateMachine.state, GameState.playing);
+      expect(overlays.showHudCalled, isFalse);
+      expect(resumeCalled, isFalse);
+    });
   });
 }
