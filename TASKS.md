@@ -77,7 +77,7 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
       persist across sessions.
 - [x] HUD button or `B` key toggles range rings for targeting, Tractor Aura and mining.
 - [x] Settings overlay with sliders for HUD, text, joystick, targeting,
-      Tractor Aura and mining ranges.
+      Tractor Aura and mining ranges, plus reset button.
 
 - [x] Persist purchased upgrades across sessions using `StorageService`.
 

@@ -94,6 +94,17 @@ class SettingsService {
     miningRange.value = storage.getDouble(_miningRangeKey, miningRange.value);
   }
 
+  /// Restores all values to their defaults.
+  void reset() {
+    hudButtonScale.value = defaultHudButtonScale;
+    textScale.value = defaultTextScale;
+    joystickScale.value = defaultJoystickScale;
+    minimapScale.value = defaultMinimapScale;
+    targetingRange.value = Constants.playerAutoAimRange;
+    tractorRange.value = Constants.playerTractorAuraRadius;
+    miningRange.value = Constants.playerMiningRange;
+  }
+
   static const _hudScaleKey = 'hudButtonScale';
   static const _textScaleKey = 'textScale';
   static const _joystickScaleKey = 'joystickScale';
