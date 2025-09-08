@@ -165,7 +165,14 @@ class SpaceGame extends FlameGame
     joystick = _buildJoystick();
     await add(joystick);
 
-    _starfield = await StarfieldComponent(debugDrawTiles: debugMode);
+    _starfield = await StarfieldComponent(
+      debugDrawTiles: debugMode,
+      layers: const [
+        StarfieldLayerConfig(parallax: 0.2, density: 0.3, twinkleSpeed: 0.5),
+        StarfieldLayerConfig(parallax: 0.6, density: 0.6, twinkleSpeed: 0.8),
+        StarfieldLayerConfig(parallax: 1.0, density: 1, twinkleSpeed: 1),
+      ],
+    );
     await add(_starfield!);
 
     player = PlayerComponent(
@@ -444,6 +451,7 @@ class SpaceGame extends FlameGame
     scoreService.dispose();
     upgradeService.dispose();
     stateMachine.dispose();
+    audioService.dispose();
     super.onRemove();
     // Dispose the event bus after children are removed so they can emit
     // removal events without errors.
