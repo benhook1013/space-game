@@ -166,10 +166,10 @@ class Constants {
   static const double starMaxSize = 2;
 
   /// Minimum distance between stars at highest density.
-  static const double starMinDistanceMin = 15;
+  static const double starMinDistanceMin = 20;
 
   /// Maximum distance between stars at lowest density.
-  static const double starMinDistanceMax = 40;
+  static const double starMinDistanceMax = 60;
 
   /// Noise frequency used to modulate star density.
   static const double starNoiseScale = 0.1;
