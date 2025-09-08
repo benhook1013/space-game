@@ -30,7 +30,7 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
 
 ## Polish ([milestone-polish.md](milestone-polish.md))
 
-- [x] Parallax starfield renders behind gameplay.
+- [x] Deterministic world-space starfield renders behind gameplay.
 - [x] Implement `audio_service.dart` wrapping `flame_audio` with a
       mute toggle.
 - [x] Implement `storage_service.dart` using `shared_preferences`
@@ -69,7 +69,7 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
       `Esc` also closes it.
 - [x] HUD displays current score, minerals and health.
 - [x] Limit player fire rate with a brief cooldown.
-- [x] Keyboard shortcut `F1` toggles debug overlays.
+- [x] Keyboard shortcut `F1` toggles debug overlays and outlines starfield tiles.
 - [x] Audio volume lowers when the game is paused.
 - [x] Menu includes button to reset the high score.
 - [x] Menu allows choosing between multiple ship sprites and persists the selection.
@@ -97,7 +97,6 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
 - [x] Attach a `CameraComponent` that follows the player with no fixed bounds.
 - [x] Spawn asteroids and enemies just ahead of the player and despawn those
       far behind.
-- [x] Tile the parallax starfield so it scrolls seamlessly.
 - [x] Add a minimap or other navigation aid for exploring the larger world.
 - [x] Replace the player-following parallax starfield with a deterministic
       world-space starfield:

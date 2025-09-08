@@ -18,11 +18,13 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
   late final OpenSimplexNoise _noise = OpenSimplexNoise(_seed);
   final Map<math.Point<int>, Picture> _cache = {};
 
-  /// Whether to draw debug outlines around generated tiles.
-  final bool debugDrawTiles;
+  /// Whether to draw debug outlines around generated tiles. This can be toggled
+  /// at runtime so `SpaceGame.toggleDebug` can enable tile borders when debug
+  /// mode is active.
+  bool debugDrawTiles;
 
   static final Paint _outlinePaint = Paint()
-    ..color = const Color(0x40FFFFFF)
+    ..color = Constants.starfieldTileOutlineColor
     ..style = PaintingStyle.stroke;
 
   /// Exposes the current cache size for tests.

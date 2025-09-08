@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 /// Centralised tunable values for the game.
 class Constants {
   /// Distance from the player after which entities are removed.
@@ -168,6 +170,9 @@ class Constants {
 
   /// Noise frequency used to modulate star density.
   static const double starNoiseScale = 0.1;
+
+  /// Colour used for starfield tile outlines in debug mode.
+  static const Color starfieldTileOutlineColor = Color(0x40FFFFFF);
 
   /// Extra tile padding kept around the camera for the starfield cache.
   static const int starfieldCacheMargin = 1;
