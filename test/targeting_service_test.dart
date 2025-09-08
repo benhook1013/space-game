@@ -29,5 +29,28 @@ void main() {
 
     bus.emit(ComponentRemoveEvent<PlayerComponent>(player));
     expect(targeting.playerPosition, isNull);
+    targeting.dispose();
+    bus.dispose();
+  });
+
+  test('disposing cancels event subscriptions', () {
+    final bus = GameEventBus();
+    final targeting = TargetingService(bus);
+    final player = _DummyPlayer()..position = Vector2.zero();
+
+    bus.emit(ComponentSpawnEvent<PlayerComponent>(player));
+    expect(targeting.playerPosition, player.position);
+
+    targeting.dispose();
+
+    // After disposal, further events should have no effect.
+    bus.emit(ComponentRemoveEvent<PlayerComponent>(player));
+    expect(targeting.playerPosition, player.position);
+
+    final newPlayer = _DummyPlayer()..position = Vector2(5, 6);
+    bus.emit(ComponentSpawnEvent<PlayerComponent>(newPlayer));
+    expect(targeting.playerPosition, player.position);
+
+    bus.dispose();
   });
 }
