@@ -80,4 +80,21 @@ void main() {
     expect(
         service.tractorRange, greaterThan(Constants.playerTractorAuraRadius));
   });
+
+  test('Engine Tuning increases player speed', () async {
+    SharedPreferences.setMockInitialValues({});
+    final storage = await StorageService.create();
+    final score = ScoreService(storageService: storage);
+    final settings = SettingsService();
+    final service = UpgradeService(
+      scoreService: score,
+      storageService: storage,
+      settingsService: settings,
+    );
+    final upgrade = service.upgrades.firstWhere((u) => u.id == 'speed1');
+    expect(service.playerSpeed, Constants.playerSpeed);
+    score.addMinerals(upgrade.cost);
+    service.buy(upgrade);
+    expect(service.playerSpeed, greaterThan(Constants.playerSpeed));
+  });
 }

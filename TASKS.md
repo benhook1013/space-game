@@ -80,6 +80,7 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
       joystick, targeting, Tractor Aura and mining ranges, plus reset button.
 
 - [x] Persist purchased upgrades across sessions using `StorageService`.
+- [x] Engine Tuning upgrade increases player movement speed.
 
 ## Next Steps
 

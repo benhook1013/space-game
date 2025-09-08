@@ -47,7 +47,9 @@ dedicated server or NAT traversal.
 - Toggable top-left minimap shows nearby asteroids, enemies and pickups
 - HUD button or `B` key toggles coloured range rings showing targeting, Tractor Aura and mining radii
 - Upgrades overlay lets you buy simple upgrades with minerals that persist
-  between sessions, accessible via a HUD button or the `U` key
+  between sessions, accessible via a HUD button or the `U` key. Current
+  upgrades include a faster cannon, quicker mining pulses, a targeting
+  computer, a Tractor Booster and Engine Tuning for higher speed
 - Settings overlay adjusts volume, HUD, minimap, text and joystick scales and
   gameplay ranges, and includes a reset button
 - Menu allows choosing between multiple ship sprites and remembers the selection

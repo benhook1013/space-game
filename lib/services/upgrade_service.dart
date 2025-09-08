@@ -36,6 +36,7 @@ class UpgradeService {
     Upgrade(id: 'miningSpeed1', name: 'Efficient Mining', cost: 15),
     Upgrade(id: 'targetingRange1', name: 'Targeting Computer', cost: 20),
     Upgrade(id: 'tractorRange1', name: 'Tractor Booster', cost: 25),
+    Upgrade(id: 'speed1', name: 'Engine Tuning', cost: 30),
   ];
 
   final ValueNotifier<Set<String>> _purchased =
@@ -81,6 +82,15 @@ class UpgradeService {
       range *= Constants.tractorRangeUpgradeFactor;
     }
     return range;
+  }
+
+  /// Current player movement speed factoring in purchased upgrades.
+  double get playerSpeed {
+    var speed = Constants.playerSpeed;
+    if (isPurchased('speed1')) {
+      speed *= Constants.playerSpeedUpgradeFactor;
+    }
+    return speed;
   }
 
   /// Attempts to buy [upgrade], returning `true` on success.
