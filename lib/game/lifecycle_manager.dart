@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:flame/components.dart';
+
 import '../game/space_game.dart';
 import '../components/explosion.dart';
 import '../components/player.dart';
@@ -11,6 +13,12 @@ class LifecycleManager {
 
   final SpaceGame game;
 
+  void _removeAll<T extends Component>() {
+    for (final component in List<T>.from(game.children.whereType<T>())) {
+      component.removeFromParent();
+    }
+  }
+
   void onStart() {
     game.audioService.stopAll();
     game.scoreService.reset();
@@ -19,18 +27,9 @@ class LifecycleManager {
     // previous session ended (like the player's explosion on death) are
     // mounted and can be removed before the new run begins.
     game.processLifecycleEvents();
-    // Remove any lingering explosions from a previous session.
-    for (final explosion in List<ExplosionComponent>.from(
-      game.children.whereType<ExplosionComponent>(),
-    )) {
-      explosion.removeFromParent();
-    }
-    // Ensure any previous player instances are fully removed before starting.
-    for (final player in List<PlayerComponent>.from(
-      game.children.whereType<PlayerComponent>(),
-    )) {
-      player.removeFromParent();
-    }
+    // Remove any lingering explosions and players from a previous session.
+    _removeAll<ExplosionComponent>();
+    _removeAll<PlayerComponent>();
     if (game.player.isRemoving || !game.player.isMounted) {
       // Previous player is pending removal; create a fresh instance.
       final player = PlayerComponent(
