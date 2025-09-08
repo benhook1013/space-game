@@ -17,6 +17,7 @@ import 'package:space_game/services/storage_service.dart';
 import 'test_joystick.dart';
 
 class _FakeAudioService implements AudioService {
+  @override
   final ValueNotifier<bool> muted = ValueNotifier(false);
 
   @override
