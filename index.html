@@ -39,8 +39,26 @@
       });
 
       if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function () {
-          navigator.serviceWorker.register('sw.js');
+        // Compute a content hash of `assets_manifest.json` so the service worker
+        // cache name automatically changes when any asset changes. This avoids
+        // manual version bumps.
+        document.addEventListener('DOMContentLoaded', async () => {
+          let version;
+          try {
+            const response = await fetch('assets_manifest.json');
+            const text = await response.text();
+            const buffer = await crypto.subtle.digest(
+              'SHA-256',
+              new TextEncoder().encode(text),
+            );
+            version = Array.from(new Uint8Array(buffer))
+              .map((b) => b.toString(16).padStart(2, '0'))
+              .join('');
+          } catch (err) {
+            console.warn('Asset hash failed, using timestamp', err);
+            version = Date.now().toString();
+          }
+          navigator.serviceWorker.register(`sw.js?v=${version}`);
         });
       }
     </script>
@@ -50,7 +68,7 @@
       // own `sw.js` above. This prevents Flutter's loader from waiting four
       // seconds for `flutter_service_worker.js`, which would otherwise log a
       // noisy console error when it times out.
-      const serviceWorkerVersion = "1098453185";
+      const serviceWorkerVersion = "2721548070";
     </script>
     <script src="flutter_bootstrap.js" async></script>
   </body>
