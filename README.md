@@ -52,7 +52,8 @@ dedicated server or NAT traversal.
   upgrades include a faster cannon, quicker mining pulses, a targeting
   computer, a Tractor Booster and Engine Tuning for higher speed
 - Settings overlay adjusts volume, HUD, minimap, text and joystick scales,
-  gameplay ranges and starfield tile size, and includes a reset button
+  gameplay ranges and starfield tile size, and includes a reset button;
+  accessible via HUD button or `O` key
 - Menu allows choosing between multiple ship sprites and remembers the selection
 - Local high score stored on device using `shared_preferences`
 - Basic sound effects with a mute toggle on menu, HUD and game over
@@ -64,7 +65,8 @@ dedicated server or NAT traversal.
   rings, `N` toggles the minimap, `F1` toggles debug overlays, `Enter` starts
   or restarts from the menu or game over, `R` restarts at any time, `Q` returns
   to the menu from pause or game over, `H` shows a help overlay that `Esc` also
-  closes, `U` opens an upgrades overlay that `Esc` also closes)
+  closes, `U` opens an upgrades overlay that `Esc` also closes, `O` opens the
+  settings overlay)
 - Game works offline after the first load
 - Deterministic world-space starfield replaces the parallax background:
   - Stars spawn per chunk via Poisson-disk sampling seeded by chunk coordinates.

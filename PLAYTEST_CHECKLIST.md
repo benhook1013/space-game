@@ -41,9 +41,9 @@ _Update this file whenever a player-facing feature is added or changed._
 - [ ] Pressing `H` shows a help overlay; `Esc` or `H` closes it and resumes play
 - [ ] Pressing `U` shows an upgrades overlay and pauses the game; `Esc` or `U`
       closes it
-- [ ] Settings overlay sliders adjust volume, HUD button, minimap, text,
-      joystick sizes and gameplay ranges (default 0.75 for buttons and text)
-      and reset button restores defaults
+- [ ] Settings button or `O` key opens settings overlay; sliders adjust volume,
+      HUD button, minimap, text, joystick sizes and gameplay ranges (default
+      0.75 for buttons and text) and reset button restores defaults
 - [ ] Local high score persists between sessions
 - [ ] PWA installability and offline play after initial load
 - [ ] Performance acceptable on target devices
