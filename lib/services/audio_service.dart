@@ -81,8 +81,7 @@ class AudioService {
   Future<void> toggleMute() async {
     muted.value = !muted.value;
     if (muted.value) {
-      _miningLoop?.stop();
-      _miningLoop = null;
+      stopAll();
     }
     await _storage.setMuted(muted.value);
   }
@@ -91,16 +90,16 @@ class AudioService {
   void playShoot() {
     if (muted.value) return;
     if (_shootPool != null) {
-      _shootPool.start();
+      _shootPool.start(volume: _masterVolume);
     } else {
-      FlameAudio.play(Assets.shootSfx);
+      FlameAudio.play(Assets.shootSfx, volume: _masterVolume);
     }
   }
 
   /// Plays the explosion sound effect if not muted.
   void playExplosion() {
     if (muted.value) return;
-    FlameAudio.play(Assets.explosionSfx);
+    FlameAudio.play(Assets.explosionSfx, volume: _masterVolume);
   }
 
   AudioPlayer? _miningLoop;
