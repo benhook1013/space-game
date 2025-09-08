@@ -21,7 +21,10 @@ class _FakeAudioService implements AudioService {
   final ValueNotifier<double> volume = ValueNotifier(1);
 
   @override
-  double get masterVolume => 1;
+  final ValueNotifier<double> volume = ValueNotifier(1);
+
+  @override
+  double get masterVolume => volume.value;
 
   @override
   AudioPlayer? get miningLoop => null;
