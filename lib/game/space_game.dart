@@ -389,12 +389,20 @@ class SpaceGame extends FlameGame
 
   void _updateJoystickScale() {
     final scale = settingsService.joystickScale.value;
-    // Rebuild the joystick to ensure the knob stays centred and scaling
-    // expands from the bottom-left corner.
-    joystick.removeFromParent();
-    joystick = _buildJoystick();
-    add(joystick);
-    joystick.onGameResize(size);
+    // Update the joystick in place to avoid flicker when scaling. Adjust the
+    // knob and background radii so growth originates from the bottom-left
+    // corner while keeping the knob centred.
+    final bg = joystick.background as CircleComponent;
+    final knob = joystick.knob as CircleComponent;
+    bg
+      ..radius = 50 * scale
+      ..position = Vector2.zero();
+    knob
+      ..radius = 20 * scale
+      ..position = Vector2.zero();
+    joystick
+      ..anchor = Anchor.bottomLeft
+      ..position = Vector2(40, size.y - 40);
 
     // Scale the fire button to match the joystick and stay anchored
     // to the bottom-right corner.
