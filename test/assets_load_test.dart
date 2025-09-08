@@ -5,7 +5,7 @@ import 'package:space_game/assets.dart';
 
 class _FakeAudioCache extends AudioCache {
   @override
-  Future<List<Uri>> loadAll(List<String> files) async => [];
+  Future<Uri> load(String file) async => Uri();
 
   @override
   Future<void> clearAll() async {}
