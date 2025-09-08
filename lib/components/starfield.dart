@@ -15,7 +15,7 @@ class StarfieldLayerConfig {
   const StarfieldLayerConfig({
     this.parallax = 1,
     this.density = 1,
-    this.twinkleSpeed = 1,
+    this.twinkleSpeed = 0,
     this.maxCacheTiles = 64,
   });
 
@@ -25,7 +25,7 @@ class StarfieldLayerConfig {
   /// Multiplier applied to star density. Values >1 increase star count.
   final double density;
 
-  /// Speed factor for star alpha animation.
+  /// Speed factor for tile alpha animation.
   final double twinkleSpeed;
 
   /// Maximum tiles retained in the LRU cache.
@@ -39,8 +39,14 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
     this.debugDrawTiles = false,
     List<StarfieldLayerConfig>? layers,
   })  : _seed = seed,
-        _layers =
-            layers ?? const [StarfieldLayerConfig(parallax: 1, density: 1)],
+        _layers = layers ??
+            const [
+              StarfieldLayerConfig(parallax: 1, density: 1, twinkleSpeed: 1.2),
+              StarfieldLayerConfig(
+                  parallax: 0.5, density: 0.6, twinkleSpeed: 0.8),
+              StarfieldLayerConfig(
+                  parallax: 0.25, density: 0.3, twinkleSpeed: 0.5),
+            ],
         super(priority: -1);
 
   final int _seed;
@@ -49,6 +55,7 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
   final List<StarfieldLayerConfig> _layers;
 
   final Paint _starPaint = Paint();
+  final Paint _tilePaint = Paint();
 
   /// Whether to draw debug outlines around generated tiles.
   bool debugDrawTiles;
@@ -67,6 +74,16 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
       _layerStates.add(_LayerState(cfg));
     }
     super.onLoad();
+  }
+
+  @override
+  void onRemove() {
+    for (final layer in _layerStates) {
+      for (final picture in layer.cache.values) {
+        picture.dispose();
+      }
+    }
+    super.onRemove();
   }
 
   /// Exposes the current cache size for tests.
@@ -135,18 +152,23 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
       for (var tx = startX; tx <= endX; tx++) {
         for (var ty = startY; ty <= endY; ty++) {
           final key = math.Point(tx, ty);
-          final stars = layer.cache[key];
-          if (stars == null) continue;
+          final picture = layer.cache[key];
+          if (picture == null) continue;
           _touch(layer, key);
           final offsetX = tx * Constants.starfieldTileSize;
           final offsetY = ty * Constants.starfieldTileSize;
           canvas.save();
           canvas.translate(offsetX, offsetY);
-          for (final star in stars) {
+          if (cfg.twinkleSpeed != 0) {
             final twinkle =
-                math.sin(_time * cfg.twinkleSpeed + star.phase) * 0.4 + 0.6;
-            _starPaint.color = star.color.withAlpha((twinkle * 255).round());
-            canvas.drawCircle(star.position, star.radius, _starPaint);
+                math.sin(_time * cfg.twinkleSpeed + tx + ty) * 0.2 + 0.8;
+            _tilePaint.color =
+                Color.fromARGB((twinkle * 255).round(), 255, 255, 255);
+            canvas.saveLayer(null, _tilePaint);
+            canvas.drawPicture(picture);
+            canvas.restore();
+          } else {
+            canvas.drawPicture(picture);
           }
           if (debugDrawTiles) {
             canvas.drawRect(
@@ -171,11 +193,30 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
     if (layer.cache.containsKey(key) || layer.pending.containsKey(key)) {
       return;
     }
-    final future =
-        Future(() => _generateTileStars(_seed, tx, ty, layer.config.density));
+    final future = compute<Map<String, num>, List<Map<String, num>>>(
+      _generateTileStarsData,
+      {
+        'seed': _seed,
+        'tx': tx,
+        'ty': ty,
+        'density': layer.config.density,
+      },
+    ).then((raw) {
+      final recorder = PictureRecorder();
+      final canvas = Canvas(recorder);
+      for (final m in raw) {
+        _starPaint.color = Color(m['color'] as int);
+        canvas.drawCircle(
+          Offset(m['x'] as double, m['y'] as double),
+          m['radius'] as double,
+          _starPaint,
+        );
+      }
+      return recorder.endRecording();
+    });
     layer.pending[key] = future;
-    future.then((stars) {
-      layer.cache[key] = stars;
+    future.then((picture) {
+      layer.cache[key] = picture;
       layer.pending.remove(key);
       _prune(layer);
     });
@@ -183,14 +224,14 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
 
   void _prune(_LayerState layer) {
     while (layer.cache.length > layer.config.maxCacheTiles) {
-      layer.cache.remove(layer.cache.keys.first);
+      layer.cache.remove(layer.cache.keys.first)?.dispose();
     }
   }
 
   void _touch(_LayerState layer, math.Point<int> key) {
-    final stars = layer.cache.remove(key);
-    if (stars != null) {
-      layer.cache[key] = stars;
+    final picture = layer.cache.remove(key);
+    if (picture != null) {
+      layer.cache[key] = picture;
     }
   }
 
@@ -205,21 +246,23 @@ class _LayerState {
   _LayerState(this.config);
 
   final StarfieldLayerConfig config;
-  final LinkedHashMap<math.Point<int>, List<_Star>> cache = LinkedHashMap();
-  final Map<math.Point<int>, Future<List<_Star>>> pending = {};
+  final LinkedHashMap<math.Point<int>, Picture> cache = LinkedHashMap();
+  final Map<math.Point<int>, Future<Picture>> pending = {};
 }
 
 class _Star {
-  _Star(this.position, this.radius, this.color, this.phase);
+  _Star(this.position, this.radius, this.color);
 
   final Offset position;
   final double radius;
   final Color color;
-  final double phase;
 }
 
-List<_Star> _generateTileStars(
-    int seed, int tx, int ty, double densityMultiplier) {
+List<Map<String, num>> _generateTileStarsData(Map<String, num> args) {
+  final seed = args['seed']!.toInt();
+  final tx = args['tx']!.toInt();
+  final ty = args['ty']!.toInt();
+  final densityMultiplier = args['density']!.toDouble();
   final noise = OpenSimplexNoise(seed);
   final rnd = math.Random(seed ^ tx ^ (ty << 16));
   final n = noise.noise2D(
@@ -234,7 +277,35 @@ List<_Star> _generateTileStars(
   final samples = _poisson(Constants.starfieldTileSize, minDist, rnd);
   final stars = samples.map((o) => _randomStar(o, rnd)).toList()
     ..sort((a, b) => a.radius.compareTo(b.radius));
-  return stars;
+  return [
+    for (final s in stars)
+      {
+        'x': s.position.dx,
+        'y': s.position.dy,
+        'radius': s.radius,
+        'color': ((s.color.a * 255).round() & 0xff) << 24 |
+            ((s.color.r * 255).round() & 0xff) << 16 |
+            ((s.color.g * 255).round() & 0xff) << 8 |
+            ((s.color.b * 255).round() & 0xff),
+      }
+  ];
+}
+
+List<_Star> _generateTileStars(
+    int seed, int tx, int ty, double densityMultiplier) {
+  final raw = _generateTileStarsData({
+    'seed': seed,
+    'tx': tx,
+    'ty': ty,
+    'density': densityMultiplier,
+  });
+  return raw
+      .map((m) => _Star(
+            Offset(m['x'] as double, m['y'] as double),
+            m['radius'] as double,
+            Color(m['color'] as int),
+          ))
+      .toList();
 }
 
 List<Offset> _poisson(double size, double minDist, math.Random rnd,
@@ -313,7 +384,7 @@ _Star _randomStar(Offset position, math.Random rnd) {
   }
 
   final jitter = rnd.nextInt(55);
-  final hue = rnd.nextInt(4);
+  final hue = rnd.nextInt(6);
   int r = brightness, g = brightness, b = brightness;
   switch (hue) {
     case 0: // blue
@@ -326,6 +397,14 @@ _Star _randomStar(Offset position, math.Random rnd) {
     case 2: // red
       r = math.min(255, r + jitter);
       break;
+    case 3: // orange
+      r = math.min(255, r + jitter);
+      g = math.min(255, g + jitter ~/ 2);
+      break;
+    case 4: // purple
+      r = math.min(255, r + jitter);
+      b = math.min(255, b + jitter);
+      break;
     default: // white
       r = math.min(255, r + jitter);
       g = math.min(255, g + jitter);
@@ -333,8 +412,7 @@ _Star _randomStar(Offset position, math.Random rnd) {
   }
 
   final color = Color.fromARGB(255, r, g, b);
-  final phase = rnd.nextDouble() * math.pi * 2;
-  return _Star(position, radius, color, phase);
+  return _Star(position, radius, color);
 }
 
 double _lerp(double a, double b, double t) => a + (b - a) * t;
