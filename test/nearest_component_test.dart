@@ -20,7 +20,7 @@ void main() {
     final origin = Vector2.zero();
     final result = components.findClosest(
       origin,
-      8,
+      maxDistance: 8,
     );
     expect(result, equals(components[1]));
   });
@@ -33,8 +33,21 @@ void main() {
     final origin = Vector2.zero();
     final result = components.findClosest(
       origin,
-      4,
+      maxDistance: 4,
     );
     expect(result, isNull);
+  });
+
+  test('findClosestComponent with predicate', () {
+    final components = [
+      _TestComponent(Vector2(10, 0)),
+      _TestComponent(Vector2(5, 0)),
+    ];
+    final origin = Vector2.zero();
+    final result = components.findClosest(
+      origin,
+      where: (c) => c.position.x > 6,
+    );
+    expect(result, equals(components[0]));
   });
 }

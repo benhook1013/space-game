@@ -53,7 +53,7 @@ class MiningLaserComponent extends Component with HasGameReference<SpaceGame> {
       );
       _target = asteroids.findClosest(
         player.position,
-        miningRange,
+        maxDistance: miningRange,
       );
       _pulseTimer
         ..stop()
