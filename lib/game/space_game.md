@@ -16,9 +16,9 @@ Main FlameGame subclass managing world setup, state transitions and the update l
 - Handle keyboard shortcuts such as `Escape` or `P` for pause, `M` for mute,
    `Enter` to start or restart from the menu or game over, `R` to restart at any
    time, `Q` to return to the menu from pause or game over, `Esc` to return to the
-   menu from game over, and `H` to show or hide the help overlay (`Esc` also
-   closes it). Pressing `F1` toggles debug mode, outlining starfield tiles and
-   showing hit boxes.
+  menu from game over, and `H` to show or hide the help overlay (`Esc` also
+   closes it). Pressing `F1` toggles debug mode, outlining starfield tiles,
+   showing hit boxes and displaying an FPS counter.
 - Expose helpers to pause, resume or return to the menu.
 - Drive the update cycle while delegating work to components and services.
 - Persist and load the high score and selected player sprite index through

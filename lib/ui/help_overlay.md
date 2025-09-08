@@ -9,6 +9,7 @@ Lists available touch and keyboard controls.
 - Pauses gameplay when opened during a run and resumes when closed.
 - Dismiss with the on-screen close button or by pressing `H` again or `Esc`.
 - Lists keys such as `N` to toggle the minimap, `B` for range rings and `Q`
-  to return to the menu from pause or game over.
+  to return to the menu from pause or game over, and `F1` to toggle debug
+  mode with hit boxes, starfield tile outlines and an FPS counter.
 
 See [../../PLAN.md](../../PLAN.md) for UI goals.
