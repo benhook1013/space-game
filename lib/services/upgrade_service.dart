@@ -97,4 +97,9 @@ class UpgradeService {
     );
     return true;
   }
+
+  /// Releases resources held by the service.
+  void dispose() {
+    _purchased.dispose();
+  }
 }
