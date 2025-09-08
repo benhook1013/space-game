@@ -23,6 +23,7 @@ class StarfieldLayerConfig {
   final double parallax;
 
   /// Multiplier applied to star density. Values >1 increase star count.
+  /// Values ≤0 disable the layer.
   final double density;
 
   /// Speed factor for star alpha animation.
@@ -171,6 +172,10 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
     if (layer.cache.containsKey(key) || layer.pending.containsKey(key)) {
       return;
     }
+    if (layer.config.density <= 0) {
+      layer.cache[key] = const <_Star>[];
+      return;
+    }
     final future =
         Future(() => _generateTileStars(_seed, tx, ty, layer.config.density));
     layer.pending[key] = future;
@@ -220,6 +225,9 @@ class _Star {
 
 List<_Star> _generateTileStars(
     int seed, int tx, int ty, double densityMultiplier) {
+  if (densityMultiplier <= 0) {
+    return const <_Star>[];
+  }
   final noise = OpenSimplexNoise(seed);
   final rnd = math.Random(seed ^ tx ^ (ty << 16));
   final n = noise.noise2D(
