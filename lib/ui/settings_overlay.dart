@@ -39,12 +39,27 @@ class SettingsOverlay extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   GameText(
-                    'UI Settings',
+                    'Settings',
                     style: Theme.of(context).textTheme.headlineSmall,
                     maxLines: 1,
                     color: Theme.of(context).colorScheme.onSurface,
                   ),
                   SizedBox(height: spacing),
+                  GameText(
+                    'Audio',
+                    style: Theme.of(context).textTheme.titleMedium,
+                    maxLines: 1,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                  SizedBox(height: spacing),
+                  _buildSlider(
+                    context,
+                    'Volume',
+                    game.audioService.volume,
+                    spacing,
+                    min: 0,
+                    max: 1,
+                  ),
                   GameText(
                     'HUD Scaling',
                     style: Theme.of(context).textTheme.titleMedium,
@@ -109,7 +124,10 @@ class SettingsOverlay extends StatelessWidget {
                   ),
                   SizedBox(height: spacing),
                   ElevatedButton(
-                    onPressed: settings.reset,
+                    onPressed: () {
+                      settings.reset();
+                      game.audioService.setMasterVolume(1);
+                    },
                     child: const GameText(
                       'Reset',
                       maxLines: 1,
