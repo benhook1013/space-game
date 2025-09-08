@@ -186,7 +186,7 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
   minimap, `F1` toggles debug overlays and outlines starfield tiles, `Enter`
   starts or restarts from the menu or game over, `R` restarts at any time, `H`
   shows a help overlay that `Esc` also closes, `U` opens an upgrades overlay
-  that `Esc` also closes, `B` toggles range rings)
+  that `Esc` also closes, `O` opens the settings overlay, `B` toggles range rings)
 - Upgrades overlay lets players spend minerals on simple upgrades that
   persist between sessions, opened with a HUD button or the `U` key and
   pausing gameplay. Available upgrades cover fire rate, mining speed,
@@ -194,7 +194,7 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
   movement and a Shield Booster that slowly regenerates health
 - Settings overlay with master volume slider and sliders for HUD, minimap,
   text, joystick, targeting, Tractor Aura and mining ranges, starfield tile
-  size, plus a reset button
+  size, plus a reset button, accessible via HUD button or `O` key
 - Game works offline after the first load thanks to the service worker
 - Deterministic world-space starfield replaces the parallax background:
   - Stars spawn per chunk via Poisson-disk sampling seeded by chunk coordinates.

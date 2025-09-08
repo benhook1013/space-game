@@ -62,6 +62,7 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
 - [x] Mute toggle available on menu, HUD, pause and game over overlays.
 - [x] Keyboard shortcut `M` toggles mute.
 - [x] Keyboard shortcut `P` pauses or resumes the game.
+- [x] Keyboard shortcut `O` opens the settings overlay.
 - [x] Keyboard shortcuts: `Enter` starts or restarts from the menu or game over;
       `R` restarts during play, pause or game over.
 - [x] Keyboard shortcut `Q` returns to the menu from pause or game over.
@@ -78,7 +79,7 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
 - [x] HUD button or `B` key toggles range rings for targeting, Tractor Aura and mining.
 - [x] Settings overlay with master volume slider and sliders for HUD, minimap,
       text, joystick, targeting, Tractor Aura and mining ranges, starfield tile
-      size, plus reset button.
+      size, plus reset button, accessible via HUD button or `O` key.
 
 - [x] Persist purchased upgrades across sessions using `StorageService`.
 - [x] Engine Tuning upgrade increases player movement speed.

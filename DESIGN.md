@@ -163,9 +163,9 @@ tree spanning weapons and ship systems.
   game when opened mid-run. `Esc` also closes it without triggering pause.
 - An upgrades overlay opens with the `U` key or HUD button and pauses gameplay
   while letting players buy basic upgrades that persist between sessions.
-- A settings overlay provides sliders for master volume, HUD, minimap, text,
-  joystick, targeting, Tractor Aura and mining ranges, starfield tile size and
-  includes a reset button.
+- A settings overlay opens with the `O` key or HUD button and provides sliders
+  for master volume, HUD, minimap, text, joystick, targeting, Tractor Aura and
+  mining ranges, starfield tile size and includes a reset button.
 - A `GameState` enum tracks the current phase.
 
 ## Input
@@ -177,6 +177,7 @@ tree spanning weapons and ship systems.
   mining radii.
 - `H` toggles a help overlay for quick reference, and `Esc` closes it when
   visible.
+- `O` opens the settings overlay for runtime tweaks.
 - `Q` returns to the menu when pressed during pause or game over.
 
 ## Rendering & Camera

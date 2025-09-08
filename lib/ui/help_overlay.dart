@@ -36,7 +36,7 @@ class HelpOverlay extends StatelessWidget {
               'Toggle Debug: F1\n'
               'Toggle Range Rings: B or HUD button\n'
               'Upgrades: U or HUD button\n'
-              'Settings: HUD button\n'
+              'Settings: O or HUD button\n'
               'Pause/Resume: Esc or P\n'
               'Start/Restart: Enter\n'
               'Restart anytime: R\n'

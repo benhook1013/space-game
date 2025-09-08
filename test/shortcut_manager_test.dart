@@ -104,6 +104,7 @@ class _Harness {
       toggleDebug: () => debugCalled = true,
       toggleMinimap: () => minimapCalled = true,
       toggleRangeRings: () => rangeRingsCalled = true,
+      toggleSettings: () => settingsCalled = true,
       returnToMenu: () => menuCalled = true,
       isHelpVisible: () => helpVisible,
     );
@@ -120,6 +121,7 @@ class _Harness {
   bool debugCalled = false;
   bool minimapCalled = false;
   bool rangeRingsCalled = false;
+  bool settingsCalled = false;
   bool menuCalled = false;
   bool helpVisible = false;
 
@@ -237,6 +239,12 @@ void main() {
       final h = _Harness();
       h.press(LogicalKeyboardKey.keyB, PhysicalKeyboardKey.keyB);
       expect(h.rangeRingsCalled, isTrue);
+    });
+
+    test('O toggles settings', () {
+      final h = _Harness();
+      h.press(LogicalKeyboardKey.keyO, PhysicalKeyboardKey.keyO);
+      expect(h.settingsCalled, isTrue);
     });
 
     test('Q returns to menu from pause or game over', () {
