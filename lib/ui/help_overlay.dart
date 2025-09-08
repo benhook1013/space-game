@@ -40,6 +40,7 @@ class HelpOverlay extends StatelessWidget {
               'Pause/Resume: Esc or P\n'
               'Start/Restart: Enter\n'
               'Restart anytime: R\n'
+              'Return to Menu: Q (from pause or game over)\n'
               'Toggle Help: H or Esc',
               textAlign: TextAlign.center,
             ),

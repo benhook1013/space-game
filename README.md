@@ -59,9 +59,9 @@ dedicated server or NAT traversal.
 - Keyboard controls for desktop playtests (`WASD`/arrow keys to move, `Space` to
   shoot, `Escape` or `P` to pause or resume, `M` to mute, `B` toggles range
   rings, `N` toggles the minimap, `F1` toggles debug overlays, `Enter` starts
-  or restarts from the menu or game over, `R` restarts at any time, `H` shows a
-  help overlay that `Esc` also closes, `U` opens an upgrades overlay that `Esc`
-  also closes)
+  or restarts from the menu or game over, `R` restarts at any time, `Q` returns
+  to the menu from pause or game over, `H` shows a help overlay that `Esc` also
+  closes, `U` opens an upgrades overlay that `Esc` also closes)
 - Game works offline after the first load
 - Deterministic world-space starfield replaces the parallax background:
   - Stars spawn per chunk via Poisson-disk sampling seeded by chunk coordinates.

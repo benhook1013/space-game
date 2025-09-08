@@ -175,6 +175,7 @@ tree spanning weapons and ship systems.
   mining radii.
 - `H` toggles a help overlay for quick reference, and `Esc` closes it when
   visible.
+- `Q` returns to the menu when pressed during pause or game over.
 
 ## Rendering & Camera
 

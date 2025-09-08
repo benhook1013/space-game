@@ -10,6 +10,7 @@ Overlay displayed when the game is paused.
 - Triggered from the HUD pause button or the Escape or `P` key.
 - Visible only while the game state is `paused`.
 - Keyboard shortcuts still work: `R` restarts, `M` toggles audio mute and `H`
-  opens the help overlay which resumes when closed; `Esc` also closes it.
+  opens the help overlay which resumes when closed; `Q` returns to the menu; and
+  `Esc` also closes it.
 
 See [../../PLAN.md](../../PLAN.md) for UI goals.
