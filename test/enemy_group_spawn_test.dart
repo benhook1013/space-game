@@ -61,11 +61,14 @@ void main() {
     game.enemySpawner.spawnNow();
     game.update(0);
     await game.ready();
-    final count = game.children.whereType<EnemyComponent>().length;
+    final enemies = game.children.whereType<EnemyComponent>().toList();
+    final count = enemies.length;
     expect(
       count == Constants.enemyGroupSize ||
           count == Constants.enemyGroupSize + 1,
       isTrue,
     );
+    final spritePaths = enemies.map((e) => e.spritePath).toSet();
+    expect(spritePaths.length, equals(1));
   });
 }
