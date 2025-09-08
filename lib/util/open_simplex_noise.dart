@@ -1,19 +1,10 @@
 import 'dart:math' as math;
 
-/// 2D Simplex noise implementation.
-///
-/// Adapted from Stefan Gustavson's public domain algorithm.
+/// 2D OpenSimplex noise implementation used for deterministic star generation.
 class OpenSimplexNoise {
   OpenSimplexNoise([int seed = 0]) {
-    final p = List<int>.generate(256, (i) => i);
-    final random = math.Random(seed);
-    for (int i = 255; i >= 0; i--) {
-      final j = random.nextInt(i + 1);
-      final temp = p[i];
-      p[i] = p[j];
-      p[j] = temp;
-    }
-    for (int i = 0; i < 512; i++) {
+    final p = List<int>.generate(256, (i) => i)..shuffle(math.Random(seed));
+    for (var i = 0; i < 512; i++) {
       _perm[i] = p[i & 255];
     }
   }
@@ -59,6 +50,7 @@ class OpenSimplexNoise {
     -1,
   ];
 
+  /// Returns a noise value in the range `[-1, 1]` for the point `[xin, yin]`.
   double noise2D(double xin, double yin) {
     const double F2 = 0.366025403; // (sqrt(3)-1)/2
     const double G2 = 0.211324865; // (3-sqrt(3))/6
