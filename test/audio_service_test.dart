@@ -70,6 +70,19 @@ void main() {
     expect(service.masterVolume, closeTo(0.3, 1e-9));
   });
 
+  test('muted state persists across sessions', () async {
+    SharedPreferences.setMockInitialValues({});
+    final storage = await StorageService.create();
+    var service = await AudioService.create(storage);
+    expect(service.muted.value, isFalse);
+
+    await service.toggleMute();
+    expect(service.muted.value, isTrue);
+
+    service = await AudioService.create(storage);
+    expect(service.muted.value, isTrue);
+  });
+
   test('stopAll halts active loops', () async {
     SharedPreferences.setMockInitialValues({});
     final storage = await StorageService.create();

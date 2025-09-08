@@ -98,4 +98,31 @@ void main() {
     expect(game.overlays.isActive(SettingsOverlay.id), isFalse);
     expect(game.overlays.isActive(HudOverlay.id), isTrue);
   });
+
+  test('rapid overlay toggles leave only HUD active', () {
+    final game = _createGame();
+    final service = OverlayService(game);
+
+    for (var i = 0; i < 20; i++) {
+      service.showMenu();
+      service.showHud();
+      service.showPause();
+      service.showGameOver();
+      service.showHud();
+      service.showUpgrades();
+      service.hideUpgrades();
+      service.showSettings();
+      service.hideSettings();
+      service.showHelp();
+      service.hideHelp();
+    }
+
+    expect(game.overlays.isActive(MenuOverlay.id), isFalse);
+    expect(game.overlays.isActive(PauseOverlay.id), isFalse);
+    expect(game.overlays.isActive(GameOverOverlay.id), isFalse);
+    expect(game.overlays.isActive(SettingsOverlay.id), isFalse);
+    expect(game.overlays.isActive(UpgradesOverlay.id), isFalse);
+    expect(game.overlays.isActive(HelpOverlay.id), isFalse);
+    expect(game.overlays.isActive(HudOverlay.id), isTrue);
+  });
 }
