@@ -63790,7 +63790,7 @@ o=A.aF()
 o.r=q.gu()
 q=r.au
 q===$&&A.a()
-n=q.ax.c
+n=q.ax.c-1.5707963267948966
 q=Math.cos(n)
 m=Math.sin(n)
 l=n+2.6179938779914944
