@@ -12,14 +12,15 @@ class ObjectPool<T> {
   final T Function() _create;
   final int? maxSize;
   final List<T> _items = [];
+  late final UnmodifiableListView<T> _itemsView = UnmodifiableListView(_items);
 
   /// Returns an unmodifiable view of the cached items currently in the pool.
   ///
   /// Exposing the internal list directly would allow callers to modify it and
-  /// break the pool's bookkeeping. Returning an [UnmodifiableListView] keeps
-  /// the data read-only while still reflecting updates to the underlying list
-  /// without additional copying.
-  UnmodifiableListView<T> get items => UnmodifiableListView(_items);
+  /// break the pool's bookkeeping. The view is cached to avoid allocating a
+  /// new wrapper on each access while still reflecting changes to the
+  /// underlying list.
+  UnmodifiableListView<T> get items => _itemsView;
 
   T acquire([void Function(T)? reset]) {
     final obj = _items.isNotEmpty ? _items.removeLast() : _create();
