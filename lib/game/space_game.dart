@@ -452,6 +452,7 @@ class SpaceGame extends FlameGame
     upgradeService.dispose();
     stateMachine.dispose();
     eventBus.dispose();
+    audioService.dispose();
     super.onRemove();
   }
 
