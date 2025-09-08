@@ -33,15 +33,25 @@ class EnemyComponent extends SpriteComponent
   EnemyComponent() : super(anchor: Anchor.center);
 
   late EnemyFaction faction;
+  late String spritePath;
 
   int _health = Constants.enemyMaxHealth;
 
   /// Prepares the enemy for reuse.
-  void reset(Vector2 position, EnemyFaction faction, {bool isBoss = false}) {
+  ///
+  /// [spritePath] allows callers to supply a specific sprite so that a group of
+  /// enemies can share the same visual even when multiple sprites exist for a
+  /// faction. If omitted, a random sprite for [faction] is chosen.
+  void reset(
+    Vector2 position,
+    EnemyFaction faction, {
+    String? spritePath,
+    bool isBoss = false,
+  }) {
     this.position.setFrom(position);
     this.faction = faction;
-    final path = Assets.randomEnemyForFaction(faction);
-    sprite = Sprite(Flame.images.fromCache(path));
+    this.spritePath = spritePath ?? Assets.randomEnemyForFaction(faction);
+    sprite = Sprite(Flame.images.fromCache(this.spritePath));
     final baseSize =
         Constants.enemySize * (Constants.spriteScale + Constants.enemyScale);
     size = Vector2.all(baseSize * (isBoss ? Constants.enemyBossScale : 1));
