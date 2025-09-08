@@ -12,7 +12,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  analyze-and-test:
+  analyze:
     runs-on: ubuntu-latest
     env:
       PUB_CACHE: ${{ github.workspace }}/.pub-cache
@@ -48,6 +48,30 @@ jobs:
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
           exit $exit_code
+  test:
+    runs-on: ubuntu-latest
+    env:
+      PUB_CACHE: ${{ github.workspace }}/.pub-cache
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Cache Flutter SDK
+        uses: actions/cache@v4
+        with:
+          path: .tooling/flutter
+          key: ${{ runner.os }}-flutter-${{ hashFiles('scripts/bootstrap_flutter.sh') }}
+          restore-keys: |
+            ${{ runner.os }}-flutter-
+      - name: Cache pub packages
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.PUB_CACHE }}
+          key: ${{ runner.os }}-pub-${{ hashFiles('pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pub-
+      - name: Install dependencies
+        run: mkdir -p $PUB_CACHE && ./scripts/flutterw pub get
       - name: Test
         run: |
           set -o pipefail

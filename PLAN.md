@@ -257,7 +257,7 @@ in [TASKS.md](TASKS.md).
 - Format with `fvm dart format .`
 - Analyze with `fvm dart analyze` (guided by `.analysis_options.yaml`)
 - Lint docs with `npx markdownlint-cli '**/*.md'`
-- Once tests exist, run `fvm flutter test`
+- Run tests with `scripts/flutterw test` (auto-detects CPU cores for `--concurrency`)
 - Use `flutter_test` for widget tests and `flame_test` for component/system tests
   once tests are added
 - Cover object pools with unit tests to ensure instances are reused
