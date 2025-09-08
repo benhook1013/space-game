@@ -1,8 +1,14 @@
 /// Generic object pool to minimise allocations by reusing instances.
 class ObjectPool<T> {
-  ObjectPool(this._create);
+  /// Creates a new pool that builds objects using [create].
+  ///
+  /// If [maxSize] is provided, the pool will keep at most that many
+  /// instances when [release] is called. Additional releases are discarded
+  /// to avoid unbounded memory growth.
+  ObjectPool(T Function() create, {this.maxSize}) : _create = create;
 
   final T Function() _create;
+  final int? maxSize;
   final List<T> _items = [];
 
   /// Returns the cached items currently in the pool.
@@ -15,7 +21,11 @@ class ObjectPool<T> {
   }
 
   /// Returns [obj] to the pool for future reuse.
-  void release(T obj) => _items.add(obj);
+  void release(T obj) {
+    if (maxSize == null || _items.length < maxSize!) {
+      _items.add(obj);
+    }
+  }
 
   /// Clears all cached instances.
   void clear() => _items.clear();
