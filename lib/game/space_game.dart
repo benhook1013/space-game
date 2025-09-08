@@ -165,7 +165,7 @@ class SpaceGame extends FlameGame
     joystick = _buildJoystick();
     await add(joystick);
 
-    _starfield = await StarfieldComponent();
+    _starfield = await StarfieldComponent(debugDrawTiles: debugMode);
     await add(_starfield!);
 
     player = PlayerComponent(
@@ -321,6 +321,9 @@ class SpaceGame extends FlameGame
     // Ensure pooled components also reflect the new debug mode so reused
     // instances don't retain stale debug flags.
     pools.applyDebugMode(debugMode);
+
+    // Outline starfield tiles when debug visuals are enabled.
+    _starfield?.debugDrawTiles = debugMode;
 
     if (debugMode) {
       if (_fpsText != null && !_fpsText!.isMounted) {

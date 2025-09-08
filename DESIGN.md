@@ -192,7 +192,8 @@ tree spanning weapons and ship systems.
   pre-renders to a cached `Picture` translated by `-playerPosition`, dropping
   tiles outside a small margin around the camera so memory stays bounded. The
   player flies over a static backdrop while circles draw faint-to-bright. A
-  `debugDrawTiles` switch outlines tile boundaries for troubleshooting.
+  `debugDrawTiles` switch outlines tile boundaries when debug mode (`F1`) is
+  active for troubleshooting.
 
 ## Assets
 

@@ -14,6 +14,8 @@ Deterministic world-space starfield rendered by `StarfieldComponent`.
   over a static backdrop. Stars within each tile sort by radius so faint stars
   render first for smoother blending.
 - A `debugDrawTiles` flag outlines each tile with a translucent stroke for
-  development verification.
+  development verification. `SpaceGame.toggleDebug` flips this on whenever the
+  game's debug mode is enabled so tile borders appear alongside other debug
+  visuals.
 - Added to `SpaceGame` with a negative priority so it always renders beneath
   gameplay components.
