@@ -5,9 +5,9 @@ Main FlameGame subclass managing world setup, state transitions and the update l
 ## Responsibilities
 
 - Preload assets via the central registry before entering gameplay.
-- Initialise the deterministic world-space starfield, set up a fixed-resolution
-  camera that follows the player via `camera.follow`, and register component
-  spawners.
+- Initialise the deterministic world-space starfield that prunes off-screen
+  tiles, set up a fixed-resolution camera that follows the player via
+  `camera.follow`, and register component spawners.
 - Spawn the player and register enemy or asteroid generators.
 - Provide small bullet, asteroid, enemy and mineral pickup pools to limit allocations.
 - Maintain `GameState` values (`menu`, `playing`, `paused`, `gameOver`)

@@ -27,7 +27,8 @@ _Update this file whenever a player-facing feature is added or changed._
 - [ ] Selected ship persists between sessions
 - [ ] Enter starts or restarts from the menu or game over; `R` restarts at any time
 - [ ] Escape or `P` key pauses or resumes the game
-- [ ] Deterministic world-space starfield renders consistently behind gameplay
+- [ ] Deterministic world-space starfield renders consistently and prunes
+      distant tiles to avoid memory leaks
 - [ ] Sound effects play and can be muted from menu, HUD or game over overlay,
       or via the `M` key
 - [ ] Laser shot sound plays when firing

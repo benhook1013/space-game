@@ -33,7 +33,8 @@ Gameplay entities and reusable pieces.
   damaged that increases the player's mineral total when picked up.
 - Each mineral independently homes toward the player when within the Tractor
   Aura, removing the need for a separate component.
-- [Starfield](starfield.md) – deterministic world-space background drawn with a cached `CustomPainter`.
+- [Starfield](starfield.md) – deterministic world-space background that caches
+  star tiles and prunes those far from the camera.
 - [ExplosionComponent](explosion.md) – short animation and sound played when
   a ship is destroyed.
 

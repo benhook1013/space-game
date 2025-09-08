@@ -23,8 +23,8 @@ Core game class and shared systems.
 ## Responsibilities
 
 - Load assets via a central registry before starting play.
-- Configure the world, including the deterministic world-space starfield and
-  camera.
+- Configure the world, including the deterministic world-space starfield that
+  prunes off-screen tiles, and the camera.
 - Spawn the player and register component spawners.
 - Maintain `GameState` values (`menu`, `playing`, `upgrades`, `paused`,
   `gameOver`) and swap overlays accordingly.

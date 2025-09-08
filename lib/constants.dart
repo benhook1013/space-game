@@ -157,14 +157,18 @@ class Constants {
   /// Cell size for spatial grid used in proximity queries.
   static const double spatialGridCellSize = 200;
 
-  /// Number of stars spawned per parallax layer.
-  static const int starsPerLayer = 30;
-
-  /// Speeds for starfield layers in pixels per second.
-  static const double starSpeedSlow = 10;
-  static const double starSpeedMedium = 20;
-  static const double starSpeedFast = 40;
-
   /// Maximum star radius in logical pixels.
   static const double starMaxSize = 2;
+
+  /// Minimum distance between stars at highest density.
+  static const double starMinDistanceMin = 15;
+
+  /// Maximum distance between stars at lowest density.
+  static const double starMinDistanceMax = 40;
+
+  /// Noise frequency used to modulate star density.
+  static const double starNoiseScale = 0.1;
+
+  /// Extra tile padding kept around the camera for the starfield cache.
+  static const int starfieldCacheMargin = 1;
 }

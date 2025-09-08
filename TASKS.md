@@ -99,16 +99,21 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
       far behind.
 - [x] Tile the parallax starfield so it scrolls seamlessly.
 - [x] Add a minimap or other navigation aid for exploring the larger world.
-- [ ] Replace the player-following parallax starfield with a deterministic
+- [x] Replace the player-following parallax starfield with a deterministic
       world-space starfield:
-      - [ ] Generate stars per chunk using Poisson-disk sampling seeded by chunk
+      - [x] Generate stars per chunk using Poisson-disk sampling seeded by chunk
             coordinates.
-      - [ ] Modulate spawn density with low-frequency Simplex noise to create
+      - [x] Modulate spawn density with low-frequency Simplex noise to create
             clusters.
-      - [ ] Assign weighted radius/brightness (≈80% tiny, 19% small, 1% medium)
+      - [x] Assign weighted radius/brightness (≈80% tiny, 19% small, 1% medium)
             and optional colour jitter.
-      - [ ] Render stars as pinpoint circles via a cached `CustomPainter`,
-            translating by `-playerPosition` so the player moves over a static
+        - [x] Pre-render stars per chunk into a cached `Picture`, drawing with
+            a translation of `-playerPosition` so the player moves over a static
             backdrop.
-      - [ ] Remove the old parallax starfield once the deterministic version is
+      - [x] Sort stars by radius so faint ones render first for smoother
+            blending.
+      - [x] Prune cached starfield tiles outside a small margin so memory
+            remains bounded.
+      - [x] Remove the old parallax starfield once the deterministic version is
             in place.
+      - [x] Expose an optional `debugDrawTiles` flag to outline starfield tiles.
