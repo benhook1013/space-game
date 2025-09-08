@@ -13,15 +13,27 @@ class Assets {
     'players/player1.png',
     'players/player2.png',
   ];
-  static const Map<EnemyFaction, List<String>> enemyFactions = {
-    EnemyFaction.faction1: ['enemies/faction1/unit.png'],
-    EnemyFaction.faction2: ['enemies/faction2/unit.png'],
-    EnemyFaction.faction3: ['enemies/faction3/unit.png'],
-    EnemyFaction.faction4: ['enemies/faction4/unit.png'],
+  static const Map<EnemyFaction, EnemySpriteSet> enemyFactions = {
+    EnemyFaction.faction1: EnemySpriteSet(
+      units: ['enemies/faction1/unit.png'],
+      boss: 'enemies/faction1/unit.png',
+    ),
+    EnemyFaction.faction2: EnemySpriteSet(
+      units: ['enemies/faction2/unit.png'],
+      boss: 'enemies/faction2/unit.png',
+    ),
+    EnemyFaction.faction3: EnemySpriteSet(
+      units: ['enemies/faction3/unit.png'],
+      boss: 'enemies/faction3/unit.png',
+    ),
+    EnemyFaction.faction4: EnemySpriteSet(
+      units: ['enemies/faction4/unit.png'],
+      boss: 'enemies/faction4/unit.png',
+    ),
   };
 
   static List<String> get enemies =>
-      enemyFactions.values.expand((e) => e).toList();
+      enemyFactions.values.expand((e) => [...e.units, e.boss]).toList();
   static const List<String> asteroids = [
     'asteroids/asteroid1.png',
     'asteroids/asteroid2.png',
@@ -89,12 +101,26 @@ class Assets {
   static EnemyFaction randomFaction() =>
       EnemyFaction.values[_rand.nextInt(EnemyFaction.values.length)];
 
-  /// Returns a random enemy sprite path for [faction].
-  static String randomEnemyForFaction(EnemyFaction faction) {
-    final sprites = enemyFactions[faction]!;
+  /// Returns a random unit sprite path for [faction].
+  static String randomUnitForFaction(EnemyFaction faction) {
+    final sprites = enemyFactions[faction]!.units;
     return sprites[_rand.nextInt(sprites.length)];
   }
 
+  /// Returns the boss sprite path for [faction].
+  static String bossForFaction(EnemyFaction faction) =>
+      enemyFactions[faction]!.boss;
+
   /// Returns a random asteroid sprite path.
   static String randomAsteroid() => asteroids[_rand.nextInt(asteroids.length)];
+}
+
+class EnemySpriteSet {
+  const EnemySpriteSet({required this.units, required this.boss});
+
+  /// Sprite paths for standard units belonging to a faction.
+  final List<String> units;
+
+  /// Sprite path for the faction's boss unit.
+  final String boss;
 }
