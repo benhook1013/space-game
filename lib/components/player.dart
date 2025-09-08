@@ -62,17 +62,17 @@ class PlayerComponent extends SpriteComponent
   /// Paint used when drawing the targeting range.
   final Paint _targetingPaint = Paint()
     ..style = PaintingStyle.stroke
-    ..color = const Color(0x66ff0000);
+    ..color = Constants.targetingRangeColor;
 
   /// Paint used when drawing the Tractor Aura range.
   final Paint _tractorPaint = Paint()
     ..style = PaintingStyle.stroke
-    ..color = const Color(0x660000ff);
+    ..color = Constants.tractorRangeColor;
 
   /// Paint used when drawing the mining laser range.
   final Paint _miningPaint = Paint()
     ..style = PaintingStyle.stroke
-    ..color = const Color(0x66ffff00);
+    ..color = Constants.miningRangeColor;
 
   late final PlayerInputBehavior _input;
   late final AutoAimBehavior _autoAim;
