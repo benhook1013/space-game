@@ -7,15 +7,21 @@ Deterministic parallax starfield rendered by `StarfieldComponent`.
 - Low-frequency Simplex noise modulates the minimum distance between stars to
   create subtle clusters and voids. A density multiplier on each layer allows
   the game to tune how busy the sky appears.
+- Star generation runs in a background isolate (`compute`) so tile creation
+  doesn't stall the main thread.
+- Each layer owns a single `OpenSimplexNoise` instance reused for all tiles,
+  reducing object churn during star generation.
 - Multiple `StarfieldLayerConfig`s may be provided. Each layer renders with its
   own parallax factor, density and twinkle speed, enabling a simple depth
-  effect.
+  effect. Tile size is configurable at runtime to scale quality versus
+  performance.
+- Stars are drawn via `Canvas.drawAtlas` using a pre-rendered star sprite, so
+  each tile issues a single draw call even when many stars are visible.
+- Individual stars store randomised twinkle amplitude and frequency for a more
+  organic animation.
 - Tiles are generated asynchronously and cached in an LRU map so camera movement
   never blocks the render loop. Cache size is bounded by each layer's
   `maxCacheTiles`.
-- Stars share a `Paint` instance and their colours are picked from a broader
-  palette (white, blue, yellow and red). Their alpha is animated over time for a
-  subtle twinkling.
 - A `debugDrawTiles` flag outlines each tile with a translucent stroke for
   development verification. `SpaceGame.toggleDebug` flips this on whenever the
   game's debug mode is enabled so tile borders appear alongside other debug
