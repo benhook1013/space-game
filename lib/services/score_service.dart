@@ -34,9 +34,12 @@ class ScoreService {
     return health.value <= 0;
   }
 
-  Future<void> resetHighScore() async {
+  /// Clears the high score both in memory and persistent storage.
+  ///
+  /// Returns `true` if the underlying storage was successfully updated.
+  Future<bool> resetHighScore() async {
     highScore.value = 0;
-    await storageService.resetHighScore();
+    return storageService.resetHighScore();
   }
 
   Future<void> updateHighScoreIfNeeded() async {

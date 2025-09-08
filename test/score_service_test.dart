@@ -38,7 +38,7 @@ void main() {
     expect(score.highScore.value, 15);
     expect(storage.getHighScore(), 15);
 
-    await score.resetHighScore();
+    expect(await score.resetHighScore(), isTrue);
     expect(score.highScore.value, 0);
     expect(storage.getHighScore(), 0);
   });
