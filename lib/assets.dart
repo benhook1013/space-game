@@ -90,24 +90,30 @@ class Assets {
     final total = imagePaths.length + audioPaths.length;
     var loaded = 0;
 
-    Future<void> loadImage(String path) async {
-      await _loadImage(path);
-      loaded++;
+    void reportProgress() {
       onProgress?.call(loaded / total);
     }
 
-    Future<void> loadAudio(String path) async {
-      await _loadAudio(path);
-      loaded++;
-      onProgress?.call(loaded / total);
-    }
+    final futures = <Future<void>>[];
 
     for (final path in imagePaths) {
-      await loadImage(path);
+      futures.add(
+        _loadImage(path).then((_) {
+          loaded++;
+          reportProgress();
+        }),
+      );
     }
     for (final path in audioPaths) {
-      await loadAudio(path);
+      futures.add(
+        _loadAudio(path).then((_) {
+          loaded++;
+          reportProgress();
+        }),
+      );
     }
+
+    await Future.wait(futures);
   }
 
   static Future<void> _loadImage(String path) async {
