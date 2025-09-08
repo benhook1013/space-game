@@ -189,8 +189,8 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
 - Upgrades overlay lets players spend minerals on simple upgrades that
   persist between sessions, opened with a HUD button or the `U` key and
   pausing gameplay. Available upgrades cover fire rate, mining speed,
-  targeting and Tractor Aura ranges, plus an Engine Tuning option for
-  faster movement
+  targeting and Tractor Aura ranges, an Engine Tuning option for faster
+  movement and a Shield Booster that slowly regenerates health
 - Settings overlay with master volume slider and sliders for HUD, minimap,
   text, joystick, targeting, Tractor Aura and mining ranges, plus a reset
   button

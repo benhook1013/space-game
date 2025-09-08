@@ -13,7 +13,8 @@ Optional helpers for cross-cutting concerns.
 - `targeting_service.dart` assists auto-aim queries.
 - `upgrade_service.dart` manages purchasing upgrades with minerals,
   persists bought upgrades via `StorageService`, and derives gameplay modifiers
-  like fire rate and mining speed.
+  like fire rate, mining speed, targeting and Tractor Aura ranges, player speed
+  and health regeneration.
 - Keep services lightweight; add them only when a milestone needs them.
 
 See [../../PLAN.md](../../PLAN.md) for the broader roadmap.

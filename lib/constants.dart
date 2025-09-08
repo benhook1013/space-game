@@ -58,6 +58,10 @@ class Constants {
   /// Seconds that the player sprite flashes red after taking damage.
   static const double playerDamageFlashDuration = 0.2;
 
+  /// Seconds between automatic health regeneration ticks when the Shield
+  /// Booster upgrade is purchased.
+  static const double playerHealthRegenInterval = 5;
+
   /// Radius of the player's Tractor Aura in pixels.
   static const double playerTractorAuraRadius = 150;
 

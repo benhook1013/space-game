@@ -92,6 +92,8 @@ class SpaceGame extends FlameGame
   double _storedVolume = 1;
   bool _suppressVolumeSave = false;
 
+  double _healthRegenTimer = 0;
+
   /// Provides runtime-adjustable UI settings.
   final SettingsService settingsService;
 
@@ -296,6 +298,9 @@ class SpaceGame extends FlameGame
   /// Adds [value] to the current mineral count.
   void addMinerals(int value) => scoreService.addMinerals(value);
 
+  /// Resets the shield regeneration timer.
+  void resetHealthRegenTimer() => _healthRegenTimer = 0;
+
   /// Pauses the game and shows the `PAUSED` overlay.
   void pauseGame() {
     stateMachine.pauseGame();
@@ -455,6 +460,20 @@ class SpaceGame extends FlameGame
             stateMachine.state == GameState.upgrades);
     final effectiveDt = shouldFreeze ? 0.0 : dt;
     super.update(effectiveDt);
+
+    if (_isLoaded &&
+        stateMachine.state == GameState.playing &&
+        upgradeService.hasShieldRegen &&
+        scoreService.health.value < Constants.playerMaxHealth) {
+      _healthRegenTimer += effectiveDt;
+      if (_healthRegenTimer >= Constants.playerHealthRegenInterval) {
+        _healthRegenTimer = 0;
+        scoreService.health.value =
+            (scoreService.health.value + 1).clamp(0, Constants.playerMaxHealth);
+      }
+    } else {
+      _healthRegenTimer = 0;
+    }
   }
 
   @override

@@ -139,8 +139,9 @@ tree spanning weapons and ship systems.
 ## Upgrades
 
 - Minerals earned from asteroids fund upgrades such as faster cannon fire,
-  quicker mining pulses, extended targeting and Tractor Aura ranges, and engine
-  tuning for higher speed without bloating the core loop.
+  quicker mining pulses, extended targeting and Tractor Aura ranges, engine
+  tuning for higher speed and a Shield Booster that slowly regenerates
+  health without bloating the core loop.
 - `UpgradeService` tracks available upgrades and purchases using minerals.
 
 ## Game State Flow
