@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flame/components.dart';
 
+import '../constants.dart';
 import '../game/space_game.dart';
 import 'player.dart';
 
@@ -19,8 +20,8 @@ class TractorAuraRenderer extends Component
       auraCenter,
       auraRadius,
       [
-        const Color(0x5500aaff),
-        const Color(0x0000aaff),
+        Constants.tractorAuraInnerColor,
+        Constants.tractorAuraOuterColor,
       ],
     );
     canvas.drawCircle(auraCenter, auraRadius, _paint);
