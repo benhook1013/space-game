@@ -19,9 +19,11 @@ void main() {
     FlameAudio.audioCache = _FakeAudioCache();
   });
 
-  test('Assets.load can be called multiple times', () async {
-    await Assets.load();
-    await Assets.load();
+  test('Asset loaders can be called multiple times', () async {
+    await Assets.loadEssential();
+    await Assets.loadEssential();
+    await Assets.loadRemaining();
+    await Assets.loadRemaining();
   });
 
   test('loading a missing asset throws', () {
