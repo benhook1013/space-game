@@ -28,136 +28,143 @@ class SettingsOverlay extends StatelessWidget {
                 : width;
             return Container(
               width: maxWidth,
+              constraints: BoxConstraints(
+                maxHeight: constraints.maxHeight,
+              ),
               padding: EdgeInsets.all(spacing),
               decoration: BoxDecoration(
+                color: Colors.grey.withValues(alpha: 0.5),
                 border: Border.all(
                   color: Theme.of(context).colorScheme.outline,
                 ),
                 borderRadius: BorderRadius.circular(spacing),
               ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  GameText(
-                    'Settings',
-                    style: Theme.of(context).textTheme.headlineSmall,
-                    maxLines: 1,
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
-                  SizedBox(height: spacing),
-                  GameText(
-                    'Audio',
-                    style: Theme.of(context).textTheme.titleMedium,
-                    maxLines: 1,
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
-                  SizedBox(height: spacing),
-                  _buildSlider(
-                    context,
-                    'Volume',
-                    game.audioService.volume,
-                    spacing,
-                    min: 0,
-                    max: 1,
-                  ),
-                  GameText(
-                    'HUD Scaling',
-                    style: Theme.of(context).textTheme.titleMedium,
-                    maxLines: 1,
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
-                  SizedBox(height: spacing),
-                  _buildSlider(
-                    context,
-                    'HUD Buttons',
-                    settings.hudButtonScale,
-                    spacing,
-                  ),
-                  _buildSlider(
-                    context,
-                    'Minimap',
-                    settings.minimapScale,
-                    spacing,
-                  ),
-                  _buildSlider(
-                    context,
-                    'Text',
-                    settings.textScale,
-                    spacing,
-                  ),
-                  _buildSlider(
-                    context,
-                    'Joypad',
-                    settings.joystickScale,
-                    spacing,
-                  ),
-                  GameText(
-                    'Range Scaling',
-                    style: Theme.of(context).textTheme.titleMedium,
-                    maxLines: 1,
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
-                  SizedBox(height: spacing),
-                  _buildSlider(
-                    context,
-                    'Targeting Range',
-                    settings.targetingRange,
-                    spacing,
-                    min: 50,
-                    max: 600,
-                  ),
-                  _buildSlider(
-                    context,
-                    'Tractor Range',
-                    settings.tractorRange,
-                    spacing,
-                    min: 50,
-                    max: 600,
-                  ),
-                  _buildSlider(
-                    context,
-                    'Mining Range',
-                    settings.miningRange,
-                    spacing,
-                    min: 50,
-                    max: 600,
-                  ),
-                  GameText(
-                    'Performance',
-                    style: Theme.of(context).textTheme.titleMedium,
-                    maxLines: 1,
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
-                  SizedBox(height: spacing),
-                  _buildSlider(
-                    context,
-                    'Starfield Tile',
-                    settings.starfieldTileSize,
-                    spacing,
-                    min: 256,
-                    max: 1024,
-                  ),
-                  SizedBox(height: spacing),
-                  ElevatedButton(
-                    onPressed: () {
-                      settings.reset();
-                      game.audioService.setMasterVolume(1);
-                    },
-                    child: const GameText(
-                      'Reset',
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    GameText(
+                      'Settings',
+                      style: Theme.of(context).textTheme.headlineSmall,
                       maxLines: 1,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
-                  ),
-                  SizedBox(height: spacing),
-                  ElevatedButton(
-                    onPressed: game.toggleSettings,
-                    child: const GameText(
-                      'Close',
+                    SizedBox(height: spacing),
+                    GameText(
+                      'Audio',
+                      style: Theme.of(context).textTheme.titleMedium,
                       maxLines: 1,
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
-                  ),
-                ],
+                    SizedBox(height: spacing),
+                    _buildSlider(
+                      context,
+                      'Volume',
+                      game.audioService.volume,
+                      spacing,
+                      min: 0,
+                      max: 1,
+                    ),
+                    GameText(
+                      'HUD Scaling',
+                      style: Theme.of(context).textTheme.titleMedium,
+                      maxLines: 1,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
+                    SizedBox(height: spacing),
+                    _buildSlider(
+                      context,
+                      'HUD Buttons',
+                      settings.hudButtonScale,
+                      spacing,
+                    ),
+                    _buildSlider(
+                      context,
+                      'Minimap',
+                      settings.minimapScale,
+                      spacing,
+                    ),
+                    _buildSlider(
+                      context,
+                      'Text',
+                      settings.textScale,
+                      spacing,
+                    ),
+                    _buildSlider(
+                      context,
+                      'Joypad',
+                      settings.joystickScale,
+                      spacing,
+                    ),
+                    GameText(
+                      'Range Scaling',
+                      style: Theme.of(context).textTheme.titleMedium,
+                      maxLines: 1,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
+                    SizedBox(height: spacing),
+                    _buildSlider(
+                      context,
+                      'Targeting Range',
+                      settings.targetingRange,
+                      spacing,
+                      min: 50,
+                      max: 600,
+                    ),
+                    _buildSlider(
+                      context,
+                      'Tractor Range',
+                      settings.tractorRange,
+                      spacing,
+                      min: 50,
+                      max: 600,
+                    ),
+                    _buildSlider(
+                      context,
+                      'Mining Range',
+                      settings.miningRange,
+                      spacing,
+                      min: 50,
+                      max: 600,
+                    ),
+                    GameText(
+                      'Performance',
+                      style: Theme.of(context).textTheme.titleMedium,
+                      maxLines: 1,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
+                    SizedBox(height: spacing),
+                    _buildSlider(
+                      context,
+                      'Starfield Tile',
+                      settings.starfieldTileSize,
+                      spacing,
+                      min: 256,
+                      max: 1024,
+                    ),
+                    SizedBox(height: spacing),
+                    ElevatedButton(
+                      onPressed: () {
+                        settings.reset();
+                        game.audioService.setMasterVolume(1);
+                      },
+                      child: const GameText(
+                        'Reset',
+                        maxLines: 1,
+                      ),
+                    ),
+                    SizedBox(height: spacing),
+                    ElevatedButton(
+                      onPressed: game.toggleSettings,
+                      child: const GameText(
+                        'Close',
+                        maxLines: 1,
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    SizedBox(height: spacing),
+                  ],
+                ),
               ),
             );
           },
