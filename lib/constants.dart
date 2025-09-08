@@ -159,6 +159,15 @@ class Constants {
   /// Cell size for spatial grid used in proximity queries.
   static const double spatialGridCellSize = 200;
 
+  /// Layer configurations for the starfield background. Each record defines
+  /// `parallax`, `density` and `twinkleSpeed` values.
+  static const List<({double parallax, double density, double twinkleSpeed})>
+      starfieldLayers = [
+    (parallax: 0.2, density: 0.3, twinkleSpeed: 0.5),
+    (parallax: 0.6, density: 0.6, twinkleSpeed: 0.8),
+    (parallax: 1.0, density: 1.0, twinkleSpeed: 1.0),
+  ];
+
   /// Maximum star radius in logical pixels.
   static const double starMaxSize = 2;
 

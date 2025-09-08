@@ -195,6 +195,8 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
 - Game works offline after the first load thanks to the service worker
 - Deterministic world-space starfield replaces the parallax background:
   - Stars spawn per chunk via Poisson-disk sampling seeded by chunk coordinates.
+  - Multiple parallax layers with independent density and twinkle speed create
+    depth.
   - Simplex noise modulates density for subtle clusters.
   - Weighted size/brightness spread (≈80% tiny, 19% small, 1% medium) with optional
     colour jitter adds variety.

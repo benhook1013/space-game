@@ -176,11 +176,15 @@ class SpaceGame extends FlameGame
 
     _starfield = await StarfieldComponent(
       debugDrawTiles: debugMode,
-      layers: const [
-        StarfieldLayerConfig(parallax: 0.2, density: 0.3, twinkleSpeed: 0.5),
-        StarfieldLayerConfig(parallax: 0.6, density: 0.6, twinkleSpeed: 0.8),
-        StarfieldLayerConfig(parallax: 1.0, density: 1, twinkleSpeed: 1),
-      ],
+      layers: Constants.starfieldLayers
+          .map(
+            (l) => StarfieldLayerConfig(
+              parallax: l.parallax,
+              density: l.density,
+              twinkleSpeed: l.twinkleSpeed,
+            ),
+          )
+          .toList(),
     );
     await add(_starfield!);
 

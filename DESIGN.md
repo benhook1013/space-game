@@ -189,9 +189,11 @@ tree spanning weapons and ship systems.
   front of the ship.
 - A deterministic world-space starfield generates stars per chunk using
   Poisson-disk sampling seeded by chunk coordinates. Low-frequency Simplex
-  noise modulates density to create clusters and voids. Stars follow a weighted
-  size/brightness distribution with optional subtle colour jitter. Each chunk
-  pre-renders to a cached `Picture` translated by `-playerPosition`, dropping
+  noise modulates density to create clusters and voids. Multiple parallax layers
+  with independent density and twinkle speed values add depth while star alpha
+  animates over time for a subtle twinkle. Stars follow a weighted
+  size/brightness distribution with optional colour jitter. Each chunk pre-renders
+  to a cached `Picture` translated by `-playerPosition`, dropping
   tiles outside a small margin around the camera so memory stays bounded. The
   player flies over a static backdrop while circles draw faint-to-bright. A
   `debugDrawTiles` switch outlines tile boundaries when debug mode (`F1`) is
