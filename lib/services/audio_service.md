@@ -9,6 +9,7 @@ Lightweight wrapper around `flame_audio`.
 - Expose a mute toggle and master volume persisted via `StorageService`.
 - Provide simple methods like `playShoot()`, `playExplosion()` and
   `stopAll()` to halt loops.
+- Free audio resources with `dispose()` when the service is no longer needed.
 - Reuse the shoot sound via a web-only `AudioPool` to avoid network
   fetches on rapid fire.
 

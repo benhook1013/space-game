@@ -75,6 +75,9 @@ class _FakeAudioService implements AudioService {
 
   @override
   AudioPlayer? get miningLoop => null;
+
+  @override
+  void dispose() {}
 }
 
 class _Harness {

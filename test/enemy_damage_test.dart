@@ -54,6 +54,9 @@ class _FakeAudioService implements AudioService {
   void setMasterVolume(double volume) {
     _masterVolume = volume;
   }
+
+  @override
+  void dispose() {}
 }
 
 class _TestPlayer extends PlayerComponent {

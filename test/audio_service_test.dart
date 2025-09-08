@@ -47,11 +47,13 @@ void main() {
 
     service.stopMiningLaser();
     expect(player.stopped, isTrue);
+    expect(player.disposed, isTrue);
     expect(service.miningLoop, isNull);
 
     await service.startMiningLaser();
     await service.toggleMute();
     expect(player.stopped, isTrue);
+    expect(player.disposed, isTrue);
     expect(service.miningLoop, isNull);
 
     await service.startMiningLaser();
@@ -82,16 +84,39 @@ void main() {
 
     service.stopAll();
     expect(player.stopped, isTrue);
+    expect(player.disposed, isTrue);
+    expect(service.miningLoop, isNull);
+  });
+
+  test('dispose stops loops and releases resources', () async {
+    SharedPreferences.setMockInitialValues({});
+    final storage = await StorageService.create();
+    final player = _FakeAudioPlayer();
+    final service = await AudioService.create(
+      storage,
+      loop: (_, {double volume = 1}) async => player,
+    );
+
+    await service.startMiningLaser();
+    service.dispose();
+    expect(player.stopped, isTrue);
+    expect(player.disposed, isTrue);
     expect(service.miningLoop, isNull);
   });
 }
 
 class _FakeAudioPlayer implements AudioPlayer {
   bool stopped = false;
+  bool disposed = false;
 
   @override
   Future<void> stop() async {
     stopped = true;
+  }
+
+  @override
+  Future<void> dispose() async {
+    disposed = true;
   }
 
   @override

@@ -118,12 +118,21 @@ class AudioService {
 
   /// Stops the looping mining laser sound if playing.
   void stopMiningLaser() {
-    _miningLoop?.stop();
+    final loop = _miningLoop;
+    loop?.stop();
+    loop?.dispose();
     _miningLoop = null;
   }
 
   /// Stops all ongoing audio loops.
   void stopAll() {
     stopMiningLaser();
+  }
+
+  /// Releases all resources and disposes internal notifiers.
+  void dispose() {
+    stopAll();
+    muted.dispose();
+    _shootPool?.dispose();
   }
 }
