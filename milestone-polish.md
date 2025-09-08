@@ -15,7 +15,8 @@ See [PLAN.md](PLAN.md) for overall project goals and
 - [x] Menu allows choosing between multiple ship sprites and persists the selection.
 - [x] Option to mute or dim audio when the game is paused.
 - [x] Settings overlay with master volume slider and sliders for HUD, minimap,
-      text, joystick, targeting, Tractor Aura and mining ranges, plus reset button.
+      text, joystick, targeting, Tractor Aura and mining ranges, starfield tile
+      size, plus reset button.
 - [x] Engine Tuning upgrade boosts player speed.
 
 ## Design Notes

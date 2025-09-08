@@ -76,8 +76,9 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
 - [x] Upgrades overlay accessible via HUD button or the `U` key where purchases
       persist across sessions.
 - [x] HUD button or `B` key toggles range rings for targeting, Tractor Aura and mining.
-- [x] Settings overlay with master volume slider and sliders for HUD, text,
-      joystick, targeting, Tractor Aura and mining ranges, plus reset button.
+- [x] Settings overlay with master volume slider and sliders for HUD, minimap,
+      text, joystick, targeting, Tractor Aura and mining ranges, starfield tile
+      size, plus reset button.
 
 - [x] Persist purchased upgrades across sessions using `StorageService`.
 - [x] Engine Tuning upgrade increases player movement speed.
