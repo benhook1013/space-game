@@ -38,10 +38,7 @@ class MiningLaserComponent extends Component with HasGameReference<SpaceGame> {
       _target = null;
       _pulseTimer.stop();
       _paint.strokeWidth = 2;
-      if (_playingSound) {
-        game.audioService.stopMiningLaser();
-        _playingSound = false;
-      }
+      stopSound();
       return;
     }
 
@@ -71,10 +68,7 @@ class MiningLaserComponent extends Component with HasGameReference<SpaceGame> {
         _target = null;
         _pulseTimer.stop();
         _paint.strokeWidth = 2;
-        if (_playingSound) {
-          game.audioService.stopMiningLaser();
-          _playingSound = false;
-        }
+        stopSound();
       } else {
         final progress = _pulseTimer.progress;
         _paint.strokeWidth = 2 + 2 * progress;
@@ -86,10 +80,7 @@ class MiningLaserComponent extends Component with HasGameReference<SpaceGame> {
     } else {
       _pulseTimer.stop();
       _paint.strokeWidth = 2;
-      if (_playingSound) {
-        game.audioService.stopMiningLaser();
-        _playingSound = false;
-      }
+      stopSound();
     }
   }
 
@@ -115,10 +106,7 @@ class MiningLaserComponent extends Component with HasGameReference<SpaceGame> {
 
   @override
   void onRemove() {
-    if (_playingSound) {
-      game.audioService.stopMiningLaser();
-      _playingSound = false;
-    }
+    stopSound();
     super.onRemove();
   }
 }
