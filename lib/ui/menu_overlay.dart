@@ -91,22 +91,36 @@ class MenuOverlay extends StatelessWidget {
               },
             ),
             SizedBox(height: spacing),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ElevatedButton(
-                  onPressed: game.startGame,
-                  child: const GameText(
-                    'Start',
-                    maxLines: 1,
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-                SizedBox(width: spacing),
-                HelpButton(game: game),
-                SizedBox(width: spacing),
-                MuteButton(game: game, iconSize: iconSize),
-              ],
+            ValueListenableBuilder<double>(
+              valueListenable: game.assetLoadProgress,
+              builder: (context, progress, _) {
+                final isLoaded = progress >= 1;
+                return Column(
+                  children: [
+                    if (!isLoaded) ...[
+                      LinearProgressIndicator(value: progress),
+                      SizedBox(height: spacing),
+                    ],
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ElevatedButton(
+                          onPressed: isLoaded ? () => game.startGame() : null,
+                          child: const GameText(
+                            'Start',
+                            maxLines: 1,
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        SizedBox(width: spacing),
+                        HelpButton(game: game),
+                        SizedBox(width: spacing),
+                        MuteButton(game: game, iconSize: iconSize),
+                      ],
+                    ),
+                  ],
+                );
+              },
             ),
           ],
         );

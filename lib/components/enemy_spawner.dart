@@ -7,6 +7,7 @@ import '../assets.dart';
 import '../constants.dart';
 import '../game/space_game.dart';
 import 'enemy.dart';
+import '../enemy_faction.dart';
 
 /// Spawns enemies at timed intervals when started.
 class EnemySpawner extends Component with HasGameReference<SpaceGame> {

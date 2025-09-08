@@ -32,7 +32,7 @@ void main() {
     expect(game.stateMachine.state, GameState.menu);
     expect(game.overlays.isActive(MenuOverlay.id), isTrue);
 
-    game.startGame();
+    await game.startGame();
     expect(game.stateMachine.state, GameState.playing);
     expect(game.overlays.isActive(HudOverlay.id), isTrue);
 

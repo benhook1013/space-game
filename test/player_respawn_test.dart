@@ -31,7 +31,7 @@ void main() {
     await game.onLoad();
     game.onGameResize(Vector2.all(100));
 
-    game.startGame();
+    await game.startGame();
     game.player.position.setValues(20, 20);
 
     for (var i = 0; i < Constants.playerMaxHealth; i++) {
@@ -40,7 +40,7 @@ void main() {
 
     expect(game.stateMachine.state, GameState.gameOver);
 
-    game.startGame();
+    await game.startGame();
     expect(game.player.position, Vector2.zero());
   });
 }

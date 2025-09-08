@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flame/flame.dart';
 import 'package:flame_audio/flame_audio.dart';
+import 'package:flutter/services.dart';
 
 import 'enemy_faction.dart';
 import 'log.dart';
@@ -72,17 +73,41 @@ class Assets {
     await Future.wait(imagePaths.map(_loadImage));
   }
 
-  /// Preloads remaining images and all audio assets in the background.
-  static Future<void> loadRemaining() async {
+  /// Preloads remaining images and all audio assets.
+  ///
+  /// The optional [onProgress] callback reports a value between `0` and `1`
+  /// after each asset finishes loading.
+  static Future<void> loadRemaining({
+    void Function(double progress)? onProgress,
+  }) async {
     final imagePaths = [
       ...asteroids.skip(1),
       ...explosions.skip(1),
       ...enemies,
     ];
-    await Future.wait(imagePaths.map(_loadImage));
-
     const audioPaths = [shootSfx, explosionSfx, miningLaserSfx];
-    await Future.wait(audioPaths.map(_loadAudio));
+
+    final total = imagePaths.length + audioPaths.length;
+    var loaded = 0;
+
+    Future<void> loadImage(String path) async {
+      await _loadImage(path);
+      loaded++;
+      onProgress?.call(loaded / total);
+    }
+
+    Future<void> loadAudio(String path) async {
+      await _loadAudio(path);
+      loaded++;
+      onProgress?.call(loaded / total);
+    }
+
+    for (final path in imagePaths) {
+      await loadImage(path);
+    }
+    for (final path in audioPaths) {
+      await loadAudio(path);
+    }
   }
 
   static Future<void> _loadImage(String path) async {
@@ -97,6 +122,9 @@ class Assets {
   static Future<void> _loadAudio(String path) async {
     try {
       await FlameAudio.audioCache.load(path);
+    } on MissingPluginException catch (e) {
+      // Some test environments lack the necessary platform channels.
+      log('Missing audio plugin for $path: $e');
     } catch (e) {
       log('Failed to load audio asset $path: $e');
       rethrow;

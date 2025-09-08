@@ -50,7 +50,7 @@ void main() {
     game.joystick.relativeDelta.setZero();
 
     // Starting a new game should reset orientation and position.
-    game.startGame();
+    await game.startGame();
     game.onGameResize(Vector2.all(100));
     await game.ready();
     game.update(0);

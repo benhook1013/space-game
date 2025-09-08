@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flutter/widgets.dart';
@@ -32,14 +34,14 @@ void main() {
     await game.onLoad();
     game.onGameResize(Vector2.all(100));
 
-    game.startGame();
+    await game.startGame();
     for (var i = 0; i < Constants.playerMaxHealth; i++) {
       game.hitPlayer();
     }
     await game.ready();
     expect(game.children.whereType<ExplosionComponent>(), isNotEmpty);
 
-    game.startGame();
+    await game.startGame();
     await game.ready();
     expect(game.children.whereType<ExplosionComponent>(), isEmpty);
   });
@@ -58,12 +60,12 @@ void main() {
     await game.onLoad();
     game.onGameResize(Vector2.all(100));
 
-    game.startGame();
+    await game.startGame();
     for (var i = 0; i < Constants.playerMaxHealth; i++) {
       game.hitPlayer();
     }
     // Immediately restart without waiting for lifecycle events to process.
-    game.startGame();
+    unawaited(game.startGame());
     await game.ready();
     expect(game.children.whereType<ExplosionComponent>(), isEmpty);
   });
