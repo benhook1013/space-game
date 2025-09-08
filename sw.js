@@ -12,17 +12,27 @@ const CORE_ASSETS = [
   "main.dart.js",
 ];
 
-async function cacheAssets(cache, assets) {
-  await Promise.all(
-    assets.map(async (asset) => {
-      const url = asset.startsWith("assets/") ? `assets/${asset}` : asset;
-      try {
-        await cache.add(url);
-      } catch (err) {
-        console.warn(`Failed to cache ${url}`, err);
-      }
-    }),
-  );
+const RARELY_CHANGED_EXTENSIONS = new Set([
+  "png",
+  "jpg",
+  "jpeg",
+  "gif",
+  "svg",
+  "mp3",
+  "wav",
+  "ogg",
+  "json",
+  "woff",
+  "woff2",
+]);
+
+async function cacheAll(cache, assets) {
+  const urls = [...new Set(assets)];
+  try {
+    await cache.addAll(urls);
+  } catch (err) {
+    console.warn("Failed to cache assets", err);
+  }
 }
 
 async function cacheOptionalAssets(cache) {
@@ -33,8 +43,8 @@ async function cacheOptionalAssets(cache) {
       ...(manifest.images || []),
       ...(manifest.audio || []),
       ...(manifest.fonts || []),
-    ];
-    await cacheAssets(cache, assetList);
+    ].map((asset) => (asset.startsWith("assets/") ? asset : `assets/${asset}`));
+    await cacheAll(cache, assetList);
   } catch (err) {
     console.error("Asset manifest fetch failed", err);
   }
@@ -44,7 +54,7 @@ self.addEventListener("install", (event) => {
   event.waitUntil(
     (async () => {
       const cache = await caches.open(CACHE_NAME);
-      await cacheAssets(cache, CORE_ASSETS);
+      await cacheAll(cache, CORE_ASSETS);
     })(),
   );
   self.skipWaiting();
@@ -67,28 +77,51 @@ self.addEventListener("activate", (event) => {
   );
 });
 
+async function staleWhileRevalidate(event) {
+  const cache = await caches.open(CACHE_NAME);
+  const cached = await cache.match(event.request);
+  const fetchPromise = fetch(event.request)
+    .then((response) => {
+      if (
+        response.status === 200 &&
+        !event.request.url.startsWith("chrome-extension")
+      ) {
+        cache.put(event.request, response.clone());
+      }
+      return response;
+    })
+    .catch(() => cached);
+  if (cached) {
+    event.waitUntil(fetchPromise);
+    return cached;
+  }
+  return fetchPromise;
+}
+
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
+  const url = new URL(event.request.url);
+  const ext = url.pathname.split(".").pop();
+  if (ext && RARELY_CHANGED_EXTENSIONS.has(ext)) {
+    event.respondWith(staleWhileRevalidate(event));
+    return;
+  }
   event.respondWith(
-    (async () => {
-      const cache = await caches.open(CACHE_NAME);
-      const cached = await cache.match(event.request);
-      const fetchPromise = fetch(event.request)
-        .then((response) => {
-          if (
-            response.status === 200 &&
-            !event.request.url.startsWith("chrome-extension")
-          ) {
-            cache.put(event.request, response.clone());
-          }
-          return response;
-        })
-        .catch(() => cached);
-      if (cached) {
-        event.waitUntil(fetchPromise);
-        return cached;
-      }
-      return fetchPromise;
-    })(),
+    fetch(event.request)
+      .then((response) => {
+        if (
+          response.status === 200 &&
+          !event.request.url.startsWith("chrome-extension")
+        ) {
+          caches
+            .open(CACHE_NAME)
+            .then((cache) => cache.put(event.request, response.clone()));
+        }
+        return response;
+      })
+      .catch(async () => {
+        const cache = await caches.open(CACHE_NAME);
+        return cache.match(event.request);
+      }),
   );
 });

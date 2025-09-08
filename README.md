@@ -7,9 +7,10 @@ PWA configuration and static web files.
 - `index.html` bootstraps the Flutter app and registers `sw.js` after hashing
   `assets_manifest.json` so the cache version updates automatically when
   assets change.
-- `sw.js` precaches core files, then caches optional assets from
-  `assets_manifest.json` in the background and serves requests with a
-  stale-while-revalidate strategy.
+- `sw.js` precaches core files, batches manifest assets with `cache.addAll`
+  to avoid duplicate fetches, and applies a stale-while-revalidate strategy
+  for static assets so visits start instantly while updates download in the
+  background.
 - `assets_manifest.json` is copied here from the project root so the service
   worker can fetch it at runtime. Keep both copies in sync when assets change.
 - See [../PLAN.md](../PLAN.md) for PWA goals and deployment guidelines.
