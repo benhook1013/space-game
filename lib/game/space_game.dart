@@ -405,9 +405,13 @@ class SpaceGame extends FlameGame
     knob
       ..radius = 20 * scale
       ..position = Vector2.zero();
+    // Update cached values so the hitbox matches the visual size.
     joystick
+      ..size = Vector2.all(100 * scale)
+      ..knobRadius = 20 * scale
       ..anchor = Anchor.bottomLeft
       ..position = Vector2(40, size.y - 40);
+    joystick.onGameResize(size);
 
     // Scale the fire button to match the joystick and stay anchored
     // to the bottom-right corner.
