@@ -5,6 +5,8 @@ args=("$@")
 set --
 source "$(dirname "$0")/bootstrap_flutter.sh"
 set -- "${args[@]}"
+export FLUTTER_SUPPRESS_ANALYTICS=1
+export DART_SUPPRESS_ANALYTICS=1
 if [[ "${1-}" == "format" && $# -eq 1 ]]; then
   set -- "$1" .
 fi
