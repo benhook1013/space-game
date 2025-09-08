@@ -13,6 +13,7 @@ import 'damageable.dart';
 import 'explosion.dart';
 import 'offscreen_cleanup.dart';
 import 'spawn_remove_emitter.dart';
+import 'damage_flash.dart';
 
 /// Basic foe that drifts toward the player.
 ///
@@ -26,7 +27,8 @@ class EnemyComponent extends SpriteComponent
         SolidBody,
         Damageable,
         SpawnRemoveEmitter<EnemyComponent>,
-        OffscreenCleanup {
+        OffscreenCleanup,
+        DamageFlash {
   EnemyComponent()
       : super(
           size: Vector2.all(
@@ -70,6 +72,7 @@ class EnemyComponent extends SpriteComponent
 
   /// Reduces health by [amount] and removes the enemy when depleted.
   void takeDamage(int amount) {
+    flashDamage();
     _health -= amount;
     if (_health <= 0 && !isRemoving) {
       game

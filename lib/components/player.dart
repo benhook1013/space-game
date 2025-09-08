@@ -16,13 +16,15 @@ import 'mineral.dart';
 import 'player_input_behavior.dart';
 import 'spawn_remove_emitter.dart';
 import 'tractor_aura_renderer.dart';
+import 'damage_flash.dart';
 
 /// Controllable player ship.
 class PlayerComponent extends SpriteComponent
     with
         HasGameReference<SpaceGame>,
         CollisionCallbacks,
-        SpawnRemoveEmitter<PlayerComponent> {
+        SpawnRemoveEmitter<PlayerComponent>,
+        DamageFlash {
   PlayerComponent({
     required this.joystick,
     required this.keyDispatcher,
@@ -72,11 +74,6 @@ class PlayerComponent extends SpriteComponent
     ..style = PaintingStyle.stroke
     ..color = const Color(0x66ffff00);
 
-  static const _damageColor = Color(0xffff0000);
-
-  /// Remaining time for the damage flash effect.
-  double _damageFlashTime = 0;
-
   late final PlayerInputBehavior _input;
   late final AutoAimBehavior _autoAim;
 
@@ -110,12 +107,6 @@ class PlayerComponent extends SpriteComponent
   /// Toggles visibility of the player's range rings.
   void toggleRangeRings() {
     showRangeRings = !showRangeRings;
-  }
-
-  /// Triggers a short red flash that fades out to indicate damage taken.
-  void flashDamage() {
-    _damageFlashTime = Constants.playerDamageFlashDuration;
-    paint.colorFilter = ColorFilter.mode(_damageColor, BlendMode.srcATop);
   }
 
   /// Allows external callers to fire a bullet.
@@ -175,25 +166,6 @@ class PlayerComponent extends SpriteComponent
   @override
   void update(double dt) {
     super.update(dt);
-    _updateDamageFlash(dt);
-  }
-
-  void _updateDamageFlash(double dt) {
-    if (_damageFlashTime > 0) {
-      _damageFlashTime -= dt;
-      if (_damageFlashTime <= 0) {
-        paint.colorFilter = null;
-      } else {
-        final alpha =
-            (255 * (_damageFlashTime / Constants.playerDamageFlashDuration))
-                .clamp(0, 255)
-                .toInt();
-        paint.colorFilter = ColorFilter.mode(
-          _damageColor.withAlpha(alpha),
-          BlendMode.srcATop,
-        );
-      }
-    }
   }
 
   @override
