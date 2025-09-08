@@ -68,7 +68,9 @@ class _MiniMapPainter extends CustomPainter {
 
     final playerPaint = Paint()..color = game.colorScheme.primary;
     const double arrowRadius = 6;
-    final angle = game.player.angle;
+    // Player's angle is 0 when facing north, but Canvas expects 0 on the east.
+    // Shift by 90 degrees so the minimap arrow aligns with the ship heading.
+    final angle = game.player.angle - math.pi / 2;
     final tip = Offset(
       center.dx + math.cos(angle) * arrowRadius,
       center.dy + math.sin(angle) * arrowRadius,
