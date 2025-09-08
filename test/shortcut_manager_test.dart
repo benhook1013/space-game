@@ -43,14 +43,16 @@ class _FakeAudioService implements AudioService {
 
   @override
   final ValueNotifier<bool> muted = ValueNotifier(false);
-  double _volume = 1;
 
   @override
-  double get masterVolume => _volume;
+  final ValueNotifier<double> volume = ValueNotifier<double>(1);
+
+  @override
+  double get masterVolume => volume.value;
 
   @override
   void setMasterVolume(double volume) {
-    _volume = volume;
+    this.volume.value = volume;
   }
 
   @override

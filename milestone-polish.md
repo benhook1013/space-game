@@ -14,8 +14,8 @@ See [PLAN.md](PLAN.md) for overall project goals and
 - [x] Simple HUD and menus layered with Flutter overlays.
 - [x] Menu allows choosing between multiple ship sprites and persists the selection.
 - [x] Option to mute or dim audio when the game is paused.
-- [x] Settings overlay with sliders for HUD, minimap, text, joystick, targeting,
-      Tractor Aura and mining ranges, plus reset button.
+- [x] Settings overlay with master volume slider and sliders for HUD, minimap,
+      text, joystick, targeting, Tractor Aura and mining ranges, plus reset button.
 
 ## Design Notes
 

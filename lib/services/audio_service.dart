@@ -16,8 +16,15 @@ class AudioService {
     this.muted,
     this._shootPool,
     this._loop,
-    this._masterVolume,
-  );
+    double initialVolume,
+  ) : volume = ValueNotifier<double>(initialVolume) {
+    volume.addListener(() {
+      unawaited(_storage.setDouble(_masterVolumeKey, volume.value));
+      _miningLoop?.setVolume(
+        Constants.miningLaserVolume * volume.value,
+      );
+    });
+  }
 
   /// Asynchronously create the service and load the persisted mute flag.
   ///
@@ -30,7 +37,7 @@ class AudioService {
     _LoopCallback? loop,
   }) async {
     final muted = ValueNotifier<bool>(storage.isMuted());
-    final volume = storage.getDouble(_masterVolumeKey, 1);
+    final initialVolume = storage.getDouble(_masterVolumeKey, 1);
     AudioPool? shootPool;
     if (kIsWeb) {
       try {
@@ -49,7 +56,7 @@ class AudioService {
       loop ??
           (String file, {double volume = 1}) =>
               FlameAudio.loop(file, volume: volume),
-      volume,
+      initialVolume,
     );
   }
 
@@ -65,16 +72,14 @@ class AudioService {
 
   static const _masterVolumeKey = 'masterVolume';
 
-  double _masterVolume;
-
   /// Current global volume multiplier applied to all effects.
-  double get masterVolume => _masterVolume;
+  final ValueNotifier<double> volume;
 
-  /// Sets the global volume multiplier (0-1) and updates active loops.
-  void setMasterVolume(double volume) {
-    _masterVolume = volume.clamp(0, 1);
-    unawaited(_storage.setDouble(_masterVolumeKey, _masterVolume));
-    _miningLoop?.setVolume(Constants.miningLaserVolume * _masterVolume);
+  double get masterVolume => volume.value;
+
+  /// Sets the global volume multiplier (0-1).
+  void setMasterVolume(double value) {
+    volume.value = value.clamp(0, 1);
   }
 
   /// Toggles the mute flag and persists the new value.
@@ -90,16 +95,16 @@ class AudioService {
   void playShoot() {
     if (muted.value) return;
     if (_shootPool != null) {
-      _shootPool.start(volume: _masterVolume);
+      _shootPool.start(volume: masterVolume);
     } else {
-      FlameAudio.play(Assets.shootSfx, volume: _masterVolume);
+      FlameAudio.play(Assets.shootSfx, volume: masterVolume);
     }
   }
 
   /// Plays the explosion sound effect if not muted.
   void playExplosion() {
     if (muted.value) return;
-    FlameAudio.play(Assets.explosionSfx, volume: _masterVolume);
+    FlameAudio.play(Assets.explosionSfx, volume: masterVolume);
   }
 
   AudioPlayer? _miningLoop;
@@ -112,7 +117,7 @@ class AudioService {
     if (muted.value || _miningLoop != null) return;
     _miningLoop = await _loop(
       Assets.miningLaserSfx,
-      volume: Constants.miningLaserVolume * _masterVolume,
+      volume: Constants.miningLaserVolume * masterVolume,
     );
   }
 

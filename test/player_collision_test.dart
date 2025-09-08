@@ -24,10 +24,12 @@ import 'test_joystick.dart';
 class _FakeAudioService implements AudioService {
   @override
   final ValueNotifier<bool> muted = ValueNotifier(false);
-  double _masterVolume = 1;
 
   @override
-  double get masterVolume => _masterVolume;
+  final ValueNotifier<double> volume = ValueNotifier<double>(1);
+
+  @override
+  double get masterVolume => volume.value;
 
   @override
   AudioPlayer? get miningLoop => null;
@@ -54,7 +56,7 @@ class _FakeAudioService implements AudioService {
 
   @override
   void setMasterVolume(double volume) {
-    _masterVolume = volume;
+    this.volume.value = volume;
   }
 }
 

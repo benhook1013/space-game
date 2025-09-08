@@ -26,10 +26,10 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: SettingsOverlay(game: game)));
 
     final slider = find.byType(Slider).first;
-    final initial = game.settingsService.hudButtonScale.value;
+    final initial = audio.masterVolume;
     await tester.drag(slider, const Offset(50, 0));
     await tester.pump();
-    expect(game.settingsService.hudButtonScale.value, isNot(initial));
+    expect(audio.masterVolume, isNot(initial));
   });
 
   testWidgets('reset button restores defaults', (tester) async {
@@ -44,6 +44,7 @@ void main() {
     final audio = await AudioService.create(storage);
     final game = SpaceGame(storageService: storage, audioService: audio);
     game.settingsService.hudButtonScale.value = 1.2;
+    audio.setMasterVolume(0.5);
 
     await tester.pumpWidget(MaterialApp(home: SettingsOverlay(game: game)));
     await tester.tap(find.text('Reset'));
@@ -51,5 +52,6 @@ void main() {
 
     expect(game.settingsService.hudButtonScale.value,
         SettingsService.defaultHudButtonScale);
+    expect(audio.masterVolume, 1);
   });
 }

@@ -75,6 +75,12 @@ class SpaceGame extends FlameGame
       storageService: storageService,
       settingsService: this.settingsService,
     );
+    _storedVolume = audioService.masterVolume;
+    audioService.volume.addListener(() {
+      if (!_suppressVolumeSave) {
+        _storedVolume = audioService.masterVolume;
+      }
+    });
   }
 
   /// Handles persistence for the high score.
@@ -82,6 +88,9 @@ class SpaceGame extends FlameGame
 
   /// Plays sound effects and handles the mute toggle.
   final AudioService audioService;
+
+  double _storedVolume = 1;
+  bool _suppressVolumeSave = false;
 
   /// Provides runtime-adjustable UI settings.
   final SettingsService settingsService;
@@ -283,13 +292,20 @@ class SpaceGame extends FlameGame
   /// Pauses the game and shows the `PAUSED` overlay.
   void pauseGame() {
     stateMachine.pauseGame();
-    audioService.setMasterVolume(Constants.pausedAudioVolumeFactor);
+    _storedVolume = audioService.masterVolume;
+    _suppressVolumeSave = true;
+    audioService.setMasterVolume(
+      _storedVolume * Constants.pausedAudioVolumeFactor,
+    );
+    _suppressVolumeSave = false;
   }
 
   /// Resumes the game from a paused state.
   void resumeGame() {
     stateMachine.resumeGame();
-    audioService.setMasterVolume(1);
+    _suppressVolumeSave = true;
+    audioService.setMasterVolume(_storedVolume);
+    _suppressVolumeSave = false;
     focusGame();
   }
 
@@ -298,7 +314,9 @@ class SpaceGame extends FlameGame
 
   /// Starts a new game session.
   void startGame() {
-    audioService.setMasterVolume(1);
+    _suppressVolumeSave = true;
+    audioService.setMasterVolume(_storedVolume);
+    _suppressVolumeSave = false;
     stateMachine.startGame();
   }
 
