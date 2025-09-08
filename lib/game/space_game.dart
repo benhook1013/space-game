@@ -451,9 +451,11 @@ class SpaceGame extends FlameGame
     scoreService.dispose();
     upgradeService.dispose();
     stateMachine.dispose();
-    eventBus.dispose();
     audioService.dispose();
     super.onRemove();
+    // Dispose the event bus after children are removed so they can emit
+    // removal events without errors.
+    eventBus.dispose();
   }
 
   /// Requests keyboard focus for the surrounding [GameWidget].
