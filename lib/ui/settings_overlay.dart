@@ -42,12 +42,14 @@ class SettingsOverlay extends StatelessWidget {
                     'UI Settings',
                     style: Theme.of(context).textTheme.headlineSmall,
                     maxLines: 1,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                   SizedBox(height: spacing),
                   GameText(
                     'HUD Scaling',
                     style: Theme.of(context).textTheme.titleMedium,
                     maxLines: 1,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                   SizedBox(height: spacing),
                   _buildSlider(
@@ -78,6 +80,7 @@ class SettingsOverlay extends StatelessWidget {
                     'Range Scaling',
                     style: Theme.of(context).textTheme.titleMedium,
                     maxLines: 1,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                   SizedBox(height: spacing),
                   _buildSlider(

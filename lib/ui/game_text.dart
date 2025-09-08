@@ -46,16 +46,18 @@ class GameText extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget buildText(double scale) {
       final scheme = Theme.of(context).colorScheme;
-      final mergedStyle = _baseStyle.merge(style).copyWith(
-            color: color ?? scheme.primary,
-            decoration: TextDecoration.none,
-          );
-      final baseSize = mergedStyle.fontSize ?? _baseStyle.fontSize!;
+      final mergedStyle = _baseStyle.merge(style);
+      final effectiveColor = color ?? mergedStyle.color ?? scheme.primary;
+      final textStyle = mergedStyle.copyWith(
+        color: effectiveColor,
+        decoration: TextDecoration.none,
+      );
+      final baseSize = textStyle.fontSize ?? _baseStyle.fontSize!;
       return AutoSizeText(
         data,
         maxLines: maxLines,
         textAlign: textAlign,
-        style: mergedStyle.copyWith(fontSize: baseSize * scale),
+        style: textStyle.copyWith(fontSize: baseSize * scale),
       );
     }
 
