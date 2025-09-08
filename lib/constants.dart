@@ -68,6 +68,12 @@ class Constants {
   /// Speed pickups move toward the player within the Tractor Aura.
   static const double tractorAuraPullSpeed = 200;
 
+  /// Inner color of the player's Tractor Aura gradient.
+  static const Color tractorAuraInnerColor = Color(0x5500aaff);
+
+  /// Outer color of the player's Tractor Aura gradient.
+  static const Color tractorAuraOuterColor = Color(0x0000aaff);
+
   /// Bullet travel speed in pixels per second.
   static const double bulletSpeed = 400;
 
