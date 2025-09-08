@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flame/components.dart';
@@ -8,6 +10,9 @@ import '../components/mineral.dart';
 import '../game/space_game.dart';
 
 /// Simple circular minimap showing nearby entities relative to the player.
+///
+/// The player appears as a small arrow indicating the current heading, while
+/// enemies, asteroids and mineral pickups render as dots.
 class MiniMapDisplay extends StatefulWidget {
   const MiniMapDisplay({super.key, required this.game, this.size = 80});
 
@@ -62,7 +67,26 @@ class _MiniMapPainter extends CustomPainter {
     canvas.drawCircle(center, radius, borderPaint);
 
     final playerPaint = Paint()..color = game.colorScheme.primary;
-    canvas.drawCircle(center, 3, playerPaint);
+    const double arrowRadius = 6;
+    final angle = game.player.angle;
+    final tip = Offset(
+      center.dx + math.cos(angle) * arrowRadius,
+      center.dy + math.sin(angle) * arrowRadius,
+    );
+    final left = Offset(
+      center.dx + math.cos(angle + 5 * math.pi / 6) * arrowRadius,
+      center.dy + math.sin(angle + 5 * math.pi / 6) * arrowRadius,
+    );
+    final right = Offset(
+      center.dx + math.cos(angle - 5 * math.pi / 6) * arrowRadius,
+      center.dy + math.sin(angle - 5 * math.pi / 6) * arrowRadius,
+    );
+    final path = Path()
+      ..moveTo(tip.dx, tip.dy)
+      ..lineTo(left.dx, left.dy)
+      ..lineTo(right.dx, right.dy)
+      ..close();
+    canvas.drawPath(path, playerPaint);
 
     final enemyPaint = Paint()..color = Colors.redAccent;
     final asteroidPaint = Paint()..color = Colors.grey;

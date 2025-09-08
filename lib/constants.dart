@@ -5,7 +5,7 @@ class Constants {
   /// Distance from the player after which entities are removed.
   static const double despawnRadius = 1500;
 
-  /// Size of a single generated starfield tile in pixels.
+  /// Default size of a single generated starfield tile in pixels.
   static const double starfieldTileSize = 512;
 
   /// Player movement speed in pixels per second.
@@ -58,6 +58,10 @@ class Constants {
   /// Seconds that the player sprite flashes red after taking damage.
   static const double playerDamageFlashDuration = 0.2;
 
+  /// Seconds between automatic health regeneration ticks when the Shield
+  /// Booster upgrade is purchased.
+  static const double playerHealthRegenInterval = 5;
+
   /// Radius of the player's Tractor Aura in pixels.
   static const double playerTractorAuraRadius = 150;
 
@@ -67,6 +71,12 @@ class Constants {
 
   /// Speed pickups move toward the player within the Tractor Aura.
   static const double tractorAuraPullSpeed = 200;
+
+  /// Inner color of the player's Tractor Aura gradient.
+  static const Color tractorAuraInnerColor = Color(0x5500aaff);
+
+  /// Outer color of the player's Tractor Aura gradient.
+  static const Color tractorAuraOuterColor = Color(0x0000aaff);
 
   /// Bullet travel speed in pixels per second.
   static const double bulletSpeed = 400;
@@ -172,10 +182,10 @@ class Constants {
   static const double starMaxSize = 2;
 
   /// Minimum distance between stars at highest density.
-  static const double starMinDistanceMin = 15;
+  static const double starMinDistanceMin = 20;
 
   /// Maximum distance between stars at lowest density.
-  static const double starMinDistanceMax = 40;
+  static const double starMinDistanceMax = 60;
 
   /// Noise frequency used to modulate star density.
   static const double starNoiseScale = 0.1;

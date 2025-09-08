@@ -81,6 +81,7 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
 
 - [x] Persist purchased upgrades across sessions using `StorageService`.
 - [x] Engine Tuning upgrade increases player movement speed.
+- [x] Shield Booster upgrade slowly regenerates player health.
 
 ## Next Steps
 

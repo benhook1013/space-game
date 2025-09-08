@@ -6,6 +6,7 @@ import 'package:flame/components.dart';
 import '../assets.dart';
 import '../constants.dart';
 import '../game/space_game.dart';
+import 'asteroid.dart';
 import 'damageable.dart';
 import 'offscreen_cleanup.dart';
 import 'spawn_remove_emitter.dart';
@@ -53,7 +54,10 @@ class BulletComponent extends SpriteComponent
     PositionComponent other,
   ) {
     super.onCollisionStart(intersectionPoints, other);
-    if (other case Damageable damageable) {
+    if (other is AsteroidComponent) {
+      other.destroy();
+      removeFromParent();
+    } else if (other case Damageable damageable) {
       damageable.takeDamage(Constants.bulletDamage);
       removeFromParent();
     }

@@ -4,6 +4,7 @@ import 'package:flame/flame.dart';
 import 'package:flame_audio/flame_audio.dart';
 
 import 'enemy_faction.dart';
+import 'log.dart';
 
 /// Central registry for asset paths and preloading.
 class Assets {
@@ -46,7 +47,7 @@ class Assets {
 
   /// Preloads all images and audio assets.
   static Future<void> load() async {
-    await Flame.images.loadAll([
+    final imagePaths = [
       ...players,
       ...enemies,
       ...asteroids,
@@ -56,10 +57,30 @@ class Assets {
       scoreIcon,
       healthIcon,
       settingsIcon,
-    ]);
+    ];
 
-    await FlameAudio.audioCache
-        .loadAll([shootSfx, explosionSfx, miningLaserSfx]);
+    await Future.wait(imagePaths.map(_loadImage));
+
+    final audioPaths = [shootSfx, explosionSfx, miningLaserSfx];
+    await Future.wait(audioPaths.map(_loadAudio));
+  }
+
+  static Future<void> _loadImage(String path) async {
+    try {
+      await Flame.images.load(path);
+    } catch (e) {
+      log('Failed to load image asset $path: $e');
+      rethrow;
+    }
+  }
+
+  static Future<void> _loadAudio(String path) async {
+    try {
+      await FlameAudio.audioCache.load(path);
+    } catch (e) {
+      log('Failed to load audio asset $path: $e');
+      rethrow;
+    }
   }
 
   static final Random _rand = Random();

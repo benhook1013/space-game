@@ -92,6 +92,8 @@ class SpaceGame extends FlameGame
   double _storedVolume = 1;
   bool _suppressVolumeSave = false;
 
+  double _healthRegenTimer = 0;
+
   /// Provides runtime-adjustable UI settings.
   final SettingsService settingsService;
 
@@ -129,6 +131,7 @@ class SpaceGame extends FlameGame
   final GameEventBus eventBus = GameEventBus();
   late final TargetingService targetingService;
   StarfieldComponent? _starfield;
+  int _starfieldRebuildId = 0;
   FpsTextComponent? _fpsText;
   bool _playerInitialized = false;
   final ValueNotifier<bool> showMinimap = ValueNotifier<bool>(true);
@@ -177,12 +180,14 @@ class SpaceGame extends FlameGame
     _starfield = await StarfieldComponent(
       debugDrawTiles: debugMode,
       layers: const [
-        StarfieldLayerConfig(parallax: 0.2, density: 0.3, twinkleSpeed: 0.5),
-        StarfieldLayerConfig(parallax: 0.6, density: 0.6, twinkleSpeed: 0.8),
-        StarfieldLayerConfig(parallax: 1.0, density: 1, twinkleSpeed: 1),
+        StarfieldLayerConfig(parallax: 0.2, density: 0.15, twinkleSpeed: 0.5),
+        StarfieldLayerConfig(parallax: 0.6, density: 0.3, twinkleSpeed: 0.8),
+        StarfieldLayerConfig(parallax: 1.0, density: 0.5, twinkleSpeed: 1),
       ],
+      tileSize: settingsService.starfieldTileSize.value,
     );
     await add(_starfield!);
+    settingsService.starfieldTileSize.addListener(_rebuildStarfield);
 
     player = PlayerComponent(
       joystick: joystick,
@@ -295,6 +300,9 @@ class SpaceGame extends FlameGame
 
   /// Adds [value] to the current mineral count.
   void addMinerals(int value) => scoreService.addMinerals(value);
+
+  /// Resets the shield regeneration timer.
+  void resetHealthRegenTimer() => _healthRegenTimer = 0;
 
   /// Pauses the game and shows the `PAUSED` overlay.
   void pauseGame() {
@@ -447,6 +455,29 @@ class SpaceGame extends FlameGame
     fireButton.onGameResize(size);
   }
 
+  void _rebuildStarfield() {
+    final tileSize = settingsService.starfieldTileSize.value;
+    _starfield?.removeFromParent();
+    _starfield = null;
+    final buildId = ++_starfieldRebuildId;
+    unawaited(() async {
+      final sf = await StarfieldComponent(
+        debugDrawTiles: debugMode,
+        layers: const [
+          StarfieldLayerConfig(parallax: 0.2, density: 0.3, twinkleSpeed: 0.5),
+          StarfieldLayerConfig(parallax: 0.6, density: 0.6, twinkleSpeed: 0.8),
+          StarfieldLayerConfig(parallax: 1.0, density: 1, twinkleSpeed: 1),
+        ],
+        tileSize: tileSize,
+      );
+      if (buildId != _starfieldRebuildId) {
+        return;
+      }
+      _starfield = sf;
+      await add(sf);
+    }());
+  }
+
   /// Ensures the camera stays centred on the player.
   @override
   void update(double dt) {
@@ -455,6 +486,20 @@ class SpaceGame extends FlameGame
             stateMachine.state == GameState.upgrades);
     final effectiveDt = shouldFreeze ? 0.0 : dt;
     super.update(effectiveDt);
+
+    if (_isLoaded &&
+        stateMachine.state == GameState.playing &&
+        upgradeService.hasShieldRegen &&
+        scoreService.health.value < Constants.playerMaxHealth) {
+      _healthRegenTimer += effectiveDt;
+      if (_healthRegenTimer >= Constants.playerHealthRegenInterval) {
+        _healthRegenTimer = 0;
+        scoreService.health.value =
+            (scoreService.health.value + 1).clamp(0, Constants.playerMaxHealth);
+      }
+    } else {
+      _healthRegenTimer = 0;
+    }
   }
 
   @override

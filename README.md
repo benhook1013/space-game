@@ -44,7 +44,8 @@ dedicated server or NAT traversal.
 - Single endless level with quick restart
 - Player score, health and minerals displayed in the HUD; health drops on
   collision and minerals increase when collecting pickups from mined asteroids
-- Toggable top-left minimap shows nearby asteroids, enemies and pickups
+- Toggable top-left minimap shows the player's heading and nearby asteroids,
+  enemies and pickups
 - HUD button or `B` key toggles coloured range rings showing targeting, Tractor Aura and mining radii
 - Upgrades overlay lets you buy simple upgrades with minerals that persist
   between sessions, accessible via a HUD button or the `U` key. Current

@@ -173,7 +173,8 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
 - Single endless level without progression for now
 - Player score, minerals and health shown in the HUD with simple
   start/game‑over screens
-- Toggable top-left minimap shows nearby asteroids, enemies and pickups
+- Toggable top-left minimap shows the player's heading and nearby asteroids,
+  enemies and pickups
 - HUD button or `B` key toggles coloured range rings showing targeting, Tractor Aura and mining radii
 - Local high score stored on device (e.g., shared preferences)
 - Menu offers a reset button to clear the high score
@@ -189,8 +190,8 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
 - Upgrades overlay lets players spend minerals on simple upgrades that
   persist between sessions, opened with a HUD button or the `U` key and
   pausing gameplay. Available upgrades cover fire rate, mining speed,
-  targeting and Tractor Aura ranges, plus an Engine Tuning option for
-  faster movement
+  targeting and Tractor Aura ranges, an Engine Tuning option for faster
+  movement and a Shield Booster that slowly regenerates health
 - Settings overlay with master volume slider and sliders for HUD, minimap,
   text, joystick, targeting, Tractor Aura and mining ranges, plus a reset
   button
@@ -256,7 +257,7 @@ in [TASKS.md](TASKS.md).
 - Format with `fvm dart format .`
 - Analyze with `fvm dart analyze` (guided by `.analysis_options.yaml`)
 - Lint docs with `npx markdownlint-cli '**/*.md'`
-- Once tests exist, run `fvm flutter test`
+- Run tests with `scripts/flutterw test` (auto-detects CPU cores for `--concurrency`)
 - Use `flutter_test` for widget tests and `flame_test` for component/system tests
   once tests are added
 - Cover object pools with unit tests to ensure instances are reused

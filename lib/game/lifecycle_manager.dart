@@ -22,6 +22,7 @@ class LifecycleManager {
   void onStart() {
     game.audioService.stopAll();
     game.scoreService.reset();
+    game.resetHealthRegenTimer();
     game.pools.clear();
     // Process any queued lifecycle events so components added just before the
     // previous session ended (like the player's explosion on death) are

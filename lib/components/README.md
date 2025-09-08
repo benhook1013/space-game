@@ -38,6 +38,16 @@ Gameplay entities and reusable pieces.
   star tiles and prunes those far from the camera.
 - [ExplosionComponent](explosion.md) – short animation and sound played when
   a ship is destroyed.
+- `EnemySpawner` – releases timed groups of enemies ahead of the player.
+- `AsteroidSpawner` – scatters asteroids around the player as they travel.
+- `PlayerInputBehavior` – handles joystick and keyboard input for the player.
+- `AutoAimBehavior` – rotates the player toward the nearest enemy when idle.
+- `TractorAuraRenderer` – draws a radial gradient showing the Tractor Aura.
+- `OffscreenCleanup` – mixin that removes components far from the camera.
+- `SpawnRemoveEmitter` – mixin emitting spawn/remove events for pooling.
+- `Damageable` – mixin tracking hit points on a component.
+- `DamageFlash` – mixin flashing a sprite when taking damage.
+- `DebugHealthText` – mixin rendering remaining health in debug mode.
 
 ## Planned Components
 

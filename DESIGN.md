@@ -139,8 +139,9 @@ tree spanning weapons and ship systems.
 ## Upgrades
 
 - Minerals earned from asteroids fund upgrades such as faster cannon fire,
-  quicker mining pulses, extended targeting and Tractor Aura ranges, and engine
-  tuning for higher speed without bloating the core loop.
+  quicker mining pulses, extended targeting and Tractor Aura ranges, engine
+  tuning for higher speed and a Shield Booster that slowly regenerates
+  health without bloating the core loop.
 - `UpgradeService` tracks available upgrades and purchases using minerals.
 
 ## Game State Flow
@@ -155,7 +156,8 @@ tree spanning weapons and ship systems.
   showing a centered `PAUSED` label with a hint to press `Esc` or `P` to
   resume while gameplay halts.
 - During play the HUD provides score, minerals, health, a minimap toggle, range
-  rings toggle, pause and mute controls.
+  rings toggle, pause and mute controls. The minimap displays the player's
+  heading along with nearby asteroids, enemies and mineral pickups.
 - On player death, a game over overlay appears with restart, menu and mute buttons.
 - A help overlay lists controls and can be toggled with the `H` key, pausing the
   game when opened mid-run. `Esc` also closes it without triggering pause.
@@ -170,7 +172,7 @@ tree spanning weapons and ship systems.
 
 - On-screen joystick and fire button mirror keyboard controls (WASD + Space).
 - Input handling stays isolated from rendering for easier testing.
-- `N` toggles a minimap overlay for navigation.
+- `N` toggles a minimap overlay with a player-direction arrow for navigation.
 - `B` or a HUD button toggles range rings showing targeting, Tractor Aura and
   mining radii.
 - `H` toggles a help overlay for quick reference, and `Esc` closes it when

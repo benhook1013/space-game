@@ -11,16 +11,18 @@ _Update this file whenever a player-facing feature is added or changed._
 - [ ] Bullets spawn from the front of the player's ship
 - [ ] When stationary, the ship rotates toward the nearest enemy within range
 - [ ] Target button or `B` key toggles range rings display
-- [ ] Minimap icon or `N` key toggles minimap visibility
+- [ ] Minimap icon or `N` key toggles minimap with player heading arrow
 - [ ] Asteroids spawn randomly and drift across the screen
 - [ ] Enemies and asteroids show varied sprites
 - [ ] Shooting an asteroid destroys it and increases the on-screen score
+- [ ] Shooting an asteroid with the main cannon does not drop minerals
 - [ ] Mining an asteroid increases the on-screen minerals
 - [ ] Score resets when restarting the game
 - [ ] Minerals reset when restarting the game
 - [ ] HUD shows current score, minerals and health during play
 - [ ] Collisions reduce player health; game over when health reaches zero
 - [ ] Player ship flashes red when taking damage
+- [ ] Shield Booster upgrade regenerates health over time when purchased
 - [ ] Game states transition: menu → playing → upgrades → paused → game over
       → restart or menu
 - [ ] Player can choose a ship from the menu before starting
