@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flame/components.dart';
 
 import '../game/space_game.dart';
+import '../util/angle_utils.dart';
 import '../util/nearest_component.dart';
 import 'enemy.dart';
 import 'player.dart';
@@ -22,7 +23,7 @@ class AutoAimBehavior extends Component
       maxDistance: game.upgradeService.targetingRange,
     );
     if (target != null) {
-      parent.targetAngle = _normalizeAngle(
+      parent.targetAngle = normalizeAngle(
         math.atan2(
               target.position.y - parent.position.y,
               target.position.x - parent.position.x,
@@ -31,15 +32,5 @@ class AutoAimBehavior extends Component
       );
       parent.updateRotation(dt);
     }
-  }
-
-  double _normalizeAngle(double a) {
-    while (a <= -math.pi) {
-      a += math.pi * 2;
-    }
-    while (a > math.pi) {
-      a -= math.pi * 2;
-    }
-    return a;
   }
 }
