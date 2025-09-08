@@ -1,3 +1,6 @@
+// VERSION is a content hash of `assets_manifest.json` computed in
+// `index.html` and passed as the `v` query parameter. This ensures the cache
+// is invalidated whenever any asset changes.
 const VERSION = new URL(self.location.href).searchParams.get("v") || "v1";
 const CACHE_NAME = `space-game-cache-${VERSION}`;
 const CORE_ASSETS = [
