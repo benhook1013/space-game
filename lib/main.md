@@ -5,7 +5,8 @@ Entry point launching the Flutter app and `SpaceGame`.
 ## Responsibilities
 
 - Bootstraps the Flutter app using the FVM-pinned SDK.
-- Preloads assets via `Assets.load()` before gameplay.
+- Preloads minimal assets via `Assets.loadEssential()` before gameplay and
+  kicks off `Assets.loadRemaining()` after the first user interaction.
 - Creates core services (`StorageService`, `AudioService`, `SettingsService`).
 - Configures a dark `ColorScheme` for the app.
 - Attaches global text scaling via `GameText.attachTextScale`.

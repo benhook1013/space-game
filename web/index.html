@@ -13,6 +13,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="cache-bust" content="1">
     <style>
       html,
       body {
@@ -39,8 +40,11 @@
       });
 
       if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function () {
-          navigator.serviceWorker.register('sw.js');
+        document.addEventListener('DOMContentLoaded', () => {
+          const version =
+            document.querySelector('meta[name="cache-bust"]')?.content ||
+            '1';
+          navigator.serviceWorker.register(`sw.js?v=${version}`);
         });
       }
     </script>

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 
@@ -16,11 +18,13 @@ import 'ui/game_text.dart';
 import 'services/storage_service.dart';
 import 'services/audio_service.dart';
 import 'services/settings_service.dart';
+import 'util/interaction.dart';
 
 /// Application entry point.
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Assets.load();
+  await Assets.loadEssential();
+  onFirstUserInteraction(() => unawaited(Assets.loadRemaining()));
   final storage = await StorageService.create();
   final audio = await AudioService.create(storage);
   final settings = SettingsService();

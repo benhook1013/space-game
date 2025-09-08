@@ -57,23 +57,31 @@ class Assets {
   static const String explosionSfx = 'explosion.mp3';
   static const String miningLaserSfx = 'mining-laser-continuous.mp3';
 
-  /// Preloads all images and audio assets.
-  static Future<void> load() async {
+  /// Preloads only the assets required for the initial menu/level.
+  static Future<void> loadEssential() async {
     final imagePaths = [
       ...players,
-      ...enemies,
-      ...asteroids,
-      ...explosions,
+      asteroids.first,
+      explosions.first,
       bullet,
       mineralIcon,
       scoreIcon,
       healthIcon,
       settingsIcon,
     ];
+    await Future.wait(imagePaths.map(_loadImage));
+  }
 
+  /// Preloads remaining images and all audio assets in the background.
+  static Future<void> loadRemaining() async {
+    final imagePaths = [
+      ...asteroids.skip(1),
+      ...explosions.skip(1),
+      ...enemies,
+    ];
     await Future.wait(imagePaths.map(_loadImage));
 
-    final audioPaths = [shootSfx, explosionSfx, miningLaserSfx];
+    const audioPaths = [shootSfx, explosionSfx, miningLaserSfx];
     await Future.wait(audioPaths.map(_loadAudio));
   }
 
