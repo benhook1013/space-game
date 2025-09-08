@@ -25,7 +25,7 @@ class PoolManager {
   final GameEventBus _events;
 
   final Map<Type, ObjectPool<dynamic>> _pools = {};
-  final Map<Type, List<dynamic>> _active = {};
+  final Map<Type, Set<dynamic>> _active = {};
   final Map<Type, void Function(dynamic)> _onRemove = {};
   final Map<Type, void Function(dynamic)> _onSpawn = {};
 
@@ -38,7 +38,7 @@ class PoolManager {
     void Function(T)? onRemove,
   }) {
     _pools[T] = ObjectPool<T>(factory);
-    _active[T] = <T>[];
+    _active[T] = <T>{};
     if (onSpawn != null) {
       _onSpawn[T] = (dynamic c) => onSpawn(c as T);
     }
@@ -47,7 +47,7 @@ class PoolManager {
     }
 
     _events.on<ComponentRemoveEvent<T>>().listen((event) {
-      (_active[T] as List<T>).remove(event.component);
+      (_active[T] as Set<T>).remove(event.component);
       _onRemove[T]?.call(event.component);
       release(event.component);
     });
@@ -57,9 +57,8 @@ class PoolManager {
   T acquire<T extends Component>(void Function(T) reset) {
     final pool = _pools[T] as ObjectPool<T>;
     final obj = pool.acquire(reset);
-    final active = _active[T] as List<T>;
-    if (!active.contains(obj)) {
-      active.add(obj);
+    final active = _active[T] as Set<T>;
+    if (active.add(obj)) {
       _onSpawn[T]?.call(obj);
     }
     return obj;
@@ -67,7 +66,7 @@ class PoolManager {
 
   /// Returns [component] to its pool for reuse.
   void release<T extends Component>(T component) {
-    final active = _active[T] as List<T>?;
+    final active = _active[T] as Set<T>?;
     active?.remove(component);
     _onRemove[T]?.call(component);
     final pool = _pools[T] as ObjectPool<T>?;
@@ -75,7 +74,8 @@ class PoolManager {
   }
 
   /// Returns the active components for type [T].
-  List<T> components<T extends Component>() => _active[T] as List<T>? ?? <T>[];
+  Iterable<T> components<T extends Component>() =>
+      _active[T] as Set<T>? ?? <T>{};
 
   /// Updates the debug flag on all pooled and active components.
   ///
@@ -83,8 +83,8 @@ class PoolManager {
   /// the flag is applied recursively so pooled objects don't retain stale
   /// debug state between spawns.
   void applyDebugMode(bool enabled) {
-    for (final list in _active.values) {
-      for (final component in list.cast<Component>()) {
+    for (final set in _active.values) {
+      for (final component in set.cast<Component>()) {
         _applyDebugRecursively(component, enabled);
       }
     }
@@ -119,11 +119,11 @@ class PoolManager {
 
   /// Removes all active components and resets tracking structures.
   void clear() {
-    for (final list in _active.values) {
-      for (final component in List<Component>.from(list as List<Component>)) {
+    for (final set in _active.values) {
+      for (final component in List<Component>.from(set.cast<Component>())) {
         component.removeFromParent();
       }
-      list.clear();
+      set.clear();
     }
     _asteroidGrid.clear();
   }
