@@ -24,8 +24,24 @@ class StorageService {
   /// Supported types are [int], [double], [bool], [String] and
   /// [List]<[String]>. Throws [UnsupportedError] for unsupported types.
   T getValue<T>(String key, T defaultValue) {
-    final value = _prefs.get(key);
-    return value is T ? value : defaultValue;
+    if (T == int) {
+      final value = _prefs.getInt(key);
+      return (value ?? defaultValue) as T;
+    } else if (T == double) {
+      final value = _prefs.getDouble(key);
+      return (value ?? defaultValue) as T;
+    } else if (T == bool) {
+      final value = _prefs.getBool(key);
+      return (value ?? defaultValue) as T;
+    } else if (T == String) {
+      final value = _prefs.getString(key);
+      return (value ?? defaultValue) as T;
+    } else if (T == List<String>) {
+      final value = _prefs.getStringList(key);
+      return (value ?? defaultValue) as T;
+    } else {
+      throw UnsupportedError('Type $T is not supported');
+    }
   }
 
   /// Persists [value] for [key].
@@ -33,16 +49,16 @@ class StorageService {
   /// Supported types are [int], [double], [bool], [String] and
   /// [List]<[String]>. Throws [UnsupportedError] for unsupported types.
   Future<void> setValue<T>(String key, T value) async {
-    if (value is int) {
-      await _prefs.setInt(key, value);
-    } else if (value is double) {
-      await _prefs.setDouble(key, value);
-    } else if (value is bool) {
-      await _prefs.setBool(key, value);
-    } else if (value is String) {
-      await _prefs.setString(key, value);
-    } else if (value is List<String>) {
-      await _prefs.setStringList(key, value);
+    if (T == int) {
+      await _prefs.setInt(key, value as int);
+    } else if (T == double) {
+      await _prefs.setDouble(key, value as double);
+    } else if (T == bool) {
+      await _prefs.setBool(key, value as bool);
+    } else if (T == String) {
+      await _prefs.setString(key, value as String);
+    } else if (T == List<String>) {
+      await _prefs.setStringList(key, value as List<String>);
     } else {
       throw UnsupportedError('Type ${value.runtimeType} is not supported');
     }
