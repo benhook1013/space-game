@@ -207,8 +207,18 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
           (1 - density).toDouble(),
         ) /
         layer.config.density;
-    final params = _TileParams(_seed, tx, ty, minDist, tileSize);
-    final future = compute(_generateTileStars, params).then((stars) {
+    final params = <num>[_seed, tx, ty, minDist, tileSize];
+    final future = compute(_generateTileStarData, params).then((data) {
+      final stars = data
+          .map((s) => _Star(
+                Offset(s[0] as double, s[1] as double),
+                s[2] as double,
+                Color(s[3] as int),
+                s[4] as double,
+                s[5] as double,
+                s[6] as double,
+              ))
+          .toList(growable: false);
       final transforms = stars
           .map(
             (s) => RSTransform.fromComponents(
@@ -321,14 +331,39 @@ class _TileParams {
 }
 
 List<_Star> _generateTileStars(_TileParams params) {
-  if (params.minDist.isInfinite || params.minDist.isNaN) {
-    return const <_Star>[];
+  final raw = _generateTileStarData(<num>[
+    params.seed,
+    params.tx,
+    params.ty,
+    params.minDist,
+    params.tileSize
+  ]);
+  return raw
+      .map((s) => _Star(
+            Offset(s[0] as double, s[1] as double),
+            s[2] as double,
+            Color(s[3] as int),
+            s[4] as double,
+            s[5] as double,
+            s[6] as double,
+          ))
+      .toList(growable: false);
+}
+
+List<List<num>> _generateTileStarData(List<num> params) {
+  final seed = params[0].toInt();
+  final tx = params[1].toInt();
+  final ty = params[2].toInt();
+  final minDist = params[3] as double;
+  final tileSize = params[4] as double;
+  if (minDist.isInfinite || minDist.isNaN) {
+    return const <List<num>>[];
   }
-  final rnd = math.Random(params.seed ^ params.tx ^ (params.ty << 16));
-  final samples = _poisson(params.tileSize, params.minDist, rnd);
-  final stars = samples.map((o) => _randomStar(o, rnd)).toList()
-    ..sort((a, b) => a.radius.compareTo(b.radius));
-  return stars;
+  final rnd = math.Random(seed ^ tx ^ (ty << 16));
+  final samples = _poisson(tileSize, minDist, rnd);
+  final data = samples.map((o) => _randomStarData(o, rnd)).toList()
+    ..sort((a, b) => (a[2] as double).compareTo(b[2] as double));
+  return data;
 }
 
 List<Offset> _poisson(double size, double minDist, math.Random rnd,
@@ -391,7 +426,7 @@ List<Offset> _poisson(double size, double minDist, math.Random rnd,
   return samples;
 }
 
-_Star _randomStar(Offset position, math.Random rnd) {
+List<num> _randomStarData(Offset position, math.Random rnd) {
   final roll = rnd.nextDouble();
   double radius;
   int brightness;
@@ -426,11 +461,19 @@ _Star _randomStar(Offset position, math.Random rnd) {
       b = math.min(255, b + jitter);
   }
 
-  final color = Color.fromARGB(255, r, g, b);
+  final color = 0xFF000000 | (r << 16) | (g << 8) | b;
   final phase = rnd.nextDouble() * math.pi * 2;
   final amplitude = 0.3 + rnd.nextDouble() * 0.2; // 0.3..0.5
   final frequency = 0.8 + rnd.nextDouble() * 0.4; // 0.8..1.2
-  return _Star(position, radius, color, phase, amplitude, frequency);
+  return [
+    position.dx,
+    position.dy,
+    radius,
+    color,
+    phase,
+    amplitude,
+    frequency,
+  ];
 }
 
 double _lerp(double a, double b, double t) => a + (b - a) * t;
