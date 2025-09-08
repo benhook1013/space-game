@@ -65300,7 +65300,7 @@ A.oS.prototype={
 S(a){return new A.jk(new A.VF(this),!1,null)}}
 A.VF.prototype={
 $3(a,b,c){var s=null,r=this.a,q=r.c,p=q.E,o=t.S,n=t.p
-return A.kj(A.c([new A.bO("Game Over",A.ai(a).ok.e,1,B.bC,s,s),A.ch(s,b,s),A.fo(new A.VC(),p.b,o),A.ch(s,b,s),A.fo(new A.VD(),p.c,o),A.ch(s,b,s),A.w8(A.c([A.kp(B.zR,new A.VE(r)),A.ch(s,s,b),A.kp(B.zQ,q.gMg()),A.ch(s,s,b),new A.oY(q,s,s),A.ch(s,s,b),new A.mQ(q,c,s)],n),B.a2,B.pi,B.cV)],n),B.a2,B.ap)},
+return A.kj(A.c([new A.bO("Game Over",A.ai(a).ok.e,1,B.bC,s,s),A.ch(s,b,s),A.fo(new A.VC(),p.b,o),A.ch(s,b,s),A.fo(new A.VD(),p.c,o),A.ch(s,b,s),A.w8(A.c([A.kp(B.zR,new A.VE(r)),A.ch(s,s,b),A.kp(B.zP,q.gMg()),A.ch(s,s,b),new A.oY(q,s,s),A.ch(s,s,b),new A.mQ(q,c,s)],n),B.a2,B.pi,B.cV)],n),B.a2,B.ap)},
 $C:"$3",
 $R:3,
 $S:43}
@@ -65333,7 +65333,7 @@ A.oZ.prototype={
 S(a){return new A.jk(new A.Wp(this),!0,null)}}
 A.Wp.prototype={
 $3(a,b,c){var s=null
-return A.kj(A.c([new A.bO("Controls",A.ai(a).ok.f,1,s,s,s),A.ch(s,b,s),B.zP,A.ch(s,b,s),A.kp(B.k2,this.a.c.gvf())],t.p),B.a2,B.ap)},
+return A.kj(A.c([new A.bO("Controls",A.ai(a).ok.f,1,s,s,s),A.ch(s,b,s),B.zQ,A.ch(s,b,s),A.kp(B.k2,this.a.c.gvf())],t.p),B.a2,B.ap)},
 $C:"$3",
 $R:3,
 $S:43}
@@ -69083,9 +69083,9 @@ B.k2=new A.bO("Close",B.ar,1,null,null,null)
 B.zM=new A.bO("Purchased",null,1,null,null,null)
 B.zN=new A.bO("Start",B.ar,1,null,null,null)
 B.zO=new A.bO("Press Esc or P to resume",null,1,null,null,null)
+B.zP=new A.bO("Menu",B.ar,1,null,null,null)
 B.bC=new A.jE(2,"center")
-B.zP=new A.bO("Move: WASD / Arrow keys\nShoot: Space\nMute: M\nToggle Minimap: N or HUD button\nToggle Debug: F1\nToggle Range Rings: B or HUD button\nUpgrades: U or HUD button\nSettings: O or HUD button\nPause/Resume: Esc or P\nStart/Restart: Enter\nRestart anytime: R\nReturn to Menu: Q (from pause or game over)\nToggle Help: H or Esc",null,null,B.bC,null,null)
-B.zQ=new A.bO("Menu",B.ar,1,null,null,null)
+B.zQ=new A.bO("Move: WASD / Arrow keys\nShoot: Space\nMute: M\nToggle Minimap: N or HUD button\nToggle Debug (FPS/tiles): F1\nToggle Range Rings: B or HUD button\nUpgrades: U or HUD button\nSettings: O or HUD button\nPause/Resume: Esc or P\nStart/Restart: Enter\nRestart anytime: R\nReturn to Menu: Q (from pause or game over)\nToggle Help: H or Esc",null,null,B.bC,null,null)
 B.zR=new A.bO("Restart",B.ar,1,null,null,null)
 B.zS=new A.bO("Buy",null,1,null,null,null)
 B.zT=new A.bO("Reset",null,1,null,null,null)
