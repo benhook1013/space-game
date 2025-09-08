@@ -37,6 +37,7 @@ class UpgradeService {
     Upgrade(id: 'targetingRange1', name: 'Targeting Computer', cost: 20),
     Upgrade(id: 'tractorRange1', name: 'Tractor Booster', cost: 25),
     Upgrade(id: 'speed1', name: 'Engine Tuning', cost: 30),
+    Upgrade(id: 'shieldRegen1', name: 'Shield Booster', cost: 40),
   ];
 
   final ValueNotifier<Set<String>> _purchased =
@@ -44,6 +45,9 @@ class UpgradeService {
   ValueListenable<Set<String>> get purchased => _purchased;
 
   bool isPurchased(String id) => _purchased.value.contains(id);
+
+  /// Whether the shield regeneration upgrade has been purchased.
+  bool get hasShieldRegen => isPurchased('shieldRegen1');
 
   bool canAfford(Upgrade upgrade) =>
       scoreService.minerals.value >= upgrade.cost && !isPurchased(upgrade.id);

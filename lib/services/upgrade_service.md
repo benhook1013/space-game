@@ -10,6 +10,7 @@ Manages purchasing upgrades using collected minerals.
 - Deduct mineral costs via `ScoreService` when buying.
 - Provide a `ValueListenable` of purchased upgrade ids for UI widgets.
 - Provide derived values like bullet cooldown, mining pulse interval, targeting
-  range and Tractor Aura radius based on purchased upgrades.
+  range, Tractor Aura radius, player speed and health regeneration based on
+  purchased upgrades.
 
 See [../../PLAN.md](../../PLAN.md) for progression goals.

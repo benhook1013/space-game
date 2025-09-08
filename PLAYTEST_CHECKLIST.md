@@ -22,6 +22,7 @@ _Update this file whenever a player-facing feature is added or changed._
 - [ ] HUD shows current score, minerals and health during play
 - [ ] Collisions reduce player health; game over when health reaches zero
 - [ ] Player ship flashes red when taking damage
+- [ ] Shield Booster upgrade regenerates health over time when purchased
 - [ ] Game states transition: menu → playing → upgrades → paused → game over
       → restart or menu
 - [ ] Player can choose a ship from the menu before starting
