@@ -9,6 +9,21 @@ source "$(dirname "$0")/bootstrap_flutter.sh"
 echo "[flutterw] Flutter SDK ready"
 # Restore original args for the actual flutter invocation.
 set -- "${args[@]}"
+export FLUTTER_SUPPRESS_ANALYTICS=1
+export DART_SUPPRESS_ANALYTICS=1
+
+if [[ -n ${CI:-} && ${1:-} != "pub" ]]; then
+  found_no_pub=false
+  for arg in "$@"; do
+    if [[ $arg == --no-pub ]]; then
+      found_no_pub=true
+      break
+    fi
+  done
+  if [[ $found_no_pub == false ]]; then
+    set -- "$@" --no-pub
+  fi
+fi
 test_concurrency=""
 if [[ "${1:-}" == "test" ]]; then
   found_concurrency=false
