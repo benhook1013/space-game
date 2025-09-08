@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:isolate';
 import 'dart:math' as math;
 import 'dart:ui';
 
@@ -17,6 +18,14 @@ class StarfieldLayerConfig {
     this.density = 1,
     this.twinkleSpeed = 1,
     this.maxCacheTiles = 64,
+    this.palette = const [
+      Color(0xFFFFFFFF),
+      Color(0xFFFFAAAA),
+      Color(0xFFFFFFAA),
+      Color(0xFFAAAFFF),
+    ],
+    this.minBrightness = 150,
+    this.maxBrightness = 255,
   });
 
   /// Camera movement multiplier. Smaller values appear further away.
@@ -31,6 +40,15 @@ class StarfieldLayerConfig {
 
   /// Maximum tiles retained in the LRU cache.
   final int maxCacheTiles;
+
+  /// Palette of possible star colours.
+  final List<Color> palette;
+
+  /// Minimum star brightness (0-255).
+  final int minBrightness;
+
+  /// Maximum star brightness (0-255).
+  final int maxBrightness;
 }
 
 /// Deterministic world-space starfield rendered behind gameplay.
@@ -152,7 +170,7 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
           final offsetY = ty * tileSize;
           canvas.save();
           canvas.translate(offsetX, offsetY);
-          final colors = List<Color>.generate(tile.stars.length, (i) {
+          for (var i = 0; i < tile.stars.length; i++) {
             final star = tile.stars[i];
             final base = 1 - star.amplitude;
             final twinkle = math.sin(
@@ -160,13 +178,13 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
                     ) *
                     star.amplitude +
                 base;
-            return star.color.withAlpha((twinkle * 255).round());
-          }, growable: false);
+            tile.colors[i] = star.color.withAlpha((twinkle * 255).round());
+          }
           canvas.drawAtlas(
             _starImage,
             tile.transforms,
             tile.rects,
-            colors,
+            tile.colors,
             BlendMode.srcOver,
             null,
             _starPaint,
@@ -196,6 +214,8 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
     }
     if (layer.config.density <= 0) {
       layer.cache[key] = const _Tile.empty();
+      layer.lru.addLast(key);
+      _prune(layer);
       return;
     }
     final noiseValue = layer.noise
@@ -207,8 +227,17 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
           (1 - density).toDouble(),
         ) /
         layer.config.density;
-    final params = <num>[_seed, tx, ty, minDist, tileSize];
-    final future = compute(_generateTileStarData, params).then((data) {
+    final params = _TileParams(
+      _seed,
+      tx,
+      ty,
+      minDist,
+      tileSize,
+      layer.paletteValues,
+      layer.config.minBrightness,
+      layer.config.maxBrightness,
+    );
+    final future = _runTileData(params).then((data) {
       final stars = data
           .map((s) => _Star(
                 Offset(s[0] as double, s[1] as double),
@@ -233,8 +262,11 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
           .toList(growable: false);
       final rects =
           List<Rect>.filled(stars.length, _starSrcRect, growable: false);
-      final tile = _Tile(stars, transforms, rects);
+      final colors =
+          List<Color>.filled(stars.length, const Color(0), growable: false);
+      final tile = _Tile(stars, transforms, rects, colors);
       layer.cache[key] = tile;
+      layer.lru.addLast(key);
       layer.pending.remove(key);
       _prune(layer);
       return tile;
@@ -244,7 +276,8 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
 
   void _prune(_LayerState layer) {
     while (layer.cache.length > layer.config.maxCacheTiles) {
-      layer.cache.remove(layer.cache.keys.first);
+      final oldest = layer.lru.removeFirst();
+      layer.cache.remove(oldest);
     }
   }
 
@@ -252,6 +285,8 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
     final tile = layer.cache.remove(key);
     if (tile != null) {
       layer.cache[key] = tile;
+      layer.lru.remove(key);
+      layer.lru.addLast(key);
     }
   }
 
@@ -282,30 +317,47 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
           (1 - density).toDouble(),
         ) /
         _layers.first.density;
-    return _generateTileStars(_TileParams(_seed, tx, ty, minDist, tileSize))
-        .map((s) => s.radius);
+    final cfg = _layers.first;
+    final params = _TileParams(
+      _seed,
+      tx,
+      ty,
+      minDist,
+      tileSize,
+      cfg.palette.map((c) => c.toARGB32()).toList(growable: false),
+      cfg.minBrightness,
+      cfg.maxBrightness,
+    );
+    return _generateTileStars(params).map((s) => s.radius);
   }
 }
 
 class _LayerState {
-  _LayerState(this.config, int seed) : noise = OpenSimplexNoise(seed);
+  _LayerState(this.config, int seed)
+      : noise = OpenSimplexNoise(seed),
+        paletteValues =
+            config.palette.map((c) => c.toARGB32()).toList(growable: false);
 
   final StarfieldLayerConfig config;
   final OpenSimplexNoise noise;
+  final List<int> paletteValues;
   final LinkedHashMap<math.Point<int>, _Tile> cache = LinkedHashMap();
   final Map<math.Point<int>, Future<_Tile>> pending = {};
+  final Queue<math.Point<int>> lru = Queue();
 }
 
 class _Tile {
-  const _Tile(this.stars, this.transforms, this.rects);
+  const _Tile(this.stars, this.transforms, this.rects, this.colors);
   const _Tile.empty()
       : stars = const [],
         transforms = const [],
-        rects = const [];
+        rects = const [],
+        colors = const [];
 
   final List<_Star> stars;
   final List<RSTransform> transforms;
   final List<Rect> rects;
+  final List<Color> colors;
 }
 
 class _Star {
@@ -321,23 +373,25 @@ class _Star {
 }
 
 class _TileParams {
-  const _TileParams(this.seed, this.tx, this.ty, this.minDist, this.tileSize);
+  /// Parameters passed to tile generation isolate. Must remain sendable.
+  const _TileParams(this.seed, this.tx, this.ty, this.minDist, this.tileSize,
+      this.palette, this.minBrightness, this.maxBrightness);
 
   final int seed;
   final int tx;
   final int ty;
   final double minDist;
   final double tileSize;
+  final List<int> palette;
+  final int minBrightness;
+  final int maxBrightness;
 }
 
+Future<List<List<num>>> _runTileData(_TileParams params) =>
+    Isolate.run(() => _generateTileStarData(params));
+
 List<_Star> _generateTileStars(_TileParams params) {
-  final raw = _generateTileStarData(<num>[
-    params.seed,
-    params.tx,
-    params.ty,
-    params.minDist,
-    params.tileSize
-  ]);
+  final raw = _generateTileStarData(params);
   return raw
       .map((s) => _Star(
             Offset(s[0] as double, s[1] as double),
@@ -350,18 +404,26 @@ List<_Star> _generateTileStars(_TileParams params) {
       .toList(growable: false);
 }
 
-List<List<num>> _generateTileStarData(List<num> params) {
-  final seed = params[0].toInt();
-  final tx = params[1].toInt();
-  final ty = params[2].toInt();
-  final minDist = params[3] as double;
-  final tileSize = params[4] as double;
+List<List<num>> _generateTileStarData(_TileParams params) {
+  final seed = params.seed;
+  final tx = params.tx;
+  final ty = params.ty;
+  final minDist = params.minDist;
+  final tileSize = params.tileSize;
   if (minDist.isInfinite || minDist.isNaN) {
     return const <List<num>>[];
   }
   final rnd = math.Random(seed ^ tx ^ (ty << 16));
   final samples = _poisson(tileSize, minDist, rnd);
-  final data = samples.map((o) => _randomStarData(o, rnd)).toList()
+  final data = samples
+      .map((o) => _randomStarData(
+            o,
+            rnd,
+            params.palette,
+            params.minBrightness,
+            params.maxBrightness,
+          ))
+      .toList()
     ..sort((a, b) => (a[2] as double).compareTo(b[2] as double));
   return data;
 }
@@ -426,41 +488,24 @@ List<Offset> _poisson(double size, double minDist, math.Random rnd,
   return samples;
 }
 
-List<num> _randomStarData(Offset position, math.Random rnd) {
+List<num> _randomStarData(Offset position, math.Random rnd, List<int> palette,
+    int minBrightness, int maxBrightness) {
   final roll = rnd.nextDouble();
   double radius;
-  int brightness;
   if (roll < 0.8) {
     radius = Constants.starMaxSize * 0.25;
-    brightness = 150 + rnd.nextInt(40);
   } else if (roll < 0.99) {
     radius = Constants.starMaxSize * 0.5;
-    brightness = 180 + rnd.nextInt(60);
   } else {
     radius = Constants.starMaxSize;
-    brightness = 230 + rnd.nextInt(25);
   }
 
-  final jitter = rnd.nextInt(55);
-  final hue = rnd.nextInt(4);
-  int r = brightness, g = brightness, b = brightness;
-  switch (hue) {
-    case 0: // blue
-      b = math.min(255, b + jitter);
-      break;
-    case 1: // yellow
-      r = math.min(255, r + jitter);
-      g = math.min(255, g + jitter);
-      break;
-    case 2: // red
-      r = math.min(255, r + jitter);
-      break;
-    default: // white
-      r = math.min(255, r + jitter);
-      g = math.min(255, g + jitter);
-      b = math.min(255, b + jitter);
-  }
-
+  final baseColor = palette[rnd.nextInt(palette.length)];
+  final brightness =
+      minBrightness + rnd.nextInt(maxBrightness - minBrightness + 1);
+  final r = ((baseColor >> 16) & 0xFF) * brightness ~/ 255;
+  final g = ((baseColor >> 8) & 0xFF) * brightness ~/ 255;
+  final b = (baseColor & 0xFF) * brightness ~/ 255;
   final color = 0xFF000000 | (r << 16) | (g << 8) | b;
   final phase = rnd.nextDouble() * math.pi * 2;
   final amplitude = 0.3 + rnd.nextDouble() * 0.2; // 0.3..0.5
