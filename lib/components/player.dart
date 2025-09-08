@@ -1,4 +1,3 @@
-import 'dart:math' as math;
 import 'dart:ui';
 
 import 'package:flame/collisions.dart';
@@ -9,6 +8,7 @@ import 'package:flutter/services.dart';
 import '../constants.dart';
 import '../game/key_dispatcher.dart';
 import '../game/space_game.dart';
+import '../util/angle_utils.dart';
 import 'asteroid.dart';
 import 'auto_aim_behavior.dart';
 import 'enemy.dart';
@@ -154,7 +154,7 @@ class PlayerComponent extends SpriteComponent
 
   /// Smoothly rotates the player toward [targetAngle].
   void updateRotation(double dt) {
-    final rotationDelta = _normalizeAngle(targetAngle - angle);
+    final rotationDelta = normalizeAngle(targetAngle - angle);
     final maxDelta = Constants.playerRotationSpeed * dt;
     if (rotationDelta.abs() <= maxDelta) {
       angle = targetAngle;
@@ -204,15 +204,5 @@ class PlayerComponent extends SpriteComponent
       game.addMinerals(other.value);
       other.removeFromParent();
     }
-  }
-
-  double _normalizeAngle(double a) {
-    while (a <= -math.pi) {
-      a += math.pi * 2;
-    }
-    while (a > math.pi) {
-      a -= math.pi * 2;
-    }
-    return a;
   }
 }

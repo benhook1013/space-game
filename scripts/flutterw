@@ -28,12 +28,23 @@ if [[ "${1:-}" == "test" ]]; then
     fi
   done
   if [[ $found_concurrency == false ]]; then
-    test_concurrency=${FLUTTER_TEST_CONCURRENCY:-$(nproc)}
+    # Determine test concurrency using env var, nproc, or sysctl; default to 1 when unknown.
+    if [[ -n ${FLUTTER_TEST_CONCURRENCY:-} ]]; then
+      test_concurrency="$FLUTTER_TEST_CONCURRENCY"
+    else
+      if command -v nproc >/dev/null 2>&1; then
+        test_concurrency=$(nproc)
+      elif command -v sysctl >/dev/null 2>&1; then
+        test_concurrency=$(sysctl -n hw.ncpu 2>/dev/null || echo 1)
+      else
+        test_concurrency=1
+      fi
+    fi
     set -- "$@" --concurrency "$test_concurrency"
   fi
 fi
 echo "[flutterw] starting at $(date)"
-echo "[flutterw] flutter $@"
+echo "[flutterw] flutter" "$@"
 if [[ "${1:-}" == "test" ]]; then
   if [[ -n "$test_concurrency" ]]; then
     echo "[flutterw] running tests with concurrency $test_concurrency..."

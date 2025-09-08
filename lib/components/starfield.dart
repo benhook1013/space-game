@@ -39,6 +39,7 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
     int seed = 0,
     this.debugDrawTiles = false,
     List<StarfieldLayerConfig>? layers,
+    this.tileSize = Constants.starfieldTileSize,
   })  : _seed = seed,
         _layers =
             layers ?? const [StarfieldLayerConfig(parallax: 1, density: 1)],
@@ -49,6 +50,9 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
   /// Layer configurations.
   final List<StarfieldLayerConfig> _layers;
 
+  /// Size of each generated starfield tile.
+  final double tileSize;
+
   final Paint _starPaint = Paint();
 
   /// Whether to draw debug outlines around generated tiles.
@@ -58,14 +62,23 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
     ..color = Constants.starfieldTileOutlineColor
     ..style = PaintingStyle.stroke;
 
+  late final Image _starImage;
+  late final Rect _starSrcRect;
+  late final double _starImageRadius;
+
   double _time = 0;
 
   final List<_LayerState> _layerStates = [];
 
   @override
   Future<void> onLoad() async {
-    for (final cfg in _layers) {
-      _layerStates.add(_LayerState(cfg));
+    _starImage = await _buildStarImage();
+    _starSrcRect = Rect.fromLTWH(
+        0, 0, _starImage.width.toDouble(), _starImage.height.toDouble());
+    _starImageRadius = _starImage.width / 2;
+    for (var i = 0; i < _layers.length; i++) {
+      final cfg = _layers[i];
+      _layerStates.add(_LayerState(cfg, _seed + i));
     }
     super.onLoad();
   }
@@ -95,14 +108,10 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
       final right = left + viewSize.x;
       final bottom = top + viewSize.y;
 
-      final startX = (left / Constants.starfieldTileSize).floor() -
-          Constants.starfieldCacheMargin;
-      final endX = (right / Constants.starfieldTileSize).floor() +
-          Constants.starfieldCacheMargin;
-      final startY = (top / Constants.starfieldTileSize).floor() -
-          Constants.starfieldCacheMargin;
-      final endY = (bottom / Constants.starfieldTileSize).floor() +
-          Constants.starfieldCacheMargin;
+      final startX = (left / tileSize).floor() - Constants.starfieldCacheMargin;
+      final endX = (right / tileSize).floor() + Constants.starfieldCacheMargin;
+      final startY = (top / tileSize).floor() - Constants.starfieldCacheMargin;
+      final endY = (bottom / tileSize).floor() + Constants.starfieldCacheMargin;
 
       for (var tx = startX; tx <= endX; tx++) {
         for (var ty = startY; ty <= endY; ty++) {
@@ -126,36 +135,49 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
       final right = left + viewSize.x;
       final bottom = top + viewSize.y;
 
-      final startX = (left / Constants.starfieldTileSize).floor();
-      final endX = (right / Constants.starfieldTileSize).floor();
-      final startY = (top / Constants.starfieldTileSize).floor();
-      final endY = (bottom / Constants.starfieldTileSize).floor();
+      final startX = (left / tileSize).floor();
+      final endX = (right / tileSize).floor();
+      final startY = (top / tileSize).floor();
+      final endY = (bottom / tileSize).floor();
 
       canvas.save();
       canvas.translate(-left, -top);
       for (var tx = startX; tx <= endX; tx++) {
         for (var ty = startY; ty <= endY; ty++) {
           final key = math.Point(tx, ty);
-          final stars = layer.cache[key];
-          if (stars == null) continue;
+          final tile = layer.cache[key];
+          if (tile == null) continue;
           _touch(layer, key);
-          final offsetX = tx * Constants.starfieldTileSize;
-          final offsetY = ty * Constants.starfieldTileSize;
+          final offsetX = tx * tileSize;
+          final offsetY = ty * tileSize;
           canvas.save();
           canvas.translate(offsetX, offsetY);
-          for (final star in stars) {
-            final twinkle =
-                math.sin(_time * cfg.twinkleSpeed + star.phase) * 0.4 + 0.6;
-            _starPaint.color = star.color.withAlpha((twinkle * 255).round());
-            canvas.drawCircle(star.position, star.radius, _starPaint);
-          }
+          final colors = List<Color>.generate(tile.stars.length, (i) {
+            final star = tile.stars[i];
+            final base = 1 - star.amplitude;
+            final twinkle = math.sin(
+                      _time * cfg.twinkleSpeed * star.frequency + star.phase,
+                    ) *
+                    star.amplitude +
+                base;
+            return star.color.withAlpha((twinkle * 255).round());
+          }, growable: false);
+          canvas.drawAtlas(
+            _starImage,
+            tile.transforms,
+            tile.rects,
+            colors,
+            BlendMode.srcOver,
+            null,
+            _starPaint,
+          );
           if (debugDrawTiles) {
             canvas.drawRect(
               Rect.fromLTWH(
                 0,
                 0,
-                Constants.starfieldTileSize,
-                Constants.starfieldTileSize,
+                tileSize,
+                tileSize,
               ),
               _outlinePaint,
             );
@@ -173,17 +195,41 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
       return;
     }
     if (layer.config.density <= 0) {
-      layer.cache[key] = const <_Star>[];
+      layer.cache[key] = const _Tile.empty();
       return;
     }
-    final future =
-        Future(() => _generateTileStars(_seed, tx, ty, layer.config.density));
-    layer.pending[key] = future;
-    future.then((stars) {
-      layer.cache[key] = stars;
+    final noiseValue = layer.noise
+        .noise2D(tx * Constants.starNoiseScale, ty * Constants.starNoiseScale);
+    final density = (noiseValue + 1) / 2;
+    final minDist = _lerp(
+          Constants.starMinDistanceMin,
+          Constants.starMinDistanceMax,
+          (1 - density).toDouble(),
+        ) /
+        layer.config.density;
+    final params = _TileParams(_seed, tx, ty, minDist, tileSize);
+    final future = compute(_generateTileStars, params).then((stars) {
+      final transforms = stars
+          .map(
+            (s) => RSTransform.fromComponents(
+              rotation: 0,
+              scale: s.radius / _starImageRadius,
+              anchorX: _starImageRadius,
+              anchorY: _starImageRadius,
+              translateX: s.position.dx,
+              translateY: s.position.dy,
+            ),
+          )
+          .toList(growable: false);
+      final rects =
+          List<Rect>.filled(stars.length, _starSrcRect, growable: false);
+      final tile = _Tile(stars, transforms, rects);
+      layer.cache[key] = tile;
       layer.pending.remove(key);
       _prune(layer);
+      return tile;
     });
+    layer.pending[key] = future;
   }
 
   void _prune(_LayerState layer) {
@@ -193,53 +239,93 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
   }
 
   void _touch(_LayerState layer, math.Point<int> key) {
-    final stars = layer.cache.remove(key);
-    if (stars != null) {
-      layer.cache[key] = stars;
+    final tile = layer.cache.remove(key);
+    if (tile != null) {
+      layer.cache[key] = tile;
     }
+  }
+
+  Future<Image> _buildStarImage() async {
+    final size = (Constants.starMaxSize * 2).ceil();
+    final recorder = PictureRecorder();
+    final canvas = Canvas(recorder);
+    final paint = Paint()..color = const Color(0xFFFFFFFF);
+    final radius = Constants.starMaxSize;
+    canvas.drawCircle(Offset(radius, radius), radius, paint);
+    final picture = recorder.endRecording();
+    return picture.toImage(size, size);
   }
 
   /// Returns the radii of the stars generated for the given tile on layer 0.
   @visibleForTesting
-  Iterable<double> debugTileStarRadii(int tx, int ty) =>
-      _generateTileStars(_seed, tx, ty, _layers.first.density)
-          .map((s) => s.radius);
+  Iterable<double> debugTileStarRadii(int tx, int ty) {
+    if (_layers.first.density <= 0) {
+      return const [];
+    }
+    final noise = OpenSimplexNoise(_seed);
+    final n = noise.noise2D(
+        tx * Constants.starNoiseScale, ty * Constants.starNoiseScale);
+    final density = (n + 1) / 2;
+    final minDist = _lerp(
+          Constants.starMinDistanceMin,
+          Constants.starMinDistanceMax,
+          (1 - density).toDouble(),
+        ) /
+        _layers.first.density;
+    return _generateTileStars(_TileParams(_seed, tx, ty, minDist, tileSize))
+        .map((s) => s.radius);
+  }
 }
 
 class _LayerState {
-  _LayerState(this.config);
+  _LayerState(this.config, int seed) : noise = OpenSimplexNoise(seed);
 
   final StarfieldLayerConfig config;
-  final LinkedHashMap<math.Point<int>, List<_Star>> cache = LinkedHashMap();
-  final Map<math.Point<int>, Future<List<_Star>>> pending = {};
+  final OpenSimplexNoise noise;
+  final LinkedHashMap<math.Point<int>, _Tile> cache = LinkedHashMap();
+  final Map<math.Point<int>, Future<_Tile>> pending = {};
+}
+
+class _Tile {
+  const _Tile(this.stars, this.transforms, this.rects);
+  const _Tile.empty()
+      : stars = const [],
+        transforms = const [],
+        rects = const [];
+
+  final List<_Star> stars;
+  final List<RSTransform> transforms;
+  final List<Rect> rects;
 }
 
 class _Star {
-  _Star(this.position, this.radius, this.color, this.phase);
+  _Star(this.position, this.radius, this.color, this.phase, this.amplitude,
+      this.frequency);
 
   final Offset position;
   final double radius;
   final Color color;
   final double phase;
+  final double amplitude;
+  final double frequency;
 }
 
-List<_Star> _generateTileStars(
-    int seed, int tx, int ty, double densityMultiplier) {
-  if (densityMultiplier <= 0) {
+class _TileParams {
+  const _TileParams(this.seed, this.tx, this.ty, this.minDist, this.tileSize);
+
+  final int seed;
+  final int tx;
+  final int ty;
+  final double minDist;
+  final double tileSize;
+}
+
+List<_Star> _generateTileStars(_TileParams params) {
+  if (params.minDist.isInfinite || params.minDist.isNaN) {
     return const <_Star>[];
   }
-  final noise = OpenSimplexNoise(seed);
-  final rnd = math.Random(seed ^ tx ^ (ty << 16));
-  final n = noise.noise2D(
-      tx * Constants.starNoiseScale, ty * Constants.starNoiseScale);
-  final density = (n + 1) / 2; // 0..1
-  final minDist = _lerp(
-        Constants.starMinDistanceMin,
-        Constants.starMinDistanceMax,
-        (1 - density).toDouble(),
-      ) /
-      densityMultiplier;
-  final samples = _poisson(Constants.starfieldTileSize, minDist, rnd);
+  final rnd = math.Random(params.seed ^ params.tx ^ (params.ty << 16));
+  final samples = _poisson(params.tileSize, params.minDist, rnd);
   final stars = samples.map((o) => _randomStar(o, rnd)).toList()
     ..sort((a, b) => a.radius.compareTo(b.radius));
   return stars;
@@ -342,7 +428,9 @@ _Star _randomStar(Offset position, math.Random rnd) {
 
   final color = Color.fromARGB(255, r, g, b);
   final phase = rnd.nextDouble() * math.pi * 2;
-  return _Star(position, radius, color, phase);
+  final amplitude = 0.3 + rnd.nextDouble() * 0.2; // 0.3..0.5
+  final frequency = 0.8 + rnd.nextDouble() * 0.4; // 0.8..1.2
+  return _Star(position, radius, color, phase, amplitude, frequency);
 }
 
 double _lerp(double a, double b, double t) => a + (b - a) * t;

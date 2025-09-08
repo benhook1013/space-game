@@ -16,10 +16,9 @@ class OverlayService {
 
   void _showOnly(String id, Iterable<String> remove) {
     final overlays = game.overlays;
-    for (final overlay in remove) {
-      overlays.remove(overlay);
-    }
-    overlays.add(id);
+    overlays
+      ..removeAll(remove)
+      ..add(id);
   }
 
   static const _exclusiveOverlays = <String, Set<String>>{
