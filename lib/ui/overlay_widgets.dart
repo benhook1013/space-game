@@ -54,6 +54,35 @@ class OverlayLayout extends StatelessWidget {
   }
 }
 
+/// Reusable icon button that applies a consistent color scheme.
+class GameIconButton extends StatelessWidget {
+  const GameIconButton({
+    super.key,
+    required this.icon,
+    required this.iconSize,
+    this.onPressed,
+    this.color,
+  });
+
+  final Widget icon;
+  final double iconSize;
+  final VoidCallback? onPressed;
+  final Color? color;
+
+  @override
+  Widget build(BuildContext context) {
+    final iconColor = color ?? Theme.of(context).colorScheme.primary;
+    return IconButton(
+      iconSize: iconSize,
+      onPressed: onPressed,
+      icon: IconTheme.merge(
+        data: IconThemeData(color: iconColor),
+        child: icon,
+      ),
+    );
+  }
+}
+
 /// Icon button that toggles the game's mute state.
 class MuteButton extends StatelessWidget {
   const MuteButton({super.key, required this.game, required this.iconSize});
@@ -66,13 +95,9 @@ class MuteButton extends StatelessWidget {
     return ValueListenableBuilder<bool>(
       valueListenable: game.audioService.muted,
       builder: (context, muted, _) {
-        final primary = Theme.of(context).colorScheme.primary;
-        return IconButton(
+        return GameIconButton(
+          icon: Icon(muted ? Icons.volume_off : Icons.volume_up),
           iconSize: iconSize,
-          icon: Icon(
-            muted ? Icons.volume_off : Icons.volume_up,
-            color: primary,
-          ),
           onPressed: game.audioService.toggleMute,
         );
       },
@@ -93,10 +118,9 @@ class HelpButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (iconSize != null) {
-      final primary = Theme.of(context).colorScheme.primary;
-      return IconButton(
-        iconSize: iconSize,
-        icon: Icon(Icons.help_outline, color: primary),
+      return GameIconButton(
+        icon: const Icon(Icons.help_outline),
+        iconSize: iconSize!,
         onPressed: game.toggleHelp,
       );
     }
@@ -120,10 +144,9 @@ class UpgradeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final primary = Theme.of(context).colorScheme.primary;
-    return IconButton(
+    return GameIconButton(
+      icon: const Icon(Icons.upgrade),
       iconSize: iconSize,
-      icon: Icon(Icons.upgrade, color: primary),
       onPressed: game.toggleUpgrades,
     );
   }
@@ -138,12 +161,11 @@ class SettingsButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      iconSize: iconSize,
+    return GameIconButton(
       icon: ImageIcon(
         AssetImage('assets/images/${Assets.settingsIcon}'),
-        color: Theme.of(context).colorScheme.primary,
       ),
+      iconSize: iconSize,
       onPressed: game.toggleSettings,
     );
   }
@@ -158,12 +180,10 @@ class MinimapButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
+    return GameIconButton(
+      icon: const Icon(Icons.map),
       iconSize: iconSize,
-      icon: Icon(
-        Icons.map,
-        color: Theme.of(context).colorScheme.onSurface,
-      ),
+      color: Theme.of(context).colorScheme.onSurface,
       onPressed: game.toggleMinimap,
     );
   }
