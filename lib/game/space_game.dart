@@ -303,7 +303,9 @@ class SpaceGame extends FlameGame
   }
 
   /// Clears the saved high score.
-  Future<void> resetHighScore() => scoreService.resetHighScore();
+  ///
+  /// Returns `true` if the score was removed from storage.
+  Future<bool> resetHighScore() => scoreService.resetHighScore();
 
   /// Transitions to the game over state.
   void gameOver() => stateMachine.gameOver();

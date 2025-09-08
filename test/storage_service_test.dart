@@ -19,7 +19,7 @@ void main() {
       SharedPreferences.setMockInitialValues({'highScore': 99});
       final storage = await StorageService.create();
       expect(storage.getHighScore(), 99);
-      await storage.resetHighScore();
+      expect(await storage.resetHighScore(), isTrue);
       expect(storage.getHighScore(), 0);
     });
 
