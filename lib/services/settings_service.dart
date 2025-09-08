@@ -7,17 +7,17 @@ import 'storage_service.dart';
 /// live prototyping.
 class SettingsService {
   SettingsService({StorageService? storage}) : _storage = storage {
-    hudButtonScale = _initNotifier(_hudScaleKey, defaultHudButtonScale);
-    textScale = _initNotifier(_textScaleKey, defaultTextScale);
-    joystickScale = _initNotifier(_joystickScaleKey, defaultJoystickScale);
-    minimapScale = _initNotifier(_minimapScaleKey, defaultMinimapScale);
-    targetingRange =
-        _initNotifier(_targetingRangeKey, Constants.playerAutoAimRange);
-    tractorRange =
-        _initNotifier(_tractorRangeKey, Constants.playerTractorAuraRadius);
-    miningRange = _initNotifier(_miningRangeKey, Constants.playerMiningRange);
-    starfieldTileSize =
-        _initNotifier(_starfieldTileSizeKey, Constants.starfieldTileSize);
+    _notifiers = _settingDefaults.map(
+        (key, defaultValue) => MapEntry(key, _initNotifier(key, defaultValue)));
+
+    hudButtonScale = _notifiers[_hudScaleKey]!;
+    textScale = _notifiers[_textScaleKey]!;
+    joystickScale = _notifiers[_joystickScaleKey]!;
+    minimapScale = _notifiers[_minimapScaleKey]!;
+    targetingRange = _notifiers[_targetingRangeKey]!;
+    tractorRange = _notifiers[_tractorRangeKey]!;
+    miningRange = _notifiers[_miningRangeKey]!;
+    starfieldTileSize = _notifiers[_starfieldTileSizeKey]!;
   }
 
   static const double defaultHudButtonScale = 0.75;
@@ -50,6 +50,7 @@ class SettingsService {
   late final ValueNotifier<double> starfieldTileSize;
 
   StorageService? _storage;
+  late final Map<String, ValueNotifier<double>> _notifiers;
 
   /// Attaches a [StorageService] after construction and loads any persisted
   /// values into the existing notifiers. If storage has already been provided,
@@ -59,32 +60,17 @@ class SettingsService {
       return;
     }
     _storage = storage;
-    hudButtonScale.value =
-        storage.getDouble(_hudScaleKey, hudButtonScale.value);
-    textScale.value = storage.getDouble(_textScaleKey, textScale.value);
-    joystickScale.value =
-        storage.getDouble(_joystickScaleKey, joystickScale.value);
-    minimapScale.value =
-        storage.getDouble(_minimapScaleKey, minimapScale.value);
-    targetingRange.value =
-        storage.getDouble(_targetingRangeKey, targetingRange.value);
-    tractorRange.value =
-        storage.getDouble(_tractorRangeKey, tractorRange.value);
-    miningRange.value = storage.getDouble(_miningRangeKey, miningRange.value);
-    starfieldTileSize.value =
-        storage.getDouble(_starfieldTileSizeKey, starfieldTileSize.value);
+    _notifiers.forEach(
+      (key, notifier) =>
+          notifier.value = storage.getDouble(key, notifier.value),
+    );
   }
 
   /// Restores all values to their defaults.
   void reset() {
-    hudButtonScale.value = defaultHudButtonScale;
-    textScale.value = defaultTextScale;
-    joystickScale.value = defaultJoystickScale;
-    minimapScale.value = defaultMinimapScale;
-    targetingRange.value = Constants.playerAutoAimRange;
-    tractorRange.value = Constants.playerTractorAuraRadius;
-    miningRange.value = Constants.playerMiningRange;
-    starfieldTileSize.value = Constants.starfieldTileSize;
+    _settingDefaults.forEach(
+      (key, defaultValue) => _notifiers[key]!.value = defaultValue,
+    );
   }
 
   static const _hudScaleKey = 'hudButtonScale';
@@ -95,6 +81,17 @@ class SettingsService {
   static const _tractorRangeKey = 'tractorRange';
   static const _miningRangeKey = 'miningRange';
   static const _starfieldTileSizeKey = 'starfieldTileSize';
+
+  static const _settingDefaults = <String, double>{
+    _hudScaleKey: defaultHudButtonScale,
+    _textScaleKey: defaultTextScale,
+    _joystickScaleKey: defaultJoystickScale,
+    _minimapScaleKey: defaultMinimapScale,
+    _targetingRangeKey: Constants.playerAutoAimRange,
+    _tractorRangeKey: Constants.playerTractorAuraRadius,
+    _miningRangeKey: Constants.playerMiningRange,
+    _starfieldTileSizeKey: Constants.starfieldTileSize,
+  };
 
   ValueNotifier<double> _initNotifier(String key, double defaultValue) {
     final notifier = ValueNotifier<double>(
