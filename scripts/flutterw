@@ -9,9 +9,36 @@ source "$(dirname "$0")/bootstrap_flutter.sh"
 echo "[flutterw] Flutter SDK ready"
 # Restore original args for the actual flutter invocation.
 set -- "${args[@]}"
+test_concurrency=""
+if [[ "${1:-}" == "test" ]]; then
+  found_concurrency=false
+  for ((i=1; i<=$#; i++)); do
+    arg=${!i}
+    if [[ $arg == --concurrency ]]; then
+      found_concurrency=true
+      next_index=$((i+1))
+      if (( next_index <= $# )); then
+        test_concurrency=${!next_index}
+      fi
+      break
+    elif [[ $arg == --concurrency=* ]]; then
+      found_concurrency=true
+      test_concurrency=${arg#--concurrency=}
+      break
+    fi
+  done
+  if [[ $found_concurrency == false ]]; then
+    test_concurrency=${FLUTTER_TEST_CONCURRENCY:-$(nproc)}
+    set -- "$@" --concurrency "$test_concurrency"
+  fi
+fi
 echo "[flutterw] starting at $(date)"
 echo "[flutterw] flutter $@"
 if [[ "${1:-}" == "test" ]]; then
-  echo "[flutterw] running tests..."
+  if [[ -n "$test_concurrency" ]]; then
+    echo "[flutterw] running tests with concurrency $test_concurrency..."
+  else
+    echo "[flutterw] running tests..."
+  fi
 fi
 exec ".tooling/flutter/bin/flutter" "$@"
