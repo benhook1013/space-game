@@ -14,7 +14,7 @@ class LifecycleManager {
   final SpaceGame game;
 
   void _removeAll<T extends Component>() {
-    for (final component in List<T>.from(game.children.whereType<T>())) {
+    for (final component in game.children.whereType<T>().toList()) {
       component.removeFromParent();
     }
   }

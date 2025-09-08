@@ -27,16 +27,6 @@ class PlayerInputBehavior extends Component with HasGameReference<SpaceGame> {
   bool _isShooting = false;
 
   @override
-  void onMount() {
-    super.onMount();
-  }
-
-  @override
-  void onRemove() {
-    super.onRemove();
-  }
-
-  @override
   void update(double dt) {
     super.update(dt);
     _applyCooldown(dt);
