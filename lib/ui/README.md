@@ -36,4 +36,9 @@ Flutter overlays and HUD widgets.
   toggles the minimap, `B` toggles range rings, and `Esc` also closes overlays
   when visible.
 
+## Widgets
+
+- [MiniMapDisplay](minimap_display.md) – circular minimap showing nearby
+  entities with an arrow indicating player heading.
+
 See [../../PLAN.md](../../PLAN.md) for the broader roadmap.

@@ -173,7 +173,8 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
 - Single endless level without progression for now
 - Player score, minerals and health shown in the HUD with simple
   start/game‑over screens
-- Toggable top-left minimap shows nearby asteroids, enemies and pickups
+- Toggable top-left minimap shows the player's heading and nearby asteroids,
+  enemies and pickups
 - HUD button or `B` key toggles coloured range rings showing targeting, Tractor Aura and mining radii
 - Local high score stored on device (e.g., shared preferences)
 - Menu offers a reset button to clear the high score
