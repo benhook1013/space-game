@@ -5,6 +5,7 @@ import 'package:meta/meta.dart';
 
 import '../assets.dart';
 import '../constants.dart';
+import '../enemy_faction.dart';
 import '../game/space_game.dart';
 import 'enemy.dart';
 

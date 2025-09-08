@@ -88,6 +88,7 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
 ## Next Steps
 
 - [x] Spawn enemy groups on a timer.
+- [x] Enemies spawn from random factions with occasional boss variants.
 - [x] Add a mining laser that automatically targets and fires at nearby
       asteroids.
 - [x] Drop mineral pickups from asteroids and track the player's total.

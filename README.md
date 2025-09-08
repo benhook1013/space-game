@@ -36,8 +36,9 @@ dedicated server or NAT traversal.
 ## 🧩 MVP Features
 
 - Touch/joystick movement and shooting
-- Enemy groups spawn periodically and the main weapon smoothly auto-aims at the
-  closest foe
+- Enemy groups spawn periodically from random factions, and the main weapon
+  smoothly auto-aims at the closest foe while rare boss variants add extra
+  challenge
 - Asteroids can be mined for mineral pickups using an auto-targeting laser;
   each hit drops a mineral nearby
 - A blue Tractor Aura draws nearby pickups toward the ship

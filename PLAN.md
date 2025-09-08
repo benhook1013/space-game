@@ -18,6 +18,8 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
 - Solo-friendly workflow with minimal tooling
 - Core loop focused on mining asteroids for minerals while fending off enemy
   groups
+- Enemy ships belong to distinct factions and occasionally spawn tougher boss
+  variants for extra challenge
 - Auto-firing mining laser targets asteroids while the main cannon locks onto
   the closest enemy
 - A blue Tractor Aura around the ship pulls in nearby pickups

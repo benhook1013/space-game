@@ -99,7 +99,9 @@ tree spanning weapons and ship systems.
   component is added or removed, enabling pooling and targeting helpers.
 - Use simple hit boxes (`CircleHitbox`, `RectangleHitbox`) and
   `HasCollisionDetection`.
-- An `EnemySpawner` system releases groups of enemies at timed intervals.
+- An `EnemySpawner` system releases groups of enemies at timed intervals. Ships
+  draw from random factions with unique sprites, and a rare boss variant can
+  appear for added challenge.
 - Mining asteroids with the laser awards mineral pickups each time.
 - The player mounts two weapons: an auto-firing mining laser that targets
   asteroids in range and a primary cannon that locks onto the nearest enemy.
