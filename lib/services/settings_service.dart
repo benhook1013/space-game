@@ -92,4 +92,15 @@ class SettingsService {
     notifier.addListener(() => _storage?.setDouble(key, notifier.value));
     return notifier;
   }
+
+  /// Releases resources held by the service.
+  void dispose() {
+    hudButtonScale.dispose();
+    textScale.dispose();
+    joystickScale.dispose();
+    minimapScale.dispose();
+    targetingRange.dispose();
+    tractorRange.dispose();
+    miningRange.dispose();
+  }
 }

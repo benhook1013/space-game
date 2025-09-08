@@ -48,4 +48,12 @@ class ScoreService {
       await storageService.setHighScore(highScore.value);
     }
   }
+
+  /// Releases resources held by the service.
+  void dispose() {
+    score.dispose();
+    highScore.dispose();
+    minerals.dispose();
+    health.dispose();
+  }
 }

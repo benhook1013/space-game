@@ -434,6 +434,16 @@ class SpaceGame extends FlameGame
     camera.viewfinder.anchor = Anchor.center;
   }
 
+  @override
+  void onRemove() {
+    settingsService.dispose();
+    scoreService.dispose();
+    upgradeService.dispose();
+    stateMachine.dispose();
+    eventBus.dispose();
+    super.onRemove();
+  }
+
   /// Requests keyboard focus for the surrounding [GameWidget].
   void focusGame() => focusNode.requestFocus();
 }

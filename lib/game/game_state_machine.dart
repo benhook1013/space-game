@@ -61,4 +61,9 @@ class GameStateMachine {
     overlays.showMenu();
     onMenu();
   }
+
+  /// Releases resources held by the state machine.
+  void dispose() {
+    stateNotifier.dispose();
+  }
 }
