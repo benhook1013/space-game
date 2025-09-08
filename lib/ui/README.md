@@ -30,8 +30,9 @@ Flutter overlays and HUD widgets.
   scale and gameplay ranges, with a reset button; opened via HUD button.
 - The `M` key toggles mute in any overlay; `F1` toggles debug overlays;
   `Enter` starts or restarts from the menu or game over; `R` restarts at any
-  time; `Escape` or `P` pauses or resumes; `H` shows or hides the help overlay,
-  `U` opens upgrades, `N` toggles the minimap, `B` toggles range rings, and
-  `Esc` also closes overlays when visible.
+  time; `Q` returns to the menu from pause or game over; `Escape` or `P` pauses
+  or resumes; `H` shows or hides the help overlay, `U` opens upgrades, `N`
+  toggles the minimap, `B` toggles range rings, and `Esc` also closes overlays
+  when visible.
 
 See [../../PLAN.md](../../PLAN.md) for the broader roadmap.
