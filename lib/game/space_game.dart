@@ -129,6 +129,7 @@ class SpaceGame extends FlameGame
   final GameEventBus eventBus = GameEventBus();
   late final TargetingService targetingService;
   StarfieldComponent? _starfield;
+  int _starfieldRebuildId = 0;
   FpsTextComponent? _fpsText;
   bool _playerInitialized = false;
   final ValueNotifier<bool> showMinimap = ValueNotifier<bool>(true);
@@ -452,6 +453,8 @@ class SpaceGame extends FlameGame
   void _rebuildStarfield() {
     final tileSize = settingsService.starfieldTileSize.value;
     _starfield?.removeFromParent();
+    _starfield = null;
+    final buildId = ++_starfieldRebuildId;
     unawaited(() async {
       final sf = await StarfieldComponent(
         debugDrawTiles: debugMode,
@@ -462,6 +465,9 @@ class SpaceGame extends FlameGame
         ],
         tileSize: tileSize,
       );
+      if (buildId != _starfieldRebuildId) {
+        return;
+      }
       _starfield = sf;
       await add(sf);
     }());
