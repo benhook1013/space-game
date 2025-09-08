@@ -16,7 +16,6 @@ import 'ui/game_text.dart';
 import 'services/storage_service.dart';
 import 'services/audio_service.dart';
 import 'services/settings_service.dart';
-import 'util/interaction.dart';
 
 /// Application entry point.
 Future<void> main() async {
@@ -42,7 +41,10 @@ Future<void> main() async {
     gameColors: gameColors,
   );
 
-  onFirstUserInteraction(game.startLoadingAssets);
+  // Begin loading non-essential assets immediately. Progress is reported to
+  // the main menu overlay, which shows a loading bar until all assets are
+  // ready. The game itself will await completion before starting.
+  game.startLoadingAssets();
 
   // Pause the game and silence audio when the app is not visible.
   final lifecycleObserver = _AppLifecycleObserver(game);
