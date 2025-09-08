@@ -73,7 +73,7 @@ class AudioService {
   /// Sets the global volume multiplier (0-1) and updates active loops.
   void setMasterVolume(double volume) {
     _masterVolume = volume.clamp(0, 1);
-    _storage.setDouble(_masterVolumeKey, _masterVolume);
+    unawaited(_storage.setDouble(_masterVolumeKey, _masterVolume));
     _miningLoop?.setVolume(Constants.miningLaserVolume * _masterVolume);
   }
 
