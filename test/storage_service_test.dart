@@ -30,5 +30,19 @@ void main() {
       await storage.setPlayerSpriteIndex(1);
       expect(storage.getPlayerSpriteIndex(), 1);
     });
+
+    test('generic get/set handles strings', () async {
+      SharedPreferences.setMockInitialValues({});
+      final storage = await StorageService.create();
+      await storage.setValue<String>('greeting', 'hello');
+      expect(storage.getValue<String>('greeting', ''), 'hello');
+    });
+
+    test('string helpers persist values', () async {
+      SharedPreferences.setMockInitialValues({});
+      final storage = await StorageService.create();
+      await storage.setString('name', 'Alice');
+      expect(storage.getString('name', ''), 'Alice');
+    });
   });
 }
