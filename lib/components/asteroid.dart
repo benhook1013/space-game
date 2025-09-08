@@ -74,6 +74,15 @@ class AsteroidComponent extends SpriteComponent
     renderHealth(canvas, _health);
   }
 
+  /// Immediately destroys the asteroid without dropping minerals.
+  void destroy() {
+    _health = 0;
+    game.addScore(Constants.asteroidScore);
+    if (!isRemoving) {
+      removeFromParent();
+    }
+  }
+
   /// Reduces health by [amount], dropping a limited number of minerals and
   /// removing the asteroid when depleted.
   void takeDamage(int amount) {
