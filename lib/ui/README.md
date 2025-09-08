@@ -29,8 +29,9 @@ Flutter overlays and HUD widgets.
 - [SettingsOverlay](settings_overlay.md) – adjust volume, HUD, minimap, text,
   joystick scale and gameplay ranges, with a reset button; opened via HUD
   button.
-- The `M` key toggles mute in any overlay; `F1` toggles debug overlays;
-  `Enter` starts or restarts from the menu or game over; `R` restarts at any
+- The `M` key toggles mute in any overlay; `F1` toggles debug overlays with an
+  FPS counter and starfield tile outlines; `Enter` starts or restarts from the
+  menu or game over; `R` restarts at any
   time; `Q` returns to the menu from pause or game over; `Escape` or `P` pauses
   or resumes; `H` shows or hides the help overlay, `U` opens upgrades, `N`
   toggles the minimap, `B` toggles range rings, and `Esc` also closes overlays

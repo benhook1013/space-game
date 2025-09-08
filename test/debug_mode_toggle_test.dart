@@ -2,11 +2,13 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/widgets.dart';
 
 import 'package:space_game/game/space_game.dart';
 import 'package:space_game/services/storage_service.dart';
 import 'package:space_game/services/audio_service.dart';
 import 'package:space_game/components/enemy.dart';
+import 'package:space_game/components/starfield.dart';
 
 class _HitboxGame extends SpaceGame {
   _HitboxGame({required StorageService storage, required AudioService audio})
@@ -84,5 +86,27 @@ void main() {
     final reused = game.pools.acquire<EnemyComponent>((_) {});
     final reusedHitbox = reused.children.query<CircleHitbox>().first;
     expect(reusedHitbox.debugMode, isFalse);
+  });
+
+  test('toggleDebug updates starfield debugDrawTiles', () async {
+    SharedPreferences.setMockInitialValues({});
+    final storage = await StorageService.create();
+    final audio = await AudioService.create(storage);
+    final game = SpaceGame(storageService: storage, audioService: audio);
+    // Register minimal overlay builders expected by onLoad.
+    game.overlays.addEntry('menuOverlay', (_, __) => const SizedBox());
+    game.overlays.addEntry('hudOverlay', (_, __) => const SizedBox());
+    game.overlays.addEntry('pauseOverlay', (_, __) => const SizedBox());
+    game.overlays.addEntry('gameOverOverlay', (_, __) => const SizedBox());
+    game.overlays.addEntry('helpOverlay', (_, __) => const SizedBox());
+    game.overlays.addEntry('upgradesOverlay', (_, __) => const SizedBox());
+    game.overlays.addEntry('settingsOverlay', (_, __) => const SizedBox());
+    await game.onLoad();
+    final starfield = game.children.whereType<StarfieldComponent>().single;
+    expect(starfield.debugDrawTiles, isTrue);
+    game.toggleDebug();
+    expect(starfield.debugDrawTiles, isFalse);
+    game.toggleDebug();
+    expect(starfield.debugDrawTiles, isTrue);
   });
 }

@@ -183,7 +183,8 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
   available on menu, HUD and game over overlays
 - Keyboard controls for desktop playtests (`WASD`/arrow keys to move, `Space` to
   shoot, `Escape` or `P` to pause or resume, `M` to mute, `N` toggles the
-  minimap, `F1` toggles debug overlays and outlines starfield tiles, `Enter`
+  minimap, `F1` toggles debug overlays with an FPS counter and outlines starfield
+  tiles, `Enter`
   starts or restarts from the menu or game over, `R` restarts at any time, `H`
   shows a help overlay that `Esc` also closes, `U` opens an upgrades overlay
   that `Esc` also closes, `O` opens the settings overlay, `B` toggles range rings)
@@ -206,7 +207,8 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
     margin around the camera, then draws with a translation of `-playerPosition`
     so the player flies over a static backdrop. Stars sort by radius so faint
     ones render first for smoother blending. A `debugDrawTiles` option outlines
-    tile boundaries when debug mode (`F1`) is active to aid development.
+    tile boundaries when debug mode (`F1`) is active to aid development, and an
+    FPS counter is displayed.
   - Tile size can be tuned in the settings overlay to balance detail and performance.
 - Pause or resume with a `PAUSED` overlay prompting players to press `Esc` or
   `P` to resume; `Q` returns to the menu from pause or game over

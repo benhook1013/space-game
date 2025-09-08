@@ -9,6 +9,8 @@ Current suites verify:
 - OverlayService overlay transitions
 - Player shot cooldown logic
 - Help overlay pause behaviour
+- Debug mode toggling propagates to hit boxes, pooled objects and starfield tile
+  outlines
 
 Tests use `flutter_test` and `flame_test` as noted in [../PLAN.md](../PLAN.md).
 

@@ -12,6 +12,8 @@ _Update this file whenever a player-facing feature is added or changed._
 - [ ] When stationary, the ship rotates toward the nearest enemy within range
 - [ ] Target button or `B` key toggles range rings display
 - [ ] Minimap icon or `N` key toggles minimap with player heading arrow
+- [ ] `F1` toggles debug overlays with hit boxes, starfield tile outlines and an
+      FPS counter
 - [ ] Asteroids spawn randomly and drift across the screen
 - [ ] Enemies and asteroids show varied sprites
 - [ ] Shooting an asteroid destroys it and increases the on-screen score
