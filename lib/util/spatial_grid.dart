@@ -50,12 +50,15 @@ class SpatialGrid<T extends PositionComponent> {
   Iterable<T> query(Vector2 center, double radius) sync* {
     final min = _cellFor(center - Vector2.all(radius));
     final max = _cellFor(center + Vector2.all(radius));
+    final radiusSquared = radius * radius;
     for (var x = min.x; x <= max.x; x++) {
       for (var y = min.y; y <= max.y; y++) {
         final set = _cells[Point<int>(x, y)];
         if (set != null) {
           for (final component in set) {
-            yield component;
+            if (component.position.distanceToSquared(center) <= radiusSquared) {
+              yield component;
+            }
           }
         }
       }
