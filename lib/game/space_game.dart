@@ -177,9 +177,9 @@ class SpaceGame extends FlameGame
     _starfield = await StarfieldComponent(
       debugDrawTiles: debugMode,
       layers: const [
-        StarfieldLayerConfig(parallax: 0.2, density: 0.3, twinkleSpeed: 0.5),
-        StarfieldLayerConfig(parallax: 0.6, density: 0.6, twinkleSpeed: 0.8),
-        StarfieldLayerConfig(parallax: 1.0, density: 1, twinkleSpeed: 1),
+        StarfieldLayerConfig(parallax: 0.2, density: 0.15, twinkleSpeed: 0.5),
+        StarfieldLayerConfig(parallax: 0.6, density: 0.3, twinkleSpeed: 0.8),
+        StarfieldLayerConfig(parallax: 1.0, density: 0.5, twinkleSpeed: 1),
       ],
       tileSize: settingsService.starfieldTileSize.value,
     );
