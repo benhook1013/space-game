@@ -35,7 +35,7 @@ if [[ "${1:-}" == "test" ]]; then
       if command -v nproc >/dev/null 2>&1; then
         test_concurrency=$(nproc)
       elif command -v sysctl >/dev/null 2>&1; then
-        test_concurrency=$(sysctl -n hw.ncpu)
+        test_concurrency=$(sysctl -n hw.ncpu 2>/dev/null || echo 1)
       else
         test_concurrency=1
       fi
