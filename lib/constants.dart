@@ -5,7 +5,7 @@ class Constants {
   /// Distance from the player after which entities are removed.
   static const double despawnRadius = 1500;
 
-  /// Size of a single generated starfield tile in pixels.
+  /// Default size of a single generated starfield tile in pixels.
   static const double starfieldTileSize = 512;
 
   /// Player movement speed in pixels per second.

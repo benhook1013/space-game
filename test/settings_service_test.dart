@@ -18,6 +18,7 @@ void main() {
     expect(settings.targetingRange.value, Constants.playerAutoAimRange);
     expect(settings.tractorRange.value, Constants.playerTractorAuraRadius);
     expect(settings.miningRange.value, Constants.playerMiningRange);
+    expect(settings.starfieldTileSize.value, Constants.starfieldTileSize);
   });
 
   test('notifiers update when values change', () {
@@ -30,6 +31,7 @@ void main() {
     var targetingNotified = false;
     var tractorNotified = false;
     var miningNotified = false;
+    var starfieldNotified = false;
 
     settings.hudButtonScale.addListener(() => hudNotified = true);
     settings.minimapScale.addListener(() => minimapNotified = true);
@@ -38,6 +40,7 @@ void main() {
     settings.targetingRange.addListener(() => targetingNotified = true);
     settings.tractorRange.addListener(() => tractorNotified = true);
     settings.miningRange.addListener(() => miningNotified = true);
+    settings.starfieldTileSize.addListener(() => starfieldNotified = true);
 
     settings.hudButtonScale.value = 1.2;
     settings.minimapScale.value = 1.4;
@@ -46,6 +49,7 @@ void main() {
     settings.targetingRange.value = 350;
     settings.tractorRange.value = 250;
     settings.miningRange.value = 180;
+    settings.starfieldTileSize.value = 256;
 
     expect(hudNotified, isTrue);
     expect(minimapNotified, isTrue);
@@ -54,6 +58,7 @@ void main() {
     expect(targetingNotified, isTrue);
     expect(tractorNotified, isTrue);
     expect(miningNotified, isTrue);
+    expect(starfieldNotified, isTrue);
 
     expect(settings.hudButtonScale.value, 1.2);
     expect(settings.minimapScale.value, 1.4);
@@ -62,6 +67,7 @@ void main() {
     expect(settings.targetingRange.value, 350);
     expect(settings.tractorRange.value, 250);
     expect(settings.miningRange.value, 180);
+    expect(settings.starfieldTileSize.value, 256);
   });
 
   test('reset restores default values', () {
@@ -73,6 +79,7 @@ void main() {
     settings.targetingRange.value = 400;
     settings.tractorRange.value = 300;
     settings.miningRange.value = 200;
+    settings.starfieldTileSize.value = 256;
 
     settings.reset();
 
@@ -84,6 +91,7 @@ void main() {
     expect(settings.targetingRange.value, Constants.playerAutoAimRange);
     expect(settings.tractorRange.value, Constants.playerTractorAuraRadius);
     expect(settings.miningRange.value, Constants.playerMiningRange);
+    expect(settings.starfieldTileSize.value, Constants.starfieldTileSize);
   });
 
   test('values persist across sessions', () async {

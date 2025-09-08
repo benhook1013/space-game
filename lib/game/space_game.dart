@@ -181,8 +181,10 @@ class SpaceGame extends FlameGame
         StarfieldLayerConfig(parallax: 0.6, density: 0.6, twinkleSpeed: 0.8),
         StarfieldLayerConfig(parallax: 1.0, density: 1, twinkleSpeed: 1),
       ],
+      tileSize: settingsService.starfieldTileSize.value,
     );
     await add(_starfield!);
+    settingsService.starfieldTileSize.addListener(_rebuildStarfield);
 
     player = PlayerComponent(
       joystick: joystick,
@@ -445,6 +447,24 @@ class SpaceGame extends FlameGame
     fireButton.size = Vector2.all(60 * scale);
     fireButton.anchor = Anchor.bottomRight;
     fireButton.onGameResize(size);
+  }
+
+  void _rebuildStarfield() {
+    final tileSize = settingsService.starfieldTileSize.value;
+    _starfield?.removeFromParent();
+    unawaited(() async {
+      final sf = await StarfieldComponent(
+        debugDrawTiles: debugMode,
+        layers: const [
+          StarfieldLayerConfig(parallax: 0.2, density: 0.3, twinkleSpeed: 0.5),
+          StarfieldLayerConfig(parallax: 0.6, density: 0.6, twinkleSpeed: 0.8),
+          StarfieldLayerConfig(parallax: 1.0, density: 1, twinkleSpeed: 1),
+        ],
+        tileSize: tileSize,
+      );
+      _starfield = sf;
+      await add(sf);
+    }());
   }
 
   /// Ensures the camera stays centred on the player.

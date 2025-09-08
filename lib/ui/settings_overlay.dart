@@ -122,6 +122,21 @@ class SettingsOverlay extends StatelessWidget {
                     min: 50,
                     max: 600,
                   ),
+                  GameText(
+                    'Performance',
+                    style: Theme.of(context).textTheme.titleMedium,
+                    maxLines: 1,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                  SizedBox(height: spacing),
+                  _buildSlider(
+                    context,
+                    'Starfield Tile',
+                    settings.starfieldTileSize,
+                    spacing,
+                    min: 256,
+                    max: 1024,
+                  ),
                   SizedBox(height: spacing),
                   ElevatedButton(
                     onPressed: () {

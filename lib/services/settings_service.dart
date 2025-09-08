@@ -3,7 +3,8 @@ import 'package:flutter/foundation.dart';
 import '../constants.dart';
 import 'storage_service.dart';
 
-/// Holds tweakable UI scale values and gameplay ranges for live prototyping.
+/// Holds tweakable UI scale values, gameplay ranges and performance tweaks for
+/// live prototyping.
 class SettingsService {
   SettingsService({StorageService? storage}) : _storage = storage {
     hudButtonScale = _initNotifier(_hudScaleKey, defaultHudButtonScale);
@@ -15,6 +16,8 @@ class SettingsService {
     tractorRange =
         _initNotifier(_tractorRangeKey, Constants.playerTractorAuraRadius);
     miningRange = _initNotifier(_miningRangeKey, Constants.playerMiningRange);
+    starfieldTileSize =
+        _initNotifier(_starfieldTileSizeKey, Constants.starfieldTileSize);
   }
 
   static const double defaultHudButtonScale = 0.75;
@@ -43,6 +46,9 @@ class SettingsService {
   /// Maximum distance to auto-mine asteroids, in pixels.
   late final ValueNotifier<double> miningRange;
 
+  /// Size of each generated starfield tile.
+  late final ValueNotifier<double> starfieldTileSize;
+
   StorageService? _storage;
 
   /// Attaches a [StorageService] after construction and loads any persisted
@@ -65,6 +71,8 @@ class SettingsService {
     tractorRange.value =
         storage.getDouble(_tractorRangeKey, tractorRange.value);
     miningRange.value = storage.getDouble(_miningRangeKey, miningRange.value);
+    starfieldTileSize.value =
+        storage.getDouble(_starfieldTileSizeKey, starfieldTileSize.value);
   }
 
   /// Restores all values to their defaults.
@@ -76,6 +84,7 @@ class SettingsService {
     targetingRange.value = Constants.playerAutoAimRange;
     tractorRange.value = Constants.playerTractorAuraRadius;
     miningRange.value = Constants.playerMiningRange;
+    starfieldTileSize.value = Constants.starfieldTileSize;
   }
 
   static const _hudScaleKey = 'hudButtonScale';
@@ -85,6 +94,7 @@ class SettingsService {
   static const _targetingRangeKey = 'targetingRange';
   static const _tractorRangeKey = 'tractorRange';
   static const _miningRangeKey = 'miningRange';
+  static const _starfieldTileSizeKey = 'starfieldTileSize';
 
   ValueNotifier<double> _initNotifier(String key, double defaultValue) {
     final notifier = ValueNotifier<double>(
@@ -102,5 +112,6 @@ class SettingsService {
     targetingRange.dispose();
     tractorRange.dispose();
     miningRange.dispose();
+    starfieldTileSize.dispose();
   }
 }
