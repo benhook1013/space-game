@@ -8,6 +8,7 @@ import 'package:space_game/services/storage_service.dart';
 import 'package:space_game/services/audio_service.dart';
 import 'package:flame/components.dart';
 import 'package:space_game/components/enemy.dart';
+import 'package:space_game/enemy_faction.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -20,11 +21,11 @@ void main() {
     final game = SpaceGame(storageService: storage, audioService: audio);
 
     final enemy1 = game.pools.acquire<EnemyComponent>(
-      (e) => e.reset(Vector2.zero()),
+      (e) => e.reset(Vector2.zero(), EnemyFaction.faction1),
     );
     game.pools.release(enemy1);
     final enemy2 = game.pools.acquire<EnemyComponent>(
-      (e) => e.reset(Vector2.zero()),
+      (e) => e.reset(Vector2.zero(), EnemyFaction.faction1),
     );
     expect(identical(enemy1, enemy2), isTrue);
   });

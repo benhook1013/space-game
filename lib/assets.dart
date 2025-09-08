@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flame/flame.dart';
 import 'package:flame_audio/flame_audio.dart';
 
+import 'enemy_faction.dart';
 import 'log.dart';
 
 /// Central registry for asset paths and preloading.
@@ -12,12 +13,15 @@ class Assets {
     'players/player1.png',
     'players/player2.png',
   ];
-  static const List<String> enemies = [
-    'enemies/enemy1.png',
-    'enemies/enemy2.png',
-    'enemies/enemy3.png',
-    'enemies/enemy4.png',
-  ];
+  static const Map<EnemyFaction, List<String>> enemyFactions = {
+    EnemyFaction.faction1: ['enemies/faction1/unit.png'],
+    EnemyFaction.faction2: ['enemies/faction2/unit.png'],
+    EnemyFaction.faction3: ['enemies/faction3/unit.png'],
+    EnemyFaction.faction4: ['enemies/faction4/unit.png'],
+  };
+
+  static List<String> get enemies =>
+      enemyFactions.values.expand((e) => e).toList();
   static const List<String> asteroids = [
     'asteroids/asteroid1.png',
     'asteroids/asteroid2.png',
@@ -81,8 +85,15 @@ class Assets {
 
   static final Random _rand = Random();
 
-  /// Returns a random enemy sprite path.
-  static String randomEnemy() => enemies[_rand.nextInt(enemies.length)];
+  /// Returns a random faction.
+  static EnemyFaction randomFaction() =>
+      EnemyFaction.values[_rand.nextInt(EnemyFaction.values.length)];
+
+  /// Returns a random enemy sprite path for [faction].
+  static String randomEnemyForFaction(EnemyFaction faction) {
+    final sprites = enemyFactions[faction]!;
+    return sprites[_rand.nextInt(sprites.length)];
+  }
 
   /// Returns a random asteroid sprite path.
   static String randomAsteroid() => asteroids[_rand.nextInt(asteroids.length)];

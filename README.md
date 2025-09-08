@@ -131,7 +131,7 @@ Create the remaining assets locally under `assets/` before running the game:
 
 Simple placeholders can be generated with common tools. For example:
 
-- ImageMagick: `convert -size 32x32 canvas:red assets/images/enemies/enemy1.png`
+- ImageMagick: `convert -size 32x32 canvas:red assets/images/enemies/faction1/unit.png`
 
 Remember to update `assets_manifest.json` and credit any third-party assets in
 `ASSET_CREDITS.md`.

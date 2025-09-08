@@ -6,6 +6,7 @@ import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import '../assets.dart';
 import '../constants.dart';
+import '../enemy_faction.dart';
 import '../game/space_game.dart';
 import 'debug_health_text.dart';
 import '../util/collision_utils.dart';
@@ -29,21 +30,21 @@ class EnemyComponent extends SpriteComponent
         SpawnRemoveEmitter<EnemyComponent>,
         OffscreenCleanup,
         DamageFlash {
-  EnemyComponent()
-      : super(
-          size: Vector2.all(
-            Constants.enemySize *
-                (Constants.spriteScale + Constants.enemyScale),
-          ),
-          anchor: Anchor.center,
-        );
+  EnemyComponent() : super(anchor: Anchor.center);
+
+  late EnemyFaction faction;
 
   int _health = Constants.enemyMaxHealth;
 
   /// Prepares the enemy for reuse.
-  void reset(Vector2 position) {
+  void reset(Vector2 position, EnemyFaction faction, {bool isBoss = false}) {
     this.position.setFrom(position);
-    sprite = Sprite(Flame.images.fromCache(Assets.randomEnemy()));
+    this.faction = faction;
+    final path = Assets.randomEnemyForFaction(faction);
+    sprite = Sprite(Flame.images.fromCache(path));
+    final baseSize =
+        Constants.enemySize * (Constants.spriteScale + Constants.enemyScale);
+    size = Vector2.all(baseSize * (isBoss ? Constants.enemyBossScale : 1));
     _health = Constants.enemyMaxHealth;
   }
 

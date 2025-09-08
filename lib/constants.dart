@@ -115,6 +115,12 @@ class Constants {
   /// Extra scale applied on top of [spriteScale] for enemy sprites.
   static const double enemyScale = 0;
 
+  /// Chance that a boss enemy spawns with a group.
+  static const double enemyBossChance = 0.1;
+
+  /// Size multiplier for boss enemies.
+  static const double enemyBossScale = 2;
+
   /// Seconds between enemy spawns.
   static const double enemySpawnInterval = 2;
 

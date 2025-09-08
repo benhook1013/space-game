@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:space_game/components/enemy.dart';
+import 'package:space_game/enemy_faction.dart';
 import 'package:space_game/components/player.dart';
 import 'package:space_game/assets.dart';
 import 'package:space_game/constants.dart';
@@ -63,7 +64,8 @@ void main() {
     game.update(0);
 
     final enemy = game.pools.acquire<EnemyComponent>(
-      (e) => e.reset(game.player.position + Vector2(100, 0)),
+      (e) => e.reset(
+          game.player.position + Vector2(100, 0), EnemyFaction.faction1),
     );
     await game.add(enemy);
     game.update(0);
@@ -73,7 +75,10 @@ void main() {
     game.update(0.5);
     expect(game.player.angle, closeTo(math.pi / 2, 0.001));
 
-    enemy.reset(game.player.position - Vector2(100, 0));
+    enemy.reset(
+      game.player.position - Vector2(100, 0),
+      EnemyFaction.faction1,
+    );
     game.update(0.5);
     expect(game.player.angle, closeTo(-math.pi / 2, 0.001));
   });

@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:space_game/assets.dart';
 import 'package:space_game/components/enemy.dart';
+import 'package:space_game/enemy_faction.dart';
 import 'package:space_game/components/player.dart';
 import 'package:space_game/components/explosion.dart';
 import 'package:space_game/constants.dart';
@@ -101,7 +102,8 @@ void main() {
     game.onGameResize(Vector2.all(1000));
     await game.ready();
 
-    final enemy = EnemyComponent()..reset(Vector2.zero());
+    final enemy = EnemyComponent()
+      ..reset(Vector2.zero(), EnemyFaction.faction1);
     await game.add(enemy);
     game.update(0);
     expect(game.score.value, 0);

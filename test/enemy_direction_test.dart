@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:space_game/assets.dart';
 import 'package:space_game/components/enemy.dart';
+import 'package:space_game/enemy_faction.dart';
 import 'package:space_game/components/player.dart';
 import 'package:space_game/constants.dart';
 import 'package:space_game/game/key_dispatcher.dart';
@@ -61,7 +62,7 @@ void main() {
 
     final enemy = EnemyComponent()
       ..game = game
-      ..reset(game.player.position + Vector2(-100, 0));
+      ..reset(game.player.position + Vector2(-100, 0), EnemyFaction.faction1);
     enemy.update(0);
 
     expect(enemy.angle, closeTo(math.pi / 2, 0.001));
