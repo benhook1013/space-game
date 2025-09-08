@@ -68,9 +68,10 @@ dedicated server or NAT traversal.
   - Simplex noise modulates density for subtle clusters.
   - Weighted radius/brightness spread (≈80% tiny, 19% small, 1% medium) with optional
     colour jitter adds variation.
-  - Cache star data per chunk and draw via a `CustomPainter`, translating by
-    `-playerPosition` so the player flies over a static field. Draw faint stars
-    first for smoother blending.
+  - Each chunk pre-renders to a cached `Picture`, dropping tiles outside a small
+    margin around the camera, then draws with a translation of `-playerPosition`
+    so the player flies over a static field. Draw faint stars first for smoother
+    blending. A `debugDrawTiles` flag can outline tiles during development.
 
 ## 🔮 Future Plans
 

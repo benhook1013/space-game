@@ -146,9 +146,10 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
   shapes and a timer-based spawner
 - Top‑down view with a deterministic world-space starfield generated per chunk
   via Poisson-disk sampling seeded by chunk coordinates. Low-frequency Simplex
-  noise modulates density for clusters, and a cached `CustomPainter` draws
-  faint-to-bright circle stars based on a weighted size/brightness distribution
-  with subtle colour jitter.
+  noise modulates density for clusters, and each chunk pre-renders to a cached
+  `Picture` that sorts stars by radius so faint ones draw first for smoother
+  blending. A weighted size/brightness distribution with subtle colour jitter
+  adds variety.
 - Aim for 60 FPS and avoid heavy per‑frame allocations
 - For frequently spawned objects, bullets, asteroids and enemies use simple
   object pools to reduce garbage collection overhead
@@ -196,9 +197,11 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
   - Simplex noise modulates density for subtle clusters.
   - Weighted size/brightness spread (≈80% tiny, 19% small, 1% medium) with optional
     colour jitter adds variety.
-  - Cache star data per chunk and draw via a `CustomPainter`, translating by
-    `-playerPosition` so the player flies over a static backdrop. Draw faint stars
-    first for smoother blending.
+  - Each chunk pre-renders to a cached `Picture`, dropping tiles outside a small
+    margin around the camera, then draws with a translation of `-playerPosition`
+    so the player flies over a static backdrop. Stars sort by radius so faint
+    ones render first for smoother blending. A `debugDrawTiles` option outlines
+    tile boundaries to aid development.
 - Pause or resume with a `PAUSED` overlay prompting players to press `Esc` or
   `P` to resume; `Q` returns to the menu from pause or game over
 

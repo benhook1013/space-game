@@ -22,10 +22,10 @@ See [PLAN.md](PLAN.md) for overall project goals and
 - Background stars are generated per world-space chunk using Poisson-disk
   sampling seeded by chunk coordinates. Low-frequency Simplex noise modulates
   density for clusters and voids. Stars follow a weighted radius/brightness
-  distribution with subtle colour jitter and are cached per chunk. A
-  `CustomPainter` translates by `-playerPosition` and draws faint-to-bright
-  circles, optionally caching layers with `PictureRecorder` if performance dips
-  so the field stays static as the player moves.
+  distribution with subtle colour jitter and pre-render per chunk to a cached
+  `Picture` translated by `-playerPosition`, pruning tiles outside a small
+  margin so memory stays bounded and drawing faint-to-bright circles so the
+  field stays static as the player moves.
 - Centralise audio assets in `assets.dart` and play them through a small
   audio service.
 - Persist the high score with `shared_preferences` using a lightweight storage

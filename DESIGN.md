@@ -188,10 +188,11 @@ tree spanning weapons and ship systems.
 - A deterministic world-space starfield generates stars per chunk using
   Poisson-disk sampling seeded by chunk coordinates. Low-frequency Simplex
   noise modulates density to create clusters and voids. Stars follow a weighted
-  size/brightness distribution with optional subtle colour jitter. A cached
-  `CustomPainter` translates by `-playerPosition`, draws faint-to-bright circles
-  and can cache layers with `PictureRecorder` if needed so the field stays
-  static as the player moves.
+  size/brightness distribution with optional subtle colour jitter. Each chunk
+  pre-renders to a cached `Picture` translated by `-playerPosition`, dropping
+  tiles outside a small margin around the camera so memory stays bounded. The
+  player flies over a static backdrop while circles draw faint-to-bright. A
+  `debugDrawTiles` switch outlines tile boundaries for troubleshooting.
 
 ## Assets
 
