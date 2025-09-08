@@ -44,7 +44,7 @@ void main() {
     game.overlays.addEntry(GameOverOverlay.id, (_, __) => const SizedBox());
     await game.onLoad();
     game.onGameResize(Vector2.all(100));
-    game.startGame();
+    await game.startGame();
     await game.ready();
 
     final laser = _TestMiningLaser(player: game.player);
@@ -87,7 +87,7 @@ void main() {
     game.overlays.addEntry(GameOverOverlay.id, (_, __) => const SizedBox());
     await game.onLoad();
     game.onGameResize(Vector2.all(100));
-    game.startGame();
+    await game.startGame();
     await game.ready();
 
     const escDown = KeyDownEvent(
@@ -116,7 +116,7 @@ void main() {
     );
     game.keyDispatcher.onKeyEvent(rDown, {});
     game.keyDispatcher.onKeyEvent(rUp, {});
-
+    await game.ready();
     expect(audio.masterVolume, 1);
   });
 }

@@ -32,7 +32,7 @@ void main() {
     await game.onLoad();
     game.onGameResize(Vector2.all(100));
 
-    game.startGame();
+    await game.startGame();
     game.player.position.setValues(20, 20);
     // Kill the player.
     for (var i = 0; i < Constants.playerMaxHealth; i++) {
@@ -41,7 +41,7 @@ void main() {
     expect(game.stateMachine.state, GameState.gameOver);
 
     // Restart the game and ensure only one player exists at the spawn point.
-    game.startGame();
+    await game.startGame();
     final players = game.children.whereType<PlayerComponent>().toList();
     expect(players.length, 1);
     expect(players.first.position, Vector2.zero());

@@ -107,6 +107,11 @@ class SpaceGame extends FlameGame
   final FocusNode focusNode;
 
   final ScoreService scoreService;
+
+  /// Reports progress while remaining assets load.
+  final ValueNotifier<double> assetLoadProgress = ValueNotifier<double>(0);
+  Future<void>? _assetLoadFuture;
+
   late final OverlayService overlayService;
   late final GameStateMachine stateMachine;
 
@@ -227,7 +232,7 @@ class SpaceGame extends FlameGame
       audioService: audioService,
       pauseGame: pauseGame,
       resumeGame: resumeGame,
-      startGame: startGame,
+      startGame: () => startGame(),
       toggleHelp: toggleHelp,
       toggleUpgrades: toggleUpgrades,
       toggleDebug: toggleDebug,
@@ -328,8 +333,25 @@ class SpaceGame extends FlameGame
   /// Returns to the main menu without restarting the session.
   void returnToMenu() => stateMachine.returnToMenu();
 
+  /// Begins loading assets needed for gameplay.
+  ///
+  /// Safe to call multiple times; subsequent invocations are ignored.
+  void startLoadingAssets() {
+    _assetLoadFuture ??= Assets.loadRemaining(
+      onProgress: (p) => assetLoadProgress.value = p,
+    );
+  }
+
+  Future<void> _ensureAssetsLoaded() async {
+    await (_assetLoadFuture ??= Assets.loadRemaining(
+      onProgress: (p) => assetLoadProgress.value = p,
+    ));
+    assetLoadProgress.value = 1;
+  }
+
   /// Starts a new game session.
-  void startGame() {
+  Future<void> startGame() async {
+    await _ensureAssetsLoaded();
     _suppressVolumeSave = true;
     audioService.setMasterVolume(_storedVolume);
     _suppressVolumeSave = false;

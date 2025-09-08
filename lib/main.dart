@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 
@@ -24,7 +22,6 @@ import 'util/interaction.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Assets.loadEssential();
-  onFirstUserInteraction(() => unawaited(Assets.loadRemaining()));
   final storage = await StorageService.create();
   final audio = await AudioService.create(storage);
   final settings = SettingsService();
@@ -44,6 +41,8 @@ Future<void> main() async {
     colorScheme: colorScheme,
     gameColors: gameColors,
   );
+
+  onFirstUserInteraction(game.startLoadingAssets);
 
   // Pause the game and silence audio when the app is not visible.
   final lifecycleObserver = _AppLifecycleObserver(game);

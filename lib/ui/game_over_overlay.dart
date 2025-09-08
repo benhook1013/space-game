@@ -53,7 +53,7 @@ class GameOverOverlay extends StatelessWidget {
               children: [
                 ElevatedButton(
                   // Mirrors the Enter and R keyboard shortcuts.
-                  onPressed: game.startGame,
+                  onPressed: () => game.startGame(),
                   child: const GameText(
                     'Restart',
                     maxLines: 1,
