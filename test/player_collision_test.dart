@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:space_game/assets.dart';
 import 'package:space_game/components/asteroid.dart';
 import 'package:space_game/components/enemy.dart';
+import 'package:space_game/enemy_faction.dart';
 import 'package:space_game/components/player.dart';
 import 'package:space_game/constants.dart';
 import 'package:space_game/game/key_dispatcher.dart';
@@ -163,7 +164,7 @@ void main() {
     game.update(0);
 
     final enemy = game.pools.acquire<EnemyComponent>(
-      (e) => e.reset(game.player.position.clone()),
+      (e) => e.reset(game.player.position.clone(), EnemyFaction.faction1),
     );
     await game.add(enemy);
     game.update(0);

@@ -26,6 +26,10 @@ flutter:
   assets:
     - assets/images/
     - assets/images/enemies/
+    - assets/images/enemies/faction1/
+    - assets/images/enemies/faction2/
+    - assets/images/enemies/faction3/
+    - assets/images/enemies/faction4/
     - assets/images/players/
     - assets/images/asteroids/
     - assets/images/icons/
