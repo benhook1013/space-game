@@ -4,7 +4,7 @@ Overlay providing runtime audio, UI scaling and range controls.
 
 ## Features
 
-- Sliders adjust volume, HUD button, minimap, text, joystick scales and gameplay ranges.
+- Sliders adjust volume, HUD button, minimap, text, joystick scales, gameplay ranges and starfield tile size.
 - Sections separate HUD scaling from range scaling for easier navigation.
 - Bordered layout limits width on large screens for clarity.
 - Opens from the HUD; closing returns to the game.

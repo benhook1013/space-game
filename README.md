@@ -51,8 +51,8 @@ dedicated server or NAT traversal.
   between sessions, accessible via a HUD button or the `U` key. Current
   upgrades include a faster cannon, quicker mining pulses, a targeting
   computer, a Tractor Booster and Engine Tuning for higher speed
-- Settings overlay adjusts volume, HUD, minimap, text and joystick scales and
-  gameplay ranges, and includes a reset button
+- Settings overlay adjusts volume, HUD, minimap, text and joystick scales,
+  gameplay ranges and starfield tile size, and includes a reset button
 - Menu allows choosing between multiple ship sprites and remembers the selection
 - Local high score stored on device using `shared_preferences`
 - Basic sound effects with a mute toggle on menu, HUD and game over
@@ -69,12 +69,14 @@ dedicated server or NAT traversal.
 - Deterministic world-space starfield replaces the parallax background:
   - Stars spawn per chunk via Poisson-disk sampling seeded by chunk coordinates.
   - Simplex noise modulates density for subtle clusters.
+  - Layered parallax with independent density multipliers and twinkle speeds adds depth.
   - Weighted radius/brightness spread (≈80% tiny, 19% small, 1% medium) with optional
     colour jitter adds variation.
   - Each chunk pre-renders to a cached `Picture`, dropping tiles outside a small
     margin around the camera, then draws with a translation of `-playerPosition`
     so the player flies over a static field. Draw faint stars first for smoother
     blending. A `debugDrawTiles` flag can outline tiles during development.
+  - Tile size can be tuned in the settings overlay to balance detail and performance.
 
 ## 🔮 Future Plans
 

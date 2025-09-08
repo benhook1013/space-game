@@ -149,7 +149,7 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
   noise modulates density for clusters, and each chunk pre-renders to a cached
   `Picture` that sorts stars by radius so faint ones draw first for smoother
   blending. A weighted size/brightness distribution with subtle colour jitter
-  adds variety.
+  adds variety, and layered parallax with gentle alpha twinkling adds depth.
 - Aim for 60 FPS and avoid heavy per‑frame allocations
 - For frequently spawned objects, bullets, asteroids and enemies use simple
   object pools to reduce garbage collection overhead
@@ -193,12 +193,13 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
   targeting and Tractor Aura ranges, an Engine Tuning option for faster
   movement and a Shield Booster that slowly regenerates health
 - Settings overlay with master volume slider and sliders for HUD, minimap,
-  text, joystick, targeting, Tractor Aura and mining ranges, plus a reset
-  button
+  text, joystick, targeting, Tractor Aura and mining ranges, starfield tile
+  size, plus a reset button
 - Game works offline after the first load thanks to the service worker
 - Deterministic world-space starfield replaces the parallax background:
   - Stars spawn per chunk via Poisson-disk sampling seeded by chunk coordinates.
   - Simplex noise modulates density for subtle clusters.
+  - Layered parallax with independent density multipliers and twinkle speeds adds depth.
   - Weighted size/brightness spread (≈80% tiny, 19% small, 1% medium) with optional
     colour jitter adds variety.
   - Each chunk pre-renders to a cached `Picture`, dropping tiles outside a small
@@ -206,6 +207,7 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
     so the player flies over a static backdrop. Stars sort by radius so faint
     ones render first for smoother blending. A `debugDrawTiles` option outlines
     tile boundaries when debug mode (`F1`) is active to aid development.
+  - Tile size can be tuned in the settings overlay to balance detail and performance.
 - Pause or resume with a `PAUSED` overlay prompting players to press `Esc` or
   `P` to resume; `Q` returns to the menu from pause or game over
 

@@ -164,8 +164,8 @@ tree spanning weapons and ship systems.
 - An upgrades overlay opens with the `U` key or HUD button and pauses gameplay
   while letting players buy basic upgrades that persist between sessions.
 - A settings overlay provides sliders for master volume, HUD, minimap, text,
-  joystick, targeting, Tractor Aura and mining ranges and includes a reset
-  button.
+  joystick, targeting, Tractor Aura and mining ranges, starfield tile size and
+  includes a reset button.
 - A `GameState` enum tracks the current phase.
 
 ## Input
@@ -188,15 +188,16 @@ tree spanning weapons and ship systems.
   `OffscreenCleanup` mixin. Asteroid and enemy spawners place new objects ahead
   of the player's current heading using this same radius so action stays in
   front of the ship.
-- A deterministic world-space starfield generates stars per chunk using
-  Poisson-disk sampling seeded by chunk coordinates. Low-frequency Simplex
-  noise modulates density to create clusters and voids. Stars follow a weighted
-  size/brightness distribution with optional subtle colour jitter. Each chunk
-  pre-renders to a cached `Picture` translated by `-playerPosition`, dropping
-  tiles outside a small margin around the camera so memory stays bounded. The
-  player flies over a static backdrop while circles draw faint-to-bright. A
-  `debugDrawTiles` switch outlines tile boundaries when debug mode (`F1`) is
-  active for troubleshooting.
+- A deterministic multi-layer world-space starfield generates stars per chunk
+  using Poisson-disk sampling seeded by chunk coordinates. Low-frequency Simplex
+  noise modulates density to create clusters and voids. Layers apply parallax
+  factors and gentle alpha twinkling. Stars follow a weighted size/brightness
+  distribution with optional subtle colour jitter. Each chunk pre-renders to a
+  cached `Picture` translated by `-playerPosition`, dropping tiles outside a
+  small margin around the camera so memory stays bounded. Tile size is
+  adjustable via the settings overlay. The player flies over a static backdrop
+  while circles draw faint-to-bright. A `debugDrawTiles` switch outlines tile
+  boundaries when debug mode (`F1`) is active for troubleshooting.
 
 ## Assets
 
