@@ -78,6 +78,15 @@ class Constants {
   /// Outer color of the player's Tractor Aura gradient.
   static const Color tractorAuraOuterColor = Color(0x0000aaff);
 
+  /// Color of the targeting range ring when shown.
+  static const Color targetingRangeColor = Color(0x66FF0000);
+
+  /// Color of the Tractor Aura range ring when shown.
+  static const Color tractorRangeColor = Color(0x660000FF);
+
+  /// Color of the mining laser range ring when shown.
+  static const Color miningRangeColor = Color(0x66FFFF00);
+
   /// Bullet travel speed in pixels per second.
   static const double bulletSpeed = 400;
 

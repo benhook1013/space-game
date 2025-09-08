@@ -12,5 +12,6 @@ Holds tunable values and configuration numbers used across the game.
 - Use a global `spriteScale` for the default 3× enlargement, with per-entity
   scale offsets like `playerScale` layered on top.
 - Expose values as `const` when possible so the compiler can optimise them.
+- Centralise visual colours such as range ring and Tractor Aura colours.
 
 See [../PLAN.md](../PLAN.md) for the authoritative roadmap.
