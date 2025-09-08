@@ -39,11 +39,18 @@ jobs:
               }
             );
             for (const run of runs) {
-              await github.rest.actions.cancelWorkflowRun({
-                owner,
-                repo,
-                run_id: run.id,
-              });
+              try {
+                await github.rest.actions.cancelWorkflowRun({
+                  owner,
+                  repo,
+                  run_id: run.id,
+                });
+              } catch (error) {
+                // Ignore "Cannot cancel" errors when the run completes before cancellation.
+                if (error.status !== 409) {
+                  throw error;
+                }
+              }
             }
       - name: Cache Flutter SDK
         uses: actions/cache@v4
