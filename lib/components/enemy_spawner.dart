@@ -13,9 +13,9 @@ import '../enemy_faction.dart';
 
 /// Spawns enemies at timed intervals when started.
 class EnemySpawner extends Component with HasGameReference<SpaceGame> {
-  EnemySpawner();
+  EnemySpawner({math.Random? random}) : _random = random ?? math.Random();
 
-  final math.Random _random = math.Random();
+  final math.Random _random;
   final Timer _timer = Timer(Constants.enemySpawnInterval, repeat: true);
 
   /// Starts spawning enemies.
@@ -52,17 +52,34 @@ class EnemySpawner extends Component with HasGameReference<SpaceGame> {
     }
     final EnemyFaction faction = Assets.randomFaction();
     final unitPath = Assets.randomUnitForFaction(faction);
+    final spawnBoss = _random.nextDouble() < Constants.enemyBossChance;
+
+    final baseSize =
+        Constants.enemySize * (Constants.spriteScale + Constants.enemyScale);
+    final smallRadius = baseSize / 2;
+    final bossRadius = baseSize * Constants.enemyBossScale / 2;
+
+    final positions = <Vector2>[];
     for (var i = 0; i < Constants.enemyGroupSize; i++) {
-      final offset = (Vector2.random(_random) - Vector2.all(0.5)) *
-          (Constants.enemyGroupSpread * 2);
-      final position = base + offset;
+      Vector2 pos;
+      var attempts = 0;
+      do {
+        final angle = _random.nextDouble() * math.pi * 2;
+        final minRadius = spawnBoss ? smallRadius + bossRadius : baseSize;
+        final radius =
+            minRadius + _random.nextDouble() * Constants.enemyGroupSpread;
+        pos = base + Vector2(math.cos(angle), math.sin(angle)) * radius;
+        attempts++;
+      } while (
+          positions.any((p) => p.distanceTo(pos) < baseSize) && attempts < 10);
+      positions.add(pos);
       game.add(
         game.pools.acquire<EnemyComponent>(
-          (e) => e.reset(position, faction, spritePath: unitPath),
+          (e) => e.reset(pos, faction, spritePath: unitPath),
         ),
       );
     }
-    if (_random.nextDouble() < Constants.enemyBossChance) {
+    if (spawnBoss) {
       final bossPath = Assets.bossForFaction(faction);
       game.add(
         game.pools.acquire<EnemyComponent>(
