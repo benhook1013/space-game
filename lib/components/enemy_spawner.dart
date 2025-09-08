@@ -47,22 +47,23 @@ class EnemySpawner extends Component with HasGameReference<SpaceGame> {
       base = game.player.position +
           Vector2(math.cos(angle), math.sin(angle)) * spawnDistance;
     }
-    final faction = Assets.randomFaction();
-    final spritePath = Assets.randomEnemyForFaction(faction);
+    final EnemyFaction faction = Assets.randomFaction();
+    final unitPath = Assets.randomUnitForFaction(faction);
     for (var i = 0; i < Constants.enemyGroupSize; i++) {
       final offset = (Vector2.random(_random) - Vector2.all(0.5)) *
           (Constants.enemyGroupSpread * 2);
       final position = base + offset;
       game.add(
         game.pools.acquire<EnemyComponent>(
-          (e) => e.reset(position, faction, spritePath: spritePath),
+          (e) => e.reset(position, faction, spritePath: unitPath),
         ),
       );
     }
     if (_random.nextDouble() < Constants.enemyBossChance) {
+      final bossPath = Assets.bossForFaction(faction);
       game.add(
         game.pools.acquire<EnemyComponent>(
-          (e) => e.reset(base, faction, spritePath: spritePath, isBoss: true),
+          (e) => e.reset(base, faction, spritePath: bossPath, isBoss: true),
         ),
       );
     }

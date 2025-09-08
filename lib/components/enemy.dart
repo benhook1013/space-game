@@ -50,7 +50,10 @@ class EnemyComponent extends SpriteComponent
   }) {
     this.position.setFrom(position);
     this.faction = faction;
-    this.spritePath = spritePath ?? Assets.randomEnemyForFaction(faction);
+    this.spritePath = spritePath ??
+        (isBoss
+            ? Assets.bossForFaction(faction)
+            : Assets.randomUnitForFaction(faction));
     sprite = Sprite(Flame.images.fromCache(this.spritePath));
     final baseSize =
         Constants.enemySize * (Constants.spriteScale + Constants.enemyScale);
