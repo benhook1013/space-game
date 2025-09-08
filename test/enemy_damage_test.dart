@@ -19,10 +19,9 @@ import 'test_joystick.dart';
 
 class _FakeAudioService implements AudioService {
   final ValueNotifier<bool> muted = ValueNotifier(false);
-  int explosions = 0;
-
   @override
   final ValueNotifier<double> volume = ValueNotifier<double>(1);
+  int explosions = 0;
 
   @override
   double get masterVolume => volume.value;

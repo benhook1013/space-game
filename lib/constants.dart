@@ -11,6 +11,9 @@ class Constants {
   /// Player movement speed in pixels per second.
   static const double playerSpeed = 200;
 
+  /// Multiplier applied to [playerSpeed] when a speed upgrade is purchased.
+  static const double playerSpeedUpgradeFactor = 1.5;
+
   /// Player rotation speed in radians per second.
   static const double playerRotationSpeed = 10;
 

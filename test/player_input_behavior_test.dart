@@ -1,4 +1,6 @@
 import 'package:flame/components.dart';
+import 'package:flame_audio/flame_audio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,14 +15,42 @@ import 'package:space_game/game/space_game.dart';
 import 'package:space_game/game/game_state_machine.dart';
 import 'package:space_game/game/game_state.dart';
 import 'package:space_game/services/overlay_service.dart';
-import 'package:space_game/services/audio_service.dart';
 import 'package:space_game/services/storage_service.dart';
+import 'package:space_game/services/audio_service.dart';
 
 import 'test_joystick.dart';
 
 class _TestBullet extends BulletComponent {
   @override
   Future<void> onLoad() async {}
+}
+
+class _FakeAudioService implements AudioService {
+  @override
+  final ValueNotifier<bool> muted = ValueNotifier(false);
+  @override
+  final ValueNotifier<double> volume = ValueNotifier<double>(1);
+
+  @override
+  double get masterVolume => volume.value;
+  @override
+  AudioPlayer? get miningLoop => null;
+  @override
+  Future<void> startMiningLaser() async {}
+  @override
+  void stopAll() {}
+  @override
+  void stopMiningLaser() {}
+  @override
+  void playShoot() {}
+  @override
+  void playExplosion() {}
+  @override
+  Future<void> toggleMute() async {}
+  @override
+  void setMasterVolume(double volume) {}
+  @override
+  void dispose() {}
 }
 
 class _TestPlayer extends PlayerComponent {
@@ -94,7 +124,7 @@ void main() {
 
   test('keyboard movement when joystick idle', () async {
     final storage = await StorageService.create();
-    final audio = await AudioService.create(storage);
+    final audio = _FakeAudioService();
     final game = _TestGame(storage: storage, audio: audio);
     await game.onLoad();
     game.onGameResize(Vector2.all(500));
@@ -114,7 +144,7 @@ void main() {
 
   test('joystick movement overrides keyboard', () async {
     final storage = await StorageService.create();
-    final audio = await AudioService.create(storage);
+    final audio = _FakeAudioService();
     final game = _TestGame(storage: storage, audio: audio);
     await game.onLoad();
     game.onGameResize(Vector2.all(500));
@@ -137,7 +167,7 @@ void main() {
 
   test('continuous shooting fires repeatedly', () async {
     final storage = await StorageService.create();
-    final audio = await AudioService.create(storage);
+    final audio = _FakeAudioService();
     final game = _TestGame(storage: storage, audio: audio);
     await game.onLoad();
     game.onGameResize(Vector2.all(500));
@@ -154,5 +184,29 @@ void main() {
     game.player.stopShooting();
     game.player.inputBehavior.update(Constants.bulletCooldown);
     expect(game.children.whereType<BulletComponent>().length, 2);
+  });
+
+  test('speed upgrade increases movement distance', () async {
+    final storage = await StorageService.create();
+    final audio = _FakeAudioService();
+    final game = _TestGame(storage: storage, audio: audio);
+    await game.onLoad();
+    game.onGameResize(Vector2.all(500));
+    await game.ready();
+
+    game.joystick.delta.setValues(1, 0);
+    game.joystick.relativeDelta.setValues(1, 0);
+    game.player.inputBehavior.update(1);
+    final normalX = game.player.position.x;
+
+    game.player.position.setZero();
+    final upgrade =
+        game.upgradeService.upgrades.firstWhere((u) => u.id == 'speed1');
+    game.scoreService.addMinerals(upgrade.cost);
+    game.upgradeService.buy(upgrade);
+    game.joystick.delta.setValues(1, 0);
+    game.joystick.relativeDelta.setValues(1, 0);
+    game.player.inputBehavior.update(1);
+    expect(game.player.position.x, greaterThan(normalX));
   });
 }

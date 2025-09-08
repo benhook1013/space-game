@@ -85,7 +85,7 @@ class PlayerInputBehavior extends Component with HasGameReference<SpaceGame> {
         joystick.delta.isZero() ? _keyboardDirection : joystick.relativeDelta;
     if (!input.isZero()) {
       input = input.normalized();
-      player.position += input * Constants.playerSpeed * dt;
+      player.position += input * game.upgradeService.playerSpeed * dt;
       player.targetAngle = math.atan2(input.y, input.x) + math.pi / 2;
       player.isMoving = true;
       return true;

@@ -138,10 +138,9 @@ tree spanning weapons and ship systems.
 
 ## Upgrades
 
-- Minerals earned from asteroids will fund weapon and ship upgrades in later
-  milestones.
-- Design upgrades to modify mining efficiency, combat power and utility systems
-  without bloating the core game loop.
+- Minerals earned from asteroids fund upgrades such as faster cannon fire,
+  quicker mining pulses, extended targeting and Tractor Aura ranges, and engine
+  tuning for higher speed without bloating the core loop.
 - `UpgradeService` tracks available upgrades and purchases using minerals.
 
 ## Game State Flow
