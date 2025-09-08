@@ -324,6 +324,7 @@ class SpaceGame extends FlameGame
   /// Resumes the game from a paused state.
   void resumeGame() {
     stateMachine.resumeGame();
+    resumeEngine();
     _suppressVolumeSave = true;
     audioService.setMasterVolume(_storedVolume);
     _suppressVolumeSave = false;
