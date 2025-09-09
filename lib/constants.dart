@@ -210,4 +210,7 @@ class Constants {
 
   /// Extra tile padding kept around the camera for the starfield cache.
   static const int starfieldCacheMargin = 1;
+
+  /// Maximum tile padding applied when the camera moves quickly.
+  static const int starfieldMaxCacheMargin = 5;
 }
