@@ -138,7 +138,10 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
       layer.cache.clear();
       layer.lru.clear();
     }
-    _TileWorker.instance.dispose();
+    // Do not dispose the global tile worker here. When the starfield is
+    // rebuilt, Flame processes additions before removals, so disposing the
+    // worker during removal can interfere with the new component that is
+    // already using it.
     super.onRemove();
   }
 
