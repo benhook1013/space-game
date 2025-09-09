@@ -1,4 +1,6 @@
-import 'dart:html' as html; // ignore: deprecated_member_use
+import 'dart:js_interop';
+
+import 'package:web/web.dart' as web;
 
 /// Invokes [callback] on the first user interaction and ensures it runs once.
 ///
@@ -7,16 +9,17 @@ import 'dart:html' as html; // ignore: deprecated_member_use
 void onFirstUserInteraction(void Function() callback) {
   var handled = false;
 
-  void handler(html.Event _) {
+  late final web.EventListener listener;
+  listener = ((web.Event _) {
     if (handled) {
       return;
     }
     handled = true;
-    html.window.removeEventListener('pointerdown', handler);
-    html.window.removeEventListener('keydown', handler);
+    web.window.removeEventListener('pointerdown', listener);
+    web.window.removeEventListener('keydown', listener);
     callback();
-  }
+  }).toJS;
 
-  html.window.addEventListener('pointerdown', handler);
-  html.window.addEventListener('keydown', handler);
+  web.window.addEventListener('pointerdown', listener);
+  web.window.addEventListener('keydown', listener);
 }

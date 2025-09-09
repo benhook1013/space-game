@@ -1,5 +1,5 @@
 @TestOn('browser')
-import 'dart:html' as html; // ignore: deprecated_member_use
+import 'package:web/web.dart' as web;
 
 import 'package:flutter_test/flutter_test.dart';
 
@@ -16,7 +16,7 @@ void main() {
 
     expect(called, isFalse);
 
-    html.window.dispatchEvent(html.KeyboardEvent('keydown'));
+    web.window.dispatchEvent(web.KeyboardEvent('keydown'));
     await Future<void>.delayed(Duration.zero);
 
     expect(called, isTrue);
