@@ -26,6 +26,7 @@ class StarfieldLayerConfig {
     ],
     this.minBrightness = 150,
     this.maxBrightness = 255,
+    this.gamma = 1,
   });
 
   /// Camera movement multiplier. Smaller values appear further away.
@@ -49,6 +50,13 @@ class StarfieldLayerConfig {
 
   /// Maximum star brightness (0-255).
   final int maxBrightness;
+
+  /// Exponent applied to the brightness randomiser.
+  ///
+  /// Values >1 bias towards darker stars while values <1 produce more bright
+  /// stars. A value of 1 yields linear scaling between [minBrightness] and
+  /// [maxBrightness].
+  final double gamma;
 }
 
 /// Deterministic world-space starfield rendered behind gameplay.
@@ -60,6 +68,7 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
     this.tileSize = Constants.starfieldTileSize,
     this.densityMultiplier = 1,
     this.brightnessMultiplier = 1,
+    this.gamma = 1,
   })  : _seed = seed,
         _layers =
             layers ?? const [StarfieldLayerConfig(parallax: 1, density: 1)],
@@ -78,6 +87,9 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
 
   /// Multiplier applied to star brightness (0-1).
   final double brightnessMultiplier;
+
+  /// Global multiplier applied to layer gamma values.
+  final double gamma;
 
   final Paint _starPaint = Paint();
 
@@ -300,6 +312,7 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
       layer.paletteValues,
       (layer.config.minBrightness * brightnessMultiplier).clamp(0, 255).round(),
       (layer.config.maxBrightness * brightnessMultiplier).clamp(0, 255).round(),
+      layer.config.gamma * gamma,
     );
     final future = _runTileData(params).then((data) {
       final stars =
@@ -408,6 +421,7 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
       cfg.palette.map((c) => c.toARGB32()).toList(growable: false),
       cfg.minBrightness,
       cfg.maxBrightness,
+      cfg.gamma * gamma,
     );
     return _generateTileStars(params, cfg.twinkleSpeed).map((s) => s.radius);
   }
@@ -483,7 +497,7 @@ class _StarData {
 class _TileParams {
   /// Parameters passed to tile generation isolate. Must remain sendable.
   const _TileParams(this.seed, this.tx, this.ty, this.minDist, this.tileSize,
-      this.palette, this.minBrightness, this.maxBrightness);
+      this.palette, this.minBrightness, this.maxBrightness, this.gamma);
 
   final int seed;
   final int tx;
@@ -493,6 +507,7 @@ class _TileParams {
   final List<int> palette;
   final int minBrightness;
   final int maxBrightness;
+  final double gamma;
 }
 
 class _TileWorker {
@@ -601,6 +616,7 @@ List<_StarData> _generateTileStarData(_TileParams params) {
             params.palette,
             params.minBrightness,
             params.maxBrightness,
+            params.gamma,
           ))
       .toList()
     ..sort((a, b) => (a.radius).compareTo(b.radius));
@@ -668,7 +684,7 @@ List<Offset> _poisson(double size, double minDist, math.Random rnd,
 }
 
 _StarData _randomStarData(Offset position, math.Random rnd, List<int> palette,
-    int minBrightness, int maxBrightness) {
+    int minBrightness, int maxBrightness, double gamma) {
   final roll = rnd.nextDouble();
   double radius;
   if (roll < 0.8) {
@@ -680,8 +696,9 @@ _StarData _randomStarData(Offset position, math.Random rnd, List<int> palette,
   }
 
   final baseColor = palette[rnd.nextInt(palette.length)];
+  final t = math.pow(rnd.nextDouble(), gamma).toDouble();
   final brightness =
-      minBrightness + rnd.nextInt(maxBrightness - minBrightness + 1);
+      (minBrightness + (maxBrightness - minBrightness) * t).round();
   final r = ((baseColor >> 16) & 0xFF) * brightness ~/ 255;
   final g = ((baseColor >> 8) & 0xFF) * brightness ~/ 255;
   final b = (baseColor & 0xFF) * brightness ~/ 255;

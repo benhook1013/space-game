@@ -14,6 +14,9 @@ class Constants {
   /// Global multiplier applied to star brightness (0-1).
   static const double starfieldBrightness = 1;
 
+  /// Global gamma exponent applied to star brightness.
+  static const double starfieldGamma = 1;
+
   /// Player movement speed in pixels per second.
   static const double playerSpeed = 200;
 

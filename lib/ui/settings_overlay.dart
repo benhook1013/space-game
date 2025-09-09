@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../game/space_game.dart';
+import '../theme/star_palette.dart';
 import 'game_text.dart';
 import 'overlay_widgets.dart';
 
@@ -158,6 +159,20 @@ class SettingsOverlay extends StatelessWidget {
                       min: 0,
                       max: 1,
                     ),
+                    _buildSlider(
+                      context,
+                      'Star Gamma',
+                      settings.starfieldGamma,
+                      spacing,
+                      min: 0.5,
+                      max: 2.5,
+                    ),
+                    _buildPaletteDropdown(
+                      context,
+                      'Star Palette',
+                      settings.starfieldPalette,
+                      spacing,
+                    ),
                     SizedBox(height: spacing),
                     ElevatedButton(
                       onPressed: () {
@@ -208,6 +223,37 @@ class SettingsOverlay extends StatelessWidget {
             min: min,
             max: max,
             onChanged: (v) => notifier.value = v,
+          ),
+          SizedBox(height: spacing),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPaletteDropdown(
+    BuildContext context,
+    String label,
+    ValueNotifier<StarPalette> notifier,
+    double spacing,
+  ) {
+    return ValueListenableBuilder<StarPalette>(
+      valueListenable: notifier,
+      builder: (context, value, _) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          GameText(label),
+          DropdownButton<StarPalette>(
+            value: value,
+            items: [
+              for (final p in StarPalette.values)
+                DropdownMenuItem(
+                  value: p,
+                  child: GameText(p.label),
+                )
+            ],
+            onChanged: (p) {
+              if (p != null) notifier.value = p;
+            },
           ),
           SizedBox(height: spacing),
         ],
