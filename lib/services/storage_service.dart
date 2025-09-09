@@ -27,19 +27,19 @@ class StorageService {
     switch (defaultValue) {
       case int _:
         final value = _prefs.getInt(key);
-        return (value ?? defaultValue) as T;
+        return (value is int ? value : defaultValue) as T;
       case double _:
         final value = _prefs.getDouble(key);
-        return (value ?? defaultValue) as T;
+        return (value is double ? value : defaultValue) as T;
       case bool _:
         final value = _prefs.getBool(key);
-        return (value ?? defaultValue) as T;
+        return (value is bool ? value : defaultValue) as T;
       case String _:
         final value = _prefs.getString(key);
-        return (value ?? defaultValue) as T;
+        return (value is String ? value : defaultValue) as T;
       case List<String> _:
         final value = _prefs.getStringList(key);
-        return (value ?? defaultValue) as T;
+        return (value is List<String> ? value : defaultValue) as T;
       default:
         throw UnsupportedError('Type $T is not supported');
     }
