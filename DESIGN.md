@@ -63,7 +63,7 @@ tree spanning weapons and ship systems.
 - preloads assets through `Assets.load()` before play.
 - It initialises `StorageService`, `AudioService` and `SettingsService`, applies
   a static dark `ColorScheme` with extra hues from the `GameColors` theme
-  extension, and attaches global text scaling via `GameText.attachTextScale`.
+  extension, and provides global text scaling via `GameTextScale`.
 - An app lifecycle observer pauses the engine and audio when the window loses
   focus.
 - Run all development commands through FVM (`fvm flutter`, `fvm dart`) to keep

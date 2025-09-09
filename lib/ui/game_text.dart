@@ -2,6 +2,23 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
+/// Provides global text scaling for [GameText] widgets.
+class GameTextScale extends InheritedNotifier<ValueListenable<double>> {
+  const GameTextScale({
+    required ValueListenable<double> textScale,
+    required super.child,
+    super.key,
+  }) : super(notifier: textScale);
+
+  /// Returns the current scale factor from context, defaulting to `1` when
+  /// no [GameTextScale] ancestor is found.
+  static double of(BuildContext context) {
+    final inherited =
+        context.dependOnInheritedWidgetOfExactType<GameTextScale>();
+    return inherited?.notifier?.value ?? 1;
+  }
+}
+
 /// Displays text using a consistent style across game overlays.
 ///
 /// Text is rendered without decoration and uses the game's primary colour by
@@ -33,41 +50,22 @@ class GameText extends StatelessWidget {
 
   static const _baseStyle = TextStyle(fontSize: 18);
 
-  /// Globally applied text scale factor. When attached, all [GameText]
-  /// instances rebuild in response to changes.
-  static ValueListenable<double>? textScale;
-
-  /// Registers a [ValueListenable] that controls text scaling.
-  static void attachTextScale(ValueListenable<double> notifier) {
-    textScale = notifier;
-  }
-
   @override
   Widget build(BuildContext context) {
-    Widget buildText(double scale) {
-      final scheme = Theme.of(context).colorScheme;
-      final mergedStyle = _baseStyle.merge(style);
-      final effectiveColor = color ?? mergedStyle.color ?? scheme.primary;
-      final textStyle = mergedStyle.copyWith(
-        color: effectiveColor,
-        decoration: TextDecoration.none,
-      );
-      final baseSize = textStyle.fontSize ?? _baseStyle.fontSize!;
-      return AutoSizeText(
-        data,
-        maxLines: maxLines,
-        textAlign: textAlign,
-        style: textStyle.copyWith(fontSize: baseSize * scale),
-      );
-    }
-
-    final notifier = textScale;
-    if (notifier != null) {
-      return ValueListenableBuilder<double>(
-        valueListenable: notifier,
-        builder: (context, scale, _) => buildText(scale),
-      );
-    }
-    return buildText(1);
+    final scheme = Theme.of(context).colorScheme;
+    final mergedStyle = _baseStyle.merge(style);
+    final effectiveColor = color ?? mergedStyle.color ?? scheme.primary;
+    final textStyle = mergedStyle.copyWith(
+      color: effectiveColor,
+      decoration: TextDecoration.none,
+    );
+    final baseSize = textStyle.fontSize ?? _baseStyle.fontSize!;
+    final scale = GameTextScale.of(context);
+    return AutoSizeText(
+      data,
+      maxLines: maxLines,
+      textAlign: textAlign,
+      style: textStyle.copyWith(fontSize: baseSize * scale),
+    );
   }
 }

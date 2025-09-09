@@ -44,19 +44,12 @@ class HudValueDisplay extends StatelessWidget {
       );
     }
 
-    final textScale = GameText.textScale;
-    if (textScale != null) {
-      final merged = Listenable.merge([textScale, valueListenable]);
-      return AnimatedBuilder(
-        animation: merged,
-        builder: (context, _) =>
-            buildDisplay(valueListenable.value, textScale.value),
-      );
-    }
-
     return ValueListenableBuilder<int>(
       valueListenable: valueListenable,
-      builder: (context, value, _) => buildDisplay(value, 1),
+      builder: (context, value, _) {
+        final scale = GameTextScale.of(context);
+        return buildDisplay(value, scale);
+      },
     );
   }
 }

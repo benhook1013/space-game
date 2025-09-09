@@ -46,16 +46,18 @@ Future<void> main() async {
   // ready. The game itself will await completion before starting.
   game.startLoadingAssets();
 
-  GameText.attachTextScale(settings.textScale);
   final lifecycleObserver = _AppLifecycleObserver(game);
 
   runApp(
-    GameApp(
-      game: game,
-      focusNode: focusNode,
-      lifecycleObserver: lifecycleObserver,
-      colorScheme: colorScheme,
-      gameColors: gameColors,
+    GameTextScale(
+      textScale: settings.textScale,
+      child: GameApp(
+        game: game,
+        focusNode: focusNode,
+        lifecycleObserver: lifecycleObserver,
+        colorScheme: colorScheme,
+        gameColors: gameColors,
+      ),
     ),
   );
 }
