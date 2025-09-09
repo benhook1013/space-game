@@ -72,16 +72,29 @@ class Assets {
   static Future<void> loadRemaining({
     void Function(double progress)? onProgress,
   }) async {
-    final tasks = <_LoadTask<String>>[
-      ...asteroids.skip(1).map((p) => _LoadTask(p, _loadImage)),
-      ...explosions.skip(1).map((p) => _LoadTask(p, _loadImage)),
-      ...enemies.map((p) => _LoadTask(p, _loadImage)),
-      const _LoadTask(shootSfx, _loadAudio),
-      const _LoadTask(explosionSfx, _loadAudio),
-      const _LoadTask(miningLaserSfx, _loadAudio),
+    final imagePaths = [
+      ...asteroids.skip(1),
+      ...explosions.skip(1),
+      ...enemies,
     ];
+    const audioPaths = [shootSfx, explosionSfx, miningLaserSfx];
 
-    await _loadWithProgress(tasks, onProgress);
+    final total = imagePaths.length + audioPaths.length;
+    var loaded = 0;
+
+    Future<void> track(
+      Future<void> Function(String path) loader,
+      String path,
+    ) async {
+      await loader(path);
+      loaded++;
+      onProgress?.call(loaded / total);
+    }
+
+    await Future.wait([
+      ...imagePaths.map((p) => track(_loadImage, p)),
+      ...audioPaths.map((p) => track(_loadAudio, p)),
+    ]);
   }
 
   static Future<void> _loadImage(String path) async {
@@ -105,19 +118,6 @@ class Assets {
     }
   }
 
-  static Future<void> _loadWithProgress(
-    List<_LoadTask<String>> tasks,
-    void Function(double progress)? onProgress,
-  ) async {
-    var loaded = 0;
-    void report() => onProgress?.call(loaded / tasks.length);
-
-    await Future.wait(tasks.map((t) => t.loader(t.path).then((_) {
-          loaded++;
-          report();
-        })));
-  }
-
   static final Random _rand = Random();
 
   /// Returns a random faction.
@@ -136,12 +136,6 @@ class Assets {
 
   /// Returns a random asteroid sprite path.
   static String randomAsteroid() => asteroids[_rand.nextInt(asteroids.length)];
-}
-
-class _LoadTask<T> {
-  const _LoadTask(this.path, this.loader);
-  final T path;
-  final Future<void> Function(T path) loader;
 }
 
 class EnemySpriteSet {
