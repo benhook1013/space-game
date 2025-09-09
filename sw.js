@@ -26,6 +26,15 @@ const RARELY_CHANGED_EXTENSIONS = new Set([
   "woff2",
 ]);
 
+let cachedManifest;
+
+self.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "assetManifest") {
+    cachedManifest = event.data.manifest;
+    caches.open(CACHE_NAME).then((cache) => cacheOptionalAssets(cache));
+  }
+});
+
 async function cacheAll(cache, assets) {
   const urls = [...new Set(assets)];
   await Promise.all(
@@ -39,12 +48,14 @@ async function cacheAll(cache, assets) {
 
 async function cacheOptionalAssets(cache) {
   try {
-    const response = await fetch("assets_manifest.json");
-    const manifest = await response.json();
+    if (!cachedManifest) {
+      const response = await fetch("assets_manifest.json");
+      cachedManifest = await response.json();
+    }
     const assetList = [
-      ...(manifest.images || []),
-      ...(manifest.audio || []),
-      ...(manifest.fonts || []),
+      ...(cachedManifest.images || []),
+      ...(cachedManifest.audio || []),
+      ...(cachedManifest.fonts || []),
     ].map((asset) => (asset.startsWith("assets/") ? asset : `assets/${asset}`));
     await cacheAll(cache, assetList);
   } catch (err) {
@@ -72,9 +83,7 @@ self.addEventListener("activate", (event) => {
         keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)),
       );
       await self.clients.claim();
-      const cache = await caches.open(CACHE_NAME);
-      // Cache optional assets without delaying activation.
-      cacheOptionalAssets(cache);
+      // Optional assets are cached once the manifest is received from the page.
     })(),
   );
 });
