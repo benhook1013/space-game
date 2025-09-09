@@ -27,21 +27,27 @@ class OverlayService {
       PauseOverlay.id,
       GameOverOverlay.id,
       SettingsOverlay.id,
+      UpgradesOverlay.id,
     },
     HudOverlay.id: {
       MenuOverlay.id,
       PauseOverlay.id,
       GameOverOverlay.id,
       SettingsOverlay.id,
+      UpgradesOverlay.id,
     },
     GameOverOverlay.id: {
       HudOverlay.id,
       PauseOverlay.id,
       SettingsOverlay.id,
+      UpgradesOverlay.id,
     },
     UpgradesOverlay.id: {
       HudOverlay.id,
       SettingsOverlay.id,
+      MenuOverlay.id,
+      PauseOverlay.id,
+      GameOverOverlay.id,
     },
   };
 
@@ -63,10 +69,7 @@ class OverlayService {
 
   void showUpgrades() => _showExclusive(UpgradesOverlay.id);
 
-  void hideUpgrades() => _showExclusive(
-        HudOverlay.id,
-        remove: {UpgradesOverlay.id, SettingsOverlay.id},
-      );
+  void hideUpgrades() => showHud();
 
   void showSettings() => game.overlays.add(SettingsOverlay.id);
 
