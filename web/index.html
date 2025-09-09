@@ -44,6 +44,7 @@
         // manual version bumps.
         document.addEventListener('DOMContentLoaded', async () => {
           let version;
+          let manifest;
           try {
             const response = await fetch('assets_manifest.json');
             const text = await response.text();
@@ -54,11 +55,20 @@
             version = Array.from(new Uint8Array(buffer))
               .map((b) => b.toString(16).padStart(2, '0'))
               .join('');
+            manifest = JSON.parse(text);
           } catch (err) {
             console.warn('Asset hash failed, using timestamp', err);
             version = Date.now().toString();
           }
-          navigator.serviceWorker.register(`sw.js?v=${version}`);
+          navigator.serviceWorker
+            .register(`sw.js?v=${version}`)
+            .then((reg) => {
+              const worker = reg.installing || reg.active;
+              worker?.postMessage({ type: 'assetManifest', manifest });
+              navigator.serviceWorker.ready.then((r) =>
+                r.active?.postMessage({ type: 'assetManifest', manifest }),
+              );
+            });
         });
       }
     </script>
