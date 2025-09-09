@@ -26,6 +26,20 @@ void main() {
     expect(score.health.value, Constants.playerMaxHealth);
   });
 
+  test('hitPlayer clamps health at zero', () async {
+    SharedPreferences.setMockInitialValues({});
+    final storage = await StorageService.create();
+    final score = ScoreService(storageService: storage);
+
+    for (var i = 0; i < Constants.playerMaxHealth; i++) {
+      score.hitPlayer();
+    }
+
+    expect(score.health.value, 0);
+    expect(score.hitPlayer(), isTrue);
+    expect(score.health.value, 0);
+  });
+
   test('updates and resets high score', () async {
     SharedPreferences.setMockInitialValues({'highScore': 10});
     final storage = await StorageService.create();
