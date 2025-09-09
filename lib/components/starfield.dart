@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:collection';
 import 'dart:math' as math;
+import 'dart:typed_data';
 import 'dart:ui';
+import 'dart:isolate';
 
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
@@ -177,9 +179,9 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
                     ) *
                     star.amplitude +
                 base;
-            tile.colors[i] = star.color.withAlpha((twinkle * 255).round());
+            tile.colors[i] = ((twinkle * 255).round() << 24) | star.color;
           }
-          canvas.drawAtlas(
+          canvas.drawRawAtlas(
             _starImage,
             tile.transforms,
             tile.rects,
@@ -212,7 +214,7 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
       return;
     }
     if (layer.config.density <= 0) {
-      layer.cache[key] = const _Tile.empty();
+      layer.cache[key] = _Tile.empty();
       layer.lru.addLast(key);
       _prune(layer);
       return;
@@ -238,31 +240,31 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
     );
     final future = _runTileData(params).then((data) {
       final stars = data
-          .map((s) => _Star(
-                Offset(s[0] as double, s[1] as double),
-                s[2] as double,
-                Color(s[3] as int),
-                s[4] as double,
-                s[5] as double,
-                s[6] as double,
-              ))
+          .map((m) => _Star.fromData(_StarData.fromMap(m)))
           .toList(growable: false);
-      final transforms = stars
-          .map(
-            (s) => RSTransform.fromComponents(
-              rotation: 0,
-              scale: s.radius / _starImageRadius,
-              anchorX: _starImageRadius,
-              anchorY: _starImageRadius,
-              translateX: s.position.dx,
-              translateY: s.position.dy,
-            ),
-          )
-          .toList(growable: false);
-      final rects =
-          List<Rect>.filled(stars.length, _starSrcRect, growable: false);
-      final colors =
-          List<Color>.filled(stars.length, const Color(0), growable: false);
+      final transforms = Float32List(stars.length * 4);
+      final rects = Float32List(stars.length * 4);
+      final colors = Int32List(stars.length);
+      for (var i = 0; i < stars.length; i++) {
+        final s = stars[i];
+        final r = RSTransform.fromComponents(
+          rotation: 0,
+          scale: s.radius / _starImageRadius,
+          anchorX: _starImageRadius,
+          anchorY: _starImageRadius,
+          translateX: s.position.dx,
+          translateY: s.position.dy,
+        );
+        final ti = i * 4;
+        transforms[ti] = r.scos;
+        transforms[ti + 1] = r.ssin;
+        transforms[ti + 2] = r.tx;
+        transforms[ti + 3] = r.ty;
+        rects[ti] = 0;
+        rects[ti + 1] = 0;
+        rects[ti + 2] = _starImage.width.toDouble();
+        rects[ti + 3] = _starImage.height.toDouble();
+      }
       final tile = _Tile(stars, transforms, rects, colors);
       layer.cache[key] = tile;
       layer.lru.addLast(key);
@@ -346,29 +348,71 @@ class _LayerState {
 }
 
 class _Tile {
-  const _Tile(this.stars, this.transforms, this.rects, this.colors);
-  const _Tile.empty()
+  _Tile(this.stars, this.transforms, this.rects, this.colors);
+  _Tile.empty()
       : stars = const [],
-        transforms = const [],
-        rects = const [],
-        colors = const [];
+        transforms = Float32List(0),
+        rects = Float32List(0),
+        colors = Int32List(0);
 
   final List<_Star> stars;
-  final List<RSTransform> transforms;
-  final List<Rect> rects;
-  final List<Color> colors;
+  final Float32List transforms;
+  final Float32List rects;
+  final Int32List colors;
 }
 
 class _Star {
   _Star(this.position, this.radius, this.color, this.phase, this.amplitude,
       this.frequency);
 
+  factory _Star.fromData(_StarData d) => _Star(
+        Offset(d.x, d.y),
+        d.radius,
+        d.color,
+        d.phase,
+        d.amplitude,
+        d.frequency,
+      );
+
   final Offset position;
   final double radius;
-  final Color color;
+  final int color;
   final double phase;
   final double amplitude;
   final double frequency;
+}
+
+class _StarData {
+  const _StarData(this.x, this.y, this.radius, this.color, this.phase,
+      this.amplitude, this.frequency);
+
+  final double x;
+  final double y;
+  final double radius;
+  final int color;
+  final double phase;
+  final double amplitude;
+  final double frequency;
+
+  Map<String, num> toMap() => {
+        'x': x,
+        'y': y,
+        'radius': radius,
+        'color': color,
+        'phase': phase,
+        'amplitude': amplitude,
+        'frequency': frequency,
+      };
+
+  static _StarData fromMap(Map<String, num> m) => _StarData(
+        (m['x'] ?? 0).toDouble(),
+        (m['y'] ?? 0).toDouble(),
+        (m['radius'] ?? 0).toDouble(),
+        (m['color'] ?? 0).toInt(),
+        (m['phase'] ?? 0).toDouble(),
+        (m['amplitude'] ?? 0).toDouble(),
+        (m['frequency'] ?? 0).toDouble(),
+      );
 }
 
 class _TileParams {
@@ -386,33 +430,90 @@ class _TileParams {
   final int maxBrightness;
 }
 
-Future<List<List<num>>> _runTileData(_TileParams params) =>
-    // compute() gracefully falls back to the main isolate on web builds
-    // where spawning isolates is unsupported.
-    compute(_generateTileStarData, params);
+class _TileWorker {
+  _TileWorker._() {
+    _receivePort.listen((message) {
+      if (message is SendPort) {
+        _sendPort = message;
+        _readyCompleter?.complete(message);
+        return;
+      }
+      if (message is List && message.length == 2) {
+        final id = message[0] as int;
+        final data = message[1] as List<Map<String, num>>;
+        _pending.remove(id)?.complete(data);
+      }
+    });
+  }
+
+  static final _TileWorker instance = _TileWorker._();
+
+  Isolate? _isolate;
+  SendPort? _sendPort;
+  final ReceivePort _receivePort = ReceivePort();
+  int _id = 0;
+  final Map<int, Completer<List<Map<String, num>>>> _pending = {};
+  Completer<SendPort>? _readyCompleter;
+  Future<void>? _starting;
+
+  Future<void> _ensureStarted() {
+    if (_sendPort != null) {
+      return Future.value();
+    }
+    return _starting ??= _start();
+  }
+
+  Future<void> _start() async {
+    _readyCompleter = Completer<SendPort>();
+    _isolate = await Isolate.spawn(_tileWorkerMain, _receivePort.sendPort);
+    await _readyCompleter!.future;
+    _readyCompleter = null;
+    _starting = null;
+  }
+
+  Future<List<Map<String, num>>> run(_TileParams params) async {
+    if (kIsWeb) {
+      return _generateTileStarData(params);
+    }
+    await _ensureStarted();
+    final id = _id++;
+    final completer = Completer<List<Map<String, num>>>();
+    _pending[id] = completer;
+    _sendPort!.send([id, params]);
+    return completer.future;
+  }
+}
+
+@pragma('vm:entry-point')
+void _tileWorkerMain(SendPort mainSendPort) {
+  final port = ReceivePort();
+  mainSendPort.send(port.sendPort);
+  port.listen((message) {
+    final id = message[0] as int;
+    final params = message[1] as _TileParams;
+    final result = _generateTileStarData(params);
+    mainSendPort.send([id, result]);
+  });
+}
+
+Future<List<Map<String, num>>> _runTileData(_TileParams params) =>
+    _TileWorker.instance.run(params);
 
 List<_Star> _generateTileStars(_TileParams params) {
   final raw = _generateTileStarData(params);
   return raw
-      .map((s) => _Star(
-            Offset(s[0] as double, s[1] as double),
-            s[2] as double,
-            Color(s[3] as int),
-            s[4] as double,
-            s[5] as double,
-            s[6] as double,
-          ))
+      .map((m) => _Star.fromData(_StarData.fromMap(m)))
       .toList(growable: false);
 }
 
-List<List<num>> _generateTileStarData(_TileParams params) {
+List<Map<String, num>> _generateTileStarData(_TileParams params) {
   final seed = params.seed;
   final tx = params.tx;
   final ty = params.ty;
   final minDist = params.minDist;
   final tileSize = params.tileSize;
   if (minDist.isInfinite || minDist.isNaN) {
-    return const <List<num>>[];
+    return const <Map<String, num>>[];
   }
   final rnd = math.Random(seed ^ tx ^ (ty << 16));
   final samples = _poisson(tileSize, minDist, rnd);
@@ -425,8 +526,8 @@ List<List<num>> _generateTileStarData(_TileParams params) {
             params.maxBrightness,
           ))
       .toList()
-    ..sort((a, b) => (a[2] as double).compareTo(b[2] as double));
-  return data;
+    ..sort((a, b) => (a.radius).compareTo(b.radius));
+  return data.map((s) => s.toMap()).toList();
 }
 
 List<Offset> _poisson(double size, double minDist, math.Random rnd,
@@ -489,7 +590,7 @@ List<Offset> _poisson(double size, double minDist, math.Random rnd,
   return samples;
 }
 
-List<num> _randomStarData(Offset position, math.Random rnd, List<int> palette,
+_StarData _randomStarData(Offset position, math.Random rnd, List<int> palette,
     int minBrightness, int maxBrightness) {
   final roll = rnd.nextDouble();
   double radius;
@@ -507,11 +608,11 @@ List<num> _randomStarData(Offset position, math.Random rnd, List<int> palette,
   final r = ((baseColor >> 16) & 0xFF) * brightness ~/ 255;
   final g = ((baseColor >> 8) & 0xFF) * brightness ~/ 255;
   final b = (baseColor & 0xFF) * brightness ~/ 255;
-  final color = 0xFF000000 | (r << 16) | (g << 8) | b;
+  final color = (r << 16) | (g << 8) | b;
   final phase = rnd.nextDouble() * math.pi * 2;
   final amplitude = 0.3 + rnd.nextDouble() * 0.2; // 0.3..0.5
   final frequency = 0.8 + rnd.nextDouble() * 0.4; // 0.8..1.2
-  return [
+  return _StarData(
     position.dx,
     position.dy,
     radius,
@@ -519,7 +620,7 @@ List<num> _randomStarData(Offset position, math.Random rnd, List<int> palette,
     phase,
     amplitude,
     frequency,
-  ];
+  );
 }
 
 double _lerp(double a, double b, double t) => a + (b - a) * t;
