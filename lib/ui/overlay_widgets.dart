@@ -75,10 +75,8 @@ class GameIconButton extends StatelessWidget {
     return IconButton(
       iconSize: iconSize,
       onPressed: onPressed,
-      icon: IconTheme.merge(
-        data: IconThemeData(color: iconColor),
-        child: icon,
-      ),
+      color: iconColor,
+      icon: icon,
     );
   }
 }
