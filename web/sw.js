@@ -45,8 +45,8 @@ async function cacheAll(cache, assets) {
     urls.map((url) =>
       cache.add(url).catch((err) => {
         console.warn(`Failed to cache ${url}`, err);
-      }),
-    ),
+      })
+    )
   );
 }
 
@@ -72,7 +72,7 @@ self.addEventListener("install", (event) => {
     (async () => {
       const cache = await caches.open(CACHE_NAME);
       await cacheAll(cache, CORE_ASSETS);
-    })(),
+    })()
   );
   self.skipWaiting();
 });
@@ -84,11 +84,11 @@ self.addEventListener("activate", (event) => {
     (async () => {
       const keys = await caches.keys();
       await Promise.all(
-        keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)),
+        keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k))
       );
       await self.clients.claim();
       // Optional assets are cached once the manifest is received from the page.
-    })(),
+    })()
   );
 });
 
@@ -123,20 +123,24 @@ self.addEventListener("fetch", (event) => {
   }
   event.respondWith(
     fetch(event.request)
-      .then(async (response) => {
+      .then((response) => {
         if (
           response.status === 200 &&
           !event.request.url.startsWith("chrome-extension")
         ) {
           const responseClone = response.clone();
-          const cache = await caches.open(CACHE_NAME);
-          cache.put(event.request, responseClone);
+          caches
+            .open(CACHE_NAME)
+            .then((cache) => cache.put(event.request, responseClone))
+            .catch((err) => {
+              console.warn("Cache put failed", err);
+            });
         }
         return response;
       })
       .catch(async () => {
         const cache = await caches.open(CACHE_NAME);
         return cache.match(event.request);
-      }),
+      })
   );
 });
