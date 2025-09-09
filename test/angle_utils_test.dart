@@ -24,4 +24,20 @@ void main() {
     final normalized = normalizeAngle(angle);
     expect(normalized, closeTo(math.pi / 4, 1e-10));
   });
+
+  test('normalizeAngle leaves in-range angles unchanged', () {
+    expect(normalizeAngle(math.pi), closeTo(math.pi, 1e-10));
+    expect(normalizeAngle(0), closeTo(0, 1e-10));
+    expect(normalizeAngle(math.pi / 2), closeTo(math.pi / 2, 1e-10));
+  });
+
+  test('normalizeAngle wraps -π to π', () {
+    expect(normalizeAngle(-math.pi), closeTo(math.pi, 1e-10));
+  });
+
+  test('normalizeAngle handles negative multiples of 2π', () {
+    final angle = -7 * 2 * math.pi - math.pi / 3;
+    final normalized = normalizeAngle(angle);
+    expect(normalized, closeTo(-math.pi / 3, 1e-10));
+  });
 }
