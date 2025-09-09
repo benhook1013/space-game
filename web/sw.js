@@ -119,14 +119,14 @@ self.addEventListener("fetch", (event) => {
   }
   event.respondWith(
     fetch(event.request)
-      .then((response) => {
+      .then(async (response) => {
         if (
           response.status === 200 &&
           !event.request.url.startsWith("chrome-extension")
         ) {
-          caches
-            .open(CACHE_NAME)
-            .then((cache) => cache.put(event.request, response.clone()));
+          const responseClone = response.clone();
+          const cache = await caches.open(CACHE_NAME);
+          cache.put(event.request, responseClone);
         }
         return response;
       })
