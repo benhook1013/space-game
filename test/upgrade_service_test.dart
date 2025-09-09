@@ -45,22 +45,23 @@ void main() {
 
   test('purchased upgrades persist to storage', () async {
     SharedPreferences.setMockInitialValues({});
-    final storage = await StorageService.create();
-    final score = ScoreService(storageService: storage);
+    final storage1 = await StorageService.create();
+    final score = ScoreService(storageService: storage1);
     final settings = SettingsService();
     final service = UpgradeService(
       scoreService: score,
-      storageService: storage,
+      storageService: storage1,
       settingsService: settings,
     );
     final upgrade = service.upgrades.first;
     score.addMinerals(upgrade.cost);
     service.buy(upgrade);
 
-    final score2 = ScoreService(storageService: storage);
+    final storage2 = await StorageService.create();
+    final score2 = ScoreService(storageService: storage2);
     final service2 = UpgradeService(
       scoreService: score2,
-      storageService: storage,
+      storageService: storage2,
       settingsService: settings,
     );
     expect(service2.isPurchased(upgrade.id), isTrue);
