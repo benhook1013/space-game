@@ -8,18 +8,30 @@ sealed class GameEvent {}
 
 /// Simple event bus for broadcasting game lifecycle events.
 class GameEventBus {
-  final StreamController<GameEvent> _controller =
-      StreamController<GameEvent>.broadcast(sync: true);
+  final Map<Type, StreamController<GameEvent>> _controllers = {};
 
-  /// Emits an [event] to all listeners.
-  void emit(GameEvent event) => _controller.add(event);
+  /// Emits an [event] to listeners registered for its type.
+  void emit(GameEvent event) {
+    _controllers[event.runtimeType]?.add(event);
+    _controllers[GameEvent]?.add(event);
+  }
 
   /// Returns a stream of events of type [T].
-  Stream<T> on<T extends GameEvent>() =>
-      _controller.stream.where((e) => e is T).cast<T>();
+  Stream<T> on<T extends GameEvent>() {
+    final controller = _controllers.putIfAbsent(
+      T,
+      () => StreamController<GameEvent>.broadcast(sync: true),
+    );
+    return controller.stream.cast<T>();
+  }
 
-  /// Closes the underlying stream controller.
-  void dispose() => _controller.close();
+  /// Closes all stream controllers.
+  void dispose() {
+    for (final controller in _controllers.values) {
+      controller.close();
+    }
+    _controllers.clear();
+  }
 }
 
 /// Event fired when a component is spawned.
