@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/foundation.dart';
 
 import '../constants.dart';
@@ -30,8 +32,8 @@ class ScoreService {
 
   /// Returns `true` when health reaches zero.
   bool hitPlayer() {
-    health.value -= 1;
-    return health.value <= 0;
+    health.value = math.max(0, health.value - 1);
+    return health.value == 0;
   }
 
   /// Clears the high score both in memory and persistent storage.
