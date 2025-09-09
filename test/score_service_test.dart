@@ -56,4 +56,18 @@ void main() {
     expect(score.highScore.value, 0);
     expect(storage.getHighScore(), 0);
   });
+
+  test('high score persists across instances', () async {
+    SharedPreferences.setMockInitialValues({});
+    var storage = await StorageService.create();
+    var score1 = ScoreService(storageService: storage);
+
+    score1.addScore(10);
+    await score1.updateHighScoreIfNeeded();
+    score1.dispose();
+
+    storage = await StorageService.create();
+    final score2 = ScoreService(storageService: storage);
+    expect(score2.highScore.value, 10);
+  });
 }
