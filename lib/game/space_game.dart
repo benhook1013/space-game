@@ -28,7 +28,6 @@ import '../services/upgrade_service.dart';
 import '../services/settings_service.dart';
 import '../theme/game_theme.dart';
 import '../ui/help_overlay.dart';
-import '../ui/upgrades_overlay.dart';
 import '../ui/settings_overlay.dart';
 import 'event_bus.dart';
 import 'game_state.dart';
@@ -228,6 +227,14 @@ class SpaceGame extends FlameGame
       onResume: () {},
       onGameOver: lifecycle.onGameOver,
       onMenu: lifecycle.onMenu,
+      onEnterUpgrades: () {
+        pauseEngine();
+        miningLaser?.stopSound();
+      },
+      onExitUpgrades: () {
+        resumeEngine();
+        focusGame();
+      },
     );
 
     shortcuts = game_shortcuts.ShortcutManager(
@@ -256,22 +263,7 @@ class SpaceGame extends FlameGame
   PoolManager createPoolManager() => PoolManager(events: eventBus);
 
   /// Toggles the upgrades overlay and pauses/resumes the game.
-  void toggleUpgrades() {
-    if (overlays.isActive(UpgradesOverlay.id)) {
-      overlayService.hideUpgrades();
-      stateMachine.state = GameState.playing;
-      resumeEngine();
-      focusGame();
-    } else {
-      if (stateMachine.state != GameState.playing) {
-        return;
-      }
-      stateMachine.state = GameState.upgrades;
-      overlayService.showUpgrades();
-      pauseEngine();
-      miningLaser?.stopSound();
-    }
-  }
+  void toggleUpgrades() => stateMachine.toggleUpgrades();
 
   /// Toggles the help overlay and pauses/resumes if entering from gameplay.
   void toggleHelp() {

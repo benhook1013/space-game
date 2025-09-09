@@ -12,6 +12,8 @@ class GameStateMachine {
     required this.onResume,
     required this.onGameOver,
     required this.onMenu,
+    required this.onEnterUpgrades,
+    required this.onExitUpgrades,
   });
 
   final OverlayService overlays;
@@ -20,6 +22,8 @@ class GameStateMachine {
   final void Function() onResume;
   final void Function() onGameOver;
   final void Function() onMenu;
+  final void Function() onEnterUpgrades;
+  final void Function() onExitUpgrades;
 
   final ValueNotifier<GameState> stateNotifier =
       ValueNotifier<GameState>(GameState.menu);
@@ -60,6 +64,19 @@ class GameStateMachine {
     state = GameState.menu;
     overlays.showMenu();
     onMenu();
+  }
+
+  /// Toggles the upgrades overlay and pauses/resumes the game.
+  void toggleUpgrades() {
+    if (state == GameState.upgrades) {
+      state = GameState.playing;
+      overlays.hideUpgrades();
+      onExitUpgrades();
+    } else if (state == GameState.playing) {
+      state = GameState.upgrades;
+      overlays.showUpgrades();
+      onEnterUpgrades();
+    }
   }
 
   /// Releases resources held by the state machine.

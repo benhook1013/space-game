@@ -110,6 +110,8 @@ class _TestGame extends SpaceGame {
       onResume: resumeEngine,
       onGameOver: () {},
       onMenu: () {},
+      onEnterUpgrades: () {},
+      onExitUpgrades: () {},
     );
     player.inputBehavior.game = this;
   }

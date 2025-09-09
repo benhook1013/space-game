@@ -91,6 +91,8 @@ class _Harness {
       onResume: () {},
       onGameOver: () {},
       onMenu: () {},
+      onEnterUpgrades: () {},
+      onExitUpgrades: () {},
     );
     ShortcutManager(
       keyDispatcher: dispatcher,

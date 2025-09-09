@@ -13,6 +13,8 @@ class _FakeOverlayService implements OverlayService {
   bool showPauseCalled = false;
   bool showGameOverCalled = false;
   bool showMenuCalled = false;
+  bool showUpgradesCalled = false;
+  bool hideUpgradesCalled = false;
 
   @override
   void showHud() => showHudCalled = true;
@@ -28,9 +30,9 @@ class _FakeOverlayService implements OverlayService {
   @override
   void hideHelp() {}
   @override
-  void showUpgrades() {}
+  void showUpgrades() => showUpgradesCalled = true;
   @override
-  void hideUpgrades() {}
+  void hideUpgrades() => hideUpgradesCalled = true;
   @override
   void showSettings() {}
   @override
@@ -51,6 +53,8 @@ void main() {
         onResume: () {},
         onGameOver: () {},
         onMenu: () {},
+        onEnterUpgrades: () {},
+        onExitUpgrades: () {},
       );
 
       stateMachine.startGame();
@@ -70,6 +74,8 @@ void main() {
         onResume: () {},
         onGameOver: () {},
         onMenu: () {},
+        onEnterUpgrades: () {},
+        onExitUpgrades: () {},
       )..startGame();
 
       stateMachine.pauseGame();
@@ -89,6 +95,8 @@ void main() {
         onResume: () => resumeCalled = true,
         onGameOver: () {},
         onMenu: () {},
+        onEnterUpgrades: () {},
+        onExitUpgrades: () {},
       )
         ..startGame()
         ..pauseGame();
@@ -111,6 +119,8 @@ void main() {
         onResume: () {},
         onGameOver: () => gameOverCalled = true,
         onMenu: () {},
+        onEnterUpgrades: () {},
+        onExitUpgrades: () {},
       )..startGame();
 
       stateMachine.gameOver();
@@ -130,6 +140,8 @@ void main() {
         onResume: () {},
         onGameOver: () {},
         onMenu: () => menuCalled = true,
+        onEnterUpgrades: () {},
+        onExitUpgrades: () {},
       )..startGame();
 
       stateMachine.returnToMenu();
@@ -149,6 +161,8 @@ void main() {
         onResume: () {},
         onGameOver: () {},
         onMenu: () {},
+        onEnterUpgrades: () {},
+        onExitUpgrades: () {},
       );
 
       stateMachine.pauseGame();
@@ -168,6 +182,8 @@ void main() {
         onResume: () => resumeCalled = true,
         onGameOver: () {},
         onMenu: () {},
+        onEnterUpgrades: () {},
+        onExitUpgrades: () {},
       )..startGame();
 
       overlays.showHudCalled = false;
@@ -176,6 +192,50 @@ void main() {
       expect(stateMachine.state, GameState.playing);
       expect(overlays.showHudCalled, isFalse);
       expect(resumeCalled, isFalse);
+    });
+
+    test('toggleUpgrades shows upgrades overlay and calls onEnterUpgrades', () {
+      final overlays = _FakeOverlayService();
+      var enterCalled = false;
+      final stateMachine = GameStateMachine(
+        overlays: overlays,
+        onStart: () {},
+        onPause: () {},
+        onResume: () {},
+        onGameOver: () {},
+        onMenu: () {},
+        onEnterUpgrades: () => enterCalled = true,
+        onExitUpgrades: () {},
+      )..startGame();
+
+      stateMachine.toggleUpgrades();
+
+      expect(stateMachine.state, GameState.upgrades);
+      expect(overlays.showUpgradesCalled, isTrue);
+      expect(enterCalled, isTrue);
+    });
+
+    test('toggleUpgrades hides upgrades overlay and calls onExitUpgrades', () {
+      final overlays = _FakeOverlayService();
+      var exitCalled = false;
+      final stateMachine = GameStateMachine(
+        overlays: overlays,
+        onStart: () {},
+        onPause: () {},
+        onResume: () {},
+        onGameOver: () {},
+        onMenu: () {},
+        onEnterUpgrades: () {},
+        onExitUpgrades: () => exitCalled = true,
+      )..startGame();
+
+      stateMachine.toggleUpgrades();
+      overlays.showUpgradesCalled = false;
+      stateMachine.toggleUpgrades();
+
+      expect(stateMachine.state, GameState.playing);
+      expect(overlays.hideUpgradesCalled, isTrue);
+      expect(exitCalled, isTrue);
     });
   });
 }
