@@ -1,4 +1,5 @@
 @TestOn('browser')
+import 'package:test/test.dart' show TestOn; // ignore: unnecessary_import
 import 'package:web/web.dart' as web;
 
 import 'package:flutter_test/flutter_test.dart';
