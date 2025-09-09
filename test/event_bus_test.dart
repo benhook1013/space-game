@@ -21,4 +21,13 @@ void main() {
     bus.emit(ComponentSpawnEvent<int>(2));
     expect(events, [1, 2]);
   });
+
+  test('base listeners receive all events', () {
+    final bus = GameEventBus();
+    final events = <GameEvent>[];
+    bus.on<GameEvent>().listen(events.add);
+    bus.emit(ComponentSpawnEvent<int>(1));
+    bus.emit(ComponentRemoveEvent<int>(1));
+    expect(events.length, 2);
+  });
 }
