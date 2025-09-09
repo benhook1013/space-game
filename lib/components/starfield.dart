@@ -514,8 +514,10 @@ class _TileWorker {
   _TileWorker._() {
     _receivePort.listen((message) {
       if (message is SendPort) {
-        _sendPort = message;
-        _readyCompleter?.complete(message);
+        _sendPorts.add(message);
+        if (_sendPorts.length == _poolSize) {
+          _readyCompleter?.complete();
+        }
         return;
       }
       if (message is List && message.length == 2) {
@@ -528,24 +530,31 @@ class _TileWorker {
 
   static final _TileWorker instance = _TileWorker._();
 
-  SendPort? _sendPort;
+  static const int _poolSize = 2;
+
   final ReceivePort _receivePort = ReceivePort();
-  Isolate? _isolate;
+  final List<SendPort> _sendPorts = [];
+  final List<Isolate> _isolates = [];
+  int _nextPort = 0;
   int _id = 0;
   final Map<int, Completer<List<_StarData>>> _pending = {};
-  Completer<SendPort>? _readyCompleter;
+  Completer<void>? _readyCompleter;
   Future<void>? _starting;
 
   Future<void> _ensureStarted() {
-    if (_sendPort != null) {
+    if (_sendPorts.length == _poolSize) {
       return Future.value();
     }
     return _starting ??= _start();
   }
 
   Future<void> _start() async {
-    _readyCompleter = Completer<SendPort>();
-    _isolate = await Isolate.spawn(_tileWorkerMain, _receivePort.sendPort);
+    _readyCompleter = Completer<void>();
+    for (var i = 0; i < _poolSize; i++) {
+      final isolate =
+          await Isolate.spawn(_tileWorkerMain, _receivePort.sendPort);
+      _isolates.add(isolate);
+    }
     await _readyCompleter!.future;
     _readyCompleter = null;
     _starting = null;
@@ -559,20 +568,25 @@ class _TileWorker {
     final id = _id++;
     final completer = Completer<List<_StarData>>();
     _pending[id] = completer;
-    _sendPort!.send([id, params]);
+    final port = _sendPorts[_nextPort];
+    _nextPort = (_nextPort + 1) % _sendPorts.length;
+    port.send([id, params]);
     return completer.future;
   }
 
   void dispose() {
-    _isolate?.kill(priority: Isolate.immediate);
-    _isolate = null;
+    for (final isolate in _isolates) {
+      isolate.kill(priority: Isolate.immediate);
+    }
+    _isolates.clear();
     for (final c in _pending.values) {
       if (!c.isCompleted) {
         c.complete(const []);
       }
     }
     _pending.clear();
-    _sendPort = null;
+    _sendPorts.clear();
+    _nextPort = 0;
   }
 }
 
