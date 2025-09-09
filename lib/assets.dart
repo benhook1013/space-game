@@ -14,24 +14,16 @@ class Assets {
     'players/player1.png',
     'players/player2.png',
   ];
-  static const Map<EnemyFaction, EnemySpriteSet> enemyFactions = {
-    EnemyFaction.faction1: EnemySpriteSet(
-      units: ['enemies/faction1/unit.png'],
-      boss: 'enemies/faction1/unit.png',
-    ),
-    EnemyFaction.faction2: EnemySpriteSet(
-      units: ['enemies/faction2/unit.png'],
-      boss: 'enemies/faction2/unit.png',
-    ),
-    EnemyFaction.faction3: EnemySpriteSet(
-      units: ['enemies/faction3/unit.png'],
-      boss: 'enemies/faction3/unit.png',
-    ),
-    EnemyFaction.faction4: EnemySpriteSet(
-      units: ['enemies/faction4/unit.png'],
-      boss: 'enemies/faction4/unit.png',
-    ),
+  static final Map<EnemyFaction, EnemySpriteSet> enemyFactions = {
+    for (final faction in EnemyFaction.values)
+      faction: EnemySpriteSet(
+        units: [_enemyPath(faction, 'unit.png')],
+        boss: _enemyPath(faction, 'unit.png'),
+      ),
   };
+
+  static String _enemyPath(EnemyFaction faction, String file) =>
+      'enemies/${faction.name}/$file';
 
   static List<String> get enemies =>
       enemyFactions.values.expand((e) => [...e.units, e.boss]).toList();
@@ -90,30 +82,17 @@ class Assets {
     final total = imagePaths.length + audioPaths.length;
     var loaded = 0;
 
-    void reportProgress() {
-      onProgress?.call(loaded / total);
-    }
+    void report() => onProgress?.call(loaded / total);
 
-    final futures = <Future<void>>[];
+    await _loadAll(imagePaths, _loadImage, () {
+      loaded++;
+      report();
+    });
 
-    for (final path in imagePaths) {
-      futures.add(
-        _loadImage(path).then((_) {
-          loaded++;
-          reportProgress();
-        }),
-      );
-    }
-    for (final path in audioPaths) {
-      futures.add(
-        _loadAudio(path).then((_) {
-          loaded++;
-          reportProgress();
-        }),
-      );
-    }
-
-    await Future.wait(futures);
+    await _loadAll(audioPaths, _loadAudio, () {
+      loaded++;
+      report();
+    });
   }
 
   static Future<void> _loadImage(String path) async {
@@ -135,6 +114,16 @@ class Assets {
       log('Failed to load audio asset $path: $e');
       rethrow;
     }
+  }
+
+  static Future<void> _loadAll(
+    Iterable<String> paths,
+    Future<void> Function(String path) loader,
+    void Function() onItemLoaded,
+  ) {
+    return Future.wait(
+      paths.map((p) => loader(p).then((_) => onItemLoaded())),
+    );
   }
 
   static final Random _rand = Random();

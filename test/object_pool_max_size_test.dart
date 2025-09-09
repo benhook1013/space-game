@@ -12,4 +12,18 @@ void main() {
     // Ensure the stored instance is the first one released.
     expect(pool.acquire(), 1);
   });
+
+  test('onDiscard callback fires when pool is full', () {
+    var discarded = 0;
+    final pool = ObjectPool<int>(
+      () => 0,
+      maxSize: 1,
+      onDiscard: (_) => discarded++,
+    );
+
+    pool.release(1);
+    pool.release(2); // Triggers discard.
+
+    expect(discarded, 1);
+  });
 }

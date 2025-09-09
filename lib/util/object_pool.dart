@@ -1,5 +1,7 @@
 import 'dart:collection';
 
+import '../log.dart';
+
 /// Generic object pool to minimise allocations by reusing instances.
 class ObjectPool<T> {
   /// Creates a new pool that builds objects using [create].
@@ -7,10 +9,15 @@ class ObjectPool<T> {
   /// If [maxSize] is provided, the pool will keep at most that many
   /// instances when [release] is called. Additional releases are discarded
   /// to avoid unbounded memory growth.
-  ObjectPool(T Function() create, {this.maxSize}) : _create = create;
+  ObjectPool(
+    T Function() create, {
+    this.maxSize,
+    this.onDiscard,
+  }) : _create = create;
 
   final T Function() _create;
   final int? maxSize;
+  final void Function(T obj)? onDiscard;
   final List<T> _items = [];
   late final UnmodifiableListView<T> _itemsView = UnmodifiableListView(_items);
 
@@ -32,6 +39,12 @@ class ObjectPool<T> {
   void release(T obj) {
     if (maxSize == null || _items.length < maxSize!) {
       _items.add(obj);
+    } else {
+      onDiscard?.call(obj);
+      log(
+        'ObjectPool discarding ${obj.runtimeType} as capacity '
+        '${_items.length}/$maxSize is reached',
+      );
     }
   }
 
