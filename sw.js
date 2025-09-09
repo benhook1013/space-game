@@ -28,8 +28,12 @@ const RARELY_CHANGED_EXTENSIONS = new Set([
 
 let cachedManifest;
 
+// Only cache optional assets once per service worker version. Without this
+// guard the manifest message posted on every page load would trigger
+// `cacheOptionalAssets` repeatedly, forcing network requests for assets that
+// are already cached.
 self.addEventListener("message", (event) => {
-  if (event.data && event.data.type === "assetManifest") {
+  if (event.data && event.data.type === "assetManifest" && !cachedManifest) {
     cachedManifest = event.data.manifest;
     caches.open(CACHE_NAME).then((cache) => cacheOptionalAssets(cache));
   }
