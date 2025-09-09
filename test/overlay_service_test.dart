@@ -99,6 +99,23 @@ void main() {
     expect(game.overlays.isActive(HudOverlay.id), isTrue);
   });
 
+  test('opening settings while paused retains pause and hides HUD', () {
+    final game = _createGame();
+    final service = OverlayService(game);
+
+    service.showHud();
+    service.showPause();
+
+    expect(game.overlays.isActive(PauseOverlay.id), isTrue);
+    expect(game.overlays.isActive(HudOverlay.id), isTrue);
+
+    service.showSettings();
+
+    expect(game.overlays.isActive(SettingsOverlay.id), isTrue);
+    expect(game.overlays.isActive(PauseOverlay.id), isTrue);
+    expect(game.overlays.isActive(HudOverlay.id), isTrue);
+  });
+
   test('rapid overlay toggles leave only HUD active', () {
     final game = _createGame();
     final service = OverlayService(game);

@@ -25,6 +25,11 @@ void main() {
     expect(normalized, closeTo(math.pi / 4, 1e-10));
   });
 
+  test('normalizeAngle maps ±2π to zero', () {
+    expect(normalizeAngle(2 * math.pi), closeTo(0, 1e-10));
+    expect(normalizeAngle(-2 * math.pi), closeTo(0, 1e-10));
+  });
+
   test('normalizeAngle leaves in-range angles unchanged', () {
     expect(normalizeAngle(math.pi), closeTo(math.pi, 1e-10));
     expect(normalizeAngle(0), closeTo(0, 1e-10));

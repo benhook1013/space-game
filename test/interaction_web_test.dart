@@ -37,4 +37,22 @@ void main() {
     await Future<void>.delayed(Duration.zero);
     expect(calls, 1);
   });
+
+  test('listeners removed even if callback throws', () async {
+    var calls = 0;
+    onFirstUserInteraction(() {
+      calls++;
+      throw Exception('boom');
+    });
+
+    expect(
+      () => web.window.dispatchEvent(web.KeyboardEvent('keydown')),
+      throwsException,
+    );
+
+    // Subsequent events should not trigger the callback again.
+    web.window.dispatchEvent(web.PointerEvent('pointerdown'));
+    await Future<void>.delayed(Duration.zero);
+    expect(calls, 1);
+  });
 }
