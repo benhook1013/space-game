@@ -138,6 +138,7 @@ class AudioService {
   void dispose() {
     stopAll();
     muted.dispose();
+    volume.dispose();
     _shootPool?.dispose();
   }
 }

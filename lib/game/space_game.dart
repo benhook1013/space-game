@@ -540,6 +540,7 @@ class SpaceGame extends FlameGame
     targetingService.dispose();
     stateMachine.dispose();
     audioService.dispose();
+    pools.dispose();
     super.onRemove();
     // Dispose the event bus after children are removed so they can emit
     // removal events without errors.

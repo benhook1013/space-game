@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flame/components.dart';
 
 import '../components/asteroid.dart';
@@ -24,6 +26,8 @@ class PoolManager {
 
   final GameEventBus _events;
 
+  final List<StreamSubscription<dynamic>> _subscriptions = [];
+
   final Map<Type, ObjectPool<dynamic>> _pools = {};
   final Map<Type, Set<dynamic>> _active = {};
   final Map<Type, void Function(dynamic)> _onRemove = {};
@@ -46,11 +50,12 @@ class PoolManager {
       _onRemove[T] = (dynamic c) => onRemove(c as T);
     }
 
-    _events.on<ComponentRemoveEvent<T>>().listen((event) {
+    final sub = _events.on<ComponentRemoveEvent<T>>().listen((event) {
       (_active[T] as Set<T>).remove(event.component);
       _onRemove[T]?.call(event.component);
       release(event.component);
     });
+    _subscriptions.add(sub);
   }
 
   /// Retrieves an instance of [T] from its pool.
@@ -126,5 +131,14 @@ class PoolManager {
       set.clear();
     }
     _asteroidGrid.clear();
+  }
+
+  /// Cancels event subscriptions and releases all resources.
+  void dispose() {
+    clear();
+    for (final sub in _subscriptions) {
+      sub.cancel();
+    }
+    _subscriptions.clear();
   }
 }
