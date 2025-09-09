@@ -1,7 +1,10 @@
 import 'dart:async';
 
 /// Marker base class for all game events.
-abstract class GameEvent {}
+///
+/// Declared as `sealed` so that all valid game events are defined within this
+/// library, enabling the event bus to enforce exhaustiveness when needed.
+sealed class GameEvent {}
 
 /// Simple event bus for broadcasting game lifecycle events.
 class GameEventBus {
