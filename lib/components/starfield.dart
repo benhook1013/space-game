@@ -58,6 +58,8 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
     this.debugDrawTiles = false,
     List<StarfieldLayerConfig>? layers,
     this.tileSize = Constants.starfieldTileSize,
+    this.densityMultiplier = 1,
+    this.brightnessMultiplier = 1,
   })  : _seed = seed,
         _layers =
             layers ?? const [StarfieldLayerConfig(parallax: 1, density: 1)],
@@ -70,6 +72,12 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
 
   /// Size of each generated starfield tile.
   final double tileSize;
+
+  /// Multiplier applied to layer densities.
+  final double densityMultiplier;
+
+  /// Multiplier applied to star brightness (0-1).
+  final double brightnessMultiplier;
 
   final Paint _starPaint = Paint();
 
@@ -95,7 +103,25 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
       final cfg = _layers[i];
       _layerStates.add(_LayerState(cfg, _seed + i));
     }
+    await _preloadTiles();
     super.onLoad();
+  }
+
+  @override
+  void onGameResize(Vector2 size) {
+    super.onGameResize(size);
+    unawaited(_preloadTiles());
+  }
+
+  @override
+  void onRemove() {
+    for (final layer in _layerStates) {
+      layer.pending.clear();
+      layer.cache.clear();
+      layer.lru.clear();
+    }
+    _TileWorker.instance.dispose();
+    super.onRemove();
   }
 
   /// Exposes the current cache size for tests.
@@ -108,6 +134,36 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
   Future<void> debugWaitForPending() async {
     await Future.wait(
         _layerStates.expand((l) => l.pending.values).toList(growable: false));
+  }
+
+  Future<void> _preloadTiles() async {
+    final cameraPos = game.camera.viewfinder.position;
+    final viewSize = game.size;
+    final futures = <Future<_Tile>>[];
+    for (final layer in _layerStates) {
+      final cfg = layer.config;
+      final left = cameraPos.x * cfg.parallax - viewSize.x / 2;
+      final top = cameraPos.y * cfg.parallax - viewSize.y / 2;
+      final right = left + viewSize.x;
+      final bottom = top + viewSize.y;
+
+      final startX = (left / tileSize).floor() - Constants.starfieldCacheMargin;
+      final endX = (right / tileSize).floor() + Constants.starfieldCacheMargin;
+      final startY = (top / tileSize).floor() - Constants.starfieldCacheMargin;
+      final endY = (bottom / tileSize).floor() + Constants.starfieldCacheMargin;
+      for (var tx = startX; tx <= endX; tx++) {
+        for (var ty = startY; ty <= endY; ty++) {
+          _ensureTile(layer, tx, ty);
+          final pending = layer.pending[math.Point(tx, ty)];
+          if (pending != null) {
+            futures.add(pending);
+          }
+        }
+      }
+    }
+    if (futures.isNotEmpty) {
+      await Future.wait(futures);
+    }
   }
 
   @override
@@ -209,7 +265,8 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
     if (layer.cache.containsKey(key) || layer.pending.containsKey(key)) {
       return;
     }
-    if (layer.config.density <= 0) {
+    final effectiveDensity = layer.config.density * densityMultiplier;
+    if (effectiveDensity <= 0) {
       layer.cache[key] = _Tile.empty();
       layer.lru.addLast(key);
       _prune(layer);
@@ -223,7 +280,7 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
           Constants.starMinDistanceMax,
           (1 - density).toDouble(),
         ) /
-        layer.config.density;
+        effectiveDensity;
     final params = _TileParams(
       _seed,
       tx,
@@ -231,8 +288,8 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
       minDist,
       tileSize,
       layer.paletteValues,
-      layer.config.minBrightness,
-      layer.config.maxBrightness,
+      (layer.config.minBrightness * brightnessMultiplier).clamp(0, 255).round(),
+      (layer.config.maxBrightness * brightnessMultiplier).clamp(0, 255).round(),
     );
     final future = _runTileData(params).then((data) {
       final stars = data.map(_Star.fromData).toList(growable: false);
@@ -426,6 +483,7 @@ class _TileWorker {
 
   SendPort? _sendPort;
   final ReceivePort _receivePort = ReceivePort();
+  Isolate? _isolate;
   int _id = 0;
   final Map<int, Completer<List<_StarData>>> _pending = {};
   Completer<SendPort>? _readyCompleter;
@@ -440,7 +498,7 @@ class _TileWorker {
 
   Future<void> _start() async {
     _readyCompleter = Completer<SendPort>();
-    await Isolate.spawn(_tileWorkerMain, _receivePort.sendPort);
+    _isolate = await Isolate.spawn(_tileWorkerMain, _receivePort.sendPort);
     await _readyCompleter!.future;
     _readyCompleter = null;
     _starting = null;
@@ -456,6 +514,18 @@ class _TileWorker {
     _pending[id] = completer;
     _sendPort!.send([id, params]);
     return completer.future;
+  }
+
+  void dispose() {
+    _isolate?.kill(priority: Isolate.immediate);
+    _isolate = null;
+    for (final c in _pending.values) {
+      if (!c.isCompleted) {
+        c.complete(const []);
+      }
+    }
+    _pending.clear();
+    _sendPort = null;
   }
 }
 

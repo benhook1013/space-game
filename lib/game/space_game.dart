@@ -190,9 +190,13 @@ class SpaceGame extends FlameGame
         StarfieldLayerConfig(parallax: 1.0, density: 0.5, twinkleSpeed: 1),
       ],
       tileSize: settingsService.starfieldTileSize.value,
+      densityMultiplier: settingsService.starfieldDensity.value,
+      brightnessMultiplier: settingsService.starfieldBrightness.value,
     );
     await add(_starfield!);
     settingsService.starfieldTileSize.addListener(_rebuildStarfield);
+    settingsService.starfieldDensity.addListener(_rebuildStarfield);
+    settingsService.starfieldBrightness.addListener(_rebuildStarfield);
 
     player = PlayerComponent(
       joystick: joystick,
@@ -481,6 +485,8 @@ class SpaceGame extends FlameGame
 
   void _rebuildStarfield() {
     final tileSize = settingsService.starfieldTileSize.value;
+    final density = settingsService.starfieldDensity.value;
+    final brightness = settingsService.starfieldBrightness.value;
     _starfield?.removeFromParent();
     _starfield = null;
     final buildId = ++_starfieldRebuildId;
@@ -493,6 +499,8 @@ class SpaceGame extends FlameGame
           StarfieldLayerConfig(parallax: 1.0, density: 1, twinkleSpeed: 1),
         ],
         tileSize: tileSize,
+        densityMultiplier: density,
+        brightnessMultiplier: brightness,
       );
       if (buildId != _starfieldRebuildId) {
         return;

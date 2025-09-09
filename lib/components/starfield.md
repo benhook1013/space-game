@@ -6,7 +6,8 @@ Deterministic parallax starfield rendered by `StarfieldComponent`.
   `(tileX, tileY)` coordinates so results are reproducible.
 - Low-frequency Simplex noise modulates the minimum distance between stars to
   create subtle clusters and voids. A density multiplier on each layer allows
-  the game to tune how busy the sky appears.
+  the game to tune how busy the sky appears. Global density and brightness
+  multipliers expose accessibility controls.
 - Star generation runs in a background isolate (`compute`) so tile creation
   doesn't stall the main thread.
 - Each layer owns a single `OpenSimplexNoise` instance reused for all tiles,
