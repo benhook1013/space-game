@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
 import 'dart:math' as math;
-import 'dart:typed_data';
 import 'dart:ui';
 import 'dart:isolate';
 
@@ -82,7 +81,6 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
     ..style = PaintingStyle.stroke;
 
   late final Image _starImage;
-  late final Rect _starSrcRect;
   late final double _starImageRadius;
 
   double _time = 0;
@@ -92,8 +90,6 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
   @override
   Future<void> onLoad() async {
     _starImage = await _buildStarImage();
-    _starSrcRect = Rect.fromLTWH(
-        0, 0, _starImage.width.toDouble(), _starImage.height.toDouble());
     _starImageRadius = _starImage.width / 2;
     for (var i = 0; i < _layers.length; i++) {
       final cfg = _layers[i];
@@ -239,9 +235,7 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
       layer.config.maxBrightness,
     );
     final future = _runTileData(params).then((data) {
-      final stars = data
-          .map((m) => _Star.fromData(_StarData.fromMap(m)))
-          .toList(growable: false);
+      final stars = data.map(_Star.fromData).toList(growable: false);
       final transforms = Float32List(stars.length * 4);
       final rects = Float32List(stars.length * 4);
       final colors = Int32List(stars.length);
@@ -382,6 +376,8 @@ class _Star {
   final double frequency;
 }
 
+/// Immutable star properties passed across isolates.
+@immutable
 class _StarData {
   const _StarData(this.x, this.y, this.radius, this.color, this.phase,
       this.amplitude, this.frequency);
@@ -393,26 +389,6 @@ class _StarData {
   final double phase;
   final double amplitude;
   final double frequency;
-
-  Map<String, num> toMap() => {
-        'x': x,
-        'y': y,
-        'radius': radius,
-        'color': color,
-        'phase': phase,
-        'amplitude': amplitude,
-        'frequency': frequency,
-      };
-
-  static _StarData fromMap(Map<String, num> m) => _StarData(
-        (m['x'] ?? 0).toDouble(),
-        (m['y'] ?? 0).toDouble(),
-        (m['radius'] ?? 0).toDouble(),
-        (m['color'] ?? 0).toInt(),
-        (m['phase'] ?? 0).toDouble(),
-        (m['amplitude'] ?? 0).toDouble(),
-        (m['frequency'] ?? 0).toDouble(),
-      );
 }
 
 class _TileParams {
@@ -440,7 +416,7 @@ class _TileWorker {
       }
       if (message is List && message.length == 2) {
         final id = message[0] as int;
-        final data = message[1] as List<Map<String, num>>;
+        final data = message[1] as List<_StarData>;
         _pending.remove(id)?.complete(data);
       }
     });
@@ -448,11 +424,10 @@ class _TileWorker {
 
   static final _TileWorker instance = _TileWorker._();
 
-  Isolate? _isolate;
   SendPort? _sendPort;
   final ReceivePort _receivePort = ReceivePort();
   int _id = 0;
-  final Map<int, Completer<List<Map<String, num>>>> _pending = {};
+  final Map<int, Completer<List<_StarData>>> _pending = {};
   Completer<SendPort>? _readyCompleter;
   Future<void>? _starting;
 
@@ -465,19 +440,19 @@ class _TileWorker {
 
   Future<void> _start() async {
     _readyCompleter = Completer<SendPort>();
-    _isolate = await Isolate.spawn(_tileWorkerMain, _receivePort.sendPort);
+    await Isolate.spawn(_tileWorkerMain, _receivePort.sendPort);
     await _readyCompleter!.future;
     _readyCompleter = null;
     _starting = null;
   }
 
-  Future<List<Map<String, num>>> run(_TileParams params) async {
+  Future<List<_StarData>> run(_TileParams params) async {
     if (kIsWeb) {
       return _generateTileStarData(params);
     }
     await _ensureStarted();
     final id = _id++;
-    final completer = Completer<List<Map<String, num>>>();
+    final completer = Completer<List<_StarData>>();
     _pending[id] = completer;
     _sendPort!.send([id, params]);
     return completer.future;
@@ -496,24 +471,22 @@ void _tileWorkerMain(SendPort mainSendPort) {
   });
 }
 
-Future<List<Map<String, num>>> _runTileData(_TileParams params) =>
+Future<List<_StarData>> _runTileData(_TileParams params) =>
     _TileWorker.instance.run(params);
 
 List<_Star> _generateTileStars(_TileParams params) {
   final raw = _generateTileStarData(params);
-  return raw
-      .map((m) => _Star.fromData(_StarData.fromMap(m)))
-      .toList(growable: false);
+  return raw.map(_Star.fromData).toList(growable: false);
 }
 
-List<Map<String, num>> _generateTileStarData(_TileParams params) {
+List<_StarData> _generateTileStarData(_TileParams params) {
   final seed = params.seed;
   final tx = params.tx;
   final ty = params.ty;
   final minDist = params.minDist;
   final tileSize = params.tileSize;
   if (minDist.isInfinite || minDist.isNaN) {
-    return const <Map<String, num>>[];
+    return const <_StarData>[];
   }
   final rnd = math.Random(seed ^ tx ^ (ty << 16));
   final samples = _poisson(tileSize, minDist, rnd);
@@ -527,7 +500,7 @@ List<Map<String, num>> _generateTileStarData(_TileParams params) {
           ))
       .toList()
     ..sort((a, b) => (a.radius).compareTo(b.radius));
-  return data.map((s) => s.toMap()).toList();
+  return data;
 }
 
 List<Offset> _poisson(double size, double minDist, math.Random rnd,
