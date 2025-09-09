@@ -39,5 +39,18 @@ void main() {
 
     expect(score.highScore.value, 100);
     expect(upgradeService.isPurchased(upgrade.id), isTrue);
+
+    // Simulate another restart to ensure persistence across multiple sessions.
+    storage = await StorageService.create();
+    score = ScoreService(storageService: storage);
+    settings = SettingsService();
+    upgradeService = UpgradeService(
+      scoreService: score,
+      storageService: storage,
+      settingsService: settings,
+    );
+
+    expect(score.highScore.value, 100);
+    expect(upgradeService.isPurchased(upgrade.id), isTrue);
   });
 }
