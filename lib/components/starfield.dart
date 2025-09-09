@@ -225,13 +225,8 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
           canvas.translate(offsetX, offsetY);
           for (var i = 0; i < tile.stars.length; i++) {
             final star = tile.stars[i];
-            final base = 1 - star.amplitude;
-            final twinkle = math.sin(
-                      _time * cfg.twinkleSpeed * star.frequency + star.phase,
-                    ) *
-                    star.amplitude +
-                base;
-            tile.colors[i] = ((twinkle * 255).round() << 24) | star.color;
+            final idx = (_time * star.twinkleRate).toInt() & _Star.twinkleMask;
+            tile.colors[i] = star.colorTimeline[idx];
           }
           canvas.drawRawAtlas(
             _starImage,
@@ -292,7 +287,10 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
       (layer.config.maxBrightness * brightnessMultiplier).clamp(0, 255).round(),
     );
     final future = _runTileData(params).then((data) {
-      final stars = data.map(_Star.fromData).toList(growable: false);
+      final stars =
+          data.map((d) => _Star.fromData(d, layer.config.twinkleSpeed)).toList(
+                growable: false,
+              );
       final transforms = Float32List(stars.length * 4);
       final rects = Float32List(stars.length * 4);
       final colors = Int32List(stars.length);
@@ -380,7 +378,7 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
       cfg.minBrightness,
       cfg.maxBrightness,
     );
-    return _generateTileStars(params).map((s) => s.radius);
+    return _generateTileStars(params, cfg.twinkleSpeed).map((s) => s.radius);
   }
 }
 
@@ -413,24 +411,27 @@ class _Tile {
 }
 
 class _Star {
-  _Star(this.position, this.radius, this.color, this.phase, this.amplitude,
-      this.frequency);
+  _Star(this.position, this.radius, this.colorTimeline, this.twinkleRate);
 
-  factory _Star.fromData(_StarData d) => _Star(
-        Offset(d.x, d.y),
-        d.radius,
-        d.color,
-        d.phase,
-        d.amplitude,
-        d.frequency,
-      );
+  static const int twinkleSamples = 64;
+  static const int twinkleMask = twinkleSamples - 1;
+
+  factory _Star.fromData(_StarData d, double twinkleSpeed) {
+    final timeline = Int32List(twinkleSamples);
+    final base = 1 - d.amplitude;
+    for (var i = 0; i < twinkleSamples; i++) {
+      final angle = (i / twinkleSamples) * 2 * math.pi + d.phase;
+      final twinkle = math.sin(angle) * d.amplitude + base;
+      timeline[i] = ((twinkle * 255).round() << 24) | d.color;
+    }
+    final rate = twinkleSpeed * d.frequency * twinkleSamples / (2 * math.pi);
+    return _Star(Offset(d.x, d.y), d.radius, timeline, rate);
+  }
 
   final Offset position;
   final double radius;
-  final int color;
-  final double phase;
-  final double amplitude;
-  final double frequency;
+  final Int32List colorTimeline;
+  final double twinkleRate;
 }
 
 /// Immutable star properties passed across isolates.
@@ -544,9 +545,11 @@ void _tileWorkerMain(SendPort mainSendPort) {
 Future<List<_StarData>> _runTileData(_TileParams params) =>
     _TileWorker.instance.run(params);
 
-List<_Star> _generateTileStars(_TileParams params) {
+List<_Star> _generateTileStars(_TileParams params, double twinkleSpeed) {
   final raw = _generateTileStarData(params);
-  return raw.map(_Star.fromData).toList(growable: false);
+  return raw
+      .map((d) => _Star.fromData(d, twinkleSpeed))
+      .toList(growable: false);
 }
 
 List<_StarData> _generateTileStarData(_TileParams params) {
