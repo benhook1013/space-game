@@ -46,22 +46,64 @@ Future<void> main() async {
   // ready. The game itself will await completion before starting.
   game.startLoadingAssets();
 
-  // Pause the game and silence audio when the app is not visible.
-  final lifecycleObserver = _AppLifecycleObserver(game);
-  WidgetsBinding.instance.addObserver(lifecycleObserver);
-
   GameText.attachTextScale(settings.textScale);
+  final lifecycleObserver = _AppLifecycleObserver(game);
 
   runApp(
-    MaterialApp(
+    GameApp(
+      game: game,
+      focusNode: focusNode,
+      lifecycleObserver: lifecycleObserver,
+      colorScheme: colorScheme,
+      gameColors: gameColors,
+    ),
+  );
+}
+
+class GameApp extends StatefulWidget {
+  const GameApp({
+    required this.game,
+    required this.focusNode,
+    required this.lifecycleObserver,
+    required this.colorScheme,
+    required this.gameColors,
+    super.key,
+  });
+
+  final SpaceGame game;
+  final FocusNode focusNode;
+  final _AppLifecycleObserver lifecycleObserver;
+  final ColorScheme colorScheme;
+  final GameColors gameColors;
+
+  @override
+  State<GameApp> createState() => _GameAppState();
+}
+
+class _GameAppState extends State<GameApp> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(widget.lifecycleObserver);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(widget.lifecycleObserver);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
       theme: ThemeData(
-        colorScheme: colorScheme,
+        colorScheme: widget.colorScheme,
         useMaterial3: true,
-        extensions: const [GameColors.dark],
+        extensions: [widget.gameColors],
       ),
       home: GameWidget<SpaceGame>(
-        game: game,
-        focusNode: focusNode,
+        game: widget.game,
+        focusNode: widget.focusNode,
         // Automatically request keyboard focus so web players can use WASD
         // without tapping the canvas first.
         autofocus: true,
@@ -78,8 +120,8 @@ Future<void> main() async {
               SettingsOverlay(game: game),
         },
       ),
-    ),
-  );
+    );
+  }
 }
 
 class _AppLifecycleObserver extends WidgetsBindingObserver {
@@ -89,20 +131,20 @@ class _AppLifecycleObserver extends WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.paused ||
-        state == AppLifecycleState.inactive ||
-        state == AppLifecycleState.detached) {
-      game.pauseEngine();
-      final laser = game.miningLaser;
-      if (laser != null && laser.isMounted) {
-        laser.stopSound();
-      }
-      game.audioService.stopAll();
-    } else if (state == AppLifecycleState.resumed) {
-      if (game.isLoaded && game.stateMachine.state == GameState.playing) {
-        game.resumeEngine();
-        game.focusGame();
-      }
+    switch (state) {
+      case AppLifecycleState.resumed:
+        if (game.isLoaded && game.stateMachine.state == GameState.playing) {
+          game.resumeEngine();
+          game.focusGame();
+        }
+        break;
+      default:
+        game.pauseEngine();
+        final laser = game.miningLaser;
+        if (laser != null && laser.isMounted) {
+          laser.stopSound();
+        }
+        game.audioService.stopAll();
     }
   }
 }
