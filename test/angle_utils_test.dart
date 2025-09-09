@@ -58,4 +58,35 @@ void main() {
       );
     }
   });
+
+  test('normalizeAngle is odd except at π', () {
+    for (var angle = -10 * math.pi;
+        angle <= 10 * math.pi;
+        angle += math.pi / 7) {
+      final normalized = normalizeAngle(angle);
+      if ((normalized - math.pi).abs() < 1e-10 ||
+          (normalized + math.pi).abs() < 1e-10) {
+        continue;
+      }
+      final mirrored = normalizeAngle(-angle);
+      expect(
+        mirrored,
+        closeTo(-normalized, 1e-10),
+        reason: 'angle $angle produced $normalized and $mirrored',
+      );
+    }
+  });
+
+  test('normalizeAngle ignores 2π multiples', () {
+    const base = math.pi / 3;
+    final expected = normalizeAngle(base);
+    for (var k = -5; k <= 5; k++) {
+      final shifted = base + k * 2 * math.pi;
+      expect(normalizeAngle(shifted), closeTo(expected, 1e-10));
+    }
+  });
+
+  test('normalizeAngle treats -0 as 0', () {
+    expect(normalizeAngle(-0.0), isZero);
+  });
 }
