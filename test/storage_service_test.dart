@@ -11,7 +11,7 @@ void main() {
       SharedPreferences.setMockInitialValues({});
       final storage = await StorageService.create();
       expect(storage.getHighScore(), 0);
-      await storage.setHighScore(42);
+      expect(await storage.setHighScore(42), isTrue);
       expect(storage.getHighScore(), 42);
     });
 
@@ -27,21 +27,21 @@ void main() {
       SharedPreferences.setMockInitialValues({});
       final storage = await StorageService.create();
       expect(storage.getPlayerSpriteIndex(), 0);
-      await storage.setPlayerSpriteIndex(1);
+      expect(await storage.setPlayerSpriteIndex(1), isTrue);
       expect(storage.getPlayerSpriteIndex(), 1);
     });
 
     test('generic get/set handles strings', () async {
       SharedPreferences.setMockInitialValues({});
       final storage = await StorageService.create();
-      await storage.setValue<String>('greeting', 'hello');
+      expect(await storage.setValue<String>('greeting', 'hello'), isTrue);
       expect(storage.getValue<String>('greeting', ''), 'hello');
     });
 
     test('string helpers persist values', () async {
       SharedPreferences.setMockInitialValues({});
       final storage = await StorageService.create();
-      await storage.setString('name', 'Alice');
+      expect(await storage.setString('name', 'Alice'), isTrue);
       expect(storage.getString('name', ''), 'Alice');
     });
   });
