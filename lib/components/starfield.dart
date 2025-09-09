@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:collection';
-import 'dart:isolate';
 import 'dart:math' as math;
 import 'dart:ui';
 
@@ -388,7 +387,9 @@ class _TileParams {
 }
 
 Future<List<List<num>>> _runTileData(_TileParams params) =>
-    Isolate.run(() => _generateTileStarData(params));
+    // compute() gracefully falls back to the main isolate on web builds
+    // where spawning isolates is unsupported.
+    compute(_generateTileStarData, params);
 
 List<_Star> _generateTileStars(_TileParams params) {
   final raw = _generateTileStarData(params);
