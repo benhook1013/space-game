@@ -44,5 +44,26 @@ void main() {
       expect(await storage.setString('name', 'Alice'), isTrue);
       expect(storage.getString('name', ''), 'Alice');
     });
+
+    test('high score persists across instances', () async {
+      SharedPreferences.setMockInitialValues({});
+      var storage = await StorageService.create();
+      await storage.setHighScore(77);
+
+      storage = await StorageService.create();
+      expect(storage.getHighScore(), 77);
+    });
+
+    test('string list persists across instances', () async {
+      SharedPreferences.setMockInitialValues({});
+      var storage = await StorageService.create();
+      await storage.setStringList('upgrades', ['speed1', 'fireRate1']);
+
+      storage = await StorageService.create();
+      expect(
+        storage.getStringList('upgrades', []),
+        ['speed1', 'fireRate1'],
+      );
+    });
   });
 }
