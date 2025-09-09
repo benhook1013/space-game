@@ -124,6 +124,8 @@ class _TestGame extends SpaceGame {
       onResume: () {},
       onGameOver: () {},
       onMenu: () {},
+      onEnterUpgrades: () {},
+      onExitUpgrades: () {},
     );
     stateMachine.state = GameState.playing;
     final dispatcher = KeyDispatcher();

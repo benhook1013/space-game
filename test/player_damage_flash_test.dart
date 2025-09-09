@@ -38,6 +38,8 @@ class _TestGame extends SpaceGame {
       onResume: () {},
       onGameOver: () {},
       onMenu: () {},
+      onEnterUpgrades: () {},
+      onExitUpgrades: () {},
     )..state = GameState.playing;
     final keyDispatcher = KeyDispatcher();
     add(keyDispatcher);
