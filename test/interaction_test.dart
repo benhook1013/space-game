@@ -12,4 +12,22 @@ void main() {
     });
     expect(called, isTrue);
   });
+
+  test('onFirstUserInteraction executes each callback separately', () {
+    var count = 0;
+    onFirstUserInteraction(() {
+      count++;
+    });
+    onFirstUserInteraction(() {
+      count++;
+    });
+    expect(count, 2);
+  });
+
+  test('onFirstUserInteraction forwards exceptions', () {
+    expect(
+      () => onFirstUserInteraction(() => throw Exception('boom')),
+      throwsException,
+    );
+  });
 }
