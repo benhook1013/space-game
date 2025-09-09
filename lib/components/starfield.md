@@ -31,3 +31,10 @@ Deterministic parallax starfield rendered by `StarfieldComponent`.
   visuals.
 - Added to `SpaceGame` with a negative priority so it always renders beneath
   gameplay components.
+
+## Future Enhancements
+
+- Optional nebula or distant galaxy overlays may draw above the starfield to
+  add ambience while leaving the deterministic tiles untouched. These overlays
+  could use noise-generated sprites or a pre-rendered bitmap and expose
+  toggles and density controls in the settings overlay.

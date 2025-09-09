@@ -150,6 +150,10 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
   `Picture` that sorts stars by radius so faint ones draw first for smoother
   blending. A weighted size/brightness distribution with subtle colour jitter
   adds variety, and layered parallax with gentle alpha twinkling adds depth.
+  - Optional nebula or distant galaxy overlays may render above this starfield to
+    enrich the backdrop without altering the tile-based generation. These
+    overlays could use noise-generated sprites or large bitmaps and expose
+    toggles in the settings overlay.
 - Aim for 60 FPS and avoid heavy per‑frame allocations
 - For frequently spawned objects, bullets, asteroids and enemies use simple
   object pools to reduce garbage collection overhead
