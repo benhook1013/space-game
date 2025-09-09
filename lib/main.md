@@ -9,7 +9,7 @@ Entry point launching the Flutter app and `SpaceGame`.
   kicks off `Assets.loadRemaining()` after the first user interaction.
 - Creates core services (`StorageService`, `AudioService`, `SettingsService`).
 - Configures a dark `ColorScheme` for the app.
-- Attaches global text scaling via `GameText.attachTextScale`.
+- Provides global text scaling via `GameTextScale`.
 - Wraps `SpaceGame` in a `GameWidget` so overlays can render Flutter UI and
   registers overlay builders for menus, HUD and dialogs.
 - Observes app lifecycle changes to pause the engine and audio when unfocused.
