@@ -114,15 +114,9 @@ class SettingsService {
 
   /// Releases resources held by the service.
   void dispose() {
-    hudButtonScale.dispose();
-    textScale.dispose();
-    joystickScale.dispose();
-    minimapScale.dispose();
-    targetingRange.dispose();
-    tractorRange.dispose();
-    miningRange.dispose();
-    starfieldTileSize.dispose();
-    starfieldDensity.dispose();
-    starfieldBrightness.dispose();
+    for (final notifier in _notifiers.values) {
+      notifier.dispose();
+    }
+    _notifiers.clear();
   }
 }
