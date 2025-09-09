@@ -21,4 +21,20 @@ void main() {
 
     expect(called, isTrue);
   });
+
+  test('onFirstUserInteraction triggers only once', () async {
+    var calls = 0;
+    onFirstUserInteraction(() {
+      calls++;
+    });
+
+    web.window.dispatchEvent(web.PointerEvent('pointerdown'));
+    await Future<void>.delayed(Duration.zero);
+    expect(calls, 1);
+
+    web.window.dispatchEvent(web.KeyboardEvent('keydown'));
+    web.window.dispatchEvent(web.PointerEvent('pointerdown'));
+    await Future<void>.delayed(Duration.zero);
+    expect(calls, 1);
+  });
 }
