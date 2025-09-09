@@ -47,6 +47,7 @@ void main() {
     audio.setMasterVolume(0.5);
 
     await tester.pumpWidget(MaterialApp(home: SettingsOverlay(game: game)));
+    await tester.ensureVisible(find.text('Reset'));
     await tester.tap(find.text('Reset'));
     await tester.pump();
 

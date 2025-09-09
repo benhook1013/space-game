@@ -142,6 +142,22 @@ class SettingsOverlay extends StatelessWidget {
                       min: 256,
                       max: 1024,
                     ),
+                    _buildSlider(
+                      context,
+                      'Star Density',
+                      settings.starfieldDensity,
+                      spacing,
+                      min: 0,
+                      max: 2,
+                    ),
+                    _buildSlider(
+                      context,
+                      'Star Brightness',
+                      settings.starfieldBrightness,
+                      spacing,
+                      min: 0,
+                      max: 1,
+                    ),
                     SizedBox(height: spacing),
                     ElevatedButton(
                       onPressed: () {

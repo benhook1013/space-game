@@ -18,6 +18,8 @@ class SettingsService {
     tractorRange = _notifiers[_tractorRangeKey]!;
     miningRange = _notifiers[_miningRangeKey]!;
     starfieldTileSize = _notifiers[_starfieldTileSizeKey]!;
+    starfieldDensity = _notifiers[_starfieldDensityKey]!;
+    starfieldBrightness = _notifiers[_starfieldBrightnessKey]!;
   }
 
   static const double defaultHudButtonScale = 0.75;
@@ -48,6 +50,12 @@ class SettingsService {
 
   /// Size of each generated starfield tile.
   late final ValueNotifier<double> starfieldTileSize;
+
+  /// Global multiplier applied to star density.
+  late final ValueNotifier<double> starfieldDensity;
+
+  /// Global multiplier applied to star brightness.
+  late final ValueNotifier<double> starfieldBrightness;
 
   StorageService? _storage;
   late final Map<String, ValueNotifier<double>> _notifiers;
@@ -81,6 +89,8 @@ class SettingsService {
   static const _tractorRangeKey = 'tractorRange';
   static const _miningRangeKey = 'miningRange';
   static const _starfieldTileSizeKey = 'starfieldTileSize';
+  static const _starfieldDensityKey = 'starfieldDensity';
+  static const _starfieldBrightnessKey = 'starfieldBrightness';
 
   static const _settingDefaults = <String, double>{
     _hudScaleKey: defaultHudButtonScale,
@@ -91,6 +101,8 @@ class SettingsService {
     _tractorRangeKey: Constants.playerTractorAuraRadius,
     _miningRangeKey: Constants.playerMiningRange,
     _starfieldTileSizeKey: Constants.starfieldTileSize,
+    _starfieldDensityKey: Constants.starfieldDensity,
+    _starfieldBrightnessKey: Constants.starfieldBrightness,
   };
 
   ValueNotifier<double> _initNotifier(String key, double defaultValue) {
@@ -110,5 +122,7 @@ class SettingsService {
     tractorRange.dispose();
     miningRange.dispose();
     starfieldTileSize.dispose();
+    starfieldDensity.dispose();
+    starfieldBrightness.dispose();
   }
 }

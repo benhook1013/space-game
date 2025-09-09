@@ -8,6 +8,12 @@ class Constants {
   /// Default size of a single generated starfield tile in pixels.
   static const double starfieldTileSize = 512;
 
+  /// Global multiplier applied to star density.
+  static const double starfieldDensity = 1;
+
+  /// Global multiplier applied to star brightness (0-1).
+  static const double starfieldBrightness = 1;
+
   /// Player movement speed in pixels per second.
   static const double playerSpeed = 200;
 
