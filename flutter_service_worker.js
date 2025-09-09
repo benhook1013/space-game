@@ -54,12 +54,12 @@ const RESOURCES = {"segmenter_polyfill.js": "42e980438259612fd275ba3eb9a06067",
 "assets/AssetManifest.bin": "cd197766c90c91ed5b578bc53d85774c",
 "assets/shaders/ink_sparkle.frag": "ecc85a2e95f5e9f53123dcaf8cb9b6ce",
 "assets/packages/cupertino_icons/assets/CupertinoIcons.ttf": "33b7d9392238c04c131b6ce224e13711",
-"flutter_bootstrap.js": "27ab4edde783a52c9bf42aa213aee6da",
+"flutter_bootstrap.js": "b4e7fbfcf74aa1c1ed2bce930d9eb636",
 "assets_manifest.json": "228263de68a0acbedd80c3e637b736d6",
 "sw.js": "c0cd28c6b5228110bc0cb0422149b603",
 "favicon.png": "6ef9dfb7dc912ce20411ecf920217d46",
-"index.html": "811f11c5cc5be7df8895de916cd41631",
-"/": "811f11c5cc5be7df8895de916cd41631"};
+"index.html": "d8d7513a8387115eda82261add323fc8",
+"/": "d8d7513a8387115eda82261add323fc8"};
 // The application shell files that are downloaded before a service worker can
 // start.
 const CORE = ["main.dart.js",
