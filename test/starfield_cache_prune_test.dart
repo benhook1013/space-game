@@ -1,9 +1,12 @@
 import 'dart:ui';
 
+import 'dart:math' as math;
+
 import 'package:flame/game.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:space_game/components/starfield.dart';
+import 'package:space_game/constants.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -30,7 +33,14 @@ void main() {
     starfield.update(0);
     await starfield.debugWaitForPending();
     starfield.render(canvas);
-    const movedExpected = 16; // old tiles pruned by LRU
+    final moveTiles = (3000 / Constants.starfieldTileSize).ceil();
+    final margin = math.min(
+      Constants.starfieldCacheMargin + moveTiles,
+      Constants.starfieldMaxCacheMargin,
+    );
+    final visible =
+        (game.size.x / Constants.starfieldTileSize).ceil() + 1; // 2 tiles
+    final movedExpected = (visible + margin * 2) * (visible + margin * 2);
     expect(starfield.debugCacheSize(), movedExpected);
   });
 }

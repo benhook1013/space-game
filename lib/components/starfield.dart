@@ -93,6 +93,9 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
 
   double _time = 0;
 
+  int _currentMargin = Constants.starfieldCacheMargin;
+  Vector2? _lastCameraPos;
+
   final List<_LayerState> _layerStates = [];
 
   @override
@@ -104,13 +107,16 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
       _layerStates.add(_LayerState(cfg, _seed + i));
     }
     await _preloadTiles();
+    _lastCameraPos = game.camera.viewfinder.position.clone();
     super.onLoad();
   }
 
   @override
   void onGameResize(Vector2 size) {
     super.onGameResize(size);
+    _currentMargin = Constants.starfieldCacheMargin;
     unawaited(_preloadTiles());
+    _lastCameraPos = game.camera.viewfinder.position.clone();
   }
 
   @override
@@ -147,10 +153,10 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
       final right = left + viewSize.x;
       final bottom = top + viewSize.y;
 
-      final startX = (left / tileSize).floor() - Constants.starfieldCacheMargin;
-      final endX = (right / tileSize).floor() + Constants.starfieldCacheMargin;
-      final startY = (top / tileSize).floor() - Constants.starfieldCacheMargin;
-      final endY = (bottom / tileSize).floor() + Constants.starfieldCacheMargin;
+      final startX = (left / tileSize).floor() - _currentMargin;
+      final endX = (right / tileSize).floor() + _currentMargin;
+      final startY = (top / tileSize).floor() - _currentMargin;
+      final endY = (bottom / tileSize).floor() + _currentMargin;
       for (var tx = startX; tx <= endX; tx++) {
         for (var ty = startY; ty <= endY; ty++) {
           _ensureTile(layer, tx, ty);
@@ -172,6 +178,15 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
     final cameraPos = game.camera.viewfinder.position;
     final viewSize = game.size;
 
+    final movement =
+        _lastCameraPos == null ? Vector2.zero() : cameraPos - _lastCameraPos!;
+    final movementTiles = (movement.length / tileSize).ceil();
+    _currentMargin = math.min(
+      Constants.starfieldCacheMargin + movementTiles,
+      Constants.starfieldMaxCacheMargin,
+    );
+    _lastCameraPos = cameraPos.clone();
+
     for (final layer in _layerStates) {
       final cfg = layer.config;
       final left = cameraPos.x * cfg.parallax - viewSize.x / 2;
@@ -179,10 +194,10 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
       final right = left + viewSize.x;
       final bottom = top + viewSize.y;
 
-      final startX = (left / tileSize).floor() - Constants.starfieldCacheMargin;
-      final endX = (right / tileSize).floor() + Constants.starfieldCacheMargin;
-      final startY = (top / tileSize).floor() - Constants.starfieldCacheMargin;
-      final endY = (bottom / tileSize).floor() + Constants.starfieldCacheMargin;
+      final startX = (left / tileSize).floor() - _currentMargin;
+      final endX = (right / tileSize).floor() + _currentMargin;
+      final startY = (top / tileSize).floor() - _currentMargin;
+      final endY = (bottom / tileSize).floor() + _currentMargin;
 
       for (var tx = startX; tx <= endX; tx++) {
         for (var ty = startY; ty <= endY; ty++) {
@@ -325,7 +340,23 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
   }
 
   void _prune(_LayerState layer) {
-    while (layer.cache.length > layer.config.maxCacheTiles) {
+    final cfg = layer.config;
+    final cameraPos = game.camera.viewfinder.position;
+    final viewSize = game.size;
+    final left = cameraPos.x * cfg.parallax - viewSize.x / 2;
+    final top = cameraPos.y * cfg.parallax - viewSize.y / 2;
+    final right = left + viewSize.x;
+    final bottom = top + viewSize.y;
+    final startX = (left / tileSize).floor();
+    final endX = (right / tileSize).floor();
+    final startY = (top / tileSize).floor();
+    final endY = (bottom / tileSize).floor();
+    final visibleX = endX - startX + 1;
+    final visibleY = endY - startY + 1;
+    final required =
+        (visibleX + _currentMargin * 2) * (visibleY + _currentMargin * 2);
+    final limit = math.max(cfg.maxCacheTiles, required);
+    while (layer.cache.length > limit) {
       final oldest = layer.lru.removeFirst();
       layer.cache.remove(oldest);
     }
