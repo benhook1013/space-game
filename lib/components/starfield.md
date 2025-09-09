@@ -7,7 +7,8 @@ Deterministic parallax starfield rendered by `StarfieldComponent`.
 - Low-frequency Simplex noise modulates the minimum distance between stars to
   create subtle clusters and voids. A density multiplier on each layer allows
   the game to tune how busy the sky appears. Global density and brightness
-  multipliers expose accessibility controls.
+  multipliers expose accessibility controls. A gamma value modulates brightness
+  using a non-linear curve, enabling more nuanced contrast adjustments.
 - Star generation runs in a background isolate (`compute`) so tile creation
   doesn't stall the main thread.
 - Each layer owns a single `OpenSimplexNoise` instance reused for all tiles,
@@ -23,6 +24,7 @@ Deterministic parallax starfield rendered by `StarfieldComponent`.
 - Tiles are generated asynchronously and cached in an LRU map so camera movement
   never blocks the render loop. Cache size is bounded by each layer's
   `maxCacheTiles`.
+- Star colours come from a selectable palette, allowing theme-driven visuals.
 - A `debugDrawTiles` flag outlines each tile with a translucent stroke for
   development verification. `SpaceGame.toggleDebug` flips this on whenever the
   game's debug mode is enabled so tile borders appear alongside other debug

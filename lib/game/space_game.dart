@@ -27,6 +27,7 @@ import '../services/targeting_service.dart';
 import '../services/upgrade_service.dart';
 import '../services/settings_service.dart';
 import '../theme/game_theme.dart';
+import '../theme/star_palette.dart';
 import '../ui/help_overlay.dart';
 import '../ui/settings_overlay.dart';
 import 'event_bus.dart';
@@ -181,21 +182,28 @@ class SpaceGame extends FlameGame
     joystick = _buildJoystick();
     await add(joystick);
 
+    final palette = settingsService.starfieldPalette.value.colors;
     _starfield = await StarfieldComponent(
       debugDrawTiles: debugMode,
-      layers: const [
-        StarfieldLayerConfig(parallax: 0.2, density: 0.15, twinkleSpeed: 0.5),
-        StarfieldLayerConfig(parallax: 0.6, density: 0.3, twinkleSpeed: 0.8),
-        StarfieldLayerConfig(parallax: 1.0, density: 0.5, twinkleSpeed: 1),
+      layers: [
+        StarfieldLayerConfig(
+            parallax: 0.2, density: 0.15, twinkleSpeed: 0.5, palette: palette),
+        StarfieldLayerConfig(
+            parallax: 0.6, density: 0.3, twinkleSpeed: 0.8, palette: palette),
+        StarfieldLayerConfig(
+            parallax: 1.0, density: 0.5, twinkleSpeed: 1, palette: palette),
       ],
       tileSize: settingsService.starfieldTileSize.value,
       densityMultiplier: settingsService.starfieldDensity.value,
       brightnessMultiplier: settingsService.starfieldBrightness.value,
+      gamma: settingsService.starfieldGamma.value,
     );
     await add(_starfield!);
     settingsService.starfieldTileSize.addListener(_rebuildStarfield);
     settingsService.starfieldDensity.addListener(_rebuildStarfield);
     settingsService.starfieldBrightness.addListener(_rebuildStarfield);
+    settingsService.starfieldGamma.addListener(_rebuildStarfield);
+    settingsService.starfieldPalette.addListener(_rebuildStarfield);
 
     player = PlayerComponent(
       joystick: joystick,
@@ -479,20 +487,26 @@ class SpaceGame extends FlameGame
     final tileSize = settingsService.starfieldTileSize.value;
     final density = settingsService.starfieldDensity.value;
     final brightness = settingsService.starfieldBrightness.value;
+    final gamma = settingsService.starfieldGamma.value;
+    final palette = settingsService.starfieldPalette.value.colors;
     _starfield?.removeFromParent();
     _starfield = null;
     final buildId = ++_starfieldRebuildId;
     unawaited(() async {
       final sf = await StarfieldComponent(
         debugDrawTiles: debugMode,
-        layers: const [
-          StarfieldLayerConfig(parallax: 0.2, density: 0.3, twinkleSpeed: 0.5),
-          StarfieldLayerConfig(parallax: 0.6, density: 0.6, twinkleSpeed: 0.8),
-          StarfieldLayerConfig(parallax: 1.0, density: 1, twinkleSpeed: 1),
+        layers: [
+          StarfieldLayerConfig(
+              parallax: 0.2, density: 0.3, twinkleSpeed: 0.5, palette: palette),
+          StarfieldLayerConfig(
+              parallax: 0.6, density: 0.6, twinkleSpeed: 0.8, palette: palette),
+          StarfieldLayerConfig(
+              parallax: 1.0, density: 1, twinkleSpeed: 1, palette: palette),
         ],
         tileSize: tileSize,
         densityMultiplier: density,
         brightnessMultiplier: brightness,
+        gamma: gamma,
       );
       if (buildId != _starfieldRebuildId) {
         return;

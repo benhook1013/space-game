@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 import '../constants.dart';
+import '../theme/star_palette.dart';
 import 'storage_service.dart';
 
 /// Holds tweakable UI scale values, gameplay ranges and performance tweaks for
@@ -20,6 +21,12 @@ class SettingsService {
     starfieldTileSize = _notifiers[_starfieldTileSizeKey]!;
     starfieldDensity = _notifiers[_starfieldDensityKey]!;
     starfieldBrightness = _notifiers[_starfieldBrightnessKey]!;
+    starfieldGamma = _notifiers[_starfieldGammaKey]!;
+    starfieldPalette = ValueNotifier<StarPalette>(
+      StarPalette.values[_storage?.getInt(_starfieldPaletteKey, 0) ?? 0],
+    );
+    starfieldPalette.addListener(() =>
+        _storage?.setInt(_starfieldPaletteKey, starfieldPalette.value.index));
   }
 
   static const double defaultHudButtonScale = 0.75;
@@ -57,6 +64,12 @@ class SettingsService {
   /// Global multiplier applied to star brightness.
   late final ValueNotifier<double> starfieldBrightness;
 
+  /// Exponent applied to star brightness.
+  late final ValueNotifier<double> starfieldGamma;
+
+  /// Currently selected star colour palette.
+  late final ValueNotifier<StarPalette> starfieldPalette;
+
   StorageService? _storage;
   late final Map<String, ValueNotifier<double>> _notifiers;
 
@@ -72,6 +85,8 @@ class SettingsService {
       (key, notifier) =>
           notifier.value = storage.getDouble(key, notifier.value),
     );
+    starfieldPalette.value =
+        StarPalette.values[storage.getInt(_starfieldPaletteKey, 0)];
   }
 
   /// Restores all values to their defaults.
@@ -79,6 +94,7 @@ class SettingsService {
     _settingDefaults.forEach(
       (key, defaultValue) => _notifiers[key]!.value = defaultValue,
     );
+    starfieldPalette.value = StarPalette.classic;
   }
 
   static const _hudScaleKey = 'hudButtonScale';
@@ -91,6 +107,8 @@ class SettingsService {
   static const _starfieldTileSizeKey = 'starfieldTileSize';
   static const _starfieldDensityKey = 'starfieldDensity';
   static const _starfieldBrightnessKey = 'starfieldBrightness';
+  static const _starfieldGammaKey = 'starfieldGamma';
+  static const _starfieldPaletteKey = 'starfieldPalette';
 
   static const _settingDefaults = <String, double>{
     _hudScaleKey: defaultHudButtonScale,
@@ -103,6 +121,7 @@ class SettingsService {
     _starfieldTileSizeKey: Constants.starfieldTileSize,
     _starfieldDensityKey: Constants.starfieldDensity,
     _starfieldBrightnessKey: Constants.starfieldBrightness,
+    _starfieldGammaKey: Constants.starfieldGamma,
   };
 
   ValueNotifier<double> _initNotifier(String key, double defaultValue) {
@@ -117,6 +136,7 @@ class SettingsService {
     for (final notifier in _notifiers.values) {
       notifier.dispose();
     }
+    starfieldPalette.dispose();
     _notifiers.clear();
   }
 }
