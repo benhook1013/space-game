@@ -199,6 +199,11 @@ tree spanning weapons and ship systems.
   adjustable via the settings overlay. The player flies over a static backdrop
   while circles draw faint-to-bright. A `debugDrawTiles` switch outlines tile
   boundaries when debug mode (`F1`) is active for troubleshooting.
+- Optional nebula or distant galaxy layers may overlay this starfield to add
+  ambience. Nebulae could be noise-generated sprites cached per tile, while a
+  far galaxy may draw as a single bitmap with slow parallax. Each overlay would
+  be toggleable in the settings and render behind gameplay but above the
+  starfield to keep existing tiles untouched.
 
 ## Assets
 

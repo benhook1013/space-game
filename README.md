@@ -87,6 +87,8 @@ dedicated server or NAT traversal.
 - Optional backend for saves or analytics
 - Native builds (Play Store/TestFlight) if needed later
 - Inventory, mineral-based upgrades, menus, shop UI and save/load
+- Optional nebula or distant galaxy overlays to enrich the starfield without
+  altering its tile system
 
 ---
 

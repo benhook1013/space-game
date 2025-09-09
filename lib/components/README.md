@@ -51,6 +51,8 @@ Gameplay entities and reusable pieces.
 
 ## Planned Components
 
-None at this time.
+- [NebulaLayer](nebula_layer.md) – optional noise-generated nebula sprites or a
+  distant galaxy bitmap that overlays the starfield and exposes toggles for
+  visibility and density in the settings overlay.
 
 See [../../PLAN.md](../../PLAN.md) for the broader roadmap.

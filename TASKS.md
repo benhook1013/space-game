@@ -120,3 +120,10 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
       - [x] Remove the old parallax starfield once the deterministic version is
             in place.
       - [x] Expose an optional `debugDrawTiles` flag to outline starfield tiles.
+
+## Background Enhancements
+
+- [ ] Add an optional noise-generated nebula layer rendered above the starfield.
+- [ ] Add an optional distant galaxy bitmap overlay with subtle parallax.
+- [ ] Expose settings toggles and density/brightness sliders for these
+      overlays.
