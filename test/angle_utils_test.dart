@@ -40,4 +40,17 @@ void main() {
     final normalized = normalizeAngle(angle);
     expect(normalized, closeTo(-math.pi / 3, 1e-10));
   });
+
+  test('normalizeAngle keeps result within [-π, π]', () {
+    for (var angle = -20 * math.pi;
+        angle <= 20 * math.pi;
+        angle += math.pi / 5) {
+      final normalized = normalizeAngle(angle);
+      expect(
+        normalized >= -math.pi && normalized <= math.pi,
+        isTrue,
+        reason: 'angle $angle normalized to $normalized outside range',
+      );
+    }
+  });
 }
