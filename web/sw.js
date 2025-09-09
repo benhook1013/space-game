@@ -28,11 +28,13 @@ const RARELY_CHANGED_EXTENSIONS = new Set([
 
 async function cacheAll(cache, assets) {
   const urls = [...new Set(assets)];
-  try {
-    await cache.addAll(urls);
-  } catch (err) {
-    console.warn("Failed to cache assets", err);
-  }
+  await Promise.all(
+    urls.map((url) =>
+      cache.add(url).catch((err) => {
+        console.warn(`Failed to cache ${url}`, err);
+      }),
+    ),
+  );
 }
 
 async function cacheOptionalAssets(cache) {
