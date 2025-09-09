@@ -15,11 +15,11 @@ void onFirstUserInteraction(void Function() callback) {
       return;
     }
     handled = true;
-    web.window.removeEventListener('pointerdown', listener);
-    web.window.removeEventListener('keydown', listener);
+    web.window.removeEventListener('pointerdown'.toJS as String, listener);
+    web.window.removeEventListener('keydown'.toJS as String, listener);
     callback();
   }).toJS;
 
-  web.window.addEventListener('pointerdown', listener);
-  web.window.addEventListener('keydown', listener);
+  web.window.addEventListener('pointerdown'.toJS as String, listener);
+  web.window.addEventListener('keydown'.toJS as String, listener);
 }
