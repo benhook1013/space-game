@@ -121,4 +121,14 @@ void main() {
     expect(reloaded.hudButtonScale.value, 1.4);
     expect(reloaded.minimapScale.value, 1.2);
   });
+
+  test('dispose releases all notifiers', () {
+    final settings = SettingsService();
+    settings.dispose();
+
+    expect(
+      () => settings.hudButtonScale.addListener(() {}),
+      throwsFlutterError,
+    );
+  });
 }
