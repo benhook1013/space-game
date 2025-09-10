@@ -140,5 +140,12 @@ class PoolManager {
       sub.cancel();
     }
     _subscriptions.clear();
+    for (final pool in _pools.values) {
+      pool.clear();
+    }
+    _pools.clear();
+    _active.clear();
+    _onRemove.clear();
+    _onSpawn.clear();
   }
 }

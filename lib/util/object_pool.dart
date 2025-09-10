@@ -48,6 +48,18 @@ class ObjectPool<T> {
     }
   }
 
-  /// Clears all cached instances.
-  void clear() => _items.clear();
+  /// Clears all cached instances and calls [onDiscard] for each.
+  ///
+  /// This ensures pooled objects can release any resources before being
+  /// dropped permanently, mirroring the behaviour when the pool reaches its
+  /// [maxSize] in [release].
+  void clear() {
+    final discard = onDiscard;
+    if (discard != null) {
+      for (final item in _items) {
+        discard(item);
+      }
+    }
+    _items.clear();
+  }
 }
