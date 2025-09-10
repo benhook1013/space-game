@@ -45,6 +45,15 @@ void main() {
       expect(storage.getString('name', ''), 'Alice');
     });
 
+    test('generic get/set handles double and bool', () async {
+      SharedPreferences.setMockInitialValues({});
+      final storage = await StorageService.create();
+      expect(await storage.setValue<double>('volume', 0.5), isTrue);
+      expect(storage.getValue<double>('volume', 0), 0.5);
+      expect(await storage.setValue<bool>('muted', true), isTrue);
+      expect(storage.getValue<bool>('muted', false), isTrue);
+    });
+
     test('high score persists across instances', () async {
       SharedPreferences.setMockInitialValues({});
       var storage = await StorageService.create();
