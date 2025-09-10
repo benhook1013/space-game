@@ -18,6 +18,23 @@ class PlayerInputBehavior extends Component with HasGameReference<SpaceGame> {
     required this.keyDispatcher,
   });
 
+  static const _leftKeys = <LogicalKeyboardKey>[
+    LogicalKeyboardKey.keyA,
+    LogicalKeyboardKey.arrowLeft,
+  ];
+  static const _rightKeys = <LogicalKeyboardKey>[
+    LogicalKeyboardKey.keyD,
+    LogicalKeyboardKey.arrowRight,
+  ];
+  static const _upKeys = <LogicalKeyboardKey>[
+    LogicalKeyboardKey.keyW,
+    LogicalKeyboardKey.arrowUp,
+  ];
+  static const _downKeys = <LogicalKeyboardKey>[
+    LogicalKeyboardKey.keyS,
+    LogicalKeyboardKey.arrowDown,
+  ];
+
   final PlayerComponent player;
   JoystickComponent joystick;
   final KeyDispatcher keyDispatcher;
@@ -56,30 +73,10 @@ class PlayerInputBehavior extends Component with HasGameReference<SpaceGame> {
     player.isMoving = false;
     _keyboardDirection
       ..setZero()
-      ..x += keyDispatcher.isAnyPressed([
-        LogicalKeyboardKey.keyA,
-        LogicalKeyboardKey.arrowLeft,
-      ])
-          ? -1
-          : 0
-      ..x += keyDispatcher.isAnyPressed([
-        LogicalKeyboardKey.keyD,
-        LogicalKeyboardKey.arrowRight,
-      ])
-          ? 1
-          : 0
-      ..y += keyDispatcher.isAnyPressed([
-        LogicalKeyboardKey.keyW,
-        LogicalKeyboardKey.arrowUp,
-      ])
-          ? -1
-          : 0
-      ..y += keyDispatcher.isAnyPressed([
-        LogicalKeyboardKey.keyS,
-        LogicalKeyboardKey.arrowDown,
-      ])
-          ? 1
-          : 0;
+      ..x += keyDispatcher.isAnyPressed(_leftKeys) ? -1 : 0
+      ..x += keyDispatcher.isAnyPressed(_rightKeys) ? 1 : 0
+      ..y += keyDispatcher.isAnyPressed(_upKeys) ? -1 : 0
+      ..y += keyDispatcher.isAnyPressed(_downKeys) ? 1 : 0;
 
     var input =
         joystick.delta.isZero() ? _keyboardDirection : joystick.relativeDelta;
