@@ -124,6 +124,10 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
 ## Background Enhancements
 
 - [ ] Add an optional noise-generated nebula layer rendered above the starfield.
+      - Generate nebula sprites per tile in a background isolate and cache them.
+      - Expose brightness and density controls.
 - [ ] Add an optional distant galaxy bitmap overlay with subtle parallax.
-- [ ] Expose settings toggles and density/brightness sliders for these
-      overlays.
+      - Load via the `Assets` registry and draw behind gameplay.
+      - Support tint/alpha adjustments.
+- [ ] Expose settings toggles and density/brightness sliders for these overlays.
+      - Ensure overlays hide when debug mode is disabled.

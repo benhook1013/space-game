@@ -35,6 +35,8 @@ Deterministic parallax starfield rendered by `StarfieldComponent`.
 ## Future Enhancements
 
 - Optional nebula or distant galaxy overlays may draw above the starfield to
-  add ambience while leaving the deterministic tiles untouched. These overlays
-  could use noise-generated sprites or a pre-rendered bitmap and expose
-  toggles and density controls in the settings overlay.
+  add ambience while leaving the deterministic tiles untouched.
+  - `NebulaLayer` generates noise-based sprites per tile with brightness and
+    density sliders.
+  - A distant galaxy overlay draws a large bitmap with subtle parallax.
+  - Settings menu controls toggle these layers and adjust their intensity.
