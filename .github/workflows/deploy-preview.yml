@@ -40,7 +40,7 @@ jobs:
       - name: Install Dependencies
         run: mkdir -p $PUB_CACHE && ./scripts/flutterw pub get
       - name: Build Web
-        run: ./scripts/flutterw build web --release --base-href "/${{ github.event.repository.name }}/previews/pr-${{ github.event.pull_request.number }}/"
+        run: ./scripts/flutterw build web --debug --base-href "/${{ github.event.repository.name }}/previews/pr-${{ github.event.pull_request.number }}/"
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         continue-on-error: true
