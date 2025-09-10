@@ -200,10 +200,13 @@ tree spanning weapons and ship systems.
   while circles draw faint-to-bright. A `debugDrawTiles` switch outlines tile
   boundaries when debug mode (`F1`) is active for troubleshooting.
 - Optional nebula or distant galaxy layers may overlay this starfield to add
-  ambience. Nebulae could be noise-generated sprites cached per tile, while a
-  far galaxy may draw as a single bitmap with slow parallax. Each overlay would
-  be toggleable in the settings and render behind gameplay but above the
-  starfield to keep existing tiles untouched.
+  ambience.
+  - Nebulae reuse the starfield's tile worker to generate noise-based sprites
+    and expose brightness/density sliders.
+  - A far galaxy draws as a single bitmap with subtle parallax and optional
+    tint.
+  - Settings toggles control visibility, and overlays hide when debug mode is
+    disabled so existing tiles stay untouched.
 
 ## Assets
 
