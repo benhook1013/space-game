@@ -21,38 +21,31 @@ class OverlayService {
       ..add(id);
   }
 
-  static const _exclusiveOverlays = <String, Set<String>>{
-    MenuOverlay.id: {
-      HudOverlay.id,
-      PauseOverlay.id,
-      GameOverOverlay.id,
-      SettingsOverlay.id,
-      UpgradesOverlay.id,
-    },
-    HudOverlay.id: {
+  // Overlays that shouldn't be active together. When one of the overlays in
+  // [_exclusiveMap] is shown, all other overlays in [_exclusiveIds] will be
+  // removed. Using a generated map keeps the relationships in sync when new
+  // overlays are added.
+  static const Set<String> _exclusiveIds = {
+    MenuOverlay.id,
+    HudOverlay.id,
+    PauseOverlay.id,
+    GameOverOverlay.id,
+    SettingsOverlay.id,
+    UpgradesOverlay.id,
+  };
+
+  static final Map<String, Set<String>> _exclusiveMap = {
+    for (final id in [
       MenuOverlay.id,
-      PauseOverlay.id,
-      GameOverOverlay.id,
-      SettingsOverlay.id,
-      UpgradesOverlay.id,
-    },
-    GameOverOverlay.id: {
       HudOverlay.id,
-      PauseOverlay.id,
-      SettingsOverlay.id,
-      UpgradesOverlay.id,
-    },
-    UpgradesOverlay.id: {
-      HudOverlay.id,
-      SettingsOverlay.id,
-      MenuOverlay.id,
-      PauseOverlay.id,
       GameOverOverlay.id,
-    },
+      UpgradesOverlay.id,
+    ])
+      id: _exclusiveIds.difference({id}),
   };
 
   void _showExclusive(String id, {Set<String>? remove}) =>
-      _showOnly(id, remove ?? _exclusiveOverlays[id] ?? const <String>{});
+      _showOnly(id, remove ?? _exclusiveMap[id] ?? const <String>{});
 
   void showMenu() => _showExclusive(MenuOverlay.id);
 
