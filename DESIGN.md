@@ -201,12 +201,12 @@ tree spanning weapons and ship systems.
   boundaries when debug mode (`F1`) is active for troubleshooting.
 - Optional nebula or distant galaxy layers may overlay this starfield to add
   ambience.
-  - Nebulae reuse the starfield's tile worker to generate noise-based sprites
-    and expose brightness/density sliders.
-  - A far galaxy draws as a single bitmap with subtle parallax and optional
+  - `NebulaLayer` reuses the starfield's tile worker to generate noise-based
+    sprites and expose brightness/density sliders.
+  - `GalaxyLayer` draws a single bitmap with subtle parallax and optional
     tint.
-  - Settings toggles control visibility, and overlays hide when debug mode is
-    disabled so existing tiles stay untouched.
+  - Settings toggles control visibility, overlays hide when debug mode is
+    disabled, and each component can land independently.
 
 ## Assets
 
