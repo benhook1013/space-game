@@ -20,8 +20,7 @@ class GameEventBus {
   void emit(GameEvent event) => _controller.add(event);
 
   /// Returns a stream of events of type [T].
-  Stream<T> on<T extends GameEvent>() =>
-      _controller.stream.where((event) => event is T).cast<T>();
+  Stream<T> on<T extends GameEvent>() => _controller.stream.whereType<T>();
 
   /// Closes the underlying stream controller.
   void dispose() {
@@ -39,4 +38,10 @@ class ComponentSpawnEvent<T> implements GameEvent {
 class ComponentRemoveEvent<T> implements GameEvent {
   ComponentRemoveEvent(this.component);
   final T component;
+}
+
+extension GameEventStreamX on Stream<GameEvent> {
+  /// Returns a stream of events of type [T].
+  Stream<T> whereType<T extends GameEvent>() =>
+      where((event) => event is T).cast<T>();
 }
