@@ -7,30 +7,25 @@ import 'dart:async';
 sealed class GameEvent {}
 
 /// Simple event bus for broadcasting game lifecycle events.
+///
+/// Uses a single broadcast stream and [whereType] filtering so listeners can
+/// subscribe to specific event classes without managing per-type controllers.
 class GameEventBus {
-  final Map<Type, StreamController<GameEvent>> _controllers = {};
+  GameEventBus()
+      : _controller = StreamController<GameEvent>.broadcast(sync: true);
 
-  /// Emits an [event] to listeners registered for its type.
-  void emit(GameEvent event) {
-    _controllers[event.runtimeType]?.add(event);
-    _controllers[GameEvent]?.add(event);
-  }
+  final StreamController<GameEvent> _controller;
+
+  /// Emits an [event] to all listeners.
+  void emit(GameEvent event) => _controller.add(event);
 
   /// Returns a stream of events of type [T].
-  Stream<T> on<T extends GameEvent>() {
-    final controller = _controllers.putIfAbsent(
-      T,
-      () => StreamController<GameEvent>.broadcast(sync: true),
-    );
-    return controller.stream.cast<T>();
-  }
+  Stream<T> on<T extends GameEvent>() =>
+      _controller.stream.where((event) => event is T).cast<T>();
 
-  /// Closes all stream controllers.
+  /// Closes the underlying stream controller.
   void dispose() {
-    for (final controller in _controllers.values) {
-      controller.close();
-    }
-    _controllers.clear();
+    _controller.close();
   }
 }
 
