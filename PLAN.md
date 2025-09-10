@@ -154,7 +154,9 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
     enrich the backdrop without altering the tile-based generation.
     - `NebulaLayer` renders noise-generated sprites per tile using the existing
       cache worker and exposes brightness/density sliders.
-    - A distant galaxy overlay draws a low‑resolution bitmap with subtle parallax.
+    - `GalaxyLayer` draws a low-resolution bitmap with subtle parallax and
+      optional tint.
+    - Each layer is an independent component so work can land incrementally.
     - Both layers toggle via the settings menu and respect debug mode flags.
 - Aim for 60 FPS and avoid heavy per‑frame allocations
 - For frequently spawned objects, bullets, asteroids and enemies use simple

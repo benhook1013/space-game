@@ -38,5 +38,6 @@ Deterministic parallax starfield rendered by `StarfieldComponent`.
   add ambience while leaving the deterministic tiles untouched.
   - `NebulaLayer` generates noise-based sprites per tile with brightness and
     density sliders.
-  - A distant galaxy overlay draws a large bitmap with subtle parallax.
+  - `GalaxyLayer` draws a low-resolution bitmap with subtle parallax and
+    optional tint.
   - Settings menu controls toggle these layers and adjust their intensity.

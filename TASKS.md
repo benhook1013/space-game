@@ -123,11 +123,13 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
 
 ## Background Enhancements
 
-- [ ] Add an optional noise-generated nebula layer rendered above the starfield.
-      - Generate nebula sprites per tile in a background isolate and cache them.
+- [ ] Implement `NebulaLayer` component rendered above the starfield.
+      - Generate nebula textures per tile in a background isolate and cache them.
       - Expose brightness and density controls.
-- [ ] Add an optional distant galaxy bitmap overlay with subtle parallax.
+      - Hide when debug mode is off.
+- [ ] Implement `GalaxyLayer` component with a distant bitmap and subtle parallax.
       - Load via the `Assets` registry and draw behind gameplay.
-      - Support tint/alpha adjustments.
-- [ ] Expose settings toggles and density/brightness sliders for these overlays.
+      - Support tint/alpha adjustments and randomised orientation.
+- [ ] Expose settings toggles and sliders for these overlays.
+      - Changes should rebuild layers and persist via `SettingsService`.
       - Ensure overlays hide when debug mode is disabled.
