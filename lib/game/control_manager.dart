@@ -20,6 +20,11 @@ class ControlManager {
     required this.colorScheme,
   });
 
+  static const double _joystickKnobRadius = 20;
+  static const double _joystickBackgroundRadius = 50;
+  static const double _fireButtonRadius = 30;
+  static const double _controlMargin = 40;
+
   /// Host game used to mount control components.
   final FlameGame game;
 
@@ -53,34 +58,41 @@ class ControlManager {
     final scheme = colorScheme;
     return JoystickComponent(
       knob: CircleComponent(
-        radius: 20 * scale,
+        radius: _joystickKnobRadius * scale,
         paint: Paint()..color = scheme.primary,
       ),
       background: CircleComponent(
-        radius: 50 * scale,
+        radius: _joystickBackgroundRadius * scale,
         paint: Paint()..color = scheme.primary.withValues(alpha: 0.4),
       ),
-      margin: const EdgeInsets.only(left: 40, bottom: 40),
+      margin: const EdgeInsets.only(
+        left: _controlMargin,
+        bottom: _controlMargin,
+      ),
     )..anchor = Anchor.bottomLeft;
   }
 
   HudButtonComponent _buildFireButton(double scale, PlayerComponent player) {
     final scheme = colorScheme;
+    final radius = _fireButtonRadius * scale;
     return HudButtonComponent(
       button: CircleComponent(
-        radius: 30 * scale,
+        radius: radius,
         paint: Paint()..color = scheme.primary.withValues(alpha: 0.4),
       ),
       buttonDown: CircleComponent(
-        radius: 30 * scale,
+        radius: radius,
         paint: Paint()..color = scheme.primary,
       ),
       anchor: Anchor.bottomRight,
-      margin: const EdgeInsets.only(right: 40, bottom: 40),
+      margin: const EdgeInsets.only(
+        right: _controlMargin,
+        bottom: _controlMargin,
+      ),
       onPressed: player.startShooting,
       onReleased: player.stopShooting,
       onCancelled: player.stopShooting,
-    )..size = Vector2.all(60 * scale);
+    )..size = Vector2.all((radius * 2));
   }
 
   void _updateJoystickScale() {
@@ -88,24 +100,25 @@ class ControlManager {
     final bg = _joystick.background as CircleComponent;
     final knob = _joystick.knob as CircleComponent;
     bg
-      ..radius = 50 * scale
+      ..radius = _joystickBackgroundRadius * scale
       ..position = Vector2.zero();
     knob
-      ..radius = 20 * scale
+      ..radius = _joystickKnobRadius * scale
       ..position = Vector2.zero();
     _joystick
-      ..size = Vector2.all(100 * scale)
-      ..knobRadius = 20 * scale
+      ..size = Vector2.all((_joystickBackgroundRadius * 2) * scale)
+      ..knobRadius = _joystickKnobRadius * scale
       ..anchor = Anchor.bottomLeft
-      ..position = Vector2(40, game.size.y - 40);
+      ..position = Vector2(_controlMargin, game.size.y - _controlMargin);
     _joystick.onGameResize(game.size);
 
     final fb = fireButton;
     if (fb != null) {
-      (fb.button as CircleComponent).radius = 30 * scale;
-      (fb.buttonDown as CircleComponent).radius = 30 * scale;
+      final radius = _fireButtonRadius * scale;
+      (fb.button as CircleComponent).radius = radius;
+      (fb.buttonDown as CircleComponent).radius = radius;
       fb
-        ..size = Vector2.all(60 * scale)
+        ..size = Vector2.all(radius * 2)
         ..anchor = Anchor.bottomRight;
       fb.onGameResize(game.size);
     }
