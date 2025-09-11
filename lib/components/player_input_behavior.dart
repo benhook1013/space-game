@@ -8,6 +8,7 @@ import '../game/key_dispatcher.dart';
 import '../game/space_game.dart';
 import 'bullet.dart';
 import 'player.dart';
+import '../util/angle_utils.dart';
 
 /// Handles keyboard/joystick input, movement and shooting for the player.
 class PlayerInputBehavior extends Component with HasGameReference<SpaceGame> {
@@ -82,7 +83,7 @@ class PlayerInputBehavior extends Component with HasGameReference<SpaceGame> {
     if (!input.isZero()) {
       input = input.normalized();
       player.position += input * game.upgradeService.playerSpeed * dt;
-      player.targetAngle = math.atan2(input.y, input.x) + math.pi / 2;
+      player.targetAngle = vectorToFlameAngle(input);
       player.isMoving = true;
       return true;
     }
