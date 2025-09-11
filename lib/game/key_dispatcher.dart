@@ -3,8 +3,8 @@ import 'package:flutter/services.dart';
 
 /// Maps keyboard keys to callbacks and tracks pressed state.
 class KeyDispatcher extends Component with KeyboardHandler {
-  final Map<LogicalKeyboardKey, VoidCallback> _down = {};
-  final Map<LogicalKeyboardKey, VoidCallback> _up = {};
+  final Map<LogicalKeyboardKey, List<VoidCallback>> _down = {};
+  final Map<LogicalKeyboardKey, List<VoidCallback>> _up = {};
   final Set<LogicalKeyboardKey> _pressed = <LogicalKeyboardKey>{};
   final Set<LogicalKeyboardKey> _ignored = <LogicalKeyboardKey>{};
 
@@ -15,10 +15,10 @@ class KeyDispatcher extends Component with KeyboardHandler {
     VoidCallback? onUp,
   }) {
     if (onDown != null) {
-      _down[key] = onDown;
+      _down.putIfAbsent(key, () => <VoidCallback>[]).add(onDown);
     }
     if (onUp != null) {
-      _up[key] = onUp;
+      _up.putIfAbsent(key, () => <VoidCallback>[]).add(onUp);
     }
     _ignored.remove(key);
   }
@@ -50,9 +50,11 @@ class KeyDispatcher extends Component with KeyboardHandler {
       // Always fire the down callback on explicit down events. This avoids
       // missing actions when a prior key up was skipped (e.g. focus loss).
       _pressed.add(key);
-      final callback = _down[key];
-      if (callback != null) {
-        callback();
+      final callbacks = _down[key];
+      if (callbacks != null) {
+        for (final callback in callbacks) {
+          callback();
+        }
         handled = true;
       }
     } else if (event is KeyRepeatEvent) {
@@ -61,17 +63,21 @@ class KeyDispatcher extends Component with KeyboardHandler {
       // (e.g. spacebar on web).
       final firstPress = _pressed.add(key);
       if (firstPress) {
-        final callback = _down[key];
-        if (callback != null) {
-          callback();
+        final callbacks = _down[key];
+        if (callbacks != null) {
+          for (final callback in callbacks) {
+            callback();
+          }
           handled = true;
         }
       }
     } else if (event is KeyUpEvent) {
       _pressed.remove(key);
-      final callback = _up[key];
-      if (callback != null) {
-        callback();
+      final callbacks = _up[key];
+      if (callbacks != null) {
+        for (final callback in callbacks) {
+          callback();
+        }
         handled = true;
       }
     }
