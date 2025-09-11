@@ -8,8 +8,8 @@ sealed class GameEvent {}
 
 /// Simple event bus for broadcasting game lifecycle events.
 ///
-/// Uses a single broadcast stream and [whereType] filtering so listeners can
-/// subscribe to specific event classes without managing per-type controllers.
+/// Uses a single broadcast stream; listeners filter for specific event types
+/// using [on].
 class GameEventBus {
   GameEventBus()
       : _controller = StreamController<GameEvent>.broadcast(sync: true);
@@ -31,9 +31,7 @@ class GameEventBus {
       _controller.stream.where((event) => event is T).cast<T>();
 
   /// Closes the underlying stream controller.
-  void dispose() {
-    _controller.close();
-  }
+  Future<void> dispose() => _controller.close();
 }
 
 /// Event fired when a component is spawned.
