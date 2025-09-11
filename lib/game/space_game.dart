@@ -19,6 +19,7 @@ import '../services/score_service.dart';
 import '../services/overlay_service.dart';
 import '../services/storage_service.dart';
 import '../services/audio_service.dart';
+import '../services/asset_lifecycle_service.dart';
 import '../services/targeting_service.dart';
 import '../services/upgrade_service.dart';
 import '../services/settings_service.dart';
@@ -82,12 +83,10 @@ class SpaceGame extends FlameGame
       settings: this.settingsService,
       colorScheme: this.colorScheme,
     );
-    _storedVolume = audioService.masterVolume;
-    audioService.volume.addListener(() {
-      if (!_suppressVolumeSave) {
-        _storedVolume = audioService.masterVolume;
-      }
-    });
+    assetLifecycle = AssetLifecycleService(
+      game: this,
+      audioService: audioService,
+    );
   }
 
   /// Handles persistence for the high score.
@@ -95,9 +94,6 @@ class SpaceGame extends FlameGame
 
   /// Plays sound effects and handles the mute toggle.
   final AudioService audioService;
-
-  double _storedVolume = 1;
-  bool _suppressVolumeSave = false;
 
   double _healthRegenTimer = 0;
 
@@ -115,9 +111,8 @@ class SpaceGame extends FlameGame
 
   final ScoreService scoreService;
 
-  /// Reports progress while remaining assets load.
-  final ValueNotifier<double> assetLoadProgress = ValueNotifier<double>(0);
-  Future<void>? _assetLoadFuture;
+  /// Provides asset loading and pause/resume logic.
+  late final AssetLifecycleService assetLifecycle;
 
   late final OverlayService overlayService;
   late final GameStateMachine stateMachine;
@@ -164,6 +159,10 @@ class SpaceGame extends FlameGame
   void toggleMinimap() {
     showMinimap.value = !showMinimap.value;
   }
+
+  /// Reports progress while remaining assets load.
+  ValueNotifier<double> get assetLoadProgress =>
+      assetLifecycle.assetLoadProgress;
 
   /// Tracks whether the game was playing when the help overlay opened.
   bool _helpWasPlaying = false;
@@ -288,25 +287,10 @@ class SpaceGame extends FlameGame
   void resetHealthRegenTimer() => _healthRegenTimer = 0;
 
   /// Pauses the game and shows the `PAUSED` overlay.
-  void pauseGame() {
-    stateMachine.pauseGame();
-    _storedVolume = audioService.masterVolume;
-    _suppressVolumeSave = true;
-    audioService.setMasterVolume(
-      _storedVolume * Constants.pausedAudioVolumeFactor,
-    );
-    _suppressVolumeSave = false;
-  }
+  void pauseGame() => assetLifecycle.pauseGame();
 
   /// Resumes the game from a paused state.
-  void resumeGame() {
-    stateMachine.resumeGame();
-    resumeEngine();
-    _suppressVolumeSave = true;
-    audioService.setMasterVolume(_storedVolume);
-    _suppressVolumeSave = false;
-    focusGame();
-  }
+  void resumeGame() => assetLifecycle.resumeGame();
 
   /// Returns to the main menu without restarting the session.
   void returnToMenu() => stateMachine.returnToMenu();
@@ -314,27 +298,10 @@ class SpaceGame extends FlameGame
   /// Begins loading assets needed for gameplay.
   ///
   /// Safe to call multiple times; subsequent invocations are ignored.
-  void startLoadingAssets() {
-    _assetLoadFuture ??= Assets.loadRemaining(
-      onProgress: (p) => assetLoadProgress.value = p,
-    );
-  }
-
-  Future<void> _ensureAssetsLoaded() async {
-    await (_assetLoadFuture ??= Assets.loadRemaining(
-      onProgress: (p) => assetLoadProgress.value = p,
-    ));
-    assetLoadProgress.value = 1;
-  }
+  void startLoadingAssets() => assetLifecycle.startLoadingAssets();
 
   /// Starts a new game session.
-  Future<void> startGame() async {
-    await _ensureAssetsLoaded();
-    _suppressVolumeSave = true;
-    audioService.setMasterVolume(_storedVolume);
-    _suppressVolumeSave = false;
-    stateMachine.startGame();
-  }
+  Future<void> startGame() => assetLifecycle.startGame();
 
   /// Clears the saved high score.
   ///
@@ -414,6 +381,7 @@ class SpaceGame extends FlameGame
     stateMachine.dispose();
     controlManager.dispose();
     audioService.dispose();
+    assetLifecycle.dispose();
     starfieldManager.dispose();
     pools.dispose();
     super.onRemove();
