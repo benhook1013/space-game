@@ -140,9 +140,9 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
 - [x] Move joystick, fire button and scaling input code into a `ControlManager` so `SpaceGame` focuses on orchestration.
   - [x] Extract joystick and fire button construction into `ControlManager`.
   - [x] Update references and tests for `ControlManager`.
-- [ ] Extract debug-mode toggling into a reusable `DebugController` mixin or utility.
-  - [ ] Implement `DebugController` mixin.
-  - [ ] Apply mixin to `SpaceGame` and related components.
+- [x] Extract debug-mode toggling into a reusable `DebugController` mixin or utility.
+  - [x] Implement `DebugController` mixin.
+  - [x] Apply mixin to `SpaceGame` and related components.
 - [ ] Shift asset loading plus pause/resume handlers to a lifecycle/asset loader service instead of keeping them in `SpaceGame`.
   - [ ] Create `AssetLifecycleService` handling asset loading and pause/resume.
   - [ ] Refactor `SpaceGame` to use the service.
