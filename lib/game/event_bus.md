@@ -5,6 +5,7 @@ Lightweight synchronous event hub used by core game systems.
 - All events extend the `GameEvent` base class.
 - `GameEventBus` exposes `emit` and typed `on<T>()` helpers for broadcasting
   events through a single broadcast stream filtered via `whereType<T>()`.
+  Emitting after the bus is disposed is a no-op to avoid teardown errors.
 - Components mix in `SpawnRemoveEmitter` so `ComponentSpawnEvent` and
   `ComponentRemoveEvent` fire when they are added or removed.
 - `SpaceGame` creates a single bus instance and passes it to services like

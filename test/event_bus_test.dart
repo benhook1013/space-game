@@ -30,4 +30,16 @@ void main() {
     bus.emit(ComponentRemoveEvent<int>(1));
     expect(events.length, 2);
   });
+
+  test('emit after dispose is ignored', () {
+    final bus = GameEventBus();
+    final events = <GameEvent>[];
+    bus.on<GameEvent>().listen(events.add);
+    bus.dispose();
+    expect(
+      () => bus.emit(ComponentSpawnEvent<int>(1)),
+      returnsNormally,
+    );
+    expect(events, isEmpty);
+  });
 }

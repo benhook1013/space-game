@@ -17,10 +17,18 @@ class GameEventBus {
   final StreamController<GameEvent> _controller;
 
   /// Emits an [event] to all listeners.
-  void emit(GameEvent event) => _controller.add(event);
+  ///
+  /// Events emitted after the bus is disposed are silently ignored so callers
+  /// don't have to guard against late emits during teardown.
+  void emit(GameEvent event) {
+    if (!_controller.isClosed) {
+      _controller.add(event);
+    }
+  }
 
   /// Returns a stream of events of type [T].
-  Stream<T> on<T extends GameEvent>() => _controller.stream.whereType<T>();
+  Stream<T> on<T extends GameEvent>() =>
+      _controller.stream.where((event) => event is T).cast<T>();
 
   /// Closes the underlying stream controller.
   void dispose() {
@@ -38,10 +46,4 @@ class ComponentSpawnEvent<T> implements GameEvent {
 class ComponentRemoveEvent<T> implements GameEvent {
   ComponentRemoveEvent(this.component);
   final T component;
-}
-
-extension GameEventStreamX on Stream<GameEvent> {
-  /// Returns a stream of events of type [T].
-  Stream<T> whereType<T extends GameEvent>() =>
-      where((event) => event is T).cast<T>();
 }
