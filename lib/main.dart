@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import 'assets.dart';
 import 'game/space_game.dart';
-import 'game/game_state.dart';
 import 'theme/game_theme.dart';
 import 'ui/game_over_overlay.dart';
 import 'ui/hud_overlay.dart';

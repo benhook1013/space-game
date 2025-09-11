@@ -31,7 +31,6 @@ import '../theme/star_palette.dart';
 import '../ui/help_overlay.dart';
 import '../ui/settings_overlay.dart';
 import 'event_bus.dart';
-import 'game_state.dart';
 import 'pool_manager.dart';
 import 'lifecycle_manager.dart';
 import 'shortcut_manager.dart' as game_shortcuts;
