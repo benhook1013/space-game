@@ -133,3 +133,10 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
 - [ ] Expose settings toggles and sliders for these overlays.
       - Changes should rebuild layers and persist via `SettingsService`.
       - Ensure overlays hide when debug mode is disabled.
+
+## Refactoring
+
+- [ ] Decouple starfield setup and rebuild logic into a dedicated starfield manager or service to reduce `SpaceGame` complexity.
+- [ ] Move joystick, fire button and scaling input code into a `ControlManager` so `SpaceGame` focuses on orchestration.
+- [ ] Extract debug-mode toggling into a reusable `DebugController` mixin or utility.
+- [ ] Shift asset loading plus pause/resume handlers to a lifecycle/asset loader service instead of keeping them in `SpaceGame`.
