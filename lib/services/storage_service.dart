@@ -24,23 +24,26 @@ class StorageService {
   /// Supported types are [int], [double], [bool], [String] and
   /// [List]<[String]>. Throws [UnsupportedError] for unsupported types.
   T getValue<T>(String key, T defaultValue) {
-    if (T == int) {
-      final value = _prefs.getInt(key);
-      return (value ?? defaultValue) as T;
-    } else if (T == double) {
-      final value = _prefs.getDouble(key);
-      return (value ?? defaultValue) as T;
-    } else if (T == bool) {
-      final value = _prefs.getBool(key);
-      return (value ?? defaultValue) as T;
-    } else if (T == String) {
-      final value = _prefs.getString(key);
-      return (value ?? defaultValue) as T;
-    } else if (T == List<String>) {
-      final value = _prefs.getStringList(key);
-      return (value ?? defaultValue) as T;
-    } else {
-      throw UnsupportedError('Type $T is not supported');
+    switch (defaultValue) {
+      case int _:
+        final value = _prefs.getInt(key);
+        return (value ?? defaultValue) as T;
+      case double _:
+        final value = _prefs.getDouble(key);
+        return (value ?? defaultValue) as T;
+      case bool _:
+        final value = _prefs.getBool(key);
+        return (value ?? defaultValue) as T;
+      case String _:
+        final value = _prefs.getString(key);
+        return (value ?? defaultValue) as T;
+      case List<String> _:
+        final value = _prefs.getStringList(key);
+        return (value ?? defaultValue) as T;
+      default:
+        throw UnsupportedError(
+          'Type ${defaultValue.runtimeType} is not supported',
+        );
     }
   }
 
