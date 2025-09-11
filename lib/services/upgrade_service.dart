@@ -6,8 +6,10 @@ import 'settings_service.dart';
 import 'storage_service.dart';
 
 /// Simple upgrade data.
+@immutable
 class Upgrade {
-  Upgrade({required this.id, required this.name, required this.cost});
+  /// Creates an immutable upgrade definition.
+  const Upgrade({required this.id, required this.name, required this.cost});
 
   final String id;
   final String name;
@@ -31,14 +33,16 @@ class UpgradeService {
 
   static const _purchasedUpgradesKey = 'purchasedUpgrades';
 
-  final List<Upgrade> upgrades = [
-    Upgrade(id: 'fireRate1', name: 'Faster Cannon', cost: 10),
-    Upgrade(id: 'miningSpeed1', name: 'Efficient Mining', cost: 15),
-    Upgrade(id: 'targetingRange1', name: 'Targeting Computer', cost: 20),
-    Upgrade(id: 'tractorRange1', name: 'Tractor Booster', cost: 25),
-    Upgrade(id: 'speed1', name: 'Engine Tuning', cost: 30),
-    Upgrade(id: 'shieldRegen1', name: 'Shield Booster', cost: 40),
-  ];
+  /// Available upgrades, exposed as an unmodifiable list to prevent runtime
+  /// mutation.
+  final List<Upgrade> upgrades = List.unmodifiable([
+    const Upgrade(id: 'fireRate1', name: 'Faster Cannon', cost: 10),
+    const Upgrade(id: 'miningSpeed1', name: 'Efficient Mining', cost: 15),
+    const Upgrade(id: 'targetingRange1', name: 'Targeting Computer', cost: 20),
+    const Upgrade(id: 'tractorRange1', name: 'Tractor Booster', cost: 25),
+    const Upgrade(id: 'speed1', name: 'Engine Tuning', cost: 30),
+    const Upgrade(id: 'shieldRegen1', name: 'Shield Booster', cost: 40),
+  ]);
 
   final ValueNotifier<Set<String>> _purchased =
       ValueNotifier<Set<String>>(<String>{});
