@@ -32,7 +32,7 @@ class OverlayLayout extends StatelessWidget {
       builder: (context, constraints) {
         final shortestSide = constraints.biggest.shortestSide;
         final spacing = shortestSide * 0.02;
-        final iconSize = responsiveIconSize(constraints);
+        final iconSize = constraints.responsiveIconSize();
 
         Widget child = Center(child: builder(context, spacing, iconSize));
         // Ensure overlays have a Material ancestor so widgets like ListTile
