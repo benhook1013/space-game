@@ -24,27 +24,26 @@ class StorageService {
   /// Supported types are [int], [double], [bool], [String] and
   /// [List]<[String]>. Throws [UnsupportedError] for unsupported types.
   T getValue<T>(String key, T defaultValue) {
-    switch (defaultValue) {
-      case int _:
-        final value = _prefs.getInt(key);
-        return (value ?? defaultValue) as T;
-      case double _:
-        final value = _prefs.getDouble(key);
-        return (value ?? defaultValue) as T;
-      case bool _:
-        final value = _prefs.getBool(key);
-        return (value ?? defaultValue) as T;
-      case String _:
-        final value = _prefs.getString(key);
-        return (value ?? defaultValue) as T;
-      case List<String> _:
-        final value = _prefs.getStringList(key);
-        return (value ?? defaultValue) as T;
-      default:
-        throw UnsupportedError(
-          'Type ${defaultValue.runtimeType} is not supported',
-        );
+    if (defaultValue is int) {
+      final value = _prefs.getInt(key);
+      return (value ?? defaultValue) as T;
+    } else if (defaultValue is double) {
+      final value = _prefs.getDouble(key);
+      return (value ?? defaultValue) as T;
+    } else if (defaultValue is bool) {
+      final value = _prefs.getBool(key);
+      return (value ?? defaultValue) as T;
+    } else if (defaultValue is String) {
+      final value = _prefs.getString(key);
+      return (value ?? defaultValue) as T;
+    } else if (defaultValue is List<String>) {
+      final value = _prefs.getStringList(key);
+      return (value ?? defaultValue) as T;
     }
+
+    throw UnsupportedError(
+      'Type ${defaultValue.runtimeType} is not supported',
+    );
   }
 
   /// Persists [value] for [key].
@@ -54,20 +53,19 @@ class StorageService {
   ///
   /// Returns `true` when the value was written to storage.
   Future<bool> setValue<T>(String key, T value) {
-    switch (value) {
-      case int v:
-        return _prefs.setInt(key, v);
-      case double v:
-        return _prefs.setDouble(key, v);
-      case bool v:
-        return _prefs.setBool(key, v);
-      case String v:
-        return _prefs.setString(key, v);
-      case List<String> v:
-        return _prefs.setStringList(key, v);
-      default:
-        throw UnsupportedError('Type ${value.runtimeType} is not supported');
+    if (value is int) {
+      return _prefs.setInt(key, value);
+    } else if (value is double) {
+      return _prefs.setDouble(key, value);
+    } else if (value is bool) {
+      return _prefs.setBool(key, value);
+    } else if (value is String) {
+      return _prefs.setString(key, value);
+    } else if (value is List<String>) {
+      return _prefs.setStringList(key, value);
     }
+
+    throw UnsupportedError('Type ${value.runtimeType} is not supported');
   }
 
   /// Returns the stored high score or `0` if none exists.
