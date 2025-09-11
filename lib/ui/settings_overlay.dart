@@ -186,7 +186,7 @@ class SettingsOverlay extends StatelessWidget {
                     ),
                     SizedBox(height: spacing),
                     ElevatedButton(
-                      onPressed: game.toggleSettings,
+                      onPressed: () => game.ui.toggleSettings(),
                       child: const GameText(
                         'Close',
                         maxLines: 1,

@@ -34,7 +34,7 @@ class HudOverlay extends StatelessWidget {
                   Align(
                     alignment: Alignment.topLeft,
                     child: ValueListenableBuilder<bool>(
-                      valueListenable: game.showMinimap,
+                      valueListenable: game.ui.showMinimap,
                       builder: (context, show, _) {
                         if (!show) {
                           return const SizedBox.shrink();
@@ -88,7 +88,7 @@ class HudOverlay extends StatelessWidget {
                             Icons.gps_fixed,
                             color: Theme.of(context).colorScheme.onSurface,
                           ),
-                          onPressed: game.toggleRangeRings,
+                          onPressed: () => game.ui.toggleRangeRings(),
                         ),
                         MinimapButton(game: game, iconSize: iconSize),
                         UpgradeButton(game: game, iconSize: iconSize),

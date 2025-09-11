@@ -12,7 +12,6 @@ import '../components/mining_laser.dart';
 import '../components/enemy_spawner.dart';
 import '../components/asteroid_spawner.dart';
 import '../components/explosion.dart';
-import '../constants.dart';
 import '../game/key_dispatcher.dart';
 import '../game/game_state_machine.dart';
 import '../services/score_service.dart';
@@ -25,7 +24,6 @@ import '../services/upgrade_service.dart';
 import '../services/settings_service.dart';
 import '../theme/game_theme.dart';
 import '../ui/help_overlay.dart';
-import '../ui/settings_overlay.dart';
 import 'event_bus.dart';
 import 'pool_manager.dart';
 import 'lifecycle_manager.dart';
@@ -33,6 +31,8 @@ import 'shortcut_manager.dart' as game_shortcuts;
 import 'starfield_manager.dart';
 import 'control_manager.dart';
 import 'debug_controller.dart';
+import 'ui_controller.dart';
+import 'health_regen_system.dart';
 
 /// Root Flame game handling the core loop.
 ///
@@ -73,6 +73,10 @@ class SpaceGame extends FlameGame
       storageService: storageService,
       settingsService: this.settingsService,
     );
+    healthRegen = HealthRegenSystem(
+      scoreService: scoreService,
+      upgradeService: upgradeService,
+    );
     starfieldManager = StarfieldManager(
       game: this,
       settings: this.settingsService,
@@ -94,8 +98,6 @@ class SpaceGame extends FlameGame
 
   /// Plays sound effects and handles the mute toggle.
   final AudioService audioService;
-
-  double _healthRegenTimer = 0;
 
   /// Provides runtime-adjustable UI settings.
   final SettingsService settingsService;
@@ -132,8 +134,9 @@ class SpaceGame extends FlameGame
   final GameEventBus eventBus = GameEventBus();
   late final TargetingService targetingService;
   late final StarfieldManager starfieldManager;
+  late final HealthRegenSystem healthRegen;
+  late final UiController ui;
   FpsTextComponent? _fpsText;
-  final ValueNotifier<bool> showMinimap = ValueNotifier<bool>(true);
 
   /// Whether [onLoad] has finished and late fields are initialised.
   bool _isLoaded = false;
@@ -156,16 +159,9 @@ class SpaceGame extends FlameGame
     storageService.setPlayerSpriteIndex(clamped);
   }
 
-  void toggleMinimap() {
-    showMinimap.value = !showMinimap.value;
-  }
-
   /// Reports progress while remaining assets load.
   ValueNotifier<double> get assetLoadProgress =>
       assetLifecycle.assetLoadProgress;
-
-  /// Tracks whether the game was playing when the help overlay opened.
-  bool _helpWasPlaying = false;
 
   @override
   Future<void> onLoad() async {
@@ -219,6 +215,16 @@ class SpaceGame extends FlameGame
       },
     );
 
+    ui = UiController(
+      overlayService: overlayService,
+      stateMachine: stateMachine,
+      player: player,
+      miningLaser: miningLaser,
+      pauseEngine: pauseEngine,
+      resumeEngine: resumeEngine,
+      focusGame: focusGame,
+    );
+
     shortcuts = game_shortcuts.ShortcutManager(
       keyDispatcher: keyDispatcher,
       stateMachine: stateMachine,
@@ -226,12 +232,12 @@ class SpaceGame extends FlameGame
       pauseGame: pauseGame,
       resumeGame: resumeGame,
       startGame: () => startGame(),
-      toggleHelp: toggleHelp,
-      toggleUpgrades: toggleUpgrades,
+      toggleHelp: ui.toggleHelp,
+      toggleUpgrades: ui.toggleUpgrades,
       toggleDebug: toggleDebug,
-      toggleMinimap: toggleMinimap,
-      toggleRangeRings: toggleRangeRings,
-      toggleSettings: toggleSettings,
+      toggleMinimap: ui.toggleMinimap,
+      toggleRangeRings: ui.toggleRangeRings,
+      toggleSettings: ui.toggleSettings,
       returnToMenu: returnToMenu,
       isHelpVisible: () => overlays.isActive(HelpOverlay.id),
     );
@@ -241,27 +247,6 @@ class SpaceGame extends FlameGame
 
   @protected
   PoolManager createPoolManager() => PoolManager(events: eventBus);
-
-  /// Toggles the upgrades overlay and pauses/resumes the game.
-  void toggleUpgrades() => stateMachine.toggleUpgrades();
-
-  /// Toggles the help overlay and pauses/resumes if entering from gameplay.
-  void toggleHelp() {
-    if (overlays.isActive(HelpOverlay.id)) {
-      overlayService.hideHelp();
-      if (_helpWasPlaying) {
-        resumeEngine();
-        focusGame();
-      }
-    } else {
-      _helpWasPlaying = stateMachine.isPlaying;
-      overlayService.showHelp();
-      if (_helpWasPlaying) {
-        pauseEngine();
-        miningLaser?.stopSound();
-      }
-    }
-  }
 
   /// Handles player damage and checks for game over.
   void hitPlayer() {
@@ -284,7 +269,7 @@ class SpaceGame extends FlameGame
   void addMinerals(int value) => scoreService.addMinerals(value);
 
   /// Resets the shield regeneration timer.
-  void resetHealthRegenTimer() => _healthRegenTimer = 0;
+  void resetHealthRegenTimer() => healthRegen.reset();
 
   /// Pauses the game and shows the `PAUSED` overlay.
   void pauseGame() => assetLifecycle.pauseGame();
@@ -329,20 +314,6 @@ class SpaceGame extends FlameGame
     }
   }
 
-  /// Toggles rendering of the player's range rings.
-  void toggleRangeRings() {
-    player.toggleRangeRings();
-  }
-
-  /// Shows or hides the runtime settings overlay.
-  void toggleSettings() {
-    if (overlays.isActive(SettingsOverlay.id)) {
-      overlayService.hideSettings();
-    } else {
-      overlayService.showSettings();
-    }
-  }
-
   /// Ensures the camera stays centred on the player.
   @override
   void update(double dt) {
@@ -351,18 +322,8 @@ class SpaceGame extends FlameGame
     final effectiveDt = shouldFreeze ? 0.0 : dt;
     super.update(effectiveDt);
 
-    if (_isLoaded &&
-        stateMachine.isPlaying &&
-        upgradeService.hasShieldRegen &&
-        scoreService.health.value < Constants.playerMaxHealth) {
-      _healthRegenTimer += effectiveDt;
-      if (_healthRegenTimer >= Constants.playerHealthRegenInterval) {
-        _healthRegenTimer = 0;
-        scoreService.health.value =
-            (scoreService.health.value + 1).clamp(0, Constants.playerMaxHealth);
-      }
-    } else {
-      _healthRegenTimer = 0;
+    if (_isLoaded) {
+      healthRegen.update(effectiveDt, stateMachine.isPlaying);
     }
   }
 

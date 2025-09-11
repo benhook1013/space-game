@@ -136,10 +136,11 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
 
 ## Refactoring
 
-- [ ] Extract `SpaceGame` overlay toggles and UI state helpers into a dedicated
+- [x] Extract `SpaceGame` overlay toggles and UI state helpers into a dedicated
       controller module.
-- [ ] Move health regeneration logic out of `SpaceGame.update` into a separate
+- [x] Move health regeneration logic out of `SpaceGame.update` into a separate
       component or system.
 - [ ] Break `SpaceGame` constructor and `onLoad` setup into modular builders or
       helpers to reduce class size.
+  - [ ] Split `onLoad` into `_initWorld` and `_initOverlays` helpers.
 

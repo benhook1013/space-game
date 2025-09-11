@@ -29,11 +29,11 @@ void main() {
     expect(game.overlays.isActive(HelpOverlay.id), isFalse);
     expect(game.paused, isFalse);
 
-    game.toggleHelp();
+    game.ui.toggleHelp();
     expect(game.overlays.isActive(HelpOverlay.id), isTrue);
     expect(game.paused, isTrue);
 
-    game.toggleHelp();
+    game.ui.toggleHelp();
     expect(game.overlays.isActive(HelpOverlay.id), isFalse);
     expect(game.paused, isFalse);
   });
