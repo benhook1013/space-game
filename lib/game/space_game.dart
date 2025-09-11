@@ -31,6 +31,7 @@ import 'lifecycle_manager.dart';
 import 'shortcut_manager.dart' as game_shortcuts;
 import 'starfield_manager.dart';
 import 'control_manager.dart';
+import 'debug_controller.dart';
 
 /// Root Flame game handling the core loop.
 ///
@@ -39,7 +40,7 @@ import 'control_manager.dart';
 /// standalone [KeyboardEvents] here would prevent that propagation, so it is
 /// intentionally omitted.
 class SpaceGame extends FlameGame
-    with HasKeyboardHandlerComponents, HasCollisionDetection {
+    with HasKeyboardHandlerComponents, HasCollisionDetection, DebugController {
   SpaceGame({
     required this.storageService,
     required this.audioService,
@@ -343,36 +344,21 @@ class SpaceGame extends FlameGame
   /// Transitions to the game over state.
   void gameOver() => stateMachine.gameOver();
 
-  /// Toggles debug rendering and FPS overlay.
-  void toggleDebug() {
-    debugMode = !debugMode;
-
-    // Propagate the new debug mode to all existing components so built-in
-    // debug visuals like hitboxes update immediately.
-    for (final child in children) {
-      _applyDebugMode(child, debugMode);
-    }
-
+  @override
+  void onDebugModeChanged(bool enabled) {
     // Ensure pooled components also reflect the new debug mode so reused
     // instances don't retain stale debug flags.
-    pools.applyDebugMode(debugMode);
+    pools.applyDebugMode(enabled);
 
     // Outline starfield tiles when debug visuals are enabled.
-    starfieldManager.updateDebug(debugMode);
+    starfieldManager.updateDebug(enabled);
 
-    if (debugMode) {
+    if (enabled) {
       if (_fpsText != null && !_fpsText!.isMounted) {
         add(_fpsText!);
       }
     } else {
       _fpsText?.removeFromParent();
-    }
-  }
-
-  void _applyDebugMode(Component component, bool enabled) {
-    component.debugMode = enabled;
-    for (final child in component.children) {
-      _applyDebugMode(child, enabled);
     }
   }
 
