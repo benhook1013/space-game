@@ -1,11 +1,8 @@
 import 'dart:async';
-import 'dart:ui';
-
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/painting.dart' show EdgeInsets;
 import 'package:flutter/widgets.dart' show FocusNode;
 import 'package:flutter/material.dart' show ColorScheme, Colors;
 
@@ -33,6 +30,7 @@ import 'pool_manager.dart';
 import 'lifecycle_manager.dart';
 import 'shortcut_manager.dart' as game_shortcuts;
 import 'starfield_manager.dart';
+import 'control_manager.dart';
 
 /// Root Flame game handling the core loop.
 ///
@@ -78,6 +76,11 @@ class SpaceGame extends FlameGame
       settings: this.settingsService,
       debugMode: debugMode,
     );
+    controlManager = ControlManager(
+      game: this,
+      settings: this.settingsService,
+      colorScheme: this.colorScheme,
+    );
     _storedVolume = audioService.masterVolume;
     audioService.volume.addListener(() {
       if (!_suppressVolumeSave) {
@@ -121,16 +124,10 @@ class SpaceGame extends FlameGame
   late final KeyDispatcher keyDispatcher;
   late PlayerComponent player;
   MiningLaserComponent? miningLaser;
-  late JoystickComponent _joystick;
-  JoystickComponent get joystick => _joystick;
-  set joystick(JoystickComponent value) {
-    _joystick = value;
-    if (_playerInitialized) {
-      player.setJoystick(value);
-    }
-  }
-
-  late final HudButtonComponent fireButton;
+  late final ControlManager controlManager;
+  JoystickComponent get joystick => controlManager.joystick;
+  set joystick(JoystickComponent value) => controlManager.joystick = value;
+  HudButtonComponent get fireButton => controlManager.fireButton!;
   late final EnemySpawner enemySpawner;
   late final AsteroidSpawner asteroidSpawner;
   late final PoolManager pools;
@@ -140,7 +137,6 @@ class SpaceGame extends FlameGame
   late final TargetingService targetingService;
   late final StarfieldManager starfieldManager;
   FpsTextComponent? _fpsText;
-  bool _playerInitialized = false;
   final ValueNotifier<bool> showMinimap = ValueNotifier<bool>(true);
 
   /// Whether [onLoad] has finished and late fields are initialised.
@@ -181,25 +177,22 @@ class SpaceGame extends FlameGame
     keyDispatcher = KeyDispatcher();
     await add(keyDispatcher);
 
-    joystick = _buildJoystick();
-    await add(joystick);
+    await controlManager.init();
 
     await starfieldManager.init();
 
     player = PlayerComponent(
-      joystick: joystick,
+      joystick: controlManager.joystick,
       keyDispatcher: keyDispatcher,
       spritePath: selectedPlayerSprite,
     );
     await add(player);
-    _playerInitialized = true;
     camera.follow(player, snap: true);
     final laser = MiningLaserComponent(player: player);
     miningLaser = laser;
     await add(laser);
 
-    fireButton = _buildFireButton(settingsService.joystickScale.value);
-    await add(fireButton);
+    await controlManager.attachPlayer(player);
 
     enemySpawner = EnemySpawner();
     asteroidSpawner = AsteroidSpawner();
@@ -243,8 +236,6 @@ class SpaceGame extends FlameGame
       isHelpVisible: () => overlays.isActive(HelpOverlay.id),
     );
     stateMachine.returnToMenu();
-
-    settingsService.joystickScale.addListener(_updateJoystickScale);
     _isLoaded = true;
   }
 
@@ -399,71 +390,6 @@ class SpaceGame extends FlameGame
     }
   }
 
-  JoystickComponent _buildJoystick() {
-    final scale = settingsService.joystickScale.value;
-    final scheme = colorScheme;
-    return JoystickComponent(
-      knob: CircleComponent(
-        radius: 20 * scale,
-        paint: Paint()..color = scheme.primary,
-      ),
-      background: CircleComponent(
-        radius: 50 * scale,
-        paint: Paint()..color = scheme.primary.withValues(alpha: 0.4),
-      ),
-      margin: const EdgeInsets.only(left: 40, bottom: 40),
-    )..anchor = Anchor.bottomLeft;
-  }
-
-  HudButtonComponent _buildFireButton(double scale) {
-    final scheme = colorScheme;
-    return HudButtonComponent(
-      button: CircleComponent(
-        radius: 30 * scale,
-        paint: Paint()..color = scheme.primary.withValues(alpha: 0.4),
-      ),
-      buttonDown: CircleComponent(
-        radius: 30 * scale,
-        paint: Paint()..color = scheme.primary,
-      ),
-      anchor: Anchor.bottomRight,
-      margin: const EdgeInsets.only(right: 40, bottom: 40),
-      onPressed: player.startShooting,
-      onReleased: player.stopShooting,
-      onCancelled: player.stopShooting,
-    )..size = Vector2.all(60 * scale);
-  }
-
-  void _updateJoystickScale() {
-    final scale = settingsService.joystickScale.value;
-    // Update the joystick in place to avoid flicker when scaling. Adjust the
-    // knob and background radii so growth originates from the bottom-left
-    // corner while keeping the knob centred.
-    final bg = joystick.background as CircleComponent;
-    final knob = joystick.knob as CircleComponent;
-    bg
-      ..radius = 50 * scale
-      ..position = Vector2.zero();
-    knob
-      ..radius = 20 * scale
-      ..position = Vector2.zero();
-    // Update cached values so the hitbox matches the visual size.
-    joystick
-      ..size = Vector2.all(100 * scale)
-      ..knobRadius = 20 * scale
-      ..anchor = Anchor.bottomLeft
-      ..position = Vector2(40, size.y - 40);
-    joystick.onGameResize(size);
-
-    // Scale the fire button to match the joystick and stay anchored
-    // to the bottom-right corner.
-    (fireButton.button as CircleComponent).radius = 30 * scale;
-    (fireButton.buttonDown as CircleComponent).radius = 30 * scale;
-    fireButton.size = Vector2.all(60 * scale);
-    fireButton.anchor = Anchor.bottomRight;
-    fireButton.onGameResize(size);
-  }
-
   /// Ensures the camera stays centred on the player.
   @override
   void update(double dt) {
@@ -500,6 +426,7 @@ class SpaceGame extends FlameGame
     upgradeService.dispose();
     targetingService.dispose();
     stateMachine.dispose();
+    controlManager.dispose();
     audioService.dispose();
     starfieldManager.dispose();
     pools.dispose();

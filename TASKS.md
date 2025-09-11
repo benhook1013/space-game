@@ -137,9 +137,9 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
 ## Refactoring
 
 - [x] Decouple starfield setup and rebuild logic into a dedicated starfield manager or service to reduce `SpaceGame` complexity.
-- [ ] Move joystick, fire button and scaling input code into a `ControlManager` so `SpaceGame` focuses on orchestration.
-  - [ ] Extract joystick and fire button construction into `ControlManager`.
-  - [ ] Update references and tests for `ControlManager`.
+- [x] Move joystick, fire button and scaling input code into a `ControlManager` so `SpaceGame` focuses on orchestration.
+  - [x] Extract joystick and fire button construction into `ControlManager`.
+  - [x] Update references and tests for `ControlManager`.
 - [ ] Extract debug-mode toggling into a reusable `DebugController` mixin or utility.
   - [ ] Implement `DebugController` mixin.
   - [ ] Apply mixin to `SpaceGame` and related components.

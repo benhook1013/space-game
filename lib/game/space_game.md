@@ -12,7 +12,8 @@ Main FlameGame subclass managing world setup, state transitions and the update l
 - Provide small bullet, asteroid, enemy and mineral pickup pools to limit allocations.
 - Maintain `GameState` values (`menu`, `playing`, `paused`, `gameOver`)
    and toggle overlays.
-- Route joystick, button and keyboard input to the player component.
+- Delegate joystick and fire button handling to `ControlManager` and route
+  keyboard input to the player component.
 - Handle keyboard shortcuts such as `Escape` or `P` for pause, `M` for mute,
    `Enter` to start or restart from the menu or game over, `R` to restart at any
    time, `Q` to return to the menu from pause or game over, `Esc` to return to the

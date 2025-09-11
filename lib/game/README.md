@@ -9,7 +9,8 @@ Core game class and shared systems.
 - Uses the default camera viewport so the game fills the available
   browser window.
 - Timer-based spawners generate enemies and asteroids.
-  - Input uses Flame's `JoystickComponent`, `ButtonComponent` and a
+  - On-screen controls are handled by `ControlManager`, which builds and
+    scales Flame's `JoystickComponent` and `ButtonComponent` alongside a
     custom `KeyDispatcher` (via `KeyboardHandler`) that supports helpers like
     `isAnyPressed` for grouped key queries.
 - Broadcasts component spawn and remove events through a lightweight
@@ -37,5 +38,7 @@ Core game class and shared systems.
 - [game_state.dart](game_state.md) – enum describing the game's phases.
 - [event_bus.dart](event_bus.md) – typed hub for spawn/remove events.
 - [pool_manager.dart](pool_manager.md) – central object pools and spatial grid.
+- [control_manager.dart](control_manager.dart) – manages joystick and fire
+  button controls.
 
 See [../../PLAN.md](../../PLAN.md) for the broader roadmap.

@@ -98,9 +98,14 @@ class _TestGame extends SpaceGame {
   Future<void> onLoad() async {
     keyDispatcher = KeyDispatcher();
     await add(keyDispatcher);
-    joystick = TestJoystick();
-    await add(joystick);
-    player = _TestPlayer(joystick: joystick, keyDispatcher: keyDispatcher);
+    await controlManager.init();
+    controlManager.joystick.removeFromParent();
+    controlManager.joystick = TestJoystick();
+    await add(controlManager.joystick);
+    player = _TestPlayer(
+      joystick: controlManager.joystick,
+      keyDispatcher: keyDispatcher,
+    );
     await add(player);
     overlayService = OverlayService(this);
     stateMachine = GameStateMachine(
@@ -160,8 +165,8 @@ void main() {
       ),
       {LogicalKeyboardKey.keyW},
     );
-    game.joystick.delta.setValues(1, 0);
-    game.joystick.relativeDelta.setValues(1, 0);
+    game.controlManager.joystick.delta.setValues(1, 0);
+    game.controlManager.joystick.relativeDelta.setValues(1, 0);
     game.player.inputBehavior.update(1);
     expect(game.player.position.x, greaterThan(0));
     expect(game.player.position.y, closeTo(0, 0.001));
@@ -196,8 +201,8 @@ void main() {
     game.onGameResize(Vector2.all(500));
     await game.ready();
 
-    game.joystick.delta.setValues(1, 0);
-    game.joystick.relativeDelta.setValues(1, 0);
+    game.controlManager.joystick.delta.setValues(1, 0);
+    game.controlManager.joystick.relativeDelta.setValues(1, 0);
     game.player.inputBehavior.update(1);
     final normalX = game.player.position.x;
 
@@ -206,8 +211,8 @@ void main() {
         game.upgradeService.upgrades.firstWhere((u) => u.id == 'speed1');
     game.scoreService.addMinerals(upgrade.cost);
     game.upgradeService.buy(upgrade);
-    game.joystick.delta.setValues(1, 0);
-    game.joystick.relativeDelta.setValues(1, 0);
+    game.controlManager.joystick.delta.setValues(1, 0);
+    game.controlManager.joystick.relativeDelta.setValues(1, 0);
     game.player.inputBehavior.update(1);
     expect(game.player.position.x, greaterThan(normalX));
   });

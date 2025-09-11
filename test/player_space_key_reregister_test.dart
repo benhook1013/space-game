@@ -37,8 +37,10 @@ class _TestGame extends SpaceGame {
   Future<void> onLoad() async {
     keyDispatcher = KeyDispatcher();
     await add(keyDispatcher);
-    joystick = TestJoystick();
-    await add(joystick);
+    await controlManager.init();
+    controlManager.joystick.removeFromParent();
+    controlManager.joystick = TestJoystick();
+    await add(controlManager.joystick);
   }
 }
 
@@ -58,12 +60,12 @@ void main() {
     await game.onLoad();
     game.onGameResize(Vector2.all(100));
     await game.ready();
-    game.joystick.onGameResize(game.size);
+    game.controlManager.joystick.onGameResize(game.size);
     game.update(0);
     game.update(0);
 
     final player = _TestPlayer(
-      joystick: game.joystick,
+      joystick: game.controlManager.joystick,
       keyDispatcher: game.keyDispatcher,
     );
     await game.add(player);
