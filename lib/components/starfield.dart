@@ -515,27 +515,30 @@ class _TileParams {
 
 class _TileWorker {
   _TileWorker._() {
-    _receivePort.listen((message) {
-      if (message is SendPort) {
-        _sendPorts.add(message);
-        if (_sendPorts.length == _poolSize) {
-          _readyCompleter?.complete();
+    if (!kIsWeb) {
+      _receivePort = ReceivePort();
+      _receivePort!.listen((message) {
+        if (message is SendPort) {
+          _sendPorts.add(message);
+          if (_sendPorts.length == _poolSize) {
+            _readyCompleter?.complete();
+          }
+          return;
         }
-        return;
-      }
-      if (message is List && message.length == 2) {
-        final id = message[0] as int;
-        final data = message[1] as List<_StarData>;
-        _pending.remove(id)?.complete(data);
-      }
-    });
+        if (message is List && message.length == 2) {
+          final id = message[0] as int;
+          final data = message[1] as List<_StarData>;
+          _pending.remove(id)?.complete(data);
+        }
+      });
+    }
   }
 
   static final _TileWorker instance = _TileWorker._();
 
   static const int _poolSize = 2;
 
-  final ReceivePort _receivePort = ReceivePort();
+  ReceivePort? _receivePort;
   final List<SendPort> _sendPorts = [];
   final List<Isolate> _isolates = [];
   int _nextPort = 0;
@@ -555,7 +558,7 @@ class _TileWorker {
     _readyCompleter = Completer<void>();
     for (var i = 0; i < _poolSize; i++) {
       final isolate =
-          await Isolate.spawn(_tileWorkerMain, _receivePort.sendPort);
+          await Isolate.spawn(_tileWorkerMain, _receivePort!.sendPort);
       _isolates.add(isolate);
     }
     await _readyCompleter!.future;
@@ -590,6 +593,7 @@ class _TileWorker {
     _pending.clear();
     _sendPorts.clear();
     _nextPort = 0;
+    _receivePort?.close();
   }
 }
 
