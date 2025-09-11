@@ -61,10 +61,13 @@ async function cacheOptionalAssets(cache) {
       ...(cachedManifest.audio || []),
       ...(cachedManifest.fonts || []),
       // Flutter compiles assets under a top-level `assets/` directory for web
-      // builds. Prefix manifest entries so cache.add fetches the actual files.
+      // builds. Prefix manifest entries so cache.add fetches the actual files,
+      // but avoid double-prefixing if the entry already points inside `assets/`.
     ].map((asset) => {
       const normalized = asset.startsWith("/") ? asset.slice(1) : asset;
-      return `assets/${normalized}`;
+      return normalized.startsWith("assets/")
+        ? normalized
+        : `assets/${normalized}`;
     });
     await cacheAll(cache, assetList);
   } catch (err) {
