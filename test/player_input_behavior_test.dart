@@ -19,6 +19,7 @@ import 'package:space_game/services/storage_service.dart';
 import 'package:space_game/services/audio_service.dart';
 
 import 'test_joystick.dart';
+import 'test_images.dart';
 
 class _TestBullet extends BulletComponent {
   @override
@@ -122,6 +123,33 @@ class _TestGame extends SpaceGame {
   }
 }
 
+class _RemountPlayer extends PlayerComponent {
+  _RemountPlayer({required super.joystick, required super.keyDispatcher})
+      : super(spritePath: Assets.players.first);
+
+  bool started = false;
+
+  @override
+  void startShooting() {
+    started = true;
+  }
+}
+
+class _RemountGame extends SpaceGame {
+  _RemountGame({required StorageService storage, required AudioService audio})
+      : super(storageService: storage, audioService: audio);
+
+  @override
+  Future<void> onLoad() async {
+    keyDispatcher = KeyDispatcher();
+    await add(keyDispatcher);
+    await controlManager.init();
+    controlManager.joystick.removeFromParent();
+    controlManager.joystick = TestJoystick();
+    await add(controlManager.joystick);
+  }
+}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -215,5 +243,50 @@ void main() {
     game.controlManager.joystick.relativeDelta.setValues(1, 0);
     game.player.inputBehavior.update(1);
     expect(game.player.position.x, greaterThan(normalX));
+  });
+
+  test('space key re-registers after player remount', () async {
+    await loadTestImages(Assets.players);
+    final storage = await StorageService.create();
+    final audio = _FakeAudioService();
+    final game = _RemountGame(storage: storage, audio: audio);
+    await game.onLoad();
+    game.onGameResize(Vector2.all(100));
+    await game.ready();
+    game.controlManager.joystick.onGameResize(game.size);
+    game.update(0);
+    game.update(0);
+
+    final player = _RemountPlayer(
+      joystick: game.controlManager.joystick,
+      keyDispatcher: game.keyDispatcher,
+    );
+    await game.add(player);
+    await game.ready();
+    player.onMount();
+    game.update(0);
+    game.update(0);
+
+    player.removeFromParent();
+    await game.ready();
+    game.update(0);
+    game.update(0);
+
+    await game.add(player);
+    await game.ready();
+    player.onMount();
+    game.update(0);
+    game.update(0);
+
+    game.keyDispatcher.onKeyEvent(
+      const KeyDownEvent(
+        logicalKey: LogicalKeyboardKey.space,
+        physicalKey: PhysicalKeyboardKey.space,
+        timeStamp: Duration.zero,
+      ),
+      {LogicalKeyboardKey.space},
+    );
+
+    expect(player.started, isTrue);
   });
 }
