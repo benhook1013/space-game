@@ -14,7 +14,6 @@ import '../components/player.dart';
 import '../components/mining_laser.dart';
 import '../components/enemy_spawner.dart';
 import '../components/asteroid_spawner.dart';
-import '../components/starfield.dart';
 import '../components/explosion.dart';
 import '../constants.dart';
 import '../game/key_dispatcher.dart';
@@ -27,7 +26,6 @@ import '../services/targeting_service.dart';
 import '../services/upgrade_service.dart';
 import '../services/settings_service.dart';
 import '../theme/game_theme.dart';
-import '../theme/star_palette.dart';
 import '../ui/help_overlay.dart';
 import '../ui/settings_overlay.dart';
 import 'event_bus.dart';
@@ -35,6 +33,7 @@ import 'game_state.dart';
 import 'pool_manager.dart';
 import 'lifecycle_manager.dart';
 import 'shortcut_manager.dart' as game_shortcuts;
+import 'starfield_manager.dart';
 
 /// Root Flame game handling the core loop.
 ///
@@ -74,6 +73,11 @@ class SpaceGame extends FlameGame
       scoreService: scoreService,
       storageService: storageService,
       settingsService: this.settingsService,
+    );
+    starfieldManager = StarfieldManager(
+      game: this,
+      settings: this.settingsService,
+      debugMode: debugMode,
     );
     _storedVolume = audioService.masterVolume;
     audioService.volume.addListener(() {
@@ -135,8 +139,7 @@ class SpaceGame extends FlameGame
   late final game_shortcuts.ShortcutManager shortcuts;
   final GameEventBus eventBus = GameEventBus();
   late final TargetingService targetingService;
-  StarfieldComponent? _starfield;
-  int _starfieldRebuildId = 0;
+  late final StarfieldManager starfieldManager;
   FpsTextComponent? _fpsText;
   bool _playerInitialized = false;
   final ValueNotifier<bool> showMinimap = ValueNotifier<bool>(true);
@@ -182,28 +185,7 @@ class SpaceGame extends FlameGame
     joystick = _buildJoystick();
     await add(joystick);
 
-    final palette = settingsService.starfieldPalette.value.colors;
-    _starfield = await StarfieldComponent(
-      debugDrawTiles: debugMode,
-      layers: [
-        StarfieldLayerConfig(
-            parallax: 0.2, density: 0.15, twinkleSpeed: 0.5, palette: palette),
-        StarfieldLayerConfig(
-            parallax: 0.6, density: 0.3, twinkleSpeed: 0.8, palette: palette),
-        StarfieldLayerConfig(
-            parallax: 1.0, density: 0.5, twinkleSpeed: 1, palette: palette),
-      ],
-      tileSize: settingsService.starfieldTileSize.value,
-      densityMultiplier: settingsService.starfieldDensity.value,
-      brightnessMultiplier: settingsService.starfieldBrightness.value,
-      gamma: settingsService.starfieldGamma.value,
-    );
-    await add(_starfield!);
-    settingsService.starfieldTileSize.addListener(_rebuildStarfield);
-    settingsService.starfieldDensity.addListener(_rebuildStarfield);
-    settingsService.starfieldBrightness.addListener(_rebuildStarfield);
-    settingsService.starfieldGamma.addListener(_rebuildStarfield);
-    settingsService.starfieldPalette.addListener(_rebuildStarfield);
+    await starfieldManager.init();
 
     player = PlayerComponent(
       joystick: joystick,
@@ -386,7 +368,7 @@ class SpaceGame extends FlameGame
     pools.applyDebugMode(debugMode);
 
     // Outline starfield tiles when debug visuals are enabled.
-    _starfield?.debugDrawTiles = debugMode;
+    starfieldManager.updateDebug(debugMode);
 
     if (debugMode) {
       if (_fpsText != null && !_fpsText!.isMounted) {
@@ -483,39 +465,6 @@ class SpaceGame extends FlameGame
     fireButton.onGameResize(size);
   }
 
-  void _rebuildStarfield() {
-    final tileSize = settingsService.starfieldTileSize.value;
-    final density = settingsService.starfieldDensity.value;
-    final brightness = settingsService.starfieldBrightness.value;
-    final gamma = settingsService.starfieldGamma.value;
-    final palette = settingsService.starfieldPalette.value.colors;
-    _starfield?.removeFromParent();
-    _starfield = null;
-    final buildId = ++_starfieldRebuildId;
-    unawaited(() async {
-      final sf = await StarfieldComponent(
-        debugDrawTiles: debugMode,
-        layers: [
-          StarfieldLayerConfig(
-              parallax: 0.2, density: 0.3, twinkleSpeed: 0.5, palette: palette),
-          StarfieldLayerConfig(
-              parallax: 0.6, density: 0.6, twinkleSpeed: 0.8, palette: palette),
-          StarfieldLayerConfig(
-              parallax: 1.0, density: 1, twinkleSpeed: 1, palette: palette),
-        ],
-        tileSize: tileSize,
-        densityMultiplier: density,
-        brightnessMultiplier: brightness,
-        gamma: gamma,
-      );
-      if (buildId != _starfieldRebuildId) {
-        return;
-      }
-      _starfield = sf;
-      await add(sf);
-    }());
-  }
-
   /// Ensures the camera stays centred on the player.
   @override
   void update(double dt) {
@@ -553,6 +502,7 @@ class SpaceGame extends FlameGame
     targetingService.dispose();
     stateMachine.dispose();
     audioService.dispose();
+    starfieldManager.dispose();
     pools.dispose();
     super.onRemove();
     // Dispose the event bus after children are removed so they can emit
