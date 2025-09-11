@@ -387,7 +387,7 @@ class SpaceGame extends FlameGame
     super.onRemove();
     // Dispose the event bus after children are removed so they can emit
     // removal events without errors.
-    eventBus.dispose();
+    unawaited(eventBus.dispose());
   }
 
   /// Requests keyboard focus for the surrounding [GameWidget].
