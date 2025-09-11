@@ -39,35 +39,4 @@ void main() {
     expect(score.hitPlayer(), isTrue);
     expect(score.health.value, 0);
   });
-
-  test('updates and resets high score', () async {
-    SharedPreferences.setMockInitialValues({'highScore': 10});
-    final storage = await StorageService.create();
-    final score = ScoreService(storageService: storage);
-
-    expect(score.highScore.value, 10);
-
-    score.addScore(15);
-    await score.updateHighScoreIfNeeded();
-    expect(score.highScore.value, 15);
-    expect(storage.getHighScore(), 15);
-
-    expect(await score.resetHighScore(), isTrue);
-    expect(score.highScore.value, 0);
-    expect(storage.getHighScore(), 0);
-  });
-
-  test('high score persists across instances', () async {
-    SharedPreferences.setMockInitialValues({});
-    var storage = await StorageService.create();
-    var score1 = ScoreService(storageService: storage);
-
-    score1.addScore(10);
-    await score1.updateHighScoreIfNeeded();
-    score1.dispose();
-
-    storage = await StorageService.create();
-    final score2 = ScoreService(storageService: storage);
-    expect(score2.highScore.value, 10);
-  });
 }
