@@ -48,7 +48,7 @@ class _UpgradesOverlayState extends State<UpgradesOverlay> {
             ),
             SizedBox(height: spacing),
             ElevatedButton(
-              onPressed: widget.game.toggleUpgrades,
+              onPressed: () => widget.game.ui.toggleUpgrades(),
               child: const GameText(
                 'Resume',
                 maxLines: 1,

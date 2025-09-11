@@ -46,7 +46,7 @@ class HelpOverlay extends StatelessWidget {
             ),
             SizedBox(height: spacing),
             ElevatedButton(
-              onPressed: game.toggleHelp,
+              onPressed: () => game.ui.toggleHelp(),
               child: const GameText(
                 'Close',
                 maxLines: 1,

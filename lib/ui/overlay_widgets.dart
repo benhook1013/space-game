@@ -119,11 +119,11 @@ class HelpButton extends StatelessWidget {
       return GameIconButton(
         icon: const Icon(Icons.help_outline),
         iconSize: iconSize!,
-        onPressed: game.toggleHelp,
+        onPressed: () => game.ui.toggleHelp(),
       );
     }
     return ElevatedButton(
-      onPressed: game.toggleHelp,
+      onPressed: () => game.ui.toggleHelp(),
       child: const GameText(
         'Help',
         maxLines: 1,
@@ -145,7 +145,7 @@ class UpgradeButton extends StatelessWidget {
     return GameIconButton(
       icon: const Icon(Icons.upgrade),
       iconSize: iconSize,
-      onPressed: game.toggleUpgrades,
+      onPressed: () => game.ui.toggleUpgrades(),
     );
   }
 }
@@ -164,7 +164,7 @@ class SettingsButton extends StatelessWidget {
         AssetImage('assets/images/${Assets.settingsIcon}'),
       ),
       iconSize: iconSize,
-      onPressed: game.toggleSettings,
+      onPressed: () => game.ui.toggleSettings(),
     );
   }
 }
@@ -182,7 +182,7 @@ class MinimapButton extends StatelessWidget {
       icon: const Icon(Icons.map),
       iconSize: iconSize,
       color: Theme.of(context).colorScheme.onSurface,
-      onPressed: game.toggleMinimap,
+      onPressed: () => game.ui.toggleMinimap(),
     );
   }
 }

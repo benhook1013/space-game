@@ -30,11 +30,11 @@ void main() {
     expect(game.overlays.isActive(UpgradesOverlay.id), isFalse);
     expect(game.paused, isFalse);
 
-    game.toggleUpgrades();
+    game.ui.toggleUpgrades();
     expect(game.overlays.isActive(UpgradesOverlay.id), isTrue);
     expect(game.paused, isTrue);
 
-    game.toggleUpgrades();
+    game.ui.toggleUpgrades();
     expect(game.overlays.isActive(UpgradesOverlay.id), isFalse);
     expect(game.paused, isFalse);
   });
