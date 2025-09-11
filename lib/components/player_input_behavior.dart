@@ -92,7 +92,7 @@ class PlayerInputBehavior extends Component with HasGameReference<SpaceGame> {
 
   /// Fires a bullet from the player's current position.
   void shoot() {
-    if (game.stateMachine.state != GameState.playing || _shootCooldown > 0) {
+    if (!game.stateMachine.isPlaying || _shootCooldown > 0) {
       return;
     }
     final direction = Vector2(
@@ -111,7 +111,7 @@ class PlayerInputBehavior extends Component with HasGameReference<SpaceGame> {
 
   /// Begins continuous shooting and fires immediately.
   void startShooting() {
-    if (game.stateMachine.state != GameState.playing) {
+    if (!game.stateMachine.isPlaying) {
       return;
     }
     _isShooting = true;

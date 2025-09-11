@@ -282,7 +282,7 @@ class SpaceGame extends FlameGame
         focusGame();
       }
     } else {
-      _helpWasPlaying = stateMachine.state == GameState.playing;
+      _helpWasPlaying = stateMachine.isPlaying;
       overlayService.showHelp();
       if (_helpWasPlaying) {
         pauseEngine();
@@ -293,7 +293,7 @@ class SpaceGame extends FlameGame
 
   /// Handles player damage and checks for game over.
   void hitPlayer() {
-    if (stateMachine.state != GameState.playing) {
+    if (!stateMachine.isPlaying) {
       return;
     }
     player.flashDamage();
@@ -519,14 +519,13 @@ class SpaceGame extends FlameGame
   /// Ensures the camera stays centred on the player.
   @override
   void update(double dt) {
-    final shouldFreeze = _isLoaded &&
-        (stateMachine.state == GameState.paused ||
-            stateMachine.state == GameState.upgrades);
+    final shouldFreeze =
+        _isLoaded && (stateMachine.isPaused || stateMachine.isUpgrades);
     final effectiveDt = shouldFreeze ? 0.0 : dt;
     super.update(effectiveDt);
 
     if (_isLoaded &&
-        stateMachine.state == GameState.playing &&
+        stateMachine.isPlaying &&
         upgradeService.hasShieldRegen &&
         scoreService.health.value < Constants.playerMaxHealth) {
       _healthRegenTimer += effectiveDt;
