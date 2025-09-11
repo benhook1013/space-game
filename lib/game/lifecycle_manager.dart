@@ -34,7 +34,7 @@ class LifecycleManager {
     if (game.player.isRemoving || !game.player.isMounted) {
       // Previous player is pending removal; create a fresh instance.
       final player = PlayerComponent(
-        joystick: game.joystick,
+        joystick: game.controlManager.joystick,
         keyDispatcher: game.keyDispatcher,
         spritePath: game.selectedPlayerSprite,
       )..reset();
@@ -51,7 +51,7 @@ class LifecycleManager {
       game.miningLaser = laser;
       game.add(laser);
       // Update fire button callbacks.
-      game.fireButton
+      game.controlManager.fireButton!
         ..onPressed = player.startShooting
         ..onReleased = player.stopShooting;
     } else {

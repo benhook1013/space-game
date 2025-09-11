@@ -41,7 +41,7 @@ void main() {
     final game = await _createGame();
     await game.ready();
     game.onGameResize(Vector2.all(100));
-    game.joystick.removeFromParent();
+    game.controlManager.joystick.removeFromParent();
     await game.ready();
     game.player.position.add(Vector2(10, 20));
     game.update(0);

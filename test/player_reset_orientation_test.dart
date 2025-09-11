@@ -31,11 +31,11 @@ void main() {
     game.onGameResize(Vector2.all(100));
     await game.ready();
     game.resumeEngine();
-    game.joystick.removeFromParent();
-    game.joystick = TestJoystick();
-    await game.add(game.joystick);
+    game.controlManager.joystick.removeFromParent();
+    game.controlManager.joystick = TestJoystick();
+    await game.add(game.controlManager.joystick);
     game.player
-      ..setJoystick(game.joystick)
+      ..setJoystick(game.controlManager.joystick)
       ..resetInput();
     game.update(0);
     game.update(0);
@@ -46,8 +46,8 @@ void main() {
       ..position.setValues(20, 20);
 
     // Clear input before restarting.
-    game.joystick.delta.setZero();
-    game.joystick.relativeDelta.setZero();
+    game.controlManager.joystick.delta.setZero();
+    game.controlManager.joystick.relativeDelta.setZero();
 
     // Starting a new game should reset orientation and position.
     await game.startGame();

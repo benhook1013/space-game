@@ -37,14 +37,14 @@ void main() {
     game.settingsService.joystickScale.value = 1.2;
     await Future<void>.delayed(Duration.zero);
 
-    final bg = game.joystick.background as CircleComponent;
-    final knob = game.joystick.knob as CircleComponent;
-    final fire = game.fireButton.button as CircleComponent;
+    final bg = game.controlManager.joystick.background as CircleComponent;
+    final knob = game.controlManager.joystick.knob as CircleComponent;
+    final fire = game.controlManager.fireButton!.button as CircleComponent;
     expect(bg.radius, 50 * 1.2);
     expect(knob.radius, 20 * 1.2);
     expect(fire.radius, 30 * 1.2);
-    expect(game.joystick.position.x, 40);
-    expect(game.joystick.position.y, game.size.y - 40);
-    expect(game.fireButton.anchor, Anchor.bottomRight);
+    expect(game.controlManager.joystick.position.x, 40);
+    expect(game.controlManager.joystick.position.y, game.size.y - 40);
+    expect(game.controlManager.fireButton!.anchor, Anchor.bottomRight);
   });
 }
