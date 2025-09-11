@@ -42,10 +42,10 @@ log "Ensuring Flutter $FLUTTER_VERSION ($FLUTTER_CHANNEL) in $FLUTTER_DIR_REL"
 # ----------------------------------
 needs_download=true
 if [[ -x "$FLUTTER_DIR/bin/flutter" && "$FORCE" != true ]]; then
-  current_info="$("$FLUTTER_DIR/bin/flutter" --version 2>/dev/null | tr '\n' ' ' || true)"
-  if [[ "$current_info" =~ Flutter[[:space:]]+([^[:space:]]+).*channel[[:space:]]+([^[:space:]]+) ]]; then
-    current_version="${BASH_REMATCH[1]}"
-    current_channel="${BASH_REMATCH[2]}"
+  current_info="$("$FLUTTER_DIR/bin/flutter" --version --machine 2>/dev/null || true)"
+  current_version="$(echo "$current_info" | awk -F'"' '/"frameworkVersion"/ {print $4}')"
+  current_channel="$(echo "$current_info" | awk -F'"' '/"channel"/ {print $4}')"
+  if [[ -n "$current_version" && -n "$current_channel" ]]; then
     if [[ "$current_version" == "$FLUTTER_VERSION" && "$current_channel" == "$FLUTTER_CHANNEL" ]]; then
       log "Flutter $current_version ($current_channel) already installed"
       needs_download=false
