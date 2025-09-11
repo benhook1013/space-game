@@ -9,9 +9,10 @@ import 'asteroid.dart';
 
 /// Spawns asteroids at timed intervals when started.
 class AsteroidSpawner extends Component with HasGameReference<SpaceGame> {
-  AsteroidSpawner();
+  AsteroidSpawner({math.Random? random}) : _random = random ?? math.Random();
 
-  final math.Random _random = math.Random();
+  /// Source of randomness for spawn positions. Injected for testability.
+  final math.Random _random;
   final Timer _timer = Timer(Constants.asteroidSpawnInterval, repeat: true);
 
   void start() => _timer.start();
