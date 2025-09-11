@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 
 import '../constants.dart';
 import '../game/key_dispatcher.dart';
-import '../game/game_state.dart';
 import '../game/space_game.dart';
 import 'bullet.dart';
 import 'player.dart';

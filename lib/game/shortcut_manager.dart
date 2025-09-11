@@ -2,7 +2,6 @@ import 'package:flutter/services.dart';
 
 import '../services/audio_service.dart';
 import 'game_state_machine.dart';
-import 'game_state.dart';
 import 'key_dispatcher.dart';
 
 /// Registers global keyboard shortcuts and wires them to actions.
