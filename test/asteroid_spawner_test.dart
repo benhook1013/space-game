@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -35,7 +37,7 @@ class _TestGame extends SpaceGame {
     await add(joystick);
     player = _TestPlayer(joystick: joystick, keyDispatcher: keyDispatcher);
     await add(player);
-    asteroidSpawner = AsteroidSpawner();
+    asteroidSpawner = AsteroidSpawner(random: math.Random(0));
     await add(asteroidSpawner);
   }
 }
