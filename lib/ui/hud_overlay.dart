@@ -24,7 +24,7 @@ class HudOverlay extends StatelessWidget {
     return ValueListenableBuilder<double>(
       valueListenable: game.settingsService.hudButtonScale,
       builder: (context, scale, _) {
-        final iconSize = responsiveIconSizeFromContext(context) * scale;
+        final iconSize = context.responsiveIconSize() * scale;
         return SafeArea(
           child: SizedBox.expand(
             child: Padding(

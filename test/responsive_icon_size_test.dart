@@ -6,25 +6,25 @@ import 'package:space_game/ui/responsive.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  group('responsiveIconSize', () {
+  group('ResponsiveConstraints', () {
     test('returns base size on phones', () {
       final constraints = BoxConstraints.tight(const Size(500, 800));
-      expect(responsiveIconSize(constraints), 24);
+      expect(constraints.responsiveIconSize(), 24);
     });
 
     test('doubles size on tablets', () {
       final constraints = BoxConstraints.tight(const Size(600, 800));
-      expect(responsiveIconSize(constraints), 48);
+      expect(constraints.responsiveIconSize(), 48);
     });
 
     test('triples size on desktops', () {
       final constraints = BoxConstraints.tight(const Size(900, 1200));
-      expect(responsiveIconSize(constraints), 72);
+      expect(constraints.responsiveIconSize(), 72);
     });
 
     test('honors custom base size', () {
       final constraints = BoxConstraints.tight(const Size(900, 1200));
-      expect(responsiveIconSize(constraints, base: 30), 90);
+      expect(constraints.responsiveIconSize(base: 30), 90);
     });
   });
 }
