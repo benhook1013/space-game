@@ -1,5 +1,4 @@
 import 'dart:ui';
-import 'dart:math' as math;
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
@@ -10,6 +9,7 @@ import '../enemy_faction.dart';
 import '../game/space_game.dart';
 import 'debug_health_text.dart';
 import '../util/collision_utils.dart';
+import '../util/angle_utils.dart';
 import 'damageable.dart';
 import 'explosion.dart';
 import 'offscreen_cleanup.dart';
@@ -72,7 +72,7 @@ class EnemyComponent extends SpriteComponent
     final playerPos = game.targetingService.playerPosition;
     if (playerPos != null) {
       final direction = (playerPos - position).normalized();
-      angle = math.atan2(direction.y, direction.x) + math.pi / 2;
+      angle = vectorToFlameAngle(direction);
       position += direction * Constants.enemySpeed * dt;
     }
     super.update(dt);

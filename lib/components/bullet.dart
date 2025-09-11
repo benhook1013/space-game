@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 
@@ -10,6 +8,7 @@ import 'asteroid.dart';
 import 'damageable.dart';
 import 'offscreen_cleanup.dart';
 import 'spawn_remove_emitter.dart';
+import '../util/angle_utils.dart';
 
 /// Short-lived projectile fired by the player.
 ///
@@ -32,7 +31,7 @@ class BulletComponent extends SpriteComponent
     _direction
       ..setFrom(direction)
       ..normalize();
-    angle = math.atan2(_direction.y, _direction.x) + math.pi / 2;
+    angle = vectorToFlameAngle(_direction);
   }
 
   @override

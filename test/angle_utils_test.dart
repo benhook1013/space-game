@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flame/components.dart';
 
 import 'package:space_game/util/angle_utils.dart';
 
@@ -77,5 +78,11 @@ void main() {
 
   test('normalizeAngle treats -0 as 0', () {
     expect(normalizeAngle(-0.0), isZero);
+  });
+
+  test('vectorToFlameAngle converts vectors to Flame angles', () {
+    expect(vectorToFlameAngle(Vector2(0, -1)), closeTo(0, 1e-10));
+    expect(vectorToFlameAngle(Vector2(1, 0)), closeTo(math.pi / 2, 1e-10));
+    expect(vectorToFlameAngle(Vector2(0, 1)), closeTo(math.pi, 1e-10));
   });
 }

@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:flame/components.dart';
 
 import '../game/space_game.dart';
@@ -24,11 +22,7 @@ class AutoAimBehavior extends Component
     );
     if (target != null) {
       parent.targetAngle = normalizeAngle(
-        math.atan2(
-              target.position.y - parent.position.y,
-              target.position.x - parent.position.x,
-            ) +
-            math.pi / 2,
+        vectorToFlameAngle(target.position - parent.position),
       );
       parent.updateRotation(dt);
     }
