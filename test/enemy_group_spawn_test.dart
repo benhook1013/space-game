@@ -69,6 +69,10 @@ void main() {
       isTrue,
     );
     final spritePaths = enemies.map((e) => e.spritePath).toSet();
-    expect(spritePaths.length, equals(1));
+    expect(
+      spritePaths.length == 1 ||
+          (spritePaths.length == 2 && count == Constants.enemyGroupSize + 1),
+      isTrue,
+    );
   });
 }

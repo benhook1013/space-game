@@ -31,17 +31,17 @@ class ShortcutManager {
         toggleHelp();
         return;
       }
-      if (stateMachine.state == GameState.playing) {
+      if (stateMachine.isPlaying) {
         pauseGame();
-      } else if (stateMachine.state == GameState.paused) {
+      } else if (stateMachine.isPaused) {
         resumeGame();
       }
     });
 
     keyDispatcher.register(LogicalKeyboardKey.keyP, onDown: () {
-      if (stateMachine.state == GameState.playing) {
+      if (stateMachine.isPlaying) {
         pauseGame();
-      } else if (stateMachine.state == GameState.paused) {
+      } else if (stateMachine.isPaused) {
         resumeGame();
       }
     });
@@ -52,16 +52,15 @@ class ShortcutManager {
     );
 
     keyDispatcher.register(LogicalKeyboardKey.enter, onDown: () {
-      if (stateMachine.state == GameState.menu ||
-          stateMachine.state == GameState.gameOver) {
+      if (stateMachine.isMenu || stateMachine.isGameOver) {
         startGame();
       }
     });
 
     keyDispatcher.register(LogicalKeyboardKey.keyR, onDown: () {
-      if (stateMachine.state == GameState.gameOver ||
-          stateMachine.state == GameState.playing ||
-          stateMachine.state == GameState.paused) {
+      if (stateMachine.isGameOver ||
+          stateMachine.isPlaying ||
+          stateMachine.isPaused) {
         startGame();
       }
     });
@@ -97,8 +96,7 @@ class ShortcutManager {
     );
 
     keyDispatcher.register(LogicalKeyboardKey.keyQ, onDown: () {
-      if (stateMachine.state == GameState.paused ||
-          stateMachine.state == GameState.gameOver) {
+      if (stateMachine.isPaused || stateMachine.isGameOver) {
         returnToMenu();
       }
     });

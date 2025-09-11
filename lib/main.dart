@@ -135,7 +135,7 @@ class _AppLifecycleObserver extends WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
       case AppLifecycleState.resumed:
-        if (game.isLoaded && game.stateMachine.state == GameState.playing) {
+        if (game.isLoaded && game.stateMachine.isPlaying) {
           game.resumeEngine();
           game.focusGame();
         }

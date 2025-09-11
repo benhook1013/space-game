@@ -30,6 +30,13 @@ class GameStateMachine {
   GameState get state => stateNotifier.value;
   set state(GameState value) => stateNotifier.value = value;
 
+  /// Convenience getters for common state checks.
+  bool get isMenu => state == GameState.menu;
+  bool get isPlaying => state == GameState.playing;
+  bool get isPaused => state == GameState.paused;
+  bool get isGameOver => state == GameState.gameOver;
+  bool get isUpgrades => state == GameState.upgrades;
+
   void startGame() {
     state = GameState.playing;
     overlays.showHud();
