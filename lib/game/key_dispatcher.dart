@@ -3,8 +3,7 @@ import 'package:flutter/services.dart';
 
 /// Maps keyboard keys to callbacks and tracks pressed state.
 class KeyDispatcher extends Component with KeyboardHandler {
-  final Map<LogicalKeyboardKey, List<VoidCallback>> _down = {};
-  final Map<LogicalKeyboardKey, List<VoidCallback>> _up = {};
+  final Map<LogicalKeyboardKey, _KeyCallbacks> _callbacks = {};
   final Set<LogicalKeyboardKey> _pressed = <LogicalKeyboardKey>{};
   final Set<LogicalKeyboardKey> _ignored = <LogicalKeyboardKey>{};
 
@@ -14,19 +13,22 @@ class KeyDispatcher extends Component with KeyboardHandler {
     VoidCallback? onDown,
     VoidCallback? onUp,
   }) {
+    final callbacks = _callbacks.putIfAbsent(key, _KeyCallbacks.new);
     if (onDown != null) {
-      _down.putIfAbsent(key, () => <VoidCallback>[]).add(onDown);
+      callbacks.down.add(onDown);
     }
     if (onUp != null) {
-      _up.putIfAbsent(key, () => <VoidCallback>[]).add(onUp);
+      callbacks.up.add(onUp);
+    }
+    if (callbacks.isEmpty) {
+      _callbacks.remove(key);
     }
     _ignored.remove(key);
   }
 
   /// Unregisters callbacks for [key] and clears pressed state.
   void unregister(LogicalKeyboardKey key) {
-    _down.remove(key);
-    _up.remove(key);
+    _callbacks.remove(key);
     _pressed.remove(key);
     _ignored.add(key);
   }
@@ -45,44 +47,44 @@ class KeyDispatcher extends Component with KeyboardHandler {
       _pressed.remove(key);
       return false;
     }
+    final callbacks = _callbacks[key];
     var handled = false;
     if (event is KeyDownEvent) {
       // Always fire the down callback on explicit down events. This avoids
       // missing actions when a prior key up was skipped (e.g. focus loss).
       _pressed.add(key);
-      final callbacks = _down[key];
-      if (callbacks != null) {
-        for (final callback in callbacks) {
-          callback();
-        }
-        handled = true;
-      }
+      handled = _fire(callbacks?.down) || handled;
     } else if (event is KeyRepeatEvent) {
       // Treat repeat events like down events only if we haven't seen a
       // preceding down. Some browsers emit repeats without an initial down
       // (e.g. spacebar on web).
       final firstPress = _pressed.add(key);
       if (firstPress) {
-        final callbacks = _down[key];
-        if (callbacks != null) {
-          for (final callback in callbacks) {
-            callback();
-          }
-          handled = true;
-        }
+        handled = _fire(callbacks?.down) || handled;
       }
     } else if (event is KeyUpEvent) {
       _pressed.remove(key);
-      final callbacks = _up[key];
-      if (callbacks != null) {
-        for (final callback in callbacks) {
-          callback();
-        }
-        handled = true;
-      }
+      handled = _fire(callbacks?.up) || handled;
     }
     // Return whether a callback handled the event. Unhandled keys propagate so
     // other components or widgets (like text fields) can respond.
     return handled;
   }
+}
+
+class _KeyCallbacks {
+  final List<VoidCallback> down = <VoidCallback>[];
+  final List<VoidCallback> up = <VoidCallback>[];
+
+  bool get isEmpty => down.isEmpty && up.isEmpty;
+}
+
+bool _fire(List<VoidCallback>? callbacks) {
+  if (callbacks == null || callbacks.isEmpty) {
+    return false;
+  }
+  for (final callback in callbacks) {
+    callback();
+  }
+  return true;
 }
