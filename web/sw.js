@@ -60,7 +60,12 @@ async function cacheOptionalAssets(cache) {
       ...(cachedManifest.images || []),
       ...(cachedManifest.audio || []),
       ...(cachedManifest.fonts || []),
-    ].map((asset) => (asset.startsWith("assets/") ? asset : `assets/${asset}`));
+      // Flutter compiles assets under a top-level `assets/` directory for web
+      // builds. Prefix manifest entries so cache.add fetches the actual files.
+    ].map((asset) => {
+      const normalized = asset.startsWith("/") ? asset.slice(1) : asset;
+      return `assets/${normalized}`;
+    });
     await cacheAll(cache, assetList);
   } catch (err) {
     console.error("Asset manifest fetch failed", err);
