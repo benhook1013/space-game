@@ -7,43 +7,35 @@ import 'package:space_game/util/angle_utils.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('normalizeAngle wraps angles greater than pi', () {
-    final angle = 3 * math.pi / 2;
-    final normalized = normalizeAngle(angle);
-    expect(normalized, closeTo(-math.pi / 2, 1e-10));
-  });
+  test('normalizeAngle returns expected values', () {
+    final cases = <({double input, double expected})>[
+      // wraps angles greater than π
+      (input: 3 * math.pi / 2, expected: -math.pi / 2),
+      // wraps angles less than -π
+      (input: -3 * math.pi / 2, expected: math.pi / 2),
+      // handles multiples of 2π
+      (input: 5 * 2 * math.pi + math.pi / 4, expected: math.pi / 4),
+      // maps ±2π to zero
+      (input: 2 * math.pi, expected: 0),
+      (input: -2 * math.pi, expected: 0),
+      // leaves in-range angles unchanged
+      (input: math.pi, expected: math.pi),
+      (input: 0, expected: 0),
+      (input: math.pi / 2, expected: math.pi / 2),
+      // wraps -π to π
+      (input: -math.pi, expected: math.pi),
+      // handles negative multiples of 2π
+      (input: -7 * 2 * math.pi - math.pi / 3, expected: -math.pi / 3),
+    ];
 
-  test('normalizeAngle wraps angles less than -pi', () {
-    final angle = -3 * math.pi / 2;
-    final normalized = normalizeAngle(angle);
-    expect(normalized, closeTo(math.pi / 2, 1e-10));
-  });
-
-  test('normalizeAngle handles multiples of 2π', () {
-    final angle = 5 * 2 * math.pi + math.pi / 4;
-    final normalized = normalizeAngle(angle);
-    expect(normalized, closeTo(math.pi / 4, 1e-10));
-  });
-
-  test('normalizeAngle maps ±2π to zero', () {
-    expect(normalizeAngle(2 * math.pi), closeTo(0, 1e-10));
-    expect(normalizeAngle(-2 * math.pi), closeTo(0, 1e-10));
-  });
-
-  test('normalizeAngle leaves in-range angles unchanged', () {
-    expect(normalizeAngle(math.pi), closeTo(math.pi, 1e-10));
-    expect(normalizeAngle(0), closeTo(0, 1e-10));
-    expect(normalizeAngle(math.pi / 2), closeTo(math.pi / 2, 1e-10));
-  });
-
-  test('normalizeAngle wraps -π to π', () {
-    expect(normalizeAngle(-math.pi), closeTo(math.pi, 1e-10));
-  });
-
-  test('normalizeAngle handles negative multiples of 2π', () {
-    final angle = -7 * 2 * math.pi - math.pi / 3;
-    final normalized = normalizeAngle(angle);
-    expect(normalized, closeTo(-math.pi / 3, 1e-10));
+    for (final (:input, :expected) in cases) {
+      final normalized = normalizeAngle(input);
+      expect(
+        normalized,
+        closeTo(expected, 1e-10),
+        reason: 'angle $input expected $expected but got $normalized',
+      );
+    }
   });
 
   test('normalizeAngle keeps result within [-π, π]', () {
