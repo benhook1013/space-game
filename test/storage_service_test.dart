@@ -49,5 +49,18 @@ void main() {
         ['speed1', 'fireRate1'],
       );
     });
+
+    test('throws for unsupported types', () async {
+      SharedPreferences.setMockInitialValues({});
+      final storage = await StorageService.create();
+      expect(
+        () => storage.getValue<DateTime>('now', DateTime.now()),
+        throwsUnsupportedError,
+      );
+      expect(
+        () => storage.setValue<DateTime>('now', DateTime.now()),
+        throwsUnsupportedError,
+      );
+    });
   });
 }
