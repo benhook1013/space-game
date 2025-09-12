@@ -45,15 +45,12 @@ Future<void> main() async {
   // ready. The game itself will await completion before starting.
   game.startLoadingAssets();
 
-  final lifecycleObserver = _AppLifecycleObserver(game);
-
   runApp(
     GameTextScale(
       textScale: settings.textScale,
       child: GameApp(
         game: game,
         focusNode: focusNode,
-        lifecycleObserver: lifecycleObserver,
         colorScheme: colorScheme,
         gameColors: gameColors,
       ),
@@ -65,7 +62,6 @@ class GameApp extends StatefulWidget {
   const GameApp({
     required this.game,
     required this.focusNode,
-    required this.lifecycleObserver,
     required this.colorScheme,
     required this.gameColors,
     super.key,
@@ -73,7 +69,6 @@ class GameApp extends StatefulWidget {
 
   final SpaceGame game;
   final FocusNode focusNode;
-  final _AppLifecycleObserver lifecycleObserver;
   final ColorScheme colorScheme;
   final GameColors gameColors;
 
@@ -81,17 +76,36 @@ class GameApp extends StatefulWidget {
   State<GameApp> createState() => _GameAppState();
 }
 
-class _GameAppState extends State<GameApp> {
+class _GameAppState extends State<GameApp> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(widget.lifecycleObserver);
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(widget.lifecycleObserver);
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        if (widget.game.isLoaded && widget.game.stateMachine.isPlaying) {
+          widget.game.resumeEngine();
+          widget.game.focusGame();
+        }
+        break;
+      default:
+        widget.game.pauseEngine();
+        final laser = widget.game.miningLaser;
+        if (laser != null && laser.isMounted) {
+          laser.stopSound();
+        }
+        widget.game.audioService.stopAll();
+    }
   }
 
   @override
@@ -122,30 +136,5 @@ class _GameAppState extends State<GameApp> {
         },
       ),
     );
-  }
-}
-
-class _AppLifecycleObserver extends WidgetsBindingObserver {
-  _AppLifecycleObserver(this.game);
-
-  final SpaceGame game;
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    switch (state) {
-      case AppLifecycleState.resumed:
-        if (game.isLoaded && game.stateMachine.isPlaying) {
-          game.resumeEngine();
-          game.focusGame();
-        }
-        break;
-      default:
-        game.pauseEngine();
-        final laser = game.miningLaser;
-        if (laser != null && laser.isMounted) {
-          laser.stopSound();
-        }
-        game.audioService.stopAll();
-    }
   }
 }
