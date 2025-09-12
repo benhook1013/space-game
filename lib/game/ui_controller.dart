@@ -12,17 +12,23 @@ class UiController {
   UiController({
     required this.overlayService,
     required this.stateMachine,
-    required this.player,
-    required this.miningLaser,
+    required PlayerComponent Function() player,
+    required MiningLaserComponent? Function() miningLaser,
     required this.pauseEngine,
     required this.resumeEngine,
     required this.focusGame,
-  });
+  })  : _player = player,
+        _miningLaser = miningLaser;
 
   final OverlayService overlayService;
   final GameStateMachine stateMachine;
-  final PlayerComponent player;
-  final MiningLaserComponent? miningLaser;
+
+  /// Suppliers used to fetch the current player and mining laser components.
+  ///
+  /// The lifecycle manager replaces these components on each new run, so the
+  /// UI controller avoids caching stale instances by retrieving them on demand.
+  final PlayerComponent Function() _player;
+  final MiningLaserComponent? Function() _miningLaser;
   final VoidCallback pauseEngine;
   final VoidCallback resumeEngine;
   final VoidCallback focusGame;
@@ -48,14 +54,14 @@ class UiController {
       overlayService.showHelp();
       if (_helpWasPlaying) {
         pauseEngine();
-        miningLaser?.stopSound();
+        _miningLaser()?.stopSound();
       }
     }
   }
 
   /// Toggles rendering of the player's range rings.
   void toggleRangeRings() {
-    player.toggleRangeRings();
+    _player().toggleRangeRings();
   }
 
   /// Shows or hides the runtime settings overlay.

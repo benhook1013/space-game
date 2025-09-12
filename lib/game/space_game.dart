@@ -218,8 +218,8 @@ class SpaceGame extends FlameGame
     ui = UiController(
       overlayService: overlayService,
       stateMachine: stateMachine,
-      player: player,
-      miningLaser: miningLaser,
+      player: () => player,
+      miningLaser: () => miningLaser,
       pauseEngine: pauseEngine,
       resumeEngine: resumeEngine,
       focusGame: focusGame,
