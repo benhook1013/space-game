@@ -22,6 +22,10 @@ extension NearestComponent<T extends PositionComponent> on Iterable<T> {
       }
       final distanceSquared = component.position.distanceToSquared(origin);
       if (distanceSquared < closestDistanceSquared) {
+        if (distanceSquared == 0) {
+          // Can't be closer than this; exit early.
+          return component;
+        }
         closest = component;
         closestDistanceSquared = distanceSquared;
       }
