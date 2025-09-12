@@ -8,20 +8,25 @@ class KeyDispatcher extends Component with KeyboardHandler {
   final Set<LogicalKeyboardKey> _ignored = <LogicalKeyboardKey>{};
 
   /// Registers callbacks for [key].
+  ///
+  /// If neither [onDown] nor [onUp] is provided, any existing handlers are
+  /// removed and the key is allowed to propagate unhandled.
   void register(
     LogicalKeyboardKey key, {
     VoidCallback? onDown,
     VoidCallback? onUp,
   }) {
+    if (onDown == null && onUp == null) {
+      _callbacks.remove(key);
+      _ignored.remove(key);
+      return;
+    }
     final callbacks = _callbacks.putIfAbsent(key, _KeyCallbacks.new);
     if (onDown != null) {
       callbacks.down.add(onDown);
     }
     if (onUp != null) {
       callbacks.up.add(onUp);
-    }
-    if (callbacks.isEmpty) {
-      _callbacks.remove(key);
     }
     _ignored.remove(key);
   }
