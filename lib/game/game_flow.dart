@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:flame/components.dart';
-
 import '../components/explosion.dart';
 import 'space_game.dart';
 
