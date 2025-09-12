@@ -134,3 +134,14 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
       - Changes should rebuild layers and persist via `SettingsService`.
       - Ensure overlays hide when debug mode is disabled.
 
+## Refactoring
+
+- [ ] Split the `SpaceGame` class into focused modules so each file stays under the
+      ~300‑line guideline.
+      - Extract service setup into a dedicated `game_services.dart` or similar.
+      - Move world construction logic into a `WorldBuilder` module.
+      - Create an `OverlayCoordinator` to manage overlays and state changes.
+      - Isolate gameplay flow helpers (damage, scoring, pause/resume, reset, game over)
+        into a `GameFlow` helper.
+      - Move debug toggles and lifecycle disposal into dedicated helpers or mixins.
+
