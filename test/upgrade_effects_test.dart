@@ -20,7 +20,8 @@ void main() {
       storageService: storage,
       settingsService: settings,
     );
-    final upgrade = service.upgrades.firstWhere((u) => u.id == 'fireRate1');
+    final upgrade =
+        service.upgrades.firstWhere((u) => u.id == UpgradeId.fireRate1);
     expect(service.bulletCooldown, Constants.bulletCooldown);
     score.addMinerals(upgrade.cost);
     service.buy(upgrade);
@@ -37,7 +38,8 @@ void main() {
       storageService: storage,
       settingsService: settings,
     );
-    final upgrade = service.upgrades.firstWhere((u) => u.id == 'miningSpeed1');
+    final upgrade =
+        service.upgrades.firstWhere((u) => u.id == UpgradeId.miningSpeed1);
     expect(service.miningPulseInterval, Constants.miningPulseInterval);
     score.addMinerals(upgrade.cost);
     service.buy(upgrade);
@@ -56,7 +58,7 @@ void main() {
       settingsService: settings,
     );
     final upgrade =
-        service.upgrades.firstWhere((u) => u.id == 'targetingRange1');
+        service.upgrades.firstWhere((u) => u.id == UpgradeId.targetingRange1);
     expect(service.targetingRange, Constants.playerAutoAimRange);
     score.addMinerals(upgrade.cost);
     service.buy(upgrade);
@@ -73,7 +75,8 @@ void main() {
       storageService: storage,
       settingsService: settings,
     );
-    final upgrade = service.upgrades.firstWhere((u) => u.id == 'tractorRange1');
+    final upgrade =
+        service.upgrades.firstWhere((u) => u.id == UpgradeId.tractorRange1);
     expect(service.tractorRange, Constants.playerTractorAuraRadius);
     score.addMinerals(upgrade.cost);
     service.buy(upgrade);
@@ -91,7 +94,8 @@ void main() {
       storageService: storage,
       settingsService: settings,
     );
-    final upgrade = service.upgrades.firstWhere((u) => u.id == 'speed1');
+    final upgrade =
+        service.upgrades.firstWhere((u) => u.id == UpgradeId.speed1);
     expect(service.playerSpeed, Constants.playerSpeed);
     score.addMinerals(upgrade.cost);
     service.buy(upgrade);

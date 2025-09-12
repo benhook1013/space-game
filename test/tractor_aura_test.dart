@@ -11,6 +11,7 @@ import 'package:space_game/game/key_dispatcher.dart';
 import 'package:space_game/game/space_game.dart';
 import 'package:space_game/services/audio_service.dart';
 import 'package:space_game/services/storage_service.dart';
+import 'package:space_game/services/upgrade_service.dart';
 
 class _TestGame extends SpaceGame {
   _TestGame({required StorageService storage, required AudioService audio})
@@ -114,8 +115,8 @@ void main() {
     game.update(0);
     game.update(0);
 
-    final upgrade =
-        game.upgradeService.upgrades.firstWhere((u) => u.id == 'tractorRange1');
+    final upgrade = game.upgradeService.upgrades
+        .firstWhere((u) => u.id == UpgradeId.tractorRange1);
     game.scoreService.addMinerals(upgrade.cost);
     game.upgradeService.buy(upgrade);
 

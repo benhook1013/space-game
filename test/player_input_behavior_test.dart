@@ -17,6 +17,7 @@ import 'package:space_game/game/game_state.dart';
 import 'package:space_game/services/overlay_service.dart';
 import 'package:space_game/services/storage_service.dart';
 import 'package:space_game/services/audio_service.dart';
+import 'package:space_game/services/upgrade_service.dart';
 
 import 'test_joystick.dart';
 import 'test_images.dart';
@@ -235,8 +236,8 @@ void main() {
     final normalX = game.player.position.x;
 
     game.player.position.setZero();
-    final upgrade =
-        game.upgradeService.upgrades.firstWhere((u) => u.id == 'speed1');
+    final upgrade = game.upgradeService.upgrades
+        .firstWhere((u) => u.id == UpgradeId.speed1);
     game.scoreService.addMinerals(upgrade.cost);
     game.upgradeService.buy(upgrade);
     game.controlManager.joystick.delta.setValues(1, 0);

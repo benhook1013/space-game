@@ -103,7 +103,7 @@ void main() {
       settingsService: settings,
     );
     final shieldUpgrade =
-        service.upgrades.firstWhere((u) => u.id == 'shieldRegen1');
+        service.upgrades.firstWhere((u) => u.id == UpgradeId.shieldRegen1);
 
     // Shield regen flag should be false until the upgrade is purchased.
     expect(service.hasShieldRegen, isFalse);
