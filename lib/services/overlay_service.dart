@@ -14,13 +14,6 @@ class OverlayService {
 
   final Game game;
 
-  void _showOnly(String id, Iterable<String> remove) {
-    final overlays = game.overlays;
-    overlays
-      ..removeAll(remove)
-      ..add(id);
-  }
-
   // Overlays that shouldn't be active together. When one of these overlays is
   // shown, all others in the set will be removed to ensure only a single
   // exclusive overlay is visible at a time.
@@ -33,8 +26,16 @@ class OverlayService {
     UpgradesOverlay.id,
   };
 
-  void _showExclusive(String id, {Set<String>? remove}) =>
-      _showOnly(id, remove ?? _exclusiveIds.difference({id}));
+  void _showExclusive(String id, {Set<String>? remove}) {
+    final overlays = game.overlays;
+    final ids = remove ?? _exclusiveIds;
+    for (final other in ids) {
+      if (other != id) {
+        overlays.remove(other);
+      }
+    }
+    overlays.add(id);
+  }
 
   void showMenu() => _showExclusive(MenuOverlay.id);
 
