@@ -48,10 +48,11 @@ class ScoreService {
   }
 
   Future<void> updateHighScoreIfNeeded() async {
-    if (score.value > highScore.value) {
-      final success = await storageService.setHighScore(score.value);
+    final currentScore = score.value;
+    if (currentScore > highScore.value) {
+      final success = await storageService.setHighScore(currentScore);
       if (success) {
-        highScore.value = score.value;
+        highScore.value = currentScore;
       }
     }
   }
