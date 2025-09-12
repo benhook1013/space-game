@@ -24,26 +24,24 @@ class StorageService {
   /// Supported types are [int], [double], [bool], [String] and
   /// [List]<[String]>. Throws [UnsupportedError] for unsupported types.
   T getValue<T>(String key, T defaultValue) {
-    if (defaultValue is int) {
+    if (T == int) {
       final value = _prefs.getInt(key);
       return (value ?? defaultValue) as T;
-    } else if (defaultValue is double) {
+    } else if (T == double) {
       final value = _prefs.getDouble(key);
       return (value ?? defaultValue) as T;
-    } else if (defaultValue is bool) {
+    } else if (T == bool) {
       final value = _prefs.getBool(key);
       return (value ?? defaultValue) as T;
-    } else if (defaultValue is String) {
+    } else if (T == String) {
       final value = _prefs.getString(key);
       return (value ?? defaultValue) as T;
-    } else if (defaultValue is List<String>) {
+    } else if (T == List<String>) {
       final value = _prefs.getStringList(key);
-      return (value ?? defaultValue) as T;
+      return (value ?? defaultValue as List<String>) as T;
     }
 
-    throw UnsupportedError(
-      'Type ${defaultValue.runtimeType} is not supported',
-    );
+    throw UnsupportedError('Type $T is not supported');
   }
 
   /// Persists [value] for [key].
@@ -53,19 +51,19 @@ class StorageService {
   ///
   /// Returns `true` when the value was written to storage.
   Future<bool> setValue<T>(String key, T value) {
-    if (value is int) {
-      return _prefs.setInt(key, value);
-    } else if (value is double) {
-      return _prefs.setDouble(key, value);
-    } else if (value is bool) {
-      return _prefs.setBool(key, value);
-    } else if (value is String) {
-      return _prefs.setString(key, value);
-    } else if (value is List<String>) {
-      return _prefs.setStringList(key, value);
+    if (T == int) {
+      return _prefs.setInt(key, value as int);
+    } else if (T == double) {
+      return _prefs.setDouble(key, value as double);
+    } else if (T == bool) {
+      return _prefs.setBool(key, value as bool);
+    } else if (T == String) {
+      return _prefs.setString(key, value as String);
+    } else if (T == List<String>) {
+      return _prefs.setStringList(key, value as List<String>);
     }
 
-    throw UnsupportedError('Type ${value.runtimeType} is not supported');
+    throw UnsupportedError('Type $T is not supported');
   }
 
   /// Returns the stored high score or `0` if none exists.
