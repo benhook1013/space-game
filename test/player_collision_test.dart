@@ -130,7 +130,7 @@ class _TestGame extends SpaceGame {
     stateMachine.state = GameState.playing;
     final dispatcher = KeyDispatcher();
     await add(dispatcher);
-    joystick = TestJoystick();
+    final joystick = TestJoystick();
     await add(joystick);
     player = _TestPlayer(joystick: joystick, keyDispatcher: dispatcher);
     await add(player);

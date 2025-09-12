@@ -56,16 +56,18 @@ class _TestGame extends SpaceGame {
   _TestGame({required StorageService storage, required AudioService audio})
       : super(storageService: storage, audioService: audio);
 
+  late JoystickComponent testJoystick;
+
   @override
   Future<void> onLoad() async {
     final keyDispatcher = KeyDispatcher();
     await add(keyDispatcher);
     await controlManager.init();
     controlManager.joystick.removeFromParent();
-    controlManager.joystick = TestJoystick();
-    await add(controlManager.joystick);
+    testJoystick = TestJoystick();
+    await add(testJoystick);
     player = _TestPlayer(
-      joystick: controlManager.joystick,
+      joystick: testJoystick,
       keyDispatcher: keyDispatcher,
     );
     await add(player);
@@ -94,8 +96,8 @@ void main() {
     game.update(0);
 
     // Move down; target angle is pi.
-    game.controlManager.joystick.delta.setValues(0, 1);
-    game.controlManager.joystick.relativeDelta.setValues(0, 1);
+    game.testJoystick.delta.setValues(0, 1);
+    game.testJoystick.relativeDelta.setValues(0, 1);
     final input = game.player.inputBehavior;
     input.update(0.05);
     final angleAfterFirstUpdate = game.player.angle;
@@ -105,8 +107,8 @@ void main() {
     expect(angleAfterFirstUpdate, lessThan(math.pi));
 
     // Change direction upward before rotation completes.
-    game.controlManager.joystick.delta.setValues(0, -1);
-    game.controlManager.joystick.relativeDelta.setValues(0, -1);
+    game.testJoystick.delta.setValues(0, -1);
+    game.testJoystick.relativeDelta.setValues(0, -1);
     input.update(0.05);
     expect(game.player.angle, lessThan(angleAfterFirstUpdate));
 

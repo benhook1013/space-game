@@ -18,8 +18,8 @@ import 'package:space_game/services/overlay_service.dart';
 import 'package:space_game/services/storage_service.dart';
 import 'package:space_game/services/audio_service.dart';
 
-import 'test_joystick.dart';
 import 'test_images.dart';
+import 'test_joystick.dart';
 
 class _TestBullet extends BulletComponent {
   @override
@@ -100,9 +100,6 @@ class _TestGame extends SpaceGame {
     keyDispatcher = KeyDispatcher();
     await add(keyDispatcher);
     await controlManager.init();
-    controlManager.joystick.removeFromParent();
-    controlManager.joystick = TestJoystick();
-    await add(controlManager.joystick);
     player = _TestPlayer(
       joystick: controlManager.joystick,
       keyDispatcher: keyDispatcher,
@@ -139,14 +136,16 @@ class _RemountGame extends SpaceGame {
   _RemountGame({required StorageService storage, required AudioService audio})
       : super(storageService: storage, audioService: audio);
 
+  late JoystickComponent testJoystick;
+
   @override
   Future<void> onLoad() async {
     keyDispatcher = KeyDispatcher();
     await add(keyDispatcher);
     await controlManager.init();
     controlManager.joystick.removeFromParent();
-    controlManager.joystick = TestJoystick();
-    await add(controlManager.joystick);
+    testJoystick = TestJoystick();
+    await add(testJoystick);
   }
 }
 
@@ -253,12 +252,12 @@ void main() {
     await game.onLoad();
     game.onGameResize(Vector2.all(100));
     await game.ready();
-    game.controlManager.joystick.onGameResize(game.size);
+    game.testJoystick.onGameResize(game.size);
     game.update(0);
     game.update(0);
 
     final player = _RemountPlayer(
-      joystick: game.controlManager.joystick,
+      joystick: game.testJoystick,
       keyDispatcher: game.keyDispatcher,
     );
     await game.add(player);

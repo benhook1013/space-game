@@ -33,7 +33,7 @@ class _TestGame extends SpaceGame {
   Future<void> onLoad() async {
     keyDispatcher = KeyDispatcher();
     await add(keyDispatcher);
-    joystick = TestJoystick();
+    final joystick = TestJoystick();
     await add(joystick);
     player = _TestPlayer(joystick: joystick, keyDispatcher: keyDispatcher);
     await add(player);
