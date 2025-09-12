@@ -31,7 +31,7 @@ class _TestGame extends SpaceGame {
   Future<void> onLoad() async {
     final keyDispatcher = KeyDispatcher();
     add(keyDispatcher);
-    joystick = JoystickComponent(
+    final joystick = JoystickComponent(
       knob: CircleComponent(radius: 1),
       background: CircleComponent(radius: 2),
     );

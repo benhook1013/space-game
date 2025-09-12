@@ -128,7 +128,6 @@ class SpaceGame extends FlameGame
   MiningLaserComponent? miningLaser;
   late final ControlManager controlManager;
   JoystickComponent get joystick => controlManager.joystick;
-  set joystick(JoystickComponent value) => controlManager.joystick = value;
   HudButtonComponent get fireButton => controlManager.fireButton!;
   late final EnemySpawner enemySpawner;
   late final AsteroidSpawner asteroidSpawner;

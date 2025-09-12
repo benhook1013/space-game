@@ -43,7 +43,7 @@ class _TestGame extends SpaceGame {
     )..state = GameState.playing;
     final keyDispatcher = KeyDispatcher();
     add(keyDispatcher);
-    joystick = JoystickComponent(
+    final joystick = JoystickComponent(
       knob: CircleComponent(radius: 1),
       background: CircleComponent(radius: 2),
     );

@@ -77,6 +77,8 @@ class _TestGame extends SpaceGame {
   _TestGame({required StorageService storage, required AudioService audio})
       : super(storageService: storage, audioService: audio);
 
+  late JoystickComponent testJoystick;
+
   @override
   PoolManager createPoolManager() => _TestPoolManager(events: eventBus);
 
@@ -86,10 +88,10 @@ class _TestGame extends SpaceGame {
     await add(keyDispatcher);
     await controlManager.init();
     controlManager.joystick.removeFromParent();
-    controlManager.joystick = TestJoystick();
-    await add(controlManager.joystick);
+    testJoystick = TestJoystick();
+    await add(testJoystick);
     player = _TestPlayer(
-      joystick: controlManager.joystick,
+      joystick: testJoystick,
       keyDispatcher: keyDispatcher,
     );
     await add(player);
@@ -113,7 +115,7 @@ void main() {
       ),
     );
     await game.ready();
-    game.controlManager.joystick.onGameResize(game.size);
+    game.testJoystick.onGameResize(game.size);
     game.update(0);
     game.update(0);
 

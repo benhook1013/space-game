@@ -34,9 +34,8 @@ class ControlManager {
   /// Colours used to style the joystick and fire button.
   final ColorScheme colorScheme;
 
-  late JoystickComponent _joystick;
+  late final JoystickComponent _joystick;
   JoystickComponent get joystick => _joystick;
-  set joystick(JoystickComponent value) => _joystick = value;
 
   HudButtonComponent? fireButton;
 
