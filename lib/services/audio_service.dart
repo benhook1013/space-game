@@ -79,7 +79,7 @@ class AudioService {
 
   /// Sets the global volume multiplier (0-1).
   void setMasterVolume(double value) {
-    volume.value = value.clamp(0, 1);
+    volume.value = value.clamp(0, 1).toDouble();
   }
 
   /// Toggles the mute flag and persists the new value.
