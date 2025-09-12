@@ -5,13 +5,23 @@ import 'score_service.dart';
 import 'settings_service.dart';
 import 'storage_service.dart';
 
+/// Identifiers for purchasable upgrades.
+enum UpgradeId {
+  fireRate1,
+  miningSpeed1,
+  targetingRange1,
+  tractorRange1,
+  speed1,
+  shieldRegen1,
+}
+
 /// Simple upgrade data.
 @immutable
 class Upgrade {
   /// Creates an immutable upgrade definition.
   const Upgrade({required this.id, required this.name, required this.cost});
 
-  final String id;
+  final UpgradeId id;
   final String name;
   final int cost;
 }
@@ -24,7 +34,8 @@ class UpgradeService {
     required this.settingsService,
   }) {
     final saved = storageService.getStringList(_purchasedUpgradesKey, []);
-    _purchased.value = saved.toSet();
+    _purchased.value =
+        saved.map((name) => UpgradeId.values.byName(name)).toSet();
   }
 
   final ScoreService scoreService;
@@ -36,22 +47,25 @@ class UpgradeService {
   /// Available upgrades, exposed as an unmodifiable list to prevent runtime
   /// mutation.
   final List<Upgrade> upgrades = List.unmodifiable([
-    const Upgrade(id: 'fireRate1', name: 'Faster Cannon', cost: 10),
-    const Upgrade(id: 'miningSpeed1', name: 'Efficient Mining', cost: 15),
-    const Upgrade(id: 'targetingRange1', name: 'Targeting Computer', cost: 20),
-    const Upgrade(id: 'tractorRange1', name: 'Tractor Booster', cost: 25),
-    const Upgrade(id: 'speed1', name: 'Engine Tuning', cost: 30),
-    const Upgrade(id: 'shieldRegen1', name: 'Shield Booster', cost: 40),
+    const Upgrade(id: UpgradeId.fireRate1, name: 'Faster Cannon', cost: 10),
+    const Upgrade(
+        id: UpgradeId.miningSpeed1, name: 'Efficient Mining', cost: 15),
+    const Upgrade(
+        id: UpgradeId.targetingRange1, name: 'Targeting Computer', cost: 20),
+    const Upgrade(
+        id: UpgradeId.tractorRange1, name: 'Tractor Booster', cost: 25),
+    const Upgrade(id: UpgradeId.speed1, name: 'Engine Tuning', cost: 30),
+    const Upgrade(id: UpgradeId.shieldRegen1, name: 'Shield Booster', cost: 40),
   ]);
 
-  final ValueNotifier<Set<String>> _purchased =
-      ValueNotifier<Set<String>>(<String>{});
-  ValueListenable<Set<String>> get purchased => _purchased;
+  final ValueNotifier<Set<UpgradeId>> _purchased =
+      ValueNotifier<Set<UpgradeId>>(<UpgradeId>{});
+  ValueListenable<Set<UpgradeId>> get purchased => _purchased;
 
-  bool isPurchased(String id) => _purchased.value.contains(id);
+  bool isPurchased(UpgradeId id) => _purchased.value.contains(id);
 
   /// Whether the shield regeneration upgrade has been purchased.
-  bool get hasShieldRegen => isPurchased('shieldRegen1');
+  bool get hasShieldRegen => isPurchased(UpgradeId.shieldRegen1);
 
   bool canAfford(Upgrade upgrade) =>
       scoreService.minerals.value >= upgrade.cost && !isPurchased(upgrade.id);
@@ -59,7 +73,7 @@ class UpgradeService {
   /// Current bullet cooldown factoring in purchased upgrades.
   double get bulletCooldown {
     var cooldown = Constants.bulletCooldown;
-    if (isPurchased('fireRate1')) {
+    if (isPurchased(UpgradeId.fireRate1)) {
       cooldown *= Constants.bulletCooldownUpgradeFactor;
     }
     return cooldown;
@@ -68,7 +82,7 @@ class UpgradeService {
   /// Current mining pulse interval factoring in purchased upgrades.
   double get miningPulseInterval {
     var interval = Constants.miningPulseInterval;
-    if (isPurchased('miningSpeed1')) {
+    if (isPurchased(UpgradeId.miningSpeed1)) {
       interval *= Constants.miningPulseIntervalUpgradeFactor;
     }
     return interval;
@@ -77,7 +91,7 @@ class UpgradeService {
   /// Current auto-aim targeting range factoring in purchased upgrades.
   double get targetingRange {
     var range = settingsService.targetingRange.value;
-    if (isPurchased('targetingRange1')) {
+    if (isPurchased(UpgradeId.targetingRange1)) {
       range *= Constants.targetingRangeUpgradeFactor;
     }
     return range;
@@ -86,7 +100,7 @@ class UpgradeService {
   /// Current Tractor Aura radius factoring in purchased upgrades.
   double get tractorRange {
     var range = settingsService.tractorRange.value;
-    if (isPurchased('tractorRange1')) {
+    if (isPurchased(UpgradeId.tractorRange1)) {
       range *= Constants.tractorRangeUpgradeFactor;
     }
     return range;
@@ -95,7 +109,7 @@ class UpgradeService {
   /// Current player movement speed factoring in purchased upgrades.
   double get playerSpeed {
     var speed = Constants.playerSpeed;
-    if (isPurchased('speed1')) {
+    if (isPurchased(UpgradeId.speed1)) {
       speed *= Constants.playerSpeedUpgradeFactor;
     }
     return speed;
@@ -107,11 +121,11 @@ class UpgradeService {
       return false;
     }
     scoreService.addMinerals(-upgrade.cost);
-    final newSet = Set<String>.from(_purchased.value)..add(upgrade.id);
+    final newSet = Set<UpgradeId>.from(_purchased.value)..add(upgrade.id);
     _purchased.value = newSet;
     storageService.setStringList(
       _purchasedUpgradesKey,
-      _purchased.value.toList(),
+      _purchased.value.map((e) => e.name).toList(),
     );
     return true;
   }
