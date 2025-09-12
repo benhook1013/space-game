@@ -22,9 +22,11 @@ class SettingsService {
     starfieldDensity = _notifiers[_starfieldDensityKey]!;
     starfieldBrightness = _notifiers[_starfieldBrightnessKey]!;
     starfieldGamma = _notifiers[_starfieldGammaKey]!;
-    starfieldPalette = ValueNotifier<StarPalette>(
-      StarPalette.values[_storage?.getInt(_starfieldPaletteKey, 0) ?? 0],
+    final paletteIndex = _safePaletteIndex(
+      _storage?.getInt(_starfieldPaletteKey, 0) ?? 0,
     );
+    starfieldPalette =
+        ValueNotifier<StarPalette>(StarPalette.values[paletteIndex]);
     starfieldPalette.addListener(() =>
         _storage?.setInt(_starfieldPaletteKey, starfieldPalette.value.index));
   }
@@ -85,8 +87,9 @@ class SettingsService {
       (key, notifier) =>
           notifier.value = storage.getDouble(key, notifier.value),
     );
-    starfieldPalette.value =
-        StarPalette.values[storage.getInt(_starfieldPaletteKey, 0)];
+    final paletteIndex =
+        _safePaletteIndex(storage.getInt(_starfieldPaletteKey, 0));
+    starfieldPalette.value = StarPalette.values[paletteIndex];
   }
 
   /// Restores all values to their defaults.
@@ -125,10 +128,18 @@ class SettingsService {
   };
 
   ValueNotifier<double> _initNotifier(String key, double defaultValue) {
-    final notifier = ValueNotifier<double>(
-        _storage?.getDouble(key, defaultValue) ?? defaultValue);
+    final value = _storage?.getDouble(key, defaultValue) ?? defaultValue;
+    final notifier =
+        ValueNotifier<double>(value.isFinite ? value : defaultValue);
     notifier.addListener(() => _storage?.setDouble(key, notifier.value));
     return notifier;
+  }
+
+  int _safePaletteIndex(int index) {
+    if (index < 0 || index >= StarPalette.values.length) {
+      return 0;
+    }
+    return index;
   }
 
   /// Releases resources held by the service.

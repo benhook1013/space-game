@@ -23,7 +23,9 @@ class StorageService {
   ///
   /// Supported types are [int], [double], [bool], [String] and
   /// [List]<[String]>. Throws [UnsupportedError] for unsupported types.
-  T getValue<T>(String key, T defaultValue) => switch (defaultValue) {
+  T getValue<T>(String key, T defaultValue) {
+    try {
+      return switch (defaultValue) {
         int _ => (_prefs.getInt(key) ?? defaultValue) as T,
         double _ => (_prefs.getDouble(key) ?? defaultValue) as T,
         bool _ => (_prefs.getBool(key) ?? defaultValue) as T,
@@ -32,6 +34,12 @@ class StorageService {
           (_prefs.getStringList(key) ?? defaultValue as List<String>) as T,
         _ => throw UnsupportedError('Type $T is not supported'),
       };
+    } on UnsupportedError {
+      rethrow;
+    } catch (_) {
+      return defaultValue;
+    }
+  }
 
   /// Persists [value] for [key].
   ///

@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:space_game/constants.dart';
 import 'package:space_game/services/settings_service.dart';
 import 'package:space_game/services/storage_service.dart';
+import 'package:space_game/theme/star_palette.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -120,6 +121,21 @@ void main() {
     final reloaded = SettingsService(storage: storage);
     expect(reloaded.hudButtonScale.value, 1.4);
     expect(reloaded.minimapScale.value, 1.2);
+  });
+
+  test('invalid palette index falls back to classic', () async {
+    SharedPreferences.setMockInitialValues({'starfieldPalette': 999});
+    final storage = await StorageService.create();
+    final settings = SettingsService(storage: storage);
+    expect(settings.starfieldPalette.value, StarPalette.classic);
+  });
+
+  test('negative palette index falls back to classic during attach', () async {
+    SharedPreferences.setMockInitialValues({'starfieldPalette': -1});
+    final storage = await StorageService.create();
+    final settings = SettingsService();
+    settings.attachStorage(storage);
+    expect(settings.starfieldPalette.value, StarPalette.classic);
   });
 
   test('dispose releases all notifiers', () {
