@@ -11,15 +11,26 @@ class HealthDisplay extends StatelessWidget {
   /// Reference to the running game providing health updates.
   final SpaceGame game;
 
+  /// Vertical offset applied to nudge the heart icon upward.
+  static const double _iconVerticalOffset = -2;
+
+  /// Base size used for the heart icon before scaling.
+  static const double _iconBaseSize = 22;
+
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     return HudValueDisplay(
       valueListenable: game.health,
-      iconBuilder: (size) => ImageIcon(
-        AssetImage('assets/images/${Assets.healthIcon}'),
-        color: scheme.error,
-        size: size,
+      baseIconSize: _iconBaseSize,
+      iconBuilder: (size) => Transform.translate(
+        // Scale the offset with the icon size so text scaling stays balanced.
+        offset: Offset(0, _iconVerticalOffset * (size / _iconBaseSize)),
+        child: ImageIcon(
+          AssetImage('assets/images/${Assets.healthIcon}'),
+          color: scheme.error,
+          size: size,
+        ),
       ),
     );
   }
