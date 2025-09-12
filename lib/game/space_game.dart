@@ -11,7 +11,6 @@ import '../components/player.dart';
 import '../components/mining_laser.dart';
 import '../components/enemy_spawner.dart';
 import '../components/asteroid_spawner.dart';
-import '../components/explosion.dart';
 import '../game/key_dispatcher.dart';
 import '../game/game_state_machine.dart';
 import '../services/score_service.dart';
@@ -35,6 +34,7 @@ import 'health_regen_system.dart';
 import 'game_services.dart';
 import 'world_builder.dart';
 import 'overlay_coordinator.dart';
+import 'game_flow.dart';
 
 /// Root Flame game handling the core loop.
 ///
@@ -63,6 +63,7 @@ class SpaceGame extends FlameGame
         focusNode = focusNode ?? FocusNode(),
         scoreService = ScoreService(storageService: storageService) {
     initGameServices(this);
+    gameFlow = GameFlow(this);
   }
 
   /// Handles persistence for the high score.
@@ -109,6 +110,8 @@ class SpaceGame extends FlameGame
   late final StarfieldManager starfieldManager;
   late final HealthRegenSystem healthRegen;
   FpsTextComponent? _fpsText;
+
+  late final GameFlow gameFlow;
 
   /// Whether [onLoad] has finished and late fields are initialised.
   bool _isLoaded = false;
@@ -164,52 +167,41 @@ class SpaceGame extends FlameGame
   PoolManager createPoolManager() => PoolManager(events: eventBus);
 
   /// Handles player damage and checks for game over.
-  void hitPlayer() {
-    if (!stateMachine.isPlaying) {
-      return;
-    }
-    player.flashDamage();
-    if (scoreService.hitPlayer()) {
-      add(ExplosionComponent(position: player.position.clone()));
-      audioService.playExplosion();
-      player.removeFromParent();
-      stateMachine.gameOver();
-    }
-  }
+  void hitPlayer() => gameFlow.hitPlayer();
 
   /// Adds [value] to the current score.
-  void addScore(int value) => scoreService.addScore(value);
+  void addScore(int value) => gameFlow.addScore(value);
 
   /// Adds [value] to the current mineral count.
-  void addMinerals(int value) => scoreService.addMinerals(value);
+  void addMinerals(int value) => gameFlow.addMinerals(value);
 
   /// Resets the shield regeneration timer.
-  void resetHealthRegenTimer() => healthRegen.reset();
+  void resetHealthRegenTimer() => gameFlow.resetHealthRegenTimer();
 
   /// Pauses the game and shows the `PAUSED` overlay.
-  void pauseGame() => assetLifecycle.pauseGame();
+  void pauseGame() => gameFlow.pauseGame();
 
   /// Resumes the game from a paused state.
-  void resumeGame() => assetLifecycle.resumeGame();
+  void resumeGame() => gameFlow.resumeGame();
 
   /// Returns to the main menu without restarting the session.
-  void returnToMenu() => stateMachine.returnToMenu();
+  void returnToMenu() => gameFlow.returnToMenu();
 
   /// Begins loading assets needed for gameplay.
   ///
   /// Safe to call multiple times; subsequent invocations are ignored.
-  void startLoadingAssets() => assetLifecycle.startLoadingAssets();
+  void startLoadingAssets() => gameFlow.startLoadingAssets();
 
   /// Starts a new game session.
-  Future<void> startGame() => assetLifecycle.startGame();
+  Future<void> startGame() => gameFlow.startGame();
 
   /// Clears the saved high score.
   ///
   /// Returns `true` if the score was removed from storage.
-  Future<bool> resetHighScore() => scoreService.resetHighScore();
+  Future<bool> resetHighScore() => gameFlow.resetHighScore();
 
   /// Transitions to the game over state.
-  void gameOver() => stateMachine.gameOver();
+  void gameOver() => gameFlow.gameOver();
 
   @override
   void onDebugModeChanged(bool enabled) {

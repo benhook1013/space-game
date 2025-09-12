@@ -141,6 +141,7 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
       - [x] Extract service setup into a dedicated `game_services.dart` or similar.
       - [x] Move world construction logic into a `world_builder.dart` module.
       - [x] Create an `OverlayCoordinator` to manage overlays and state changes.
-      - [ ] Isolate gameplay flow helpers (damage, scoring, pause/resume, reset, game over)
+      - [x] Isolate gameplay flow helpers (damage, scoring, pause/resume, reset, game over)
         into a `GameFlow` helper.
-      - [ ] Move debug toggles and lifecycle disposal into dedicated helpers or mixins.
+      - [ ] Move debug toggles into a dedicated `GameDebugHelper` mixin.
+      - [ ] Extract service disposal into a `GameDisposal` helper.
