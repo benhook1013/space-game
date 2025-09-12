@@ -92,7 +92,7 @@ class ControlManager {
       onPressed: player.startShooting,
       onReleased: player.stopShooting,
       onCancelled: player.stopShooting,
-    )..size = Vector2.all((radius * 2));
+    )..size = Vector2.all(radius * 2);
   }
 
   void _updateJoystickScale() {
@@ -101,15 +101,18 @@ class ControlManager {
     final knob = _joystick.knob as CircleComponent;
     bg
       ..radius = _joystickBackgroundRadius * scale
-      ..position = Vector2.zero();
+      ..position.setZero();
     knob
       ..radius = _joystickKnobRadius * scale
-      ..position = Vector2.zero();
+      ..position.setZero();
     _joystick
       ..size = Vector2.all((_joystickBackgroundRadius * 2) * scale)
       ..knobRadius = _joystickKnobRadius * scale
       ..anchor = Anchor.bottomLeft
-      ..position = Vector2(_controlMargin, game.size.y - _controlMargin);
+      ..position.setValues(
+        _controlMargin,
+        game.size.y - _controlMargin,
+      );
     _joystick.onGameResize(game.size);
 
     final fb = fireButton;
