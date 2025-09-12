@@ -84,6 +84,16 @@ class StarfieldManager {
       gamma: settings.starfieldGamma.value,
     );
     if (buildId != null && buildId != _rebuildId) {
+      // A newer rebuild was scheduled while this one was in progress.
+      // Fade out the old component to ensure it's removed and its cache is
+      // released even though this build result will be discarded.
+      previous?.add(
+        OpacityEffect.to(
+          0,
+          EffectController(duration: _fadeDuration),
+          onComplete: () => previous.removeFromParent(),
+        ),
+      );
       return;
     }
     _starfield = sf;
