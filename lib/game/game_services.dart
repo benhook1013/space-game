@@ -7,7 +7,6 @@ import '../services/targeting_service.dart';
 import '../services/upgrade_service.dart';
 import 'control_manager.dart';
 import 'health_regen_system.dart';
-import 'pool_manager.dart';
 import 'starfield_manager.dart';
 import 'space_game.dart';
 
@@ -21,7 +20,10 @@ void initGameServices(SpaceGame game) {
   }
   game.settingsService.attachStorage(game.storageService);
   game.debugMode = kDebugMode;
-  game.pools = PoolManager(events: game.eventBus);
+  // Respect the overridable pool factory to allow tests and subclasses
+  // to inject custom pool implementations.
+  // ignore: invalid_use_of_protected_member
+  game.pools = game.createPoolManager();
   game.targetingService = TargetingService(game.eventBus);
   game.upgradeService = UpgradeService(
     scoreService: game.scoreService,
