@@ -60,18 +60,22 @@ class SpaceGame extends FlameGame
         settingsService = settingsService ?? SettingsService(),
         focusNode = focusNode ?? FocusNode(),
         scoreService = ScoreService(storageService: storageService) {
+    _initServices();
+  }
+
+  void _initServices() {
     final storedIndex = storageService.getPlayerSpriteIndex();
     if (storedIndex != selectedPlayerIndex.value) {
       unawaited(storageService.setPlayerSpriteIndex(selectedPlayerIndex.value));
     }
-    this.settingsService.attachStorage(storageService);
+    settingsService.attachStorage(storageService);
     debugMode = kDebugMode;
     pools = createPoolManager();
     targetingService = TargetingService(eventBus);
     upgradeService = UpgradeService(
       scoreService: scoreService,
       storageService: storageService,
-      settingsService: this.settingsService,
+      settingsService: settingsService,
     );
     healthRegen = HealthRegenSystem(
       scoreService: scoreService,
@@ -79,13 +83,13 @@ class SpaceGame extends FlameGame
     );
     starfieldManager = StarfieldManager(
       game: this,
-      settings: this.settingsService,
+      settings: settingsService,
       debugMode: debugMode,
     );
     controlManager = ControlManager(
       game: this,
-      settings: this.settingsService,
-      colorScheme: this.colorScheme,
+      settings: settingsService,
+      colorScheme: colorScheme,
     );
     assetLifecycle = AssetLifecycleService(
       game: this,
@@ -177,6 +181,12 @@ class SpaceGame extends FlameGame
 
     await starfieldManager.init();
 
+    await _initWorld();
+    await _initOverlays();
+    _isLoaded = true;
+  }
+
+  Future<void> _initWorld() async {
     player = PlayerComponent(
       joystick: controlManager.joystick,
       keyDispatcher: keyDispatcher,
@@ -194,7 +204,9 @@ class SpaceGame extends FlameGame
     asteroidSpawner = AsteroidSpawner();
     await add(enemySpawner);
     await add(asteroidSpawner);
+  }
 
+  Future<void> _initOverlays() async {
     overlayService = OverlayService(this);
     lifecycle = LifecycleManager(this);
     stateMachine = GameStateMachine(
@@ -242,7 +254,6 @@ class SpaceGame extends FlameGame
       isHelpVisible: () => overlays.isActive(HelpOverlay.id),
     );
     stateMachine.returnToMenu();
-    _isLoaded = true;
   }
 
   @protected
