@@ -40,6 +40,7 @@ class PlayerInputBehavior extends Component with HasGameReference<SpaceGame> {
   final KeyDispatcher keyDispatcher;
 
   final Vector2 _keyboardDirection = Vector2.zero();
+  final Vector2 _input = Vector2.zero();
   double _shootCooldown = 0;
   bool _isShooting = false;
 
@@ -78,12 +79,17 @@ class PlayerInputBehavior extends Component with HasGameReference<SpaceGame> {
       ..y += keyDispatcher.isAnyPressed(_upKeys) ? -1 : 0
       ..y += keyDispatcher.isAnyPressed(_downKeys) ? 1 : 0;
 
-    var input =
+    final rawInput =
         joystick.delta.isZero() ? _keyboardDirection : joystick.relativeDelta;
-    if (!input.isZero()) {
-      input = input.normalized();
-      player.position += input * game.upgradeService.playerSpeed * dt;
-      player.targetAngle = vectorToFlameAngle(input);
+    if (!rawInput.isZero()) {
+      _input
+        ..setFrom(rawInput)
+        ..normalize();
+      player.position.addScaled(
+        _input,
+        game.upgradeService.playerSpeed * dt,
+      );
+      player.targetAngle = vectorToFlameAngle(_input);
       player.isMoving = true;
       return true;
     }
