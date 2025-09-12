@@ -29,11 +29,7 @@ class OverlayService {
   void _showExclusive(String id, {Set<String>? remove}) {
     final overlays = game.overlays;
     final ids = remove ?? _exclusiveIds;
-    for (final other in ids) {
-      if (other != id) {
-        overlays.remove(other);
-      }
-    }
+    overlays.removeAll(ids.where((other) => other != id));
     overlays.add(id);
   }
 
