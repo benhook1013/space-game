@@ -22,9 +22,11 @@ class MenuOverlay extends StatelessWidget {
   Widget build(BuildContext context) {
     return OverlayLayout(
       builder: (context, spacing, iconSize) {
-        final shortestSide = spacing / 0.02;
+        // `spacing` represents 2% of the shortest screen side (see
+        // [OverlayLayout]), so multiplying by 6 yields the same value as
+        // `shortestSide * 0.12` without recalculating the original dimension.
         final playerSize = math.min(
-          shortestSide * 0.12,
+          spacing * 6,
           Constants.playerSize *
               (Constants.spriteScale + Constants.playerScale),
         );
