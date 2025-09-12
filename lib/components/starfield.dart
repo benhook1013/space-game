@@ -5,6 +5,7 @@ import 'dart:ui';
 import 'dart:isolate';
 
 import 'package:flame/components.dart';
+import 'package:flame/effects.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/foundation.dart';
 
@@ -60,7 +61,9 @@ class StarfieldLayerConfig {
 }
 
 /// Deterministic world-space starfield rendered behind gameplay.
-class StarfieldComponent extends Component with HasGameReference<FlameGame> {
+class StarfieldComponent extends Component
+    with HasGameReference<FlameGame>
+    implements OpacityProvider {
   StarfieldComponent({
     int seed = 0,
     this.debugDrawTiles = false,
@@ -69,9 +72,11 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
     this.densityMultiplier = 1,
     this.brightnessMultiplier = 1,
     this.gamma = 1,
+    double opacity = 1,
   })  : _seed = seed,
         _layers =
             layers ?? const [StarfieldLayerConfig(parallax: 1, density: 1)],
+        _opacity = opacity,
         super(priority: -1);
 
   final int _seed;
@@ -92,6 +97,14 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
   final double gamma;
 
   final Paint _starPaint = Paint();
+
+  double _opacity = 1;
+
+  @override
+  double get opacity => _opacity;
+
+  @override
+  set opacity(double value) => _opacity = value.clamp(0, 1);
 
   /// Whether to draw debug outlines around generated tiles.
   bool debugDrawTiles;
@@ -228,6 +241,7 @@ class StarfieldComponent extends Component with HasGameReference<FlameGame> {
   void render(Canvas canvas) {
     final cameraPos = game.camera.viewfinder.position;
     final viewSize = game.size;
+    _starPaint.color = Color.fromRGBO(255, 255, 255, opacity);
 
     for (final layer in _layerStates) {
       final cfg = layer.config;

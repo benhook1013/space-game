@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flame/effects.dart';
 import 'package:flame/game.dart';
 
 import '../components/starfield.dart';
@@ -24,6 +25,8 @@ class StarfieldManager {
   int _rebuildId = 0;
   bool _debugMode;
 
+  static const _fadeDuration = 0.5;
+
   /// Initialises the starfield and starts listening for setting changes.
   Future<void> init() async {
     await _buildStarfield();
@@ -44,13 +47,14 @@ class StarfieldManager {
   }
 
   void _rebuild() {
-    _starfield?.removeFromParent();
+    final previous = _starfield;
     _starfield = null;
     final buildId = ++_rebuildId;
-    unawaited(_buildStarfield(buildId: buildId));
+    unawaited(_buildStarfield(buildId: buildId, previous: previous));
   }
 
-  Future<void> _buildStarfield({int? buildId}) async {
+  Future<void> _buildStarfield(
+      {int? buildId, StarfieldComponent? previous}) async {
     final palette = settings.starfieldPalette.value.colors;
     final sf = await StarfieldComponent(
       debugDrawTiles: _debugMode,
@@ -83,7 +87,23 @@ class StarfieldManager {
       return;
     }
     _starfield = sf;
+    sf.opacity = previous != null ? 0 : 1;
     await game.add(sf);
+    if (previous != null) {
+      previous.add(
+        OpacityEffect.to(
+          0,
+          EffectController(duration: _fadeDuration),
+          onComplete: () => previous.removeFromParent(),
+        ),
+      );
+      sf.add(
+        OpacityEffect.to(
+          1,
+          EffectController(duration: _fadeDuration),
+        ),
+      );
+    }
   }
 
   /// Cleans up listeners and removes the starfield from the game.
