@@ -26,7 +26,10 @@ void main() {
     starfield.update(0);
     await starfield.debugWaitForPending();
     starfield.render(canvas);
-    const originExpected = 16; // includes cache margin
+    final visible =
+        (game.size.x / Constants.starfieldTileSize).ceil() + 1; // 2 tiles
+    const base = Constants.starfieldCacheMargin;
+    final originExpected = (visible + base * 2) * (visible + base * 2);
     expect(starfield.debugCacheSize(), originExpected);
 
     game.camera.viewfinder.position = Vector2(3000, 0);
@@ -34,13 +37,11 @@ void main() {
     await starfield.debugWaitForPending();
     starfield.render(canvas);
     final moveTiles = (3000 / Constants.starfieldTileSize).ceil();
-    final margin = math.min(
+    final right = math.min(
       Constants.starfieldCacheMargin + moveTiles,
       Constants.starfieldMaxCacheMargin,
     );
-    final visible =
-        (game.size.x / Constants.starfieldTileSize).ceil() + 1; // 2 tiles
-    final movedExpected = (visible + margin * 2) * (visible + margin * 2);
+    final movedExpected = (visible + base + right) * (visible + base * 2);
     expect(starfield.debugCacheSize(), movedExpected);
   });
 }
