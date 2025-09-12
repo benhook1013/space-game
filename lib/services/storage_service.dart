@@ -23,26 +23,15 @@ class StorageService {
   ///
   /// Supported types are [int], [double], [bool], [String] and
   /// [List]<[String]>. Throws [UnsupportedError] for unsupported types.
-  T getValue<T>(String key, T defaultValue) {
-    if (T == int) {
-      final value = _prefs.getInt(key);
-      return (value ?? defaultValue) as T;
-    } else if (T == double) {
-      final value = _prefs.getDouble(key);
-      return (value ?? defaultValue) as T;
-    } else if (T == bool) {
-      final value = _prefs.getBool(key);
-      return (value ?? defaultValue) as T;
-    } else if (T == String) {
-      final value = _prefs.getString(key);
-      return (value ?? defaultValue) as T;
-    } else if (T == List<String>) {
-      final value = _prefs.getStringList(key);
-      return (value ?? defaultValue as List<String>) as T;
-    }
-
-    throw UnsupportedError('Type $T is not supported');
-  }
+  T getValue<T>(String key, T defaultValue) => switch (defaultValue) {
+        int _ => (_prefs.getInt(key) ?? defaultValue) as T,
+        double _ => (_prefs.getDouble(key) ?? defaultValue) as T,
+        bool _ => (_prefs.getBool(key) ?? defaultValue) as T,
+        String _ => (_prefs.getString(key) ?? defaultValue) as T,
+        List<String> _ =>
+          (_prefs.getStringList(key) ?? defaultValue as List<String>) as T,
+        _ => throw UnsupportedError('Type $T is not supported'),
+      };
 
   /// Persists [value] for [key].
   ///
@@ -50,21 +39,14 @@ class StorageService {
   /// [List]<[String]>. Throws [UnsupportedError] for unsupported types.
   ///
   /// Returns `true` when the value was written to storage.
-  Future<bool> setValue<T>(String key, T value) {
-    if (T == int) {
-      return _prefs.setInt(key, value as int);
-    } else if (T == double) {
-      return _prefs.setDouble(key, value as double);
-    } else if (T == bool) {
-      return _prefs.setBool(key, value as bool);
-    } else if (T == String) {
-      return _prefs.setString(key, value as String);
-    } else if (T == List<String>) {
-      return _prefs.setStringList(key, value as List<String>);
-    }
-
-    throw UnsupportedError('Type $T is not supported');
-  }
+  Future<bool> setValue<T>(String key, T value) => switch (value) {
+        int v => _prefs.setInt(key, v),
+        double v => _prefs.setDouble(key, v),
+        bool v => _prefs.setBool(key, v),
+        String v => _prefs.setString(key, v),
+        List<String> v => _prefs.setStringList(key, v),
+        _ => throw UnsupportedError('Type $T is not supported'),
+      };
 
   /// Returns the stored high score or `0` if none exists.
   int getHighScore() => getInt(_highScoreKey, 0);
