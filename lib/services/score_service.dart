@@ -40,14 +40,19 @@ class ScoreService {
   ///
   /// Returns `true` if the underlying storage was successfully updated.
   Future<bool> resetHighScore() async {
-    highScore.value = 0;
-    return storageService.resetHighScore();
+    final success = await storageService.resetHighScore();
+    if (success) {
+      highScore.value = 0;
+    }
+    return success;
   }
 
   Future<void> updateHighScoreIfNeeded() async {
     if (score.value > highScore.value) {
-      highScore.value = score.value;
-      await storageService.setHighScore(highScore.value);
+      final success = await storageService.setHighScore(score.value);
+      if (success) {
+        highScore.value = score.value;
+      }
     }
   }
 

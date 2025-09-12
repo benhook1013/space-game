@@ -6,6 +6,16 @@ import 'package:space_game/services/settings_service.dart';
 import 'package:space_game/services/storage_service.dart';
 import 'package:space_game/services/upgrade_service.dart';
 
+class _FailingStorageService extends StorageService {
+  _FailingStorageService(super.prefs);
+
+  @override
+  Future<bool> setHighScore(int value) async => false;
+
+  @override
+  Future<bool> resetHighScore() async => false;
+}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -37,6 +47,28 @@ void main() {
       expect(await score.resetHighScore(), isTrue);
       expect(score.highScore.value, 0);
       expect(storage.getHighScore(), 0);
+    });
+
+    test('ScoreService retains high score when storage write fails', () async {
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+      final storage = _FailingStorageService(prefs);
+      final score = ScoreService(storageService: storage);
+
+      score.addScore(10);
+      await score.updateHighScoreIfNeeded();
+      expect(score.highScore.value, 0);
+    });
+
+    test('ScoreService retains high score when reset fails', () async {
+      SharedPreferences.setMockInitialValues({'highScore': 42});
+      final prefs = await SharedPreferences.getInstance();
+      final storage = _FailingStorageService(prefs);
+      final score = ScoreService(storageService: storage);
+
+      expect(score.highScore.value, 42);
+      expect(await score.resetHighScore(), isFalse);
+      expect(score.highScore.value, 42);
     });
 
     test('High score and upgrades persist across sessions', () async {
