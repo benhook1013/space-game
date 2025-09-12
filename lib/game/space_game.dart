@@ -23,7 +23,6 @@ import '../services/targeting_service.dart';
 import '../services/upgrade_service.dart';
 import '../services/settings_service.dart';
 import '../theme/game_theme.dart';
-import '../ui/help_overlay.dart';
 import 'event_bus.dart';
 import 'pool_manager.dart';
 import 'lifecycle_manager.dart';
@@ -33,6 +32,9 @@ import 'control_manager.dart';
 import 'debug_controller.dart';
 import 'ui_controller.dart';
 import 'health_regen_system.dart';
+import 'game_services.dart';
+import 'world_builder.dart';
+import 'overlay_coordinator.dart';
 
 /// Root Flame game handling the core loop.
 ///
@@ -60,41 +62,7 @@ class SpaceGame extends FlameGame
         settingsService = settingsService ?? SettingsService(),
         focusNode = focusNode ?? FocusNode(),
         scoreService = ScoreService(storageService: storageService) {
-    _initServices();
-  }
-
-  void _initServices() {
-    final storedIndex = storageService.getPlayerSpriteIndex();
-    if (storedIndex != selectedPlayerIndex.value) {
-      unawaited(storageService.setPlayerSpriteIndex(selectedPlayerIndex.value));
-    }
-    settingsService.attachStorage(storageService);
-    debugMode = kDebugMode;
-    pools = createPoolManager();
-    targetingService = TargetingService(eventBus);
-    upgradeService = UpgradeService(
-      scoreService: scoreService,
-      storageService: storageService,
-      settingsService: settingsService,
-    );
-    healthRegen = HealthRegenSystem(
-      scoreService: scoreService,
-      upgradeService: upgradeService,
-    );
-    starfieldManager = StarfieldManager(
-      game: this,
-      settings: settingsService,
-      debugMode: debugMode,
-    );
-    controlManager = ControlManager(
-      game: this,
-      settings: settingsService,
-      colorScheme: colorScheme,
-    );
-    assetLifecycle = AssetLifecycleService(
-      game: this,
-      audioService: audioService,
-    );
+    initGameServices(this);
   }
 
   /// Handles persistence for the high score.
@@ -120,8 +88,12 @@ class SpaceGame extends FlameGame
   /// Provides asset loading and pause/resume logic.
   late final AssetLifecycleService assetLifecycle;
 
-  late final OverlayService overlayService;
-  late final GameStateMachine stateMachine;
+  late final OverlayCoordinator overlayCoordinator;
+  late OverlayService overlayService;
+  late GameStateMachine stateMachine;
+  late LifecycleManager lifecycle;
+  late game_shortcuts.ShortcutManager shortcuts;
+  late UiController ui;
 
   late final KeyDispatcher keyDispatcher;
   late PlayerComponent player;
@@ -132,13 +104,10 @@ class SpaceGame extends FlameGame
   late final EnemySpawner enemySpawner;
   late final AsteroidSpawner asteroidSpawner;
   late final PoolManager pools;
-  late final LifecycleManager lifecycle;
-  late final game_shortcuts.ShortcutManager shortcuts;
   final GameEventBus eventBus = GameEventBus();
   late final TargetingService targetingService;
   late final StarfieldManager starfieldManager;
   late final HealthRegenSystem healthRegen;
-  late final UiController ui;
   FpsTextComponent? _fpsText;
 
   /// Whether [onLoad] has finished and late fields are initialised.
@@ -180,79 +149,15 @@ class SpaceGame extends FlameGame
 
     await starfieldManager.init();
 
-    await _initWorld();
-    await _initOverlays();
+    await buildWorld(this);
+    overlayCoordinator = OverlayCoordinator(game: this);
+    await overlayCoordinator.init();
+    overlayService = overlayCoordinator.overlayService;
+    lifecycle = overlayCoordinator.lifecycle;
+    stateMachine = overlayCoordinator.stateMachine;
+    ui = overlayCoordinator.ui;
+    shortcuts = overlayCoordinator.shortcuts;
     _isLoaded = true;
-  }
-
-  Future<void> _initWorld() async {
-    player = PlayerComponent(
-      joystick: controlManager.joystick,
-      keyDispatcher: keyDispatcher,
-      spritePath: selectedPlayerSprite,
-    );
-    await add(player);
-    camera.follow(player, snap: true);
-    final laser = MiningLaserComponent(player: player);
-    miningLaser = laser;
-    await add(laser);
-
-    await controlManager.attachPlayer(player);
-
-    enemySpawner = EnemySpawner();
-    asteroidSpawner = AsteroidSpawner();
-    await add(enemySpawner);
-    await add(asteroidSpawner);
-  }
-
-  Future<void> _initOverlays() async {
-    overlayService = OverlayService(this);
-    lifecycle = LifecycleManager(this);
-    stateMachine = GameStateMachine(
-      overlays: overlayService,
-      onStart: lifecycle.onStart,
-      // Keep the engine running when paused so HUD tweaks render live.
-      onPause: () {},
-      onResume: () {},
-      onGameOver: lifecycle.onGameOver,
-      onMenu: lifecycle.onMenu,
-      onEnterUpgrades: () {
-        pauseEngine();
-        miningLaser?.stopSound();
-      },
-      onExitUpgrades: () {
-        resumeEngine();
-        focusGame();
-      },
-    );
-
-    ui = UiController(
-      overlayService: overlayService,
-      stateMachine: stateMachine,
-      player: () => player,
-      miningLaser: () => miningLaser,
-      pauseEngine: pauseEngine,
-      resumeEngine: resumeEngine,
-      focusGame: focusGame,
-    );
-
-    shortcuts = game_shortcuts.ShortcutManager(
-      keyDispatcher: keyDispatcher,
-      stateMachine: stateMachine,
-      audioService: audioService,
-      pauseGame: pauseGame,
-      resumeGame: resumeGame,
-      startGame: () => startGame(),
-      toggleHelp: ui.toggleHelp,
-      toggleUpgrades: ui.toggleUpgrades,
-      toggleDebug: toggleDebug,
-      toggleMinimap: ui.toggleMinimap,
-      toggleRangeRings: ui.toggleRangeRings,
-      toggleSettings: ui.toggleSettings,
-      returnToMenu: returnToMenu,
-      isHelpVisible: () => overlays.isActive(HelpOverlay.id),
-    );
-    stateMachine.returnToMenu();
   }
 
   @protected
