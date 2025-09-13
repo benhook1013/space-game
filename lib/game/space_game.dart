@@ -2,9 +2,9 @@ import 'dart:async';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart' show FocusNode;
 import 'package:flutter/material.dart' show ColorScheme, Colors;
+import 'package:flutter/foundation.dart' show ValueNotifier, protected;
 
 import '../assets.dart';
 import '../components/player.dart';
@@ -29,9 +29,11 @@ import 'shortcut_manager.dart' as game_shortcuts;
 import 'starfield_manager.dart';
 import 'control_manager.dart';
 import 'debug_controller.dart';
+import 'game_debug_helper.dart';
 import 'ui_controller.dart';
 import 'health_regen_system.dart';
 import 'game_services.dart';
+import 'game_disposal.dart';
 import 'world_builder.dart';
 import 'overlay_coordinator.dart';
 import 'game_flow.dart';
@@ -43,7 +45,11 @@ import 'game_flow.dart';
 /// standalone [KeyboardEvents] here would prevent that propagation, so it is
 /// intentionally omitted.
 class SpaceGame extends FlameGame
-    with HasKeyboardHandlerComponents, HasCollisionDetection, DebugController {
+    with
+        HasKeyboardHandlerComponents,
+        HasCollisionDetection,
+        DebugController,
+        GameDebugHelper {
   SpaceGame({
     required this.storageService,
     required this.audioService,
@@ -109,7 +115,6 @@ class SpaceGame extends FlameGame
   late final TargetingService targetingService;
   late final StarfieldManager starfieldManager;
   late final HealthRegenSystem healthRegen;
-  FpsTextComponent? _fpsText;
 
   late final GameFlow gameFlow;
 
@@ -140,11 +145,7 @@ class SpaceGame extends FlameGame
 
   @override
   Future<void> onLoad() async {
-    if (kDebugMode) {
-      _fpsText = FpsTextComponent(position: Vector2.all(10));
-      await add(_fpsText!);
-    }
-
+    await super.onLoad();
     keyDispatcher = KeyDispatcher();
     await add(keyDispatcher);
 
@@ -203,24 +204,6 @@ class SpaceGame extends FlameGame
   /// Transitions to the game over state.
   void gameOver() => gameFlow.gameOver();
 
-  @override
-  void onDebugModeChanged(bool enabled) {
-    // Ensure pooled components also reflect the new debug mode so reused
-    // instances don't retain stale debug flags.
-    pools.applyDebugMode(enabled);
-
-    // Outline starfield tiles when debug visuals are enabled.
-    starfieldManager.updateDebug(enabled);
-
-    if (enabled) {
-      if (_fpsText != null && !_fpsText!.isMounted) {
-        add(_fpsText!);
-      }
-    } else {
-      _fpsText?.removeFromParent();
-    }
-  }
-
   /// Ensures the camera stays centred on the player.
   @override
   void update(double dt) {
@@ -242,20 +225,11 @@ class SpaceGame extends FlameGame
 
   @override
   void onRemove() {
-    settingsService.dispose();
-    scoreService.dispose();
-    upgradeService.dispose();
-    targetingService.dispose();
-    stateMachine.dispose();
-    controlManager.dispose();
-    audioService.dispose();
-    assetLifecycle.dispose();
-    starfieldManager.dispose();
-    pools.dispose();
     super.onRemove();
+    disposeGame(this);
     // Dispose the event bus after children are removed so they can emit
     // removal events without errors.
-    unawaited(eventBus.dispose());
+    unawaited(disposeEventBus(this));
   }
 
   /// Requests keyboard focus for the surrounding [GameWidget].
