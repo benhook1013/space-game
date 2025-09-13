@@ -19,6 +19,30 @@ class SettingsOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final settings = game.settingsService;
+    final audioSliders = [
+      _SliderSetting('Volume', game.audioService.volume, min: 0, max: 1),
+    ];
+    final hudSliders = [
+      _SliderSetting('HUD Buttons', settings.hudButtonScale),
+      _SliderSetting('Minimap', settings.minimapScale),
+      _SliderSetting('Text', settings.textScale),
+      _SliderSetting('Joypad', settings.joystickScale),
+    ];
+    final rangeSliders = [
+      _SliderSetting('Targeting Range', settings.targetingRange,
+          min: 50, max: 600),
+      _SliderSetting('Tractor Range', settings.tractorRange, min: 50, max: 600),
+      _SliderSetting('Mining Range', settings.miningRange, min: 50, max: 600),
+    ];
+    final performanceSliders = [
+      _SliderSetting('Starfield Tile', settings.starfieldTileSize,
+          min: 256, max: 1024),
+      _SliderSetting('Star Density', settings.starfieldDensity, min: 0, max: 2),
+      _SliderSetting('Star Brightness', settings.starfieldBrightness,
+          min: 0, max: 1),
+      _SliderSetting('Star Gamma', settings.starfieldGamma, min: 0.5, max: 2.5),
+    ];
+
     return OverlayLayout(
       builder: (context, spacing, iconSize) {
         return LayoutBuilder(
@@ -51,129 +75,24 @@ class SettingsOverlay extends StatelessWidget {
                       color: Theme.of(context).colorScheme.onSurface,
                     ),
                     SizedBox(height: spacing),
-                    GameText(
-                      'Audio',
-                      style: Theme.of(context).textTheme.titleMedium,
-                      maxLines: 1,
-                      color: Theme.of(context).colorScheme.onSurface,
-                    ),
-                    SizedBox(height: spacing),
-                    _buildSlider(
+                    _buildSection(context, 'Audio', audioSliders, spacing),
+                    _buildSection(context, 'HUD Scaling', hudSliders, spacing),
+                    _buildSection(
+                        context, 'Range Scaling', rangeSliders, spacing),
+                    _buildSection(
                       context,
-                      'Volume',
-                      game.audioService.volume,
-                      spacing,
-                      min: 0,
-                      max: 1,
-                    ),
-                    GameText(
-                      'HUD Scaling',
-                      style: Theme.of(context).textTheme.titleMedium,
-                      maxLines: 1,
-                      color: Theme.of(context).colorScheme.onSurface,
-                    ),
-                    SizedBox(height: spacing),
-                    _buildSlider(
-                      context,
-                      'HUD Buttons',
-                      settings.hudButtonScale,
-                      spacing,
-                    ),
-                    _buildSlider(
-                      context,
-                      'Minimap',
-                      settings.minimapScale,
-                      spacing,
-                    ),
-                    _buildSlider(
-                      context,
-                      'Text',
-                      settings.textScale,
-                      spacing,
-                    ),
-                    _buildSlider(
-                      context,
-                      'Joypad',
-                      settings.joystickScale,
-                      spacing,
-                    ),
-                    GameText(
-                      'Range Scaling',
-                      style: Theme.of(context).textTheme.titleMedium,
-                      maxLines: 1,
-                      color: Theme.of(context).colorScheme.onSurface,
-                    ),
-                    SizedBox(height: spacing),
-                    _buildSlider(
-                      context,
-                      'Targeting Range',
-                      settings.targetingRange,
-                      spacing,
-                      min: 50,
-                      max: 600,
-                    ),
-                    _buildSlider(
-                      context,
-                      'Tractor Range',
-                      settings.tractorRange,
-                      spacing,
-                      min: 50,
-                      max: 600,
-                    ),
-                    _buildSlider(
-                      context,
-                      'Mining Range',
-                      settings.miningRange,
-                      spacing,
-                      min: 50,
-                      max: 600,
-                    ),
-                    GameText(
                       'Performance',
-                      style: Theme.of(context).textTheme.titleMedium,
-                      maxLines: 1,
-                      color: Theme.of(context).colorScheme.onSurface,
-                    ),
-                    SizedBox(height: spacing),
-                    _buildSlider(
-                      context,
-                      'Starfield Tile',
-                      settings.starfieldTileSize,
+                      performanceSliders,
                       spacing,
-                      min: 256,
-                      max: 1024,
+                      extra: [
+                        _buildPaletteDropdown(
+                          context,
+                          'Star Palette',
+                          settings.starfieldPalette,
+                          spacing,
+                        ),
+                      ],
                     ),
-                    _buildSlider(
-                      context,
-                      'Star Density',
-                      settings.starfieldDensity,
-                      spacing,
-                      min: 0,
-                      max: 2,
-                    ),
-                    _buildSlider(
-                      context,
-                      'Star Brightness',
-                      settings.starfieldBrightness,
-                      spacing,
-                      min: 0,
-                      max: 1,
-                    ),
-                    _buildSlider(
-                      context,
-                      'Star Gamma',
-                      settings.starfieldGamma,
-                      spacing,
-                      min: 0.5,
-                      max: 2.5,
-                    ),
-                    _buildPaletteDropdown(
-                      context,
-                      'Star Palette',
-                      settings.starfieldPalette,
-                      spacing,
-                    ),
-                    SizedBox(height: spacing),
                     ElevatedButton(
                       onPressed: () {
                         settings.reset();
@@ -204,25 +123,45 @@ class SettingsOverlay extends StatelessWidget {
     );
   }
 
+  Widget _buildSection(
+    BuildContext context,
+    String title,
+    List<_SliderSetting> sliders,
+    double spacing, {
+    List<Widget> extra = const [],
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        GameText(
+          title,
+          style: Theme.of(context).textTheme.titleMedium,
+          maxLines: 1,
+          color: Theme.of(context).colorScheme.onSurface,
+        ),
+        SizedBox(height: spacing),
+        for (final slider in sliders) _buildSlider(context, slider, spacing),
+        ...extra,
+      ],
+    );
+  }
+
   Widget _buildSlider(
     BuildContext context,
-    String label,
-    ValueNotifier<double> notifier,
-    double spacing, {
-    double min = 0.5,
-    double max = 2.0,
-  }) {
+    _SliderSetting setting,
+    double spacing,
+  ) {
     return ValueListenableBuilder<double>(
-      valueListenable: notifier,
+      valueListenable: setting.notifier,
       builder: (context, value, _) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          GameText('$label: ${value.toStringAsFixed(2)}'),
+          GameText('${setting.label}: ${value.toStringAsFixed(2)}'),
           Slider(
             value: value,
-            min: min,
-            max: max,
-            onChanged: (v) => notifier.value = v,
+            min: setting.min,
+            max: setting.max,
+            onChanged: (v) => setting.notifier.value = v,
           ),
           SizedBox(height: spacing),
         ],
@@ -260,4 +199,18 @@ class SettingsOverlay extends StatelessWidget {
       ),
     );
   }
+}
+
+class _SliderSetting {
+  const _SliderSetting(
+    this.label,
+    this.notifier, {
+    this.min = 0.5,
+    this.max = 2.0,
+  });
+
+  final String label;
+  final ValueNotifier<double> notifier;
+  final double min;
+  final double max;
 }
