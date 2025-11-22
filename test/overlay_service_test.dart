@@ -2,6 +2,9 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flame/game.dart';
 
+import 'package:space_game/game/game_state.dart';
+import 'package:space_game/game/game_state_machine.dart';
+import 'package:space_game/game/ui_controller.dart';
 import 'package:space_game/services/overlay_service.dart';
 import 'package:space_game/ui/game_over_overlay.dart';
 import 'package:space_game/ui/help_overlay.dart';
@@ -141,5 +144,48 @@ void main() {
     expect(game.overlays.isActive(UpgradesOverlay.id), isFalse);
     expect(game.overlays.isActive(HelpOverlay.id), isFalse);
     expect(game.overlays.isActive(HudOverlay.id), isTrue);
+  });
+
+  test('UiController.toggleHelp pauses and resumes gameplay contextually', () {
+    final game = _createGame();
+    final overlayService = OverlayService(game);
+
+    var paused = false;
+    var resumed = false;
+    var focused = false;
+
+    final stateMachine = GameStateMachine(
+      overlays: overlayService,
+      onStart: () {},
+      onPause: () {},
+      onResume: () {},
+      onGameOver: () {},
+      onMenu: () {},
+      onEnterUpgrades: () {},
+      onExitUpgrades: () {},
+    );
+
+    final controller = UiController(
+      overlayService: overlayService,
+      stateMachine: stateMachine,
+      player: () => throw UnimplementedError('player should not be accessed'),
+      miningLaser: () => null,
+      pauseEngine: () => paused = true,
+      resumeEngine: () => resumed = true,
+      focusGame: () => focused = true,
+    );
+
+    stateMachine.state = GameState.playing;
+    overlayService.showHud();
+
+    controller.toggleHelp();
+    expect(game.overlays.isActive(HelpOverlay.id), isTrue);
+    expect(paused, isTrue);
+    expect(resumed, isFalse);
+
+    controller.toggleHelp();
+    expect(game.overlays.isActive(HelpOverlay.id), isFalse);
+    expect(resumed, isTrue);
+    expect(focused, isTrue);
   });
 }
