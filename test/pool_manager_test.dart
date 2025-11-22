@@ -2,11 +2,52 @@ import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:space_game/assets.dart';
 import 'package:space_game/components/asteroid.dart';
 import 'package:space_game/components/bullet.dart';
+import 'package:space_game/components/enemy.dart';
+import 'package:space_game/enemy_faction.dart';
 import 'package:space_game/game/event_bus.dart';
 import 'package:space_game/game/pool_manager.dart';
-import 'package:space_game/assets.dart';
+
+class _ComponentPoolCase<T extends Component> {
+  _ComponentPoolCase({
+    required this.description,
+    required this.acquire,
+    required this.acquireAfterRelease,
+    this.loadAssets,
+    this.acquireWithoutRelease,
+    this.verifyAfterReuse,
+  });
+
+  final String description;
+  final Future<void> Function()? loadAssets;
+  final T Function(PoolManager pools) acquire;
+  final T Function(PoolManager pools) acquireAfterRelease;
+  final T Function(PoolManager pools)? acquireWithoutRelease;
+  final void Function(T component)? verifyAfterReuse;
+}
+
+Future<void> _runComponentPoolCase<T extends Component>(
+  _ComponentPoolCase<T> c,
+) async {
+  await c.loadAssets?.call();
+  final pools = PoolManager(events: GameEventBus());
+
+  final first = c.acquire(pools);
+
+  if (c.acquireWithoutRelease != null) {
+    final second = c.acquireWithoutRelease!(pools);
+    expect(identical(first, second), isFalse);
+  }
+
+  pools.release<T>(first);
+
+  final reused = c.acquireAfterRelease(pools);
+  expect(identical(first, reused), isTrue);
+
+  c.verifyAfterReuse?.call(reused);
+}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -85,6 +126,52 @@ void main() {
       pools.applyDebugMode(false);
       expect(reused.debugMode, isFalse);
       expect(child.debugMode, isFalse);
+    });
+
+    group('component pooling reuse', () {
+      test(
+        'AsteroidComponent instances are reused',
+        () => _runComponentPoolCase<AsteroidComponent>(
+          _ComponentPoolCase<AsteroidComponent>(
+            description: 'AsteroidComponent instances are reused',
+            loadAssets: () => Flame.images.loadAll(Assets.asteroids),
+            acquire: (pools) => pools.acquire<AsteroidComponent>(
+                (a) => a.reset(Vector2.zero(), Vector2.zero())),
+            acquireAfterRelease: (pools) => pools.acquire<AsteroidComponent>(
+                (a) => a.reset(Vector2.zero(), Vector2.zero())),
+          ),
+        ),
+      );
+
+      test(
+        'EnemyComponent instances are reused',
+        () => _runComponentPoolCase<EnemyComponent>(
+          _ComponentPoolCase<EnemyComponent>(
+            description: 'EnemyComponent instances are reused',
+            loadAssets: () => Flame.images.loadAll(Assets.enemies),
+            acquire: (pools) => pools.acquire<EnemyComponent>(
+                (e) => e.reset(Vector2.zero(), EnemyFaction.faction1)),
+            acquireAfterRelease: (pools) => pools.acquire<EnemyComponent>(
+                (e) => e.reset(Vector2.zero(), EnemyFaction.faction1)),
+          ),
+        ),
+      );
+
+      test(
+        'BulletComponent requires release before reuse',
+        () => _runComponentPoolCase<BulletComponent>(
+          _ComponentPoolCase<BulletComponent>(
+            description: 'BulletComponent requires release before reuse',
+            acquire: (pools) => pools.acquire<BulletComponent>(
+                (b) => b.reset(Vector2.zero(), Vector2(0, -1))),
+            acquireWithoutRelease: (pools) => pools.acquire<BulletComponent>(
+                (b) => b.reset(Vector2.all(5), Vector2(0, -1))),
+            acquireAfterRelease: (pools) => pools.acquire<BulletComponent>(
+                (b) => b.reset(Vector2.all(10), Vector2(0, -1))),
+            verifyAfterReuse: (b) => expect(b.position, Vector2.all(10)),
+          ),
+        ),
+      );
     });
   });
 }
