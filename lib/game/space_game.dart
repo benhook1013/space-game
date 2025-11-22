@@ -66,6 +66,7 @@ class SpaceGame extends FlameGame
             colorScheme ?? ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         gameColors = gameColors ?? GameColors.dark,
         settingsService = settingsService ?? SettingsService(),
+        ownsFocusNode = focusNode == null,
         focusNode = focusNode ?? FocusNode(),
         scoreService = ScoreService(storageService: storageService) {
     initGameServices(this);
@@ -88,6 +89,7 @@ class SpaceGame extends FlameGame
   final GameColors gameColors;
 
   /// Focus node used to capture keyboard input.
+  final bool ownsFocusNode;
   final FocusNode focusNode;
 
   final ScoreService scoreService;
