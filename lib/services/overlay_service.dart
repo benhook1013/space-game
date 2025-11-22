@@ -37,8 +37,8 @@ class OverlayService {
 
   void showHud() => _showExclusive(HudOverlay.id);
 
-  /// Shows the pause overlay without affecting other active overlays.
-  void showPause() => game.overlays.add(PauseOverlay.id);
+  /// Shows only the pause overlay, hiding other exclusive overlays like the HUD.
+  void showPause() => _showExclusive(PauseOverlay.id);
 
   void showGameOver() => _showExclusive(GameOverOverlay.id);
 
