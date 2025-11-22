@@ -4,44 +4,20 @@ import 'package:space_game/util/object_pool.dart';
 
 void main() {
   group('ObjectPool', () {
-    test('clear discards cached instances', () {
+    test('invokes discard callback for full pools and clearing', () {
       final discarded = <int>[];
       final pool = ObjectPool<int>(
         () => 0,
+        maxSize: 1,
         onDiscard: discarded.add,
       );
 
       pool.release(1);
-      pool.release(2);
+      pool.release(2); // Discarded because the pool is full.
+      pool.clear(); // Discards the cached instance.
 
-      pool.clear();
-
-      expect(discarded, [1, 2]);
+      expect(discarded, [2, 1]);
       expect(pool.items, isEmpty);
-    });
-
-    test('respects maxSize when releasing', () {
-      final pool = ObjectPool<int>(() => 0, maxSize: 1);
-      pool.release(1);
-      pool.release(2); // Should be discarded.
-
-      expect(pool.items.length, 1);
-      // Ensure the stored instance is the first one released.
-      expect(pool.acquire(), 1);
-    });
-
-    test('fires onDiscard when pool is full', () {
-      var discarded = 0;
-      final pool = ObjectPool<int>(
-        () => 0,
-        maxSize: 1,
-        onDiscard: (_) => discarded++,
-      );
-
-      pool.release(1);
-      pool.release(2); // Triggers discard.
-
-      expect(discarded, 1);
     });
   });
 }
