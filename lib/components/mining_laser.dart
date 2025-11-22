@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flame/components.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
 
 import '../constants.dart';
@@ -23,11 +24,18 @@ class MiningLaserComponent extends Component with HasGameReference<SpaceGame> {
   final Paint _paint = Paint();
   final Timer _pulseTimer = Timer(Constants.miningPulseInterval, repeat: true);
   bool _playingSound = false;
+  late final VoidCallback _muteListener;
 
   @override
   void onMount() {
     super.onMount();
     _paint.color = game.gameColors.playerLaser.withValues(alpha: 0.4);
+    _muteListener = () {
+      if (game.audioService.muted.value) {
+        stopSound();
+      }
+    };
+    game.audioService.muted.addListener(_muteListener);
   }
 
   @override
@@ -106,6 +114,7 @@ class MiningLaserComponent extends Component with HasGameReference<SpaceGame> {
 
   @override
   void onRemove() {
+    game.audioService.muted.removeListener(_muteListener);
     stopSound();
     super.onRemove();
   }
