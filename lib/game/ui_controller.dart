@@ -38,6 +38,11 @@ class UiController {
 
   bool _helpWasPlaying = false;
 
+  /// Releases resources owned by the controller.
+  void dispose() {
+    showMinimap.dispose();
+  }
+
   /// Toggles the upgrades overlay and pauses/resumes the game.
   void toggleUpgrades() => stateMachine.toggleUpgrades();
 

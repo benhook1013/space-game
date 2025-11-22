@@ -4,6 +4,7 @@ import 'space_game.dart';
 
 /// Cleans up services and managers owned by [SpaceGame].
 void disposeGame(SpaceGame game) {
+  game.ui.dispose();
   game.settingsService.dispose();
   game.scoreService.dispose();
   game.upgradeService.dispose();
@@ -14,6 +15,10 @@ void disposeGame(SpaceGame game) {
   game.assetLifecycle.dispose();
   game.starfieldManager.dispose();
   game.pools.dispose();
+  game.selectedPlayerIndex.dispose();
+  if (game.ownsFocusNode) {
+    game.focusNode.dispose();
+  }
 }
 
 /// Disposes the [GameEventBus] after the game tree has been torn down.
