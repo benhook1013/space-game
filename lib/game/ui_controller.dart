@@ -18,7 +18,9 @@ class UiController {
     required this.resumeEngine,
     required this.focusGame,
   })  : _player = player,
-        _miningLaser = miningLaser;
+        _miningLaser = miningLaser {
+    overlayService.onChanged = _syncModalOverlays;
+  }
 
   final OverlayService overlayService;
   final GameStateMachine stateMachine;
@@ -36,10 +38,15 @@ class UiController {
   /// Whether the minimap should be shown in the HUD.
   final ValueNotifier<bool> showMinimap = ValueNotifier<bool>(true);
 
-  bool _helpWasPlaying = false;
+  /// Tracks modal overlays that should pause the game while visible.
+  final Set<String> _activeModalOverlays = <String>{};
+
+  /// Whether the engine was paused due to at least one modal overlay.
+  bool _pausedForModalOverlay = false;
 
   /// Releases resources owned by the controller.
   void dispose() {
+    overlayService.onChanged = null;
     showMinimap.dispose();
   }
 
@@ -48,20 +55,11 @@ class UiController {
 
   /// Toggles the help overlay and pauses/resumes if entering from gameplay.
   void toggleHelp() {
-    if (overlayService.game.overlays.isActive(HelpOverlay.id)) {
-      overlayService.hideHelp();
-      if (_helpWasPlaying) {
-        resumeEngine();
-        focusGame();
-      }
-    } else {
-      _helpWasPlaying = stateMachine.isPlaying;
-      overlayService.showHelp();
-      if (_helpWasPlaying) {
-        pauseEngine();
-        _miningLaser()?.stopSound();
-      }
-    }
+    _toggleModalOverlay(
+      id: HelpOverlay.id,
+      show: overlayService.showHelp,
+      hide: overlayService.hideHelp,
+    );
   }
 
   /// Toggles rendering of the player's range rings.
@@ -71,15 +69,61 @@ class UiController {
 
   /// Shows or hides the runtime settings overlay.
   void toggleSettings() {
-    if (overlayService.game.overlays.isActive(SettingsOverlay.id)) {
-      overlayService.hideSettings();
-    } else {
-      overlayService.showSettings();
-    }
+    _toggleModalOverlay(
+      id: SettingsOverlay.id,
+      show: overlayService.showSettings,
+      hide: overlayService.hideSettings,
+    );
   }
 
   /// Toggles the minimap visibility in the HUD.
   void toggleMinimap() {
     showMinimap.value = !showMinimap.value;
+  }
+
+  /// Toggles overlays that should pause the game and resume when closed.
+  void _toggleModalOverlay({
+    required String id,
+    required VoidCallback show,
+    required VoidCallback hide,
+  }) {
+    final overlays = overlayService.game.overlays;
+    if (overlays.isActive(id)) {
+      hide();
+      _activeModalOverlays.remove(id);
+      if (_pausedForModalOverlay && !_hasActiveModalOverlay()) {
+        resumeEngine();
+        focusGame();
+        _pausedForModalOverlay = false;
+      }
+    } else {
+      final wasPlaying = stateMachine.isPlaying;
+      _activeModalOverlays.add(id);
+      show();
+      if (wasPlaying && !_pausedForModalOverlay) {
+        pauseEngine();
+        _miningLaser()?.stopSound();
+        _pausedForModalOverlay = true;
+      }
+    }
+  }
+
+  bool _hasActiveModalOverlay() {
+    final overlays = overlayService.game.overlays;
+    return _activeModalOverlays.any(overlays.isActive);
+  }
+
+  void _syncModalOverlays() {
+    final overlays = overlayService.game.overlays;
+    _activeModalOverlays.removeWhere((id) => !overlays.isActive(id));
+
+    if (_pausedForModalOverlay && !_hasActiveModalOverlay()) {
+      _pausedForModalOverlay = false;
+
+      if (stateMachine.isPlaying) {
+        resumeEngine();
+        focusGame();
+      }
+    }
   }
 }

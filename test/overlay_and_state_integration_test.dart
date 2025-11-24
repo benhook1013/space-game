@@ -183,4 +183,61 @@ void main() {
     expect(game.overlays.isActive(HelpOverlay.id), isFalse);
     expect(game.overlays.isActive(HudOverlay.id), isTrue);
   });
+
+  test('Modal pause resets when overlays are removed externally', () {
+    final game = _createGame();
+    final overlayService = OverlayService(game);
+
+    var enginePaused = false;
+    var focused = false;
+
+    final stateMachine = GameStateMachine(
+      overlays: overlayService,
+      onStart: () {},
+      onPause: () {},
+      onResume: () {},
+      onGameOver: () {},
+      onMenu: () {},
+      onEnterUpgrades: () => enginePaused = true,
+      onExitUpgrades: () {
+        enginePaused = false;
+        focused = true;
+      },
+    );
+
+    final ui = UiController(
+      overlayService: overlayService,
+      stateMachine: stateMachine,
+      player: () => throw UnimplementedError('player not needed'),
+      miningLaser: () => null,
+      pauseEngine: () => enginePaused = true,
+      resumeEngine: () => enginePaused = false,
+      focusGame: () => focused = true,
+    );
+
+    stateMachine.startGame();
+    expect(stateMachine.isPlaying, isTrue);
+
+    ui.toggleSettings();
+    expect(game.overlays.isActive(SettingsOverlay.id), isTrue);
+    expect(enginePaused, isTrue);
+
+    // Entering upgrades removes settings without the UI controller's hide path.
+    stateMachine.toggleUpgrades();
+    expect(stateMachine.isUpgrades, isTrue);
+    expect(game.overlays.isActive(SettingsOverlay.id), isFalse);
+
+    // Returning to gameplay should allow new modals to pause as expected.
+    stateMachine.toggleUpgrades();
+    expect(stateMachine.isPlaying, isTrue);
+
+    ui.toggleHelp();
+    expect(game.overlays.isActive(HelpOverlay.id), isTrue);
+    expect(enginePaused, isTrue);
+
+    ui.toggleHelp();
+    expect(game.overlays.isActive(HelpOverlay.id), isFalse);
+    expect(enginePaused, isFalse);
+    expect(focused, isTrue);
+  });
 }
