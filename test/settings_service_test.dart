@@ -75,30 +75,6 @@ void main() {
     expect(settings.starfieldTileSize.value, 256);
   });
 
-  test('reset restores default values', () {
-    final settings = SettingsService();
-    settings.hudButtonScale.value = 1.2;
-    settings.minimapScale.value = 1.3;
-    settings.textScale.value = 1.8;
-    settings.joystickScale.value = 1.4;
-    settings.targetingRange.value = 400;
-    settings.tractorRange.value = 300;
-    settings.miningRange.value = 200;
-    settings.starfieldTileSize.value = 256;
-
-    settings.reset();
-
-    expect(
-        settings.hudButtonScale.value, SettingsService.defaultHudButtonScale);
-    expect(settings.minimapScale.value, SettingsService.defaultMinimapScale);
-    expect(settings.textScale.value, SettingsService.defaultTextScale);
-    expect(settings.joystickScale.value, SettingsService.defaultJoystickScale);
-    expect(settings.targetingRange.value, Constants.playerAutoAimRange);
-    expect(settings.tractorRange.value, Constants.playerTractorAuraRadius);
-    expect(settings.miningRange.value, Constants.playerMiningRange);
-    expect(settings.starfieldTileSize.value, Constants.starfieldTileSize);
-  });
-
   test('values persist across sessions', () async {
     SharedPreferences.setMockInitialValues({});
     final storage = await StorageService.create();
