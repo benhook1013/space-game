@@ -14,15 +14,18 @@ class AssetLifecycleService {
     required this.audioService,
   }) {
     _storedVolume = audioService.masterVolume;
-    audioService.volume.addListener(() {
+    _volumeListener = () {
       if (!_suppressVolumeSave) {
         _storedVolume = audioService.masterVolume;
       }
-    });
+    };
+    audioService.volume.addListener(_volumeListener);
   }
 
   final SpaceGame game;
   final AudioService audioService;
+
+  late final VoidCallback _volumeListener;
 
   /// Reports progress while remaining assets load.
   final ValueNotifier<double> assetLoadProgress = ValueNotifier<double>(0);
@@ -58,6 +61,9 @@ class AssetLifecycleService {
 
   /// Pauses the game and lowers audio volume.
   void pauseGame() {
+    if (!game.stateMachine.isPlaying) {
+      return;
+    }
     game.stateMachine.pauseGame();
     _storedVolume = audioService.masterVolume;
     _suppressVolumeSave = true;
@@ -69,6 +75,9 @@ class AssetLifecycleService {
 
   /// Resumes the game and restores audio volume.
   void resumeGame() {
+    if (!game.stateMachine.isPaused) {
+      return;
+    }
     game.stateMachine.resumeGame();
     game.resumeEngine();
     _suppressVolumeSave = true;
@@ -78,6 +87,7 @@ class AssetLifecycleService {
   }
 
   void dispose() {
+    audioService.volume.removeListener(_volumeListener);
     assetLoadProgress.dispose();
   }
 }
