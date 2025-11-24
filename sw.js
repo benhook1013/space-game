@@ -8,7 +8,7 @@ const CORE_ASSETS = [
   "index.html",
   "manifest.json",
   "assets_manifest.json",
-  "flutter_bootstrap.js",
+  "flutter.js",
   "main.dart.js",
 ];
 

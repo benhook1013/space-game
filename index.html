@@ -74,12 +74,26 @@
     </script>
     <script src="segmenter_polyfill.js"></script>
     <script>
-      // Disable Flutter's default service worker bootstrap since we register our
-      // own `sw.js` above. This prevents Flutter's loader from waiting four
-      // seconds for `flutter_service_worker.js`, which would otherwise log a
-      // noisy console error when it times out.
-      window.flutterConfiguration = { serviceWorker: null };
+      // Load Flutter using the newer `engineInitializer.initializeEngine`
+      // configuration API so we can disable the default service worker without
+      // relying on the deprecated `window.flutterConfiguration` hook. Our
+      // custom worker (`sw.js` above) handles caching instead.
+      window.addEventListener('load', () => {
+        const flutterLoader = document.createElement('script');
+        flutterLoader.src = 'flutter.js';
+        flutterLoader.async = true;
+        flutterLoader.onload = () => {
+          _flutter.loader.loadEntrypoint({
+            serviceWorker: { serviceWorkerVersion: null },
+            onEntrypointLoaded: (engineInitializer) => {
+              engineInitializer.initializeEngine().then((appRunner) => {
+                appRunner.runApp();
+              });
+            },
+          });
+        };
+        document.body.append(flutterLoader);
+      });
     </script>
-    <script src="flutter_bootstrap.js" async></script>
   </body>
 </html>
