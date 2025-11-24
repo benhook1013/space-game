@@ -26,56 +26,63 @@ void main() {
       expect(result, isTrue);
     });
 
-    test('ignored keys are not consumed', () {
-      final dispatcher = KeyDispatcher();
-      dispatcher.unregister(LogicalKeyboardKey.space);
-      final result = dispatcher.onKeyEvent(
-        const KeyDownEvent(
-          logicalKey: LogicalKeyboardKey.space,
-          physicalKey: PhysicalKeyboardKey.space,
-          timeStamp: Duration.zero,
-        ),
-        {LogicalKeyboardKey.space},
+    group('unhandled key events', () {
+      const keyDownSpace = KeyDownEvent(
+        logicalKey: LogicalKeyboardKey.space,
+        physicalKey: PhysicalKeyboardKey.space,
+        timeStamp: Duration.zero,
       );
-      expect(result, isFalse);
-    });
 
-    test('unhandled keys propagate', () {
-      final dispatcher = KeyDispatcher();
-      final result = dispatcher.onKeyEvent(
-        const KeyDownEvent(
-          logicalKey: LogicalKeyboardKey.space,
-          physicalKey: PhysicalKeyboardKey.space,
-          timeStamp: Duration.zero,
+      final scenarios = <({String description, void Function() run})>[
+        (
+          description: 'ignored keys are not consumed',
+          run: () {
+            final dispatcher = KeyDispatcher();
+            dispatcher.unregister(LogicalKeyboardKey.space);
+            final result = dispatcher.onKeyEvent(
+              keyDownSpace,
+              {LogicalKeyboardKey.space},
+            );
+            expect(result, isFalse);
+          },
         ),
-        {LogicalKeyboardKey.space},
-      );
-      expect(result, isFalse);
-    });
+        (
+          description: 'unhandled keys propagate',
+          run: () {
+            final dispatcher = KeyDispatcher();
+            final result = dispatcher.onKeyEvent(
+              keyDownSpace,
+              {LogicalKeyboardKey.space},
+            );
+            expect(result, isFalse);
+          },
+        ),
+      ];
 
-    test('tracks pressed state for unhandled keys', () {
-      final dispatcher = KeyDispatcher();
-      final handledDown = dispatcher.onKeyEvent(
-        const KeyDownEvent(
-          logicalKey: LogicalKeyboardKey.space,
-          physicalKey: PhysicalKeyboardKey.space,
-          timeStamp: Duration.zero,
-        ),
-        {LogicalKeyboardKey.space},
-      );
-      expect(handledDown, isFalse);
-      expect(dispatcher.isPressed(LogicalKeyboardKey.space), isTrue);
+      for (final scenario in scenarios) {
+        test(scenario.description, scenario.run);
+      }
 
-      final handledUp = dispatcher.onKeyEvent(
-        const KeyUpEvent(
-          logicalKey: LogicalKeyboardKey.space,
-          physicalKey: PhysicalKeyboardKey.space,
-          timeStamp: Duration.zero,
-        ),
-        <LogicalKeyboardKey>{},
-      );
-      expect(handledUp, isFalse);
-      expect(dispatcher.isPressed(LogicalKeyboardKey.space), isFalse);
+      test('tracks pressed state for unhandled keys', () {
+        final dispatcher = KeyDispatcher();
+        final handledDown = dispatcher.onKeyEvent(
+          keyDownSpace,
+          {LogicalKeyboardKey.space},
+        );
+        expect(handledDown, isFalse);
+        expect(dispatcher.isPressed(LogicalKeyboardKey.space), isTrue);
+
+        final handledUp = dispatcher.onKeyEvent(
+          const KeyUpEvent(
+            logicalKey: LogicalKeyboardKey.space,
+            physicalKey: PhysicalKeyboardKey.space,
+            timeStamp: Duration.zero,
+          ),
+          <LogicalKeyboardKey>{},
+        );
+        expect(handledUp, isFalse);
+        expect(dispatcher.isPressed(LogicalKeyboardKey.space), isFalse);
+      });
     });
 
     test('unregister removes callbacks and pressed state', () {
