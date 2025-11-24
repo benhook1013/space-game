@@ -33,11 +33,11 @@ void main() {
     final storage = await StorageService.create();
     final audio = await AudioService.create(storage);
     final game = SpaceGame(storageService: storage, audioService: audio);
-    expect(game.debugMode, isTrue);
-    game.toggleDebug();
     expect(game.debugMode, isFalse);
     game.toggleDebug();
     expect(game.debugMode, isTrue);
+    game.toggleDebug();
+    expect(game.debugMode, isFalse);
   });
 
   test('toggleDebug updates hitbox debugMode', () async {
@@ -46,8 +46,6 @@ void main() {
     final audio = await AudioService.create(storage);
     final game = _HitboxGame(storage: storage, audio: audio);
     await game.onLoad();
-    expect(game.hitbox.debugMode, isFalse);
-    game.toggleDebug();
     expect(game.hitbox.debugMode, isFalse);
     game.toggleDebug();
     expect(game.hitbox.debugMode, isTrue);
@@ -65,7 +63,7 @@ void main() {
     game.pools.release(enemy);
     game.toggleDebug();
     final reused = game.pools.acquire<EnemyComponent>((_) {});
-    expect(reused.debugMode, isFalse);
+    expect(reused.debugMode, isTrue);
   });
 
   test('toggleDebug updates pooled child debugMode', () async {
@@ -85,7 +83,7 @@ void main() {
     game.toggleDebug();
     final reused = game.pools.acquire<EnemyComponent>((_) {});
     final reusedHitbox = reused.children.query<CircleHitbox>().first;
-    expect(reusedHitbox.debugMode, isFalse);
+    expect(reusedHitbox.debugMode, isTrue);
   });
 
   test('toggleDebug updates starfield debugDrawTiles', () async {
@@ -103,10 +101,9 @@ void main() {
     game.overlays.addEntry('settingsOverlay', (_, __) => const SizedBox());
     await game.onLoad();
     final starfield = game.children.whereType<StarfieldComponent>().single;
+    game.toggleDebug();
     expect(starfield.debugDrawTiles, isTrue);
     game.toggleDebug();
     expect(starfield.debugDrawTiles, isFalse);
-    game.toggleDebug();
-    expect(starfield.debugDrawTiles, isTrue);
   });
 }
