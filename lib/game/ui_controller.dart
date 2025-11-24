@@ -36,7 +36,7 @@ class UiController {
   /// Whether the minimap should be shown in the HUD.
   final ValueNotifier<bool> showMinimap = ValueNotifier<bool>(true);
 
-  bool _helpWasPlaying = false;
+  final Map<String, bool> _overlayPauseStates = {};
 
   /// Releases resources owned by the controller.
   void dispose() {
@@ -48,20 +48,11 @@ class UiController {
 
   /// Toggles the help overlay and pauses/resumes if entering from gameplay.
   void toggleHelp() {
-    if (overlayService.game.overlays.isActive(HelpOverlay.id)) {
-      overlayService.hideHelp();
-      if (_helpWasPlaying) {
-        resumeEngine();
-        focusGame();
-      }
-    } else {
-      _helpWasPlaying = stateMachine.isPlaying;
-      overlayService.showHelp();
-      if (_helpWasPlaying) {
-        pauseEngine();
-        _miningLaser()?.stopSound();
-      }
-    }
+    _toggleModalOverlay(
+      id: HelpOverlay.id,
+      show: overlayService.showHelp,
+      hide: overlayService.hideHelp,
+    );
   }
 
   /// Toggles rendering of the player's range rings.
@@ -71,15 +62,39 @@ class UiController {
 
   /// Shows or hides the runtime settings overlay.
   void toggleSettings() {
-    if (overlayService.game.overlays.isActive(SettingsOverlay.id)) {
-      overlayService.hideSettings();
-    } else {
-      overlayService.showSettings();
-    }
+    _toggleModalOverlay(
+      id: SettingsOverlay.id,
+      show: overlayService.showSettings,
+      hide: overlayService.hideSettings,
+    );
   }
 
   /// Toggles the minimap visibility in the HUD.
   void toggleMinimap() {
     showMinimap.value = !showMinimap.value;
+  }
+
+  /// Toggles overlays that should pause the game and resume when closed.
+  void _toggleModalOverlay({
+    required String id,
+    required VoidCallback show,
+    required VoidCallback hide,
+  }) {
+    final overlays = overlayService.game.overlays;
+    if (overlays.isActive(id)) {
+      hide();
+      if (_overlayPauseStates.remove(id) == true) {
+        resumeEngine();
+        focusGame();
+      }
+    } else {
+      final wasPlaying = stateMachine.isPlaying;
+      _overlayPauseStates[id] = wasPlaying;
+      show();
+      if (wasPlaying) {
+        pauseEngine();
+        _miningLaser()?.stopSound();
+      }
+    }
   }
 }

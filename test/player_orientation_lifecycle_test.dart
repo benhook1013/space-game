@@ -3,7 +3,6 @@ import 'dart:math' as math;
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flame_audio/flame_audio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
