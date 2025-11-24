@@ -86,7 +86,9 @@ class _GameAppState extends State<GameApp> with WidgetsBindingObserver {
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    widget.focusNode.dispose();
+    if (!widget.game.ownsFocusNode) {
+      widget.focusNode.dispose();
+    }
     super.dispose();
   }
 
