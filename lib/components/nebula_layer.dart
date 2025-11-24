@@ -21,7 +21,9 @@ class NebulaLayer extends Component
     this.driftAmplitude = 48,
     this.colorCycleSpeed = 0.08,
     this.tileSize = 512,
-    this.maxAlpha = 0.6,
+    this.maxAlpha = 0.45,
+    this.edgeFeather = 0.12,
+    this.cutoff = 0.42,
     double intensity = 0.5,
     Color? primaryTint,
     Color? secondaryTint,
@@ -52,6 +54,12 @@ class NebulaLayer extends Component
 
   /// Maximum opacity applied to the generated noise (0-1).
   final double maxAlpha;
+
+  /// Proportion of the tile width/height used to feather edges and hide seams.
+  final double edgeFeather;
+
+  /// Noise threshold below which the layer is fully transparent.
+  final double cutoff;
 
   final int _seed;
 
@@ -145,8 +153,14 @@ class NebulaLayer extends Component
       for (var x = 0; x < tileSize; x++) {
         final nx = x * noiseScale;
         final ny = y * noiseScale;
-        final value = (noise.noise2D(nx, ny) + 1) / 2;
-        final faded = math.pow(value, 1.2) as double;
+        final base = (noise.noise2D(nx, ny) + 1) / 2;
+        final wisps = (noise.noise2D(nx * 0.75 + 80, ny * 0.75 - 120) + 1) / 2;
+        final detail = (noise.noise2D(nx * 2.4 - 200, ny * 2.4 + 60) + 1) / 2;
+        var value = base * 0.55 + wisps * 0.25 + detail * 0.2;
+        value = ((value - cutoff) / (1 - cutoff)).clamp(0, 1);
+
+        final edge = _edgeMask(x, y);
+        final faded = math.pow(value * edge, 1.25) as double;
         final alpha = (faded * 255).clamp(0, 255).toInt();
         bytes[i++] = 255;
         bytes[i++] = 255;
@@ -164,6 +178,16 @@ class NebulaLayer extends Component
       completer.complete,
     );
     return completer.future;
+  }
+
+  double _edgeMask(int x, int y) {
+    final edgeDistance = math.min(
+      math.min(x, tileSize - 1 - x),
+      math.min(y, tileSize - 1 - y),
+    );
+    final featherPx = (tileSize * edgeFeather).clamp(1, tileSize.toDouble());
+    final mask = (edgeDistance / featherPx).clamp(0, 1);
+    return math.pow(mask, 1.1).toDouble();
   }
 
   @override
