@@ -36,6 +36,7 @@ doc/api/
 # Local tooling and caches
 .tooling/
 .pub-cache/
+.dev/
 
 # Platform-specific builds
 android/local.properties
