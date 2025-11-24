@@ -9,6 +9,7 @@ import 'package:space_game/components/enemy.dart';
 import 'package:space_game/enemy_faction.dart';
 import 'package:space_game/game/event_bus.dart';
 import 'package:space_game/game/pool_manager.dart';
+import 'package:space_game/util/object_pool.dart';
 
 class _ComponentPoolCase<T extends Component> {
   _ComponentPoolCase({
@@ -53,6 +54,22 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('PoolManager', () {
+    test('ObjectPool invokes discard callback for full pools and clearing', () {
+      final discarded = <int>[];
+      final pool = ObjectPool<int>(
+        () => 0,
+        maxSize: 1,
+        onDiscard: discarded.add,
+      );
+
+      pool.release(1);
+      pool.release(2); // Discarded because the pool is full.
+      pool.clear(); // Discards the cached instance.
+
+      expect(discarded, [2, 1]);
+      expect(pool.items, isEmpty);
+    });
+
     test('acquire, release via event and clear lifecycle', () {
       final events = GameEventBus();
       final pools = PoolManager(events: events);
