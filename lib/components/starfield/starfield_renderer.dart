@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flame/components.dart';
 
 import 'starfield_cache.dart';
+import 'starfield_config.dart';
 import 'starfield_worker.dart';
 
 class StarfieldRenderer {
@@ -14,7 +15,7 @@ class StarfieldRenderer {
   void render(
     Canvas canvas,
     List<LayerState> layers,
-    Vector2 cameraPos,
+    Vector2 Function(StarfieldLayerConfig config) cameraForLayer,
     Vector2 viewSize,
     double tileSize,
     double time,
@@ -24,6 +25,7 @@ class StarfieldRenderer {
   ) {
     for (final layer in layers) {
       final cfg = layer.config;
+      final cameraPos = cameraForLayer(cfg);
       final left = cameraPos.x * cfg.parallax - viewSize.x / 2;
       final top = cameraPos.y * cfg.parallax - viewSize.y / 2;
       final right = left + viewSize.x;
