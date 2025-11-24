@@ -11,7 +11,7 @@ required attribution details.
 | Asteroid sprites in `assets/images/asteroids/` | Created with PixelLab (user-provided) | Unknown | None provided |
 | `bullet.png` placeholder | Generated via Python | CC0 | None required |
 | Mineral icon in `assets/images/icons/mineral.png` | Generated with ImageMagick | CC0 | None required |
-| HUD icons in `assets/images/icons/health.png`, `score.png` and `settings.png` | Generated with Python | CC0 | None required |
+| HUD icons in `assets/images/icons/health.png`, `score.png` and `settings.png` (cog variant) | Generated with Python | CC0 | None required |
 | Explosion sprites in `assets/images/explosions/` | Created with PixelLab (user-provided) | Unknown | None provided |
 | `laser-bullet.mp3` shoot sound | User-provided | Unknown | None provided |
 | `explosion.mp3` sound | User-provided | Unknown | None provided |
