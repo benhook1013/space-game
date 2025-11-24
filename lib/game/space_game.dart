@@ -130,6 +130,9 @@ class SpaceGame extends FlameGame
   ValueNotifier<int> get health => scoreService.health;
   late final UpgradeService upgradeService;
 
+  /// Center position used when spawning the player.
+  Vector2 get spawnPosition => size / 2;
+
   /// Selected player sprite index for menu selection.
   final ValueNotifier<int> selectedPlayerIndex;
 

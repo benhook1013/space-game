@@ -37,7 +37,7 @@ class LifecycleManager {
         joystick: game.controlManager.joystick,
         keyDispatcher: game.keyDispatcher,
         spritePath: game.selectedPlayerSprite,
-      )..reset();
+      )..reset(game.spawnPosition);
       game.player = player;
       final addResult = game.add(player);
       if (addResult is Future<void>) {
@@ -56,7 +56,7 @@ class LifecycleManager {
         ..onReleased = player.stopShooting;
     } else {
       game.player.setSprite(game.selectedPlayerSprite);
-      game.player.reset();
+      game.player.reset(game.spawnPosition);
     }
     // Rebind the camera to the active player each run so it doesn't
     // follow a removed instance after respawns.
