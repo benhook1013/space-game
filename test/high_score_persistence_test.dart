@@ -75,11 +75,17 @@ void main() {
         settingsService: settings,
       );
 
-      score.addScore(100);
+      const scoreValue = 100;
+      score.addScore(scoreValue);
       await score.updateHighScoreIfNeeded();
       final upgrade = upgradeService.upgrades.first;
       score.addMinerals(upgrade.cost);
       upgradeService.buy(upgrade);
+
+      score.reset();
+      expect(score.score.value, 0);
+      expect(score.highScore.value, scoreValue);
+      expect(upgradeService.isPurchased(upgrade.id), isTrue);
 
       // Simulate a restart by recreating services with the same storage.
       storage = await StorageService.create();
@@ -91,7 +97,8 @@ void main() {
         settingsService: settings,
       );
 
-      expect(score.highScore.value, 100);
+      expect(score.score.value, 0);
+      expect(score.highScore.value, scoreValue);
       expect(upgradeService.isPurchased(upgrade.id), isTrue);
 
       // Another restart to ensure persistence across multiple sessions.
@@ -104,7 +111,8 @@ void main() {
         settingsService: settings,
       );
 
-      expect(score.highScore.value, 100);
+      expect(score.score.value, 0);
+      expect(score.highScore.value, scoreValue);
       expect(upgradeService.isPurchased(upgrade.id), isTrue);
     });
   });

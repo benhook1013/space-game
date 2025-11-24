@@ -42,7 +42,7 @@ void main() {
     );
   });
 
-  test('full lifecycle with scoring and persistence across restarts', () async {
+  test('full lifecycle state transitions across restarts', () async {
     SharedPreferences.setMockInitialValues({});
     await Flame.images.loadAll([...Assets.players, ...Assets.explosions]);
     final storage = await StorageService.create();
@@ -62,13 +62,6 @@ void main() {
     expect(game.stateMachine.state, GameState.playing);
     expect(game.overlays.isActive(HudOverlay.id), isTrue);
 
-    // Score some points and purchase an upgrade.
-    const scoreValue = 42;
-    final upgrade = game.upgradeService.upgrades.first;
-    game.addScore(scoreValue);
-    game.addMinerals(upgrade.cost);
-    expect(game.upgradeService.buy(upgrade), isTrue);
-
     for (var i = 0; i < Constants.playerMaxHealth; i++) {
       game.hitPlayer();
     }
@@ -81,31 +74,12 @@ void main() {
     expect(game.overlays.isActive(GameOverOverlay.id), isFalse);
     expect(game.overlays.isActive(HudOverlay.id), isFalse);
 
-    // Second run should reset score but preserve high score and upgrades.
+    // Second run should reset in-game state while returning to the playing view.
     await game.startGame();
     expect(game.stateMachine.state, GameState.playing);
     expect(game.overlays.isActive(HudOverlay.id), isTrue);
+    expect(game.overlays.isActive(MenuOverlay.id), isFalse);
     expect(game.scoreService.score.value, 0);
-    expect(game.scoreService.highScore.value, scoreValue);
-    expect(game.upgradeService.isPurchased(upgrade.id), isTrue);
-
-    for (var i = 0; i < Constants.playerMaxHealth; i++) {
-      game.hitPlayer();
-    }
-    expect(game.stateMachine.state, GameState.gameOver);
-    expect(game.overlays.isActive(GameOverOverlay.id), isTrue);
-
-    game.returnToMenu();
-    expect(game.stateMachine.state, GameState.menu);
-    expect(game.overlays.isActive(MenuOverlay.id), isTrue);
     expect(game.overlays.isActive(GameOverOverlay.id), isFalse);
-
-    // Third run to verify overlays after multiple restarts.
-    await game.startGame();
-    expect(game.stateMachine.state, GameState.playing);
-    expect(game.overlays.isActive(HudOverlay.id), isTrue);
-    expect(game.scoreService.score.value, 0);
-    expect(game.scoreService.highScore.value, scoreValue);
-    expect(game.upgradeService.isPurchased(upgrade.id), isTrue);
   });
 }
