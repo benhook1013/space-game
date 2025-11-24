@@ -8,9 +8,11 @@ import 'package:flame/game.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../constants.dart';
+import '../../util/open_simplex_noise.dart';
 import 'starfield_cache.dart' as cache;
 import 'starfield_config.dart';
 import 'starfield_renderer.dart';
+import 'starfield_worker.dart';
 
 /// Deterministic world-space starfield rendered behind gameplay.
 class StarfieldComponent extends Component
@@ -145,12 +147,16 @@ class StarfieldComponent extends Component
   /// Exposes the current cache size for tests.
   @visibleForTesting
   int debugCacheSize([int layerIndex = 0]) =>
-      cache.debugCacheSize(_layerStates, layerIndex);
+      _layerStates[layerIndex].cache.length;
 
   /// Awaits all pending tile generations. Used in tests.
   @visibleForTesting
   Future<void> debugWaitForPending() async {
-    await cache.debugWaitForPending(_layerStates);
+    final pendingTiles = _layerStates.expand((layer) => layer.pending.values);
+    if (pendingTiles.isEmpty) {
+      return;
+    }
+    await Future.wait(pendingTiles);
   }
 
   @override
@@ -247,6 +253,38 @@ class StarfieldComponent extends Component
 
   /// Returns the radii of the stars generated for the given tile on layer 0.
   @visibleForTesting
-  Iterable<double> debugTileStarRadii(int tx, int ty) =>
-      cache.debugTileStarRadii(_seed, tx, ty, tileSize, _layers, gamma);
+  Iterable<double> debugTileStarRadii(int tx, int ty) {
+    final firstLayer = _layers.first;
+    if (firstLayer.density <= 0) {
+      return const [];
+    }
+
+    final noise = OpenSimplexNoise(_seed);
+    final noiseValue = noise.noise2D(
+        tx * Constants.starNoiseScale, ty * Constants.starNoiseScale);
+    final density = (noiseValue + 1) / 2;
+    final minDist = _lerp(
+          Constants.starMinDistanceMin,
+          Constants.starMinDistanceMax,
+          (1 - density).toDouble(),
+        ) /
+        firstLayer.density;
+
+    final params = TileParams(
+      _seed,
+      tx,
+      ty,
+      minDist,
+      tileSize,
+      firstLayer.palette.map((c) => c.toARGB32()).toList(growable: false),
+      firstLayer.minBrightness,
+      firstLayer.maxBrightness,
+      firstLayer.gamma * gamma,
+    );
+
+    return generateTileStars(params, firstLayer.twinkleSpeed)
+        .map((star) => star.radius);
+  }
+
+  double _lerp(double a, double b, double t) => a + (b - a) * t;
 }
