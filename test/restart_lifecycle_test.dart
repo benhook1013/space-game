@@ -58,7 +58,7 @@ void main() {
     expect(game.children.whereType<ExplosionComponent>(), isEmpty);
   });
 
-  test('restarting removes the previous player instance', () async {
+  test('restarting respawns the player at the center', () async {
     final game = await createLifecycleTestGame(
       includeHudOverlay: true,
       includePauseOverlay: true,
@@ -75,6 +75,7 @@ void main() {
 
     // Restart the game and ensure only one player exists at the spawn point.
     await game.startGame();
+    await game.ready();
     final players = game.children.whereType<PlayerComponent>().toList();
     expect(players.length, 1);
     expect(players.first.position, Vector2.zero());
