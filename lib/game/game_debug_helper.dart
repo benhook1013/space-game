@@ -24,7 +24,10 @@ mixin GameDebugHelper on FlameGame, DebugController {
     await super.onLoad();
     if (kDebugMode) {
       _fpsText = FpsTextComponent(position: Vector2.all(10));
-      await add(_fpsText!);
+
+      if (debugMode) {
+        await add(_fpsText!);
+      }
     }
   }
 
