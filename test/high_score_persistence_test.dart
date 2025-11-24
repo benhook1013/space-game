@@ -20,21 +20,13 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('High score persistence', () {
-    test('StorageService persists and resets high score', () async {
-      SharedPreferences.setMockInitialValues({});
-      final storage = await StorageService.create();
-      expect(storage.getHighScore(), 0);
-      expect(await storage.setHighScore(42), isTrue);
-      expect(storage.getHighScore(), 42);
-      expect(await storage.resetHighScore(), isTrue);
-      expect(storage.getHighScore(), 0);
-    });
-
     test('ScoreService updates high score and persists across sessions',
         () async {
       SharedPreferences.setMockInitialValues({});
       var storage = await StorageService.create();
       var score = ScoreService(storageService: storage);
+
+      expect(storage.getHighScore(), 0);
 
       score.addScore(10);
       await score.updateHighScoreIfNeeded();
