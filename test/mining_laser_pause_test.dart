@@ -119,4 +119,32 @@ void main() {
     await game.ready();
     expect(audio.masterVolume, 1);
   });
+
+  test('Repeated pauses and resumes keep volume stable', () async {
+    SharedPreferences.setMockInitialValues({});
+    await Flame.images.loadAll([...Assets.players]);
+    final storage = await StorageService.create();
+    final audio = await AudioService.create(storage);
+    final game = SpaceGame(storageService: storage, audioService: audio);
+    game.overlays.addEntry(MenuOverlay.id, (_, __) => const SizedBox());
+    game.overlays.addEntry(HudOverlay.id, (_, __) => const SizedBox());
+    game.overlays.addEntry(PauseOverlay.id, (_, __) => const SizedBox());
+    game.overlays.addEntry(GameOverOverlay.id, (_, __) => const SizedBox());
+    await game.onLoad();
+    game.onGameResize(Vector2.all(100));
+    await game.startGame();
+    await game.ready();
+
+    game.pauseGame();
+    expect(audio.masterVolume, Constants.pausedAudioVolumeFactor);
+
+    game.pauseGame();
+    expect(audio.masterVolume, Constants.pausedAudioVolumeFactor);
+
+    game.resumeGame();
+    expect(audio.masterVolume, 1);
+
+    game.resumeGame();
+    expect(audio.masterVolume, 1);
+  });
 }
