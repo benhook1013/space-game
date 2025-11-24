@@ -84,8 +84,8 @@ class PlayerComponent extends SpriteComponent
   }
 
   /// Resets position and orientation to defaults.
-  void reset() {
-    position.setZero();
+  void reset(Vector2 startPosition) {
+    position.setFrom(startPosition);
     angle = 0;
     targetAngle = 0;
   }

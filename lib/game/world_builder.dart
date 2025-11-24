@@ -10,7 +10,7 @@ Future<void> buildWorld(SpaceGame game) async {
     joystick: game.controlManager.joystick,
     keyDispatcher: game.keyDispatcher,
     spritePath: game.selectedPlayerSprite,
-  );
+  )..reset(game.spawnPosition);
   await game.add(game.player);
   game.camera.follow(game.player, snap: true);
   final laser = MiningLaserComponent(player: game.player);
