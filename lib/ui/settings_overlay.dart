@@ -124,6 +124,18 @@ class SettingsOverlay extends StatelessWidget {
               ),
         ],
       ),
+      _SettingsSectionData(
+        title: 'Ambience',
+        sliders: [
+          _SliderSetting(
+            'Nebula Intensity',
+            settings.nebulaIntensity,
+            min: 0,
+            max: 1,
+            format: _percentFormatter,
+          ),
+        ],
+      ),
     ];
 
     return OverlayLayout(

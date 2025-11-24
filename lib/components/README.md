@@ -36,6 +36,8 @@ Gameplay entities and reusable pieces.
   Aura, removing the need for a separate component.
 - [Starfield](starfield.md) – deterministic world-space background that caches
   star tiles and prunes those far from the camera.
+- [NebulaLayer](nebula_layer.md) – animated ambience overlay rendered above the
+  starfield with palette-aware tinting and adjustable intensity.
 - [ExplosionComponent](explosion.md) – short animation and sound played when
   a ship is destroyed.
 - `EnemySpawner` – releases timed groups of enemies ahead of the player.
@@ -51,8 +53,6 @@ Gameplay entities and reusable pieces.
 
 ## Planned Components
 
-- [NebulaLayer](nebula_layer.md) – noise-generated nebula sprites cached per
-  tile with brightness and density settings.
 - [GalaxyLayer](galaxy_layer.md) – distant galaxy bitmap with subtle parallax
   and tint controls.
 

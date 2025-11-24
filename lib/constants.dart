@@ -17,6 +17,9 @@ class Constants {
   /// Global gamma exponent applied to star brightness.
   static const double starfieldGamma = 1;
 
+  /// Default intensity of the ambience overlay above the starfield.
+  static const double nebulaIntensity = 0.35;
+
   /// Player movement speed in pixels per second.
   static const double playerSpeed = 200;
 

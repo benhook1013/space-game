@@ -38,6 +38,7 @@ void main() {
     settings.starfieldDensity.value = 1.5;
     settings.starfieldBrightness.value = 0.5;
     settings.starfieldGamma.value = 1.8;
+    settings.nebulaIntensity.value = 0.9;
     settings.starfieldPalette.value = StarPalette.dusk;
     audio.setMasterVolume(0.5);
 
@@ -53,7 +54,8 @@ void main() {
     await tester.tap(find.text('Reset'));
     await tester.pump();
 
-    expect(settings.hudButtonScale.value, SettingsService.defaultHudButtonScale);
+    expect(
+        settings.hudButtonScale.value, SettingsService.defaultHudButtonScale);
     expect(settings.minimapScale.value, SettingsService.defaultMinimapScale);
     expect(settings.textScale.value, SettingsService.defaultTextScale);
     expect(settings.joystickScale.value, SettingsService.defaultJoystickScale);
@@ -64,6 +66,7 @@ void main() {
     expect(settings.starfieldDensity.value, Constants.starfieldDensity);
     expect(settings.starfieldBrightness.value, Constants.starfieldBrightness);
     expect(settings.starfieldGamma.value, Constants.starfieldGamma);
+    expect(settings.nebulaIntensity.value, Constants.nebulaIntensity);
     expect(settings.starfieldPalette.value, StarPalette.classic);
     expect(audio.masterVolume, 1);
   });

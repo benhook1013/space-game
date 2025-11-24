@@ -27,6 +27,10 @@ void main() {
     expect(settings.tractorRange.value, Constants.playerTractorAuraRadius);
     expect(settings.miningRange.value, Constants.playerMiningRange);
     expect(settings.starfieldTileSize.value, Constants.starfieldTileSize);
+    expect(settings.starfieldDensity.value, Constants.starfieldDensity);
+    expect(settings.starfieldBrightness.value, Constants.starfieldBrightness);
+    expect(settings.starfieldGamma.value, Constants.starfieldGamma);
+    expect(settings.nebulaIntensity.value, Constants.nebulaIntensity);
   });
 
   test('notifiers update when values change', () {
@@ -40,6 +44,7 @@ void main() {
     var tractorNotified = false;
     var miningNotified = false;
     var starfieldNotified = false;
+    var nebulaNotified = false;
 
     settings.hudButtonScale.addListener(() => hudNotified = true);
     settings.minimapScale.addListener(() => minimapNotified = true);
@@ -49,6 +54,7 @@ void main() {
     settings.tractorRange.addListener(() => tractorNotified = true);
     settings.miningRange.addListener(() => miningNotified = true);
     settings.starfieldTileSize.addListener(() => starfieldNotified = true);
+    settings.nebulaIntensity.addListener(() => nebulaNotified = true);
 
     settings.hudButtonScale.value = 1.2;
     settings.minimapScale.value = 1.4;
@@ -58,6 +64,7 @@ void main() {
     settings.tractorRange.value = 250;
     settings.miningRange.value = 180;
     settings.starfieldTileSize.value = 256;
+    settings.nebulaIntensity.value = 0.8;
 
     expect(hudNotified, isTrue);
     expect(minimapNotified, isTrue);
@@ -67,6 +74,7 @@ void main() {
     expect(tractorNotified, isTrue);
     expect(miningNotified, isTrue);
     expect(starfieldNotified, isTrue);
+    expect(nebulaNotified, isTrue);
 
     expect(settings.hudButtonScale.value, 1.2);
     expect(settings.minimapScale.value, 1.4);
@@ -76,6 +84,7 @@ void main() {
     expect(settings.tractorRange.value, 250);
     expect(settings.miningRange.value, 180);
     expect(settings.starfieldTileSize.value, 256);
+    expect(settings.nebulaIntensity.value, 0.8);
   });
 
   test('values persist across sessions', () async {
@@ -132,7 +141,8 @@ void main() {
   test('invalid palette indices fall back to classic for storage and attach',
       () async {
     for (final invalidValue in [999, -1]) {
-      SharedPreferences.setMockInitialValues({'starfieldPalette': invalidValue});
+      SharedPreferences.setMockInitialValues(
+          {'starfieldPalette': invalidValue});
       final storage = await StorageService.create();
 
       final settingsFromStorage = SettingsService(storage: storage);

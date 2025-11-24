@@ -24,6 +24,7 @@ class SettingsService {
     starfieldDensity = _notifiers[_starfieldDensityKey]!;
     starfieldBrightness = _notifiers[_starfieldBrightnessKey]!;
     starfieldGamma = _notifiers[_starfieldGammaKey]!;
+    nebulaIntensity = _notifiers[_nebulaIntensityKey]!;
     final paletteIndex = _safePaletteIndex(
       _storage?.getInt(_starfieldPaletteKey, 0) ?? 0,
     );
@@ -70,6 +71,9 @@ class SettingsService {
 
   /// Exponent applied to star brightness.
   late final ValueNotifier<double> starfieldGamma;
+
+  /// Intensity of the ambience overlay drawn above the starfield.
+  late final ValueNotifier<double> nebulaIntensity;
 
   /// Currently selected star colour palette.
   late final ValueNotifier<StarPalette> starfieldPalette;
@@ -121,6 +125,7 @@ class SettingsService {
   static const _starfieldDensityKey = 'starfieldDensity';
   static const _starfieldBrightnessKey = 'starfieldBrightness';
   static const _starfieldGammaKey = 'starfieldGamma';
+  static const _nebulaIntensityKey = 'nebulaIntensity';
   static const _starfieldPaletteKey = 'starfieldPalette';
   static const _debugEnabledKey = 'debugEnabled';
 
@@ -136,6 +141,7 @@ class SettingsService {
     _starfieldDensityKey: Constants.starfieldDensity,
     _starfieldBrightnessKey: Constants.starfieldBrightness,
     _starfieldGammaKey: Constants.starfieldGamma,
+    _nebulaIntensityKey: Constants.nebulaIntensity,
   };
 
   ValueNotifier<double> _initNotifier(String key, double defaultValue) {
