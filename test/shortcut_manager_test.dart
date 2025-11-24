@@ -16,6 +16,9 @@ class _FakeOverlayService implements OverlayService {
   final Game game = FlameGame();
 
   @override
+  VoidCallback? onChanged;
+
+  @override
   void showHud() {}
   @override
   void showPause() {}

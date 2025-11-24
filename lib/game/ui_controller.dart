@@ -18,7 +18,9 @@ class UiController {
     required this.resumeEngine,
     required this.focusGame,
   })  : _player = player,
-        _miningLaser = miningLaser;
+        _miningLaser = miningLaser {
+    overlayService.onChanged = _syncModalOverlays;
+  }
 
   final OverlayService overlayService;
   final GameStateMachine stateMachine;
@@ -44,6 +46,7 @@ class UiController {
 
   /// Releases resources owned by the controller.
   void dispose() {
+    overlayService.onChanged = null;
     showMinimap.dispose();
   }
 
@@ -108,5 +111,19 @@ class UiController {
   bool _hasActiveModalOverlay() {
     final overlays = overlayService.game.overlays;
     return _activeModalOverlays.any(overlays.isActive);
+  }
+
+  void _syncModalOverlays() {
+    final overlays = overlayService.game.overlays;
+    _activeModalOverlays.removeWhere((id) => !overlays.isActive(id));
+
+    if (_pausedForModalOverlay && !_hasActiveModalOverlay()) {
+      _pausedForModalOverlay = false;
+
+      if (stateMachine.isPlaying) {
+        resumeEngine();
+        focusGame();
+      }
+    }
   }
 }
