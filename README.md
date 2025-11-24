@@ -176,6 +176,28 @@ For Markdown linting, run:
 npx --yes markdownlint-cli '**/*.md'
 ```
 
+### 🛡️ Dev TLS certificates
+
+If you need a throwaway certificate for local HTTPS (for example, to keep secret
+scanners happy by avoiding committed keys), run:
+
+```bash
+./scripts/generate_dev_cert.sh
+```
+
+This creates `.dev/certs/dev-key.pem` and `.dev/certs/dev-cert.pem` (both
+ignored by git) and no-ops on subsequent runs. Set `DEV_CERT_DAYS` to change the
+validity period. You can call the script in a pre-start hook (e.g., a `dev`
+container entrypoint, `npm prestart`, Makefile target or CI step) so that your
+dev deployment generates a fresh key automatically without storing one in the
+repository.
+
+If a dev key was previously committed, delete it and commit the removal so new
+clones are clean. If you need it gone from the remote history too, rewrite the
+history with a tool like `git filter-repo --path services/tcp-proxy-service/src/main/resources/certs/dev-key.pem --invert-paths`,
+force-push (or coordinate with repo admins), and rotate any credentials that
+depended on the old key.
+
 ## 🌐 GitHub Pages Deployment
 
 Pushes to `main` and `develop` trigger the [deploy workflow](.github/workflows/deploy.yml),
