@@ -11,7 +11,8 @@ import 'package:space_game/services/settings_service.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('slider modifies settings', (tester) async {
+  testWidgets('controls update settings and reset restores defaults',
+      (tester) async {
     SharedPreferences.setMockInitialValues({});
     final view = tester.view;
     view.physicalSize = const Size(800, 1200);
@@ -23,30 +24,18 @@ void main() {
     final audio = await AudioService.create(storage);
     final game = SpaceGame(storageService: storage, audioService: audio);
 
-    await tester.pumpWidget(MaterialApp(home: SettingsOverlay(game: game)));
-
-    final slider = find.byType(Slider).first;
-    final initial = audio.masterVolume;
-    await tester.drag(slider, const Offset(50, 0));
-    await tester.pump();
-    expect(audio.masterVolume, isNot(initial));
-  });
-
-  testWidgets('reset button restores defaults', (tester) async {
-    SharedPreferences.setMockInitialValues({});
-    final view = tester.view;
-    view.physicalSize = const Size(800, 1200);
-    view.devicePixelRatio = 1;
-    addTearDown(view.resetPhysicalSize);
-    addTearDown(view.resetDevicePixelRatio);
-
-    final storage = await StorageService.create();
-    final audio = await AudioService.create(storage);
-    final game = SpaceGame(storageService: storage, audioService: audio);
+    // Start with non-default values so we can verify reset restores them.
     game.settingsService.hudButtonScale.value = 1.2;
     audio.setMasterVolume(0.5);
 
     await tester.pumpWidget(MaterialApp(home: SettingsOverlay(game: game)));
+
+    // Adjust the volume slider to ensure controls apply changes.
+    final slider = find.byType(Slider).first;
+    await tester.drag(slider, const Offset(50, 0));
+    await tester.pump();
+    expect(audio.masterVolume, isNot(0.5));
+
     await tester.ensureVisible(find.text('Reset'));
     await tester.tap(find.text('Reset'));
     await tester.pump();
