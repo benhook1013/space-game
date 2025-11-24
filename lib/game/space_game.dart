@@ -198,6 +198,12 @@ class SpaceGame extends FlameGame
   /// Starts a new game session.
   Future<void> startGame() => gameFlow.startGame();
 
+  @override
+  void onDebugModeChanged(bool enabled) {
+    super.onDebugModeChanged(enabled);
+    settingsService.debugEnabled.value = enabled;
+  }
+
   /// Clears the saved high score.
   ///
   /// Returns `true` if the score was removed from storage.

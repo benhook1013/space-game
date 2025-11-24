@@ -19,7 +19,7 @@ void initGameServices(SpaceGame game) {
     );
   }
   game.settingsService.attachStorage(game.storageService);
-  game.debugMode = kDebugMode;
+  game.debugMode = game.settingsService.debugEnabled.value;
   // Respect the overridable pool factory to allow tests and subclasses
   // to inject custom pool implementations.
   // ignore: invalid_use_of_protected_member
