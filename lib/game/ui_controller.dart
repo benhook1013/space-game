@@ -36,7 +36,11 @@ class UiController {
   /// Whether the minimap should be shown in the HUD.
   final ValueNotifier<bool> showMinimap = ValueNotifier<bool>(true);
 
-  final Map<String, bool> _overlayPauseStates = {};
+  /// Tracks modal overlays that should pause the game while visible.
+  final Set<String> _activeModalOverlays = <String>{};
+
+  /// Whether the engine was paused due to at least one modal overlay.
+  bool _pausedForModalOverlay = false;
 
   /// Releases resources owned by the controller.
   void dispose() {
@@ -83,18 +87,26 @@ class UiController {
     final overlays = overlayService.game.overlays;
     if (overlays.isActive(id)) {
       hide();
-      if (_overlayPauseStates.remove(id) == true) {
+      _activeModalOverlays.remove(id);
+      if (_pausedForModalOverlay && !_hasActiveModalOverlay()) {
         resumeEngine();
         focusGame();
+        _pausedForModalOverlay = false;
       }
     } else {
       final wasPlaying = stateMachine.isPlaying;
-      _overlayPauseStates[id] = wasPlaying;
+      _activeModalOverlays.add(id);
       show();
-      if (wasPlaying) {
+      if (wasPlaying && !_pausedForModalOverlay) {
         pauseEngine();
         _miningLaser()?.stopSound();
+        _pausedForModalOverlay = true;
       }
     }
+  }
+
+  bool _hasActiveModalOverlay() {
+    final overlays = overlayService.game.overlays;
+    return _activeModalOverlays.any(overlays.isActive);
   }
 }
