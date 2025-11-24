@@ -1,10 +1,9 @@
 import 'dart:collection';
 import 'dart:math' as math;
+import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:flame/game.dart';
-import 'package:flutter/foundation.dart';
-
 import '../../constants.dart';
 import '../../util/open_simplex_noise.dart';
 import 'starfield_config.dart';
@@ -209,54 +208,6 @@ void touch(LayerState layer, math.Point<int> key) {
     layer.lru.remove(key);
     layer.lru.addLast(key);
   }
-}
-
-@visibleForTesting
-int debugCacheSize(List<LayerState> layers, [int layerIndex = 0]) =>
-    layers[layerIndex].cache.length;
-
-@visibleForTesting
-Future<void> debugWaitForPending(List<LayerState> layers) async {
-  await Future.wait(
-      layers.expand((l) => l.pending.values).toList(growable: false));
-}
-
-@visibleForTesting
-Iterable<double> debugTileStarRadii(
-  int seed,
-  int tx,
-  int ty,
-  double tileSize,
-  List<StarfieldLayerConfig> layers,
-  double gamma,
-) {
-  if (layers.first.density <= 0) {
-    return const [];
-  }
-  final noise = OpenSimplexNoise(seed);
-  final n = noise.noise2D(
-      tx * Constants.starNoiseScale, ty * Constants.starNoiseScale);
-  final density = (n + 1) / 2;
-  final minDist = _lerp(
-        Constants.starMinDistanceMin,
-        Constants.starMinDistanceMax,
-        (1 - density).toDouble(),
-      ) /
-      layers.first.density;
-  final cfg = layers.first;
-  final params = TileParams(
-    seed,
-    tx,
-    ty,
-    minDist,
-    tileSize,
-    cfg.palette.map((c) => c.toARGB32()).toList(growable: false),
-    cfg.minBrightness,
-    cfg.maxBrightness,
-    cfg.gamma * gamma,
-  );
-  final result = generateTileStars(params, cfg.twinkleSpeed);
-  return result.map((s) => s.radius);
 }
 
 double _lerp(double a, double b, double t) => a + (b - a) * t;
