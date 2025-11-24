@@ -11,6 +11,8 @@ class SettingsService {
     _notifiers = _settingDefaults.map(
         (key, defaultValue) => MapEntry(key, _initNotifier(key, defaultValue)));
 
+    debugEnabled = _initBool(_debugEnabledKey, false);
+
     hudButtonScale = _notifiers[_hudScaleKey]!;
     textScale = _notifiers[_textScaleKey]!;
     joystickScale = _notifiers[_joystickScaleKey]!;
@@ -72,6 +74,9 @@ class SettingsService {
   /// Currently selected star colour palette.
   late final ValueNotifier<StarPalette> starfieldPalette;
 
+  /// Whether debug visuals such as hitboxes and FPS text are enabled.
+  late final ValueNotifier<bool> debugEnabled;
+
   StorageService? _storage;
   late final Map<String, ValueNotifier<double>> _notifiers;
 
@@ -87,6 +92,10 @@ class SettingsService {
       (key, notifier) =>
           notifier.value = storage.getDouble(key, notifier.value),
     );
+    debugEnabled.value = storage.getBool(
+      _debugEnabledKey,
+      debugEnabled.value,
+    );
     final paletteIndex =
         _safePaletteIndex(storage.getInt(_starfieldPaletteKey, 0));
     starfieldPalette.value = StarPalette.values[paletteIndex];
@@ -98,6 +107,7 @@ class SettingsService {
       (key, defaultValue) => _notifiers[key]!.value = defaultValue,
     );
     starfieldPalette.value = StarPalette.classic;
+    debugEnabled.value = false;
   }
 
   static const _hudScaleKey = 'hudButtonScale';
@@ -112,6 +122,7 @@ class SettingsService {
   static const _starfieldBrightnessKey = 'starfieldBrightness';
   static const _starfieldGammaKey = 'starfieldGamma';
   static const _starfieldPaletteKey = 'starfieldPalette';
+  static const _debugEnabledKey = 'debugEnabled';
 
   static const _settingDefaults = <String, double>{
     _hudScaleKey: defaultHudButtonScale,
@@ -148,6 +159,14 @@ class SettingsService {
       notifier.dispose();
     }
     starfieldPalette.dispose();
+    debugEnabled.dispose();
     _notifiers.clear();
+  }
+
+  ValueNotifier<bool> _initBool(String key, bool defaultValue) {
+    final value = _storage?.getBool(key, defaultValue) ?? defaultValue;
+    final notifier = ValueNotifier<bool>(value);
+    notifier.addListener(() => _storage?.setBool(key, notifier.value));
+    return notifier;
   }
 }
