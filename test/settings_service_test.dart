@@ -8,6 +8,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
+  setUp(() {
+    SharedPreferences.setMockInitialValues({});
+  });
+
   test('defaults are set', () {
     final settings = SettingsService();
 
@@ -123,19 +127,19 @@ void main() {
     expect(reloaded.minimapScale.value, 1.2);
   });
 
-  test('invalid palette index falls back to classic', () async {
-    SharedPreferences.setMockInitialValues({'starfieldPalette': 999});
-    final storage = await StorageService.create();
-    final settings = SettingsService(storage: storage);
-    expect(settings.starfieldPalette.value, StarPalette.classic);
-  });
+  test('invalid palette indices fall back to classic for storage and attach',
+      () async {
+    for (final invalidValue in [999, -1]) {
+      SharedPreferences.setMockInitialValues({'starfieldPalette': invalidValue});
+      final storage = await StorageService.create();
 
-  test('negative palette index falls back to classic during attach', () async {
-    SharedPreferences.setMockInitialValues({'starfieldPalette': -1});
-    final storage = await StorageService.create();
-    final settings = SettingsService();
-    settings.attachStorage(storage);
-    expect(settings.starfieldPalette.value, StarPalette.classic);
+      final settingsFromStorage = SettingsService(storage: storage);
+      expect(settingsFromStorage.starfieldPalette.value, StarPalette.classic);
+
+      final detachedSettings = SettingsService();
+      detachedSettings.attachStorage(storage);
+      expect(detachedSettings.starfieldPalette.value, StarPalette.classic);
+    }
   });
 
   test('dispose releases all notifiers', () {
