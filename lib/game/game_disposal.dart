@@ -11,8 +11,8 @@ void disposeGame(SpaceGame game) {
   game.targetingService.dispose();
   game.stateMachine.dispose();
   game.controlManager.dispose();
-  game.audioService.dispose();
   game.assetLifecycle.dispose();
+  game.audioService.dispose();
   game.starfieldManager.dispose();
   game.pools.dispose();
   game.selectedPlayerIndex.dispose();
