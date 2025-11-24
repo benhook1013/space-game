@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
-
 import '../services/asset_lifecycle_service.dart';
 import '../services/targeting_service.dart';
 import '../services/upgrade_service.dart';
