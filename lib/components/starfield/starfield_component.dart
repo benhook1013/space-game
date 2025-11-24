@@ -81,6 +81,15 @@ class StarfieldComponent extends Component
 
   final List<cache.LayerState> _layerStates = [];
 
+  Vector2 _cameraPositionForLayer(StarfieldLayerConfig config) {
+    final drift = config.drift;
+    if (drift == Offset.zero) {
+      return game.camera.viewfinder.position;
+    }
+    return game.camera.viewfinder.position +
+        Vector2(drift.dx, drift.dy) * _time;
+  }
+
   @override
   Future<void> onLoad() async {
     _starImage = await cache.buildStarImage();
@@ -104,6 +113,7 @@ class StarfieldComponent extends Component
       gamma,
       _starImage,
       _starImageRadius,
+      _cameraPositionForLayer,
     );
     _lastCameraPos = game.camera.viewfinder.position.clone();
     super.onLoad();
@@ -130,6 +140,7 @@ class StarfieldComponent extends Component
       gamma,
       _starImage,
       _starImageRadius,
+      _cameraPositionForLayer,
     ));
     _lastCameraPos = game.camera.viewfinder.position.clone();
   }
@@ -158,6 +169,10 @@ class StarfieldComponent extends Component
     }
     await Future.wait(pendingTiles);
   }
+
+  @visibleForTesting
+  Set<math.Point<int>> debugCachedTiles([int layerIndex = 0]) =>
+      _layerStates[layerIndex].cache.keys.toSet();
 
   @override
   void update(double dt) {
@@ -189,8 +204,9 @@ class StarfieldComponent extends Component
 
     for (final layer in _layerStates) {
       final cfg = layer.config;
-      final left = cameraPos.x * cfg.parallax - viewSize.x / 2;
-      final top = cameraPos.y * cfg.parallax - viewSize.y / 2;
+      final layerCameraPos = _cameraPositionForLayer(cfg);
+      final left = layerCameraPos.x * cfg.parallax - viewSize.x / 2;
+      final top = layerCameraPos.y * cfg.parallax - viewSize.y / 2;
       final right = left + viewSize.x;
       final bottom = top + viewSize.y;
 
@@ -218,7 +234,7 @@ class StarfieldComponent extends Component
 
       cache.prune(
         layer,
-        cameraPos,
+        layerCameraPos,
         viewSize,
         tileSize,
         _leftMargin,
@@ -231,17 +247,17 @@ class StarfieldComponent extends Component
 
   @override
   void render(Canvas canvas) {
-    final cameraPos = game.camera.viewfinder.position;
     final viewSize = game.size;
     _starPaint.color = Color.fromRGBO(255, 255, 255, opacity);
     for (final layer in _layerStates) {
-      cache.prune(layer, cameraPos, viewSize, tileSize, _leftMargin,
+      final layerCameraPos = _cameraPositionForLayer(layer.config);
+      cache.prune(layer, layerCameraPos, viewSize, tileSize, _leftMargin,
           _rightMargin, _topMargin, _bottomMargin);
     }
     _renderer.render(
       canvas,
       _layerStates,
-      cameraPos,
+      _cameraPositionForLayer,
       viewSize,
       tileSize,
       _time,

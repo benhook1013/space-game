@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flame/effects.dart';
 import 'package:flame/game.dart';
@@ -63,18 +64,21 @@ class StarfieldManager {
           parallax: 0.2,
           density: 0.3,
           twinkleSpeed: 0.5,
+          drift: const Offset(-2, 0),
           palette: palette,
         ),
         StarfieldLayerConfig(
           parallax: 0.6,
           density: 0.6,
           twinkleSpeed: 0.8,
+          drift: const Offset(-6, 0),
           palette: palette,
         ),
         StarfieldLayerConfig(
           parallax: 1,
           density: 1,
           twinkleSpeed: 1,
+          drift: const Offset(-12, 0),
           palette: palette,
         ),
       ],

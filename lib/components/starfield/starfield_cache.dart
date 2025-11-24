@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'dart:typed_data';
 import 'dart:ui';
 
+import 'package:flame/extensions.dart';
 import 'package:flame/game.dart';
 import '../../constants.dart';
 import '../../util/open_simplex_noise.dart';
@@ -62,12 +63,13 @@ Future<void> preloadTiles(
   double gamma,
   Image starImage,
   double starImageRadius,
+  Vector2 Function(StarfieldLayerConfig config) cameraForLayer,
 ) async {
-  final cameraPos = game.camera.viewfinder.position;
   final viewSize = game.size;
   final futures = <Future<Tile>>[];
   for (final layer in layers) {
     final cfg = layer.config;
+    final cameraPos = cameraForLayer(cfg);
     final left = cameraPos.x * cfg.parallax - viewSize.x / 2;
     final top = cameraPos.y * cfg.parallax - viewSize.y / 2;
     final right = left + viewSize.x;

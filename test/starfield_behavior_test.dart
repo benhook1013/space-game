@@ -44,6 +44,41 @@ void main() {
       expect(starfield.debugCacheSize(), movedExpected);
     });
 
+    test('drift moves tiles while the camera is stationary', () async {
+      final game = FlameGame();
+      game.onGameResize(Vector2.all(128));
+      final starfield = StarfieldComponent(
+        tileSize: 32,
+        layers: const [
+          StarfieldLayerConfig(
+            drift: Offset(256, 0),
+            maxCacheTiles: 64,
+          ),
+        ],
+      );
+      await game.add(starfield);
+
+      final recorder = PictureRecorder();
+      final canvas = Canvas(recorder);
+
+      starfield.update(0);
+      await starfield.debugWaitForPending();
+      starfield.render(canvas);
+
+      final initialTiles = starfield.debugCachedTiles();
+
+      starfield.update(1);
+      await starfield.debugWaitForPending();
+      starfield.render(canvas);
+
+      final driftedTiles = starfield.debugCachedTiles();
+
+      final minInitialX = initialTiles.map((p) => p.x).reduce(math.min);
+      final minDriftedX = driftedTiles.map((p) => p.x).reduce(math.min);
+
+      expect(minDriftedX, greaterThan(minInitialX));
+    });
+
     test('layer density <= 0 generates no stars', () {
       final zeroLayer =
           StarfieldComponent(layers: const [StarfieldLayerConfig(density: 0)]);
