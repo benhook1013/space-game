@@ -35,26 +35,17 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     final storage = await StorageService.create();
     final player = _FakeAudioPlayer();
-    final service = await AudioService.create(
-      storage,
-      loop: (_, {double volume = 1}) async {
-        return player;
-      },
-    );
+    final service = await _createLoopService(storage, player);
 
     await service.startMiningLaser();
     expect(service.miningLoop, isNotNull);
 
     service.stopMiningLaser();
-    expect(player.stopped, isTrue);
-    expect(player.disposed, isTrue);
-    expect(service.miningLoop, isNull);
+    _expectLoopCleanedUp(player, service);
 
     await service.startMiningLaser();
     await service.toggleMute();
-    expect(player.stopped, isTrue);
-    expect(player.disposed, isTrue);
-    expect(service.miningLoop, isNull);
+    _expectLoopCleanedUp(player, service);
 
     await service.startMiningLaser();
     expect(service.miningLoop, isNull);
@@ -83,38 +74,47 @@ void main() {
     expect(service.muted.value, isTrue);
   });
 
-  test('stopAll halts active loops', () async {
+  _testLoopCleanup('stopAll halts active loops', (service) async {
+    service.stopAll();
+  });
+
+  _testLoopCleanup('dispose stops loops and releases resources',
+      (service) async {
+    service.dispose();
+  });
+}
+
+Future<AudioService> _createLoopService(
+  StorageService storage,
+  _FakeAudioPlayer player,
+) async {
+  return AudioService.create(
+    storage,
+    loop: (_, {double volume = 1}) async => player,
+  );
+}
+
+void _expectLoopCleanedUp(_FakeAudioPlayer player, AudioService service) {
+  expect(player.stopped, isTrue);
+  expect(player.disposed, isTrue);
+  expect(service.miningLoop, isNull);
+}
+
+void _testLoopCleanup(
+  String description,
+  Future<void> Function(AudioService) performTeardown,
+) {
+  test(description, () async {
     SharedPreferences.setMockInitialValues({});
     final storage = await StorageService.create();
     final player = _FakeAudioPlayer();
-    final service = await AudioService.create(
-      storage,
-      loop: (_, {double volume = 1}) async => player,
-    );
+    final service = await _createLoopService(storage, player);
 
     await service.startMiningLaser();
     expect(service.miningLoop, isNotNull);
 
-    service.stopAll();
-    expect(player.stopped, isTrue);
-    expect(player.disposed, isTrue);
-    expect(service.miningLoop, isNull);
-  });
-
-  test('dispose stops loops and releases resources', () async {
-    SharedPreferences.setMockInitialValues({});
-    final storage = await StorageService.create();
-    final player = _FakeAudioPlayer();
-    final service = await AudioService.create(
-      storage,
-      loop: (_, {double volume = 1}) async => player,
-    );
-
-    await service.startMiningLaser();
-    service.dispose();
-    expect(player.stopped, isTrue);
-    expect(player.disposed, isTrue);
-    expect(service.miningLoop, isNull);
+    await performTeardown(service);
+    _expectLoopCleanedUp(player, service);
   });
 }
 
