@@ -120,6 +120,7 @@ class StarfieldManager {
   Future<void> _updateNebula() async {
     final targetIntensity =
         settings.nebulaIntensity.value.clamp(0, 1).toDouble();
+    final tileSize = settings.starfieldTileSize.value.toInt();
     if (targetIntensity <= 0) {
       final previous = _nebula;
       _nebula = null;
@@ -131,18 +132,22 @@ class StarfieldManager {
     final primary = palette.first;
     final secondary = palette.length > 1 ? palette.last : palette.first;
     if (_nebula != null) {
-      _nebula!
-        ..setIntensity(targetIntensity)
-        ..updatePalette(primary, secondary)
-        ..setDebugVisibility(!_debugMode);
-      return;
+      if (_nebula!.tileSize == tileSize) {
+        _nebula!
+          ..setIntensity(targetIntensity)
+          ..updatePalette(primary, secondary)
+          ..setDebugVisibility(!_debugMode);
+        return;
+      }
+      _nebula!.removeFromParent();
+      _nebula = null;
     }
 
     final buildId = ++_nebulaBuildId;
     final nebula = NebulaLayer(
       parallax: 0.8,
       intensity: targetIntensity,
-      tileSize: settings.starfieldTileSize.value.toInt(),
+      tileSize: tileSize,
       primaryTint: primary,
       secondaryTint: secondary,
       seed: settings.starfieldPalette.value.index,
