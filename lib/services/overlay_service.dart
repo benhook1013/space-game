@@ -28,9 +28,6 @@ class OverlayService {
     UpgradesOverlay.id,
   };
 
-  static final Set<String> _exclusiveIdsWithoutHud =
-      Set<String>.from(_exclusiveIds)..remove(HudOverlay.id);
-
   void _showExclusive(String id, {Set<String>? remove}) {
     final overlays = game.overlays;
     final ids = remove ?? _exclusiveIds;
@@ -61,8 +58,7 @@ class OverlayService {
     _notifyChanged();
   }
 
-  void showUpgrades() =>
-      _showExclusive(UpgradesOverlay.id, remove: _exclusiveIdsWithoutHud);
+  void showUpgrades() => _showExclusive(UpgradesOverlay.id);
 
   void hideUpgrades() => showHud();
 

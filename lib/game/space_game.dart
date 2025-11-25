@@ -130,8 +130,12 @@ class SpaceGame extends FlameGame
   ValueNotifier<int> get health => scoreService.health;
   late final UpgradeService upgradeService;
 
-  /// Center position used when spawning the player.
-  Vector2 get spawnPosition => size / 2;
+  /// Spawn position for the player and other components.
+  ///
+  /// World coordinates are centered at the origin, so spawning at `[0, 0]`
+  /// keeps components aligned regardless of whether a layout has occurred
+  /// yet in tests.
+  Vector2 get spawnPosition => Vector2.zero();
 
   /// Selected player sprite index for menu selection.
   final ValueNotifier<int> selectedPlayerIndex;

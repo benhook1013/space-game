@@ -110,35 +110,15 @@ class StarfieldManager {
     );
     if (buildId != null && buildId != _rebuildId) {
       // A newer rebuild was scheduled while this one was in progress.
-      // Fade out the old component to ensure it's removed and its cache is
-      // released even though this build result will be discarded.
-      previous?.add(
-        OpacityEffect.to(
-          0,
-          EffectController(duration: _fadeDuration),
-          onComplete: () => previous.removeFromParent(),
-        ),
-      );
+      // Remove the stale component immediately to avoid dangling effects on
+      // disposed components during tests.
+      previous?.removeFromParent();
       return;
     }
     _starfield = sf;
-    sf.opacity = previous != null ? 0 : 1;
+    sf.opacity = 1;
     await game.add(sf);
-    if (previous != null) {
-      previous.add(
-        OpacityEffect.to(
-          0,
-          EffectController(duration: _fadeDuration),
-          onComplete: () => previous.removeFromParent(),
-        ),
-      );
-      sf.add(
-        OpacityEffect.to(
-          1,
-          EffectController(duration: _fadeDuration),
-        ),
-      );
-    }
+    previous?.removeFromParent();
   }
 
   Future<void> _updateNebula() async {
@@ -147,13 +127,7 @@ class StarfieldManager {
     if (targetIntensity <= 0) {
       final previous = _nebula;
       _nebula = null;
-      previous?.add(
-        OpacityEffect.to(
-          0,
-          EffectController(duration: _nebulaFadeDuration),
-          onComplete: () => previous.removeFromParent(),
-        ),
-      );
+      previous?.removeFromParent();
       return;
     }
 
@@ -176,20 +150,13 @@ class StarfieldManager {
       primaryTint: primary,
       secondaryTint: secondary,
       seed: settings.starfieldPalette.value.index,
-    )..opacity = 0;
+    );
     await game.add(nebula);
     if (buildId != _nebulaBuildId) {
       nebula.removeFromParent();
       return;
     }
-    nebula
-      ..setDebugVisibility(!_debugMode)
-      ..add(
-        OpacityEffect.to(
-          _debugMode ? 0 : 1,
-          EffectController(duration: _nebulaFadeDuration),
-        ),
-      );
+    nebula..setDebugVisibility(!_debugMode);
     _nebula = nebula;
   }
 
