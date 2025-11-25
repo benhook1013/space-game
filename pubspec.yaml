@@ -10,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flame: 1.33.0
+  flame: 1.34.0
   flame_audio: 2.11.11
   shared_preferences: 2.5.3
   auto_size_text: ^3.0.0
