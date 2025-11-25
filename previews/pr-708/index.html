@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base href="/space-game/previews/pr-708/">
+    <meta charset="UTF-8">
+    <meta name="description" content="Space Miner PWA">
+    <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+    <!-- Flutter Web injects its own viewport meta tag for proper scaling. -->
+    <title>Space Miner</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/Icon-192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <style>
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+      canvas {
+        width: 100% !important;
+        height: 100% !important;
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      // Prevent F1 from opening browser help so the game can use it for debugging.
+      window.addEventListener('keydown', (event) => {
+        if (event.key === 'F1') {
+          event.preventDefault();
+        }
+      });
+
+      if ('serviceWorker' in navigator) {
+        // Compute a content hash of `assets_manifest.json` so the service worker
+        // cache name automatically changes when any asset changes. This avoids
+        // manual version bumps.
+        document.addEventListener('DOMContentLoaded', async () => {
+          let version;
+          let manifest;
+          try {
+            const response = await fetch('assets_manifest.json');
+            const text = await response.text();
+            const buffer = await crypto.subtle.digest(
+              'SHA-256',
+              new TextEncoder().encode(text),
+            );
+            version = Array.from(new Uint8Array(buffer))
+              .map((b) => b.toString(16).padStart(2, '0'))
+              .join('');
+            manifest = JSON.parse(text);
+          } catch (err) {
+            console.warn('Asset hash failed, using timestamp', err);
+            version = Date.now().toString();
+          }
+          navigator.serviceWorker
+            .register(`sw.js?v=${version}`)
+            .then((reg) => {
+              const worker = reg.installing || reg.active;
+              worker?.postMessage({ type: 'assetManifest', manifest });
+              navigator.serviceWorker.ready.then((r) =>
+                r.active?.postMessage({ type: 'assetManifest', manifest }),
+              );
+            });
+        });
+      }
+    </script>
+    <script src="segmenter_polyfill.js"></script>
+    <script>
+      // Load Flutter using the newer `engineInitializer.initializeEngine`
+      // configuration API so we can disable the default service worker without
+      // relying on the deprecated `window.flutterConfiguration` hook. Our
+      // custom worker (`sw.js` above) handles caching instead.
+      window.addEventListener('load', () => {
+        const flutterLoader = document.createElement('script');
+        flutterLoader.src = 'flutter.js';
+        flutterLoader.async = true;
+        flutterLoader.onload = () => {
+          _flutter.loader.loadEntrypoint({
+            serviceWorker: { serviceWorkerVersion: null },
+            onEntrypointLoaded: (engineInitializer) => {
+              engineInitializer.initializeEngine().then((appRunner) => {
+                appRunner.runApp();
+              });
+            },
+          });
+        };
+        document.body.append(flutterLoader);
+      });
+    </script>
+  </body>
+</html>
