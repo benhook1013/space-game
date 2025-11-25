@@ -139,6 +139,11 @@ class SpaceGame extends FlameGame
   Vector2 _spawnPosition = Vector2.zero();
 
   void _updateSpawnPosition() {
+    if (!hasLayout) {
+      _spawnPosition = Vector2.zero();
+      return;
+    }
+
     final visibleWorld = camera.visibleWorldRect;
     if (visibleWorld.isEmpty) {
       _spawnPosition = Vector2.zero();
@@ -169,7 +174,6 @@ class SpaceGame extends FlameGame
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-    camera.viewfinder.anchor = Anchor.center;
     _updateSpawnPosition();
     keyDispatcher = KeyDispatcher();
     await add(keyDispatcher);
