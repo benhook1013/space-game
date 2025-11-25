@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
 
-import 'package:flame/effects.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/foundation.dart';
 
@@ -29,9 +28,6 @@ class StarfieldManager {
   int _rebuildId = 0;
   int _nebulaBuildId = 0;
   bool _debugMode;
-
-  static const _fadeDuration = 0.5;
-  static const _nebulaFadeDuration = 0.35;
 
   /// Initialises the starfield and starts listening for setting changes.
   Future<void> init() async {
