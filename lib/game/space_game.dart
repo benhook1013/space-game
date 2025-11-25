@@ -132,10 +132,24 @@ class SpaceGame extends FlameGame
 
   /// Spawn position for the player and other components.
   ///
-  /// World coordinates are centered at the origin, so spawning at `[0, 0]`
-  /// keeps components aligned regardless of whether a layout has occurred
-  /// yet in tests.
-  Vector2 get spawnPosition => Vector2.zero();
+  /// World coordinates are derived from the camera's visible world so the
+  /// player starts in the middle of the viewport instead of the origin in the
+  /// top-left corner.
+  Vector2 get spawnPosition => _spawnPosition;
+  Vector2 _spawnPosition = Vector2.zero();
+
+  void _updateSpawnPosition() {
+    final visibleWorld = camera.visibleWorldRect;
+    if (visibleWorld.isEmpty) {
+      _spawnPosition = Vector2.zero();
+      return;
+    }
+
+    _spawnPosition = Vector2(
+      visibleWorld.left + visibleWorld.width / 2,
+      visibleWorld.top + visibleWorld.height / 2,
+    );
+  }
 
   /// Selected player sprite index for menu selection.
   final ValueNotifier<int> selectedPlayerIndex;
@@ -155,6 +169,8 @@ class SpaceGame extends FlameGame
   @override
   Future<void> onLoad() async {
     await super.onLoad();
+    camera.viewfinder.anchor = Anchor.center;
+    _updateSpawnPosition();
     keyDispatcher = KeyDispatcher();
     await add(keyDispatcher);
 
@@ -236,6 +252,7 @@ class SpaceGame extends FlameGame
   void onGameResize(Vector2 size) {
     super.onGameResize(size);
     camera.viewfinder.anchor = Anchor.center;
+    _updateSpawnPosition();
   }
 
   @override
