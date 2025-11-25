@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:math' as math;
-import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:flame/components.dart';
@@ -126,7 +125,7 @@ class NebulaLayer extends Component
 
     final cycle = (math.sin(_time * colorCycleSpeed) + 1) / 2;
     final tint = Color.lerp(_primaryTint, _secondaryTint, cycle)!
-        .withOpacity(alpha * maxAlpha);
+        .withValues(alpha: alpha * maxAlpha);
     _paint
       ..color = const Color(0xFFFFFFFF)
       ..colorFilter = ColorFilter.mode(tint, BlendMode.modulate);
