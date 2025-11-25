@@ -51,8 +51,36 @@ fi
 # --------------------------
 # Timing helper
 # --------------------------
-step_start() { STEP_NAME="$1"; STEP_T0="$(date +%s)"; log ">>> ${STEP_NAME}..."; }
-step_end()   { local t1; t1="$(date +%s)"; log "<<< ${STEP_NAME} done in $(( t1 - STEP_T0 ))s"; }
+declare -a STEP_SUMMARY_NAMES=()
+declare -a STEP_SUMMARY_TIMES=()
+SCRIPT_T0="$(date +%s)"
+
+step_start() {
+  STEP_NAME="$1"
+  STEP_T0="$(date +%s)"
+  log ">>> ${STEP_NAME}..."
+}
+
+step_end() {
+  local t1 duration
+  t1="$(date +%s)"
+  duration=$(( t1 - STEP_T0 ))
+  STEP_SUMMARY_NAMES+=("${STEP_NAME}")
+  STEP_SUMMARY_TIMES+=("${duration}")
+  log "<<< ${STEP_NAME} done in ${duration}s"
+}
+
+print_summary() {
+  local total elapsed
+  total=0
+  log "Summary:"
+  for i in "${!STEP_SUMMARY_NAMES[@]}"; do
+    log "  ${STEP_SUMMARY_NAMES[$i]}: ${STEP_SUMMARY_TIMES[$i]}s"
+    total=$(( total + STEP_SUMMARY_TIMES[$i] ))
+  done
+  elapsed=$(( "$(date +%s)" - SCRIPT_T0 ))
+  log "  Total: ${elapsed}s"
+}
 
 # --------------------------
 # Bootstrap Flutter (download + extract)
@@ -109,5 +137,7 @@ step_start "Persisting env hints"
   echo "export PUB_CACHE=\"$PUB_CACHE\""
 } >> /root/.profile || true
 step_end
+
+print_summary
 
 log "Completed"
