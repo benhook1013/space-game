@@ -1,7 +1,7 @@
 # NebulaLayer
 
-Optional overlay component that enriches the background with noise-generated
-nebulae while keeping the deterministic starfield intact.
+Overlay component that enriches the background with noise-generated nebulae
+while keeping the deterministic starfield intact.
 
 ## Goals
 
@@ -11,12 +11,13 @@ nebulae while keeping the deterministic starfield intact.
 
 ## Implementation Notes
 
-- Expose brightness and density controls alongside existing starfield settings.
-- Nebula tiles reuse the starfield's cache worker to avoid frame spikes. Sprites
-  may be 512×512 noise textures tinted at load time.
+- Intensity is controlled via the settings overlay and persisted alongside
+  starfield preferences. Setting intensity to zero fades the layer out.
+- Nebula tiles are procedural noise textures tinted at render time. They drift
+  slowly and crossfade between two tints derived from the current star palette.
 - Component priority sits between the starfield and gameplay components so the
   layer appears behind action but above stars.
-- Debug mode should hide the layer unless explicitly toggled for clarity.
+- Debug mode hides the layer to keep tile outlines legible.
 
 ## Open Questions
 

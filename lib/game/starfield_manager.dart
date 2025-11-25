@@ -3,7 +3,9 @@ import 'dart:ui';
 
 import 'package:flame/effects.dart';
 import 'package:flame/game.dart';
+import 'package:flutter/foundation.dart';
 
+import '../components/nebula_layer.dart';
 import '../components/starfield.dart';
 import '../services/settings_service.dart';
 import '../theme/star_palette.dart';
@@ -23,28 +25,37 @@ class StarfieldManager {
   final SettingsService settings;
 
   StarfieldComponent? _starfield;
+  NebulaLayer? _nebula;
   int _rebuildId = 0;
+  int _nebulaBuildId = 0;
   bool _debugMode;
 
   static const _fadeDuration = 0.5;
+  static const _nebulaFadeDuration = 0.35;
 
   /// Initialises the starfield and starts listening for setting changes.
   Future<void> init() async {
     await _buildStarfield();
-    settings.starfieldTileSize.addListener(_rebuild);
+    await _updateNebula();
+    settings.starfieldTileSize.addListener(_handleTileSizeChange);
     settings.starfieldDensity.addListener(_rebuild);
     settings.starfieldBrightness.addListener(_rebuild);
     settings.starfieldGamma.addListener(_rebuild);
-    settings.starfieldPalette.addListener(_rebuild);
+    settings.starfieldPalette.addListener(_handlePaletteChange);
+    settings.nebulaIntensity.addListener(_updateNebula);
   }
 
   /// Returns the current starfield component if built.
   StarfieldComponent? get starfield => _starfield;
 
+  @visibleForTesting
+  NebulaLayer? get nebulaLayer => _nebula;
+
   /// Updates whether starfield tiles are outlined for debugging.
   void updateDebug(bool enabled) {
     _debugMode = enabled;
     _starfield?.debugDrawTiles = enabled;
+    _nebula?.setDebugVisibility(!enabled);
   }
 
   void _rebuild() {
@@ -52,6 +63,16 @@ class StarfieldManager {
     _starfield = null;
     final buildId = ++_rebuildId;
     unawaited(_buildStarfield(buildId: buildId, previous: previous));
+  }
+
+  void _handleTileSizeChange() {
+    _rebuild();
+    unawaited(_updateNebula());
+  }
+
+  void _handlePaletteChange() {
+    _rebuild();
+    unawaited(_updateNebula());
   }
 
   Future<void> _buildStarfield(
@@ -120,13 +141,67 @@ class StarfieldManager {
     }
   }
 
+  Future<void> _updateNebula() async {
+    final targetIntensity =
+        settings.nebulaIntensity.value.clamp(0, 1).toDouble();
+    if (targetIntensity <= 0) {
+      final previous = _nebula;
+      _nebula = null;
+      previous?.add(
+        OpacityEffect.to(
+          0,
+          EffectController(duration: _nebulaFadeDuration),
+          onComplete: () => previous.removeFromParent(),
+        ),
+      );
+      return;
+    }
+
+    final palette = settings.starfieldPalette.value.colors;
+    final primary = palette.first;
+    final secondary = palette.length > 1 ? palette.last : palette.first;
+    if (_nebula != null) {
+      _nebula!
+        ..setIntensity(targetIntensity)
+        ..updatePalette(primary, secondary)
+        ..setDebugVisibility(!_debugMode);
+      return;
+    }
+
+    final buildId = ++_nebulaBuildId;
+    final nebula = NebulaLayer(
+      parallax: 0.8,
+      intensity: targetIntensity,
+      tileSize: settings.starfieldTileSize.value.toInt(),
+      primaryTint: primary,
+      secondaryTint: secondary,
+      seed: settings.starfieldPalette.value.index,
+    )..opacity = 0;
+    await game.add(nebula);
+    if (buildId != _nebulaBuildId) {
+      nebula.removeFromParent();
+      return;
+    }
+    nebula
+      ..setDebugVisibility(!_debugMode)
+      ..add(
+        OpacityEffect.to(
+          _debugMode ? 0 : 1,
+          EffectController(duration: _nebulaFadeDuration),
+        ),
+      );
+    _nebula = nebula;
+  }
+
   /// Cleans up listeners and removes the starfield from the game.
   void dispose() {
-    settings.starfieldTileSize.removeListener(_rebuild);
+    settings.starfieldTileSize.removeListener(_handleTileSizeChange);
     settings.starfieldDensity.removeListener(_rebuild);
     settings.starfieldBrightness.removeListener(_rebuild);
     settings.starfieldGamma.removeListener(_rebuild);
-    settings.starfieldPalette.removeListener(_rebuild);
+    settings.starfieldPalette.removeListener(_handlePaletteChange);
+    settings.nebulaIntensity.removeListener(_updateNebula);
     _starfield?.removeFromParent();
+    _nebula?.removeFromParent();
   }
 }

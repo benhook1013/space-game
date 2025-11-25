@@ -32,12 +32,15 @@ Deterministic parallax starfield rendered by `StarfieldComponent`.
 - Added to `SpaceGame` with a negative priority so it always renders beneath
   gameplay components.
 
+## Ambience Overlay
+
+- An optional `NebulaLayer` renders above the starfield with its own parallax,
+  slow drift and palette-aware tinting. The settings overlay exposes an
+  intensity slider; setting it to zero fades the layer out entirely.
+
 ## Future Enhancements
 
-- Optional nebula or distant galaxy overlays may draw above the starfield to
-  add ambience while leaving the deterministic tiles untouched.
-  - `NebulaLayer` generates noise-based sprites per tile with brightness and
-    density sliders.
+- Optional distant galaxy overlays may draw above the starfield to add ambience
+  while leaving the deterministic tiles untouched.
   - `GalaxyLayer` draws a low-resolution bitmap with subtle parallax and
     optional tint.
-  - Settings menu controls toggle these layers and adjust their intensity.

@@ -17,7 +17,8 @@ class _FailingStorageService extends StorageService {
   Future<bool> resetHighScore() async => false;
 }
 
-Future<StorageService> _createStorage({Map<String, Object>? initialValues}) async {
+Future<StorageService> _createStorage(
+    {Map<String, Object>? initialValues}) async {
   if (initialValues != null) {
     SharedPreferences.setMockInitialValues(initialValues);
   }
@@ -50,7 +51,8 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('High score persistence', () {
-    test('ScoreService reset restores health and persists progress across restart',
+    test(
+        'ScoreService reset restores health and persists progress across restart',
         () async {
       final storage = await _createStorage(initialValues: {});
       final score = _createScore(storage);

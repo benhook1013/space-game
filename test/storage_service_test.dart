@@ -11,7 +11,8 @@ void main() {
   });
 
   group('StorageService', () {
-    test('supports typed getters/setters for primitives and selection', () async {
+    test('supports typed getters/setters for primitives and selection',
+        () async {
       final storage = await StorageService.create();
       expect(storage.getPlayerSpriteIndex(), 0);
       expect(await storage.setPlayerSpriteIndex(1), isTrue);
