@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   flame: 1.34.0
-  flame_audio: 2.11.11
+  flame_audio: 2.11.12
   shared_preferences: 2.5.3
   auto_size_text: ^3.0.0
   cupertino_icons: ^1.0.8
