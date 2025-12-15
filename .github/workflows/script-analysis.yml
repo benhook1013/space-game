@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - name: Cache APT packages
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: /var/cache/apt/archives/*.deb
           key: ${{ runner.os }}-apt-shellcheck-${{ hashFiles('setup.sh') }}
@@ -34,7 +34,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - name: Cache PowerShell modules
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: '~\\Documents\\PowerShell\\Modules'
           key: ${{ runner.os }}-psmodule-${{ hashFiles('**/*.ps1') }}

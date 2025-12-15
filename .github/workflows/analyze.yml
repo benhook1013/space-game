@@ -21,14 +21,14 @@ jobs:
         with:
           fetch-depth: 0
       - name: Cache Flutter SDK
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: .tooling/flutter
           key: ${{ runner.os }}-flutter-${{ hashFiles('scripts/bootstrap_flutter.sh') }}
           restore-keys: |
             ${{ runner.os }}-flutter-
       - name: Cache pub packages
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ env.PUB_CACHE }}
           key: ${{ runner.os }}-pub-${{ hashFiles('pubspec.lock') }}
@@ -57,14 +57,14 @@ jobs:
         with:
           fetch-depth: 0
       - name: Cache Flutter SDK
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: .tooling/flutter
           key: ${{ runner.os }}-flutter-${{ hashFiles('scripts/bootstrap_flutter.sh') }}
           restore-keys: |
             ${{ runner.os }}-flutter-
       - name: Cache pub packages
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ env.PUB_CACHE }}
           key: ${{ runner.os }}-pub-${{ hashFiles('pubspec.lock') }}
