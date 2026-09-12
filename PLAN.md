@@ -3,9 +3,11 @@
 Tiny mobile‑first 2D space miner built with Flutter and Flame. Players harvest
 minerals from asteroids while periodic enemy waves keep the action moving.
 Target is an offline PWA that a solo developer can iterate on quickly.
-See [DESIGN.md](DESIGN.md) for architecture details. All design docs are now
-in sync, and tasks are broken down in the milestone docs and consolidated in
-[TASKS.md](TASKS.md) so we can start coding.
+See [DESIGN.md](DESIGN.md) for architecture details. The existing MVP milestones
+are historical implementation checklists, not evidence of current build quality.
+[WORKFLOW.md](WORKFLOW.md) defines development and handoffs;
+[decisions](docs/development/DECISIONS.md) separate accepted direction from
+proposals, and [TASKS.md](TASKS.md) puts the current round queue first.
 
 ## 🎯 Goals
 
@@ -55,9 +57,8 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
 - Public GitHub repo `space-game`
 - Contains `README.md`, `.gitignore`, `LICENSE`, `AGENTS.md`, `fvm_config.json`,
   `.analysis_options.yaml`
-- `pubspec.yaml` and Flutter source folders are generated after running
-  `fvm flutter create .`
-- Commit the generated Flutter skeleton so a fresh clone builds immediately
+- `pubspec.yaml` and the Flutter source scaffold are already committed
+- Do not recreate the scaffold during routine setup; validate the existing source
 - Include a barebones `pubspec.yaml` with pinned `flame`, `flame_audio`, and
   `shared_preferences` versions
 - `AGENTS.md` captures coding and architecture guidelines
@@ -67,25 +68,27 @@ in sync, and tasks are broken down in the milestone docs and consolidated in
 
 ### Flutter & FVM
 
-- FVM manages its own Flutter and Dart SDK; no separate Dart install required
-- Install FVM if needed: `dart pub global activate fvm`
-- `fvm install` then `fvm use` to fetch and activate the pinned Flutter SDK
-- Run `fvm flutter create .` once to scaffold the Flutter project
-  if the skeleton isn't already committed
-- Flutter version is defined in `fvm_config.json` (currently `3.32.8`)
-- `fvm flutter doctor` then `fvm flutter pub get`
-- Enable web: `fvm flutter config --enable-web`
-- Run with `fvm flutter run -d chrome` for debug or `-d web-server` for PWA tests
-- Pin the Flame version in `pubspec.yaml`; always use `fvm` commands
+Use `scripts/flutterw` and `scripts/dartw` from the project root for the pinned
+Flutter `3.32.8` SDK. FVM remains an optional equivalent; do not switch versions
+as a side effect of a feature round. The scaffold is already committed, so do
+not run `flutter create .` as routine setup.
+
+Read [environment notes](docs/development/ENVIRONMENT.md) before bootstrapping.
+An uploaded SDK does not prove dependency resolution, tests or browser access.
+Use [the WSL guide](docs/development/WSL.md) for the explicit validation commands.
 
 ## 🔁 Workflow
 
-- Use Codespaces or any lightweight editor (VS Code, GitHub Mobile, Replit)
-- Work directly on `main`; branch only for larger features
-- Commit small, frequent changes with messages like `feat:`, `fix:`, `docs:`
-- Track to‑dos in a simple `TASKS.md` to keep solo development focused
-- Run `fvm dart format .` and `fvm dart analyze` before committing
-- After editing docs, run `npx markdownlint-cli '**/*.md'` to keep Markdown tidy
+Follow [WORKFLOW.md](WORKFLOW.md): start from accepted source, implement one
+bounded outcome, validate, deliver a verified binary patch and recovery snapshot,
+then review on a branch targeting `main`. Ben or his integration agent runs
+unavailable Flutter checks and returns accepted source plus playtest evidence.
+Do not commit directly to `main` by default or publish before required checks.
+
+The next priority after the process handoff is bounded PWA cache safety, followed
+by opening gameplay, enemy differentiation, feedback and upgrade decisions.
+Additional background systems are deferred. A finite expedition/contract mode
+remains a proposal, not an approved replacement for endless play.
 
 ## 📂 Structure & Docs
 
@@ -303,9 +306,10 @@ the world beyond the viewport and have the camera track the ship.
 ## 🔁 Daily Loop
 
 ```text
-1. Edit code or docs
-2. Push to GitHub
-3. CI builds the PWA
-4. Test on device and install via "Add to Home Screen"
-5. Log findings and next steps in `TASKS.md`; update `PLAN.md` if scope changes
+1. Read the current decisions, environment notes, round log and accepted source
+2. Implement one bounded change with relevant tests, assets and docs
+3. Run available checks and verify a binary patch against an untouched baseline
+4. Apply on a review branch; validate in WSL/CI and playtest when relevant
+5. Review and merge to main through repository rules
+6. Return accepted source, validation logs and playtest observations
 ```

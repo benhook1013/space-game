@@ -2,6 +2,31 @@
 
 This repository uses a Flutter + Flame stack to build a PWA space shooter. Follow the rules below when contributing.
 
+## 0. Start-of-round handoff
+
+Read [WORKFLOW.md](WORKFLOW.md), [working decisions](docs/development/DECISIONS.md),
+[environment notes](docs/development/ENVIRONMENT.md) and the latest
+[round log](docs/development/rounds/) before editing. These are the collaboration
+source of truth; environment observations are dated, not permanent guarantees.
+
+- Implement bounded rounds as actual files, tests and binary Git patch handoffs.
+- Use the latest accepted source, not an unaccepted earlier proposal. Record base
+  and result trees; never label reconstructed local commits as upstream history.
+- Ben delegates publication of completed rounds to the assistant. Prefer normal
+  updates to `main`; when protection requires a PR, open and merge it through
+  available tools without handing routine integration back to Ben. Respect
+  required checks; never force-push or change protection to bypass a refusal.
+- A newer uploaded Linux SDK may be adopted in a scoped compatibility round.
+  Inspect its exact version/platform first; align all pins, checksums and needed
+  dependency changes rather than running a new SDK behind old wrapper pins.
+- Preserve an untouched baseline and roundtrip-test the actual delivered patch.
+- Report tests written, tests executed, builds and playtests separately.
+- Read known environment failures before retrying setup. Recheck only when
+  needed or when an SDK/upload/runtime changes the conditions.
+- Keep SDKs, caches, generated handoffs and credentials outside committed source.
+- Update decisions, round logs and affected docs so the next agent can resume
+  without conversation memory. Do not silently adopt a proposed gameplay redesign.
+
 ## 1. General Code Rules
 
 - Provide complete, functional Dart/Flutter code unless code-only is requested.

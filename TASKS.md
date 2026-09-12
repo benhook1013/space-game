@@ -1,7 +1,29 @@
 # ✅ Task List
 
-Tracking immediate work to reach the MVP. See [PLAN.md](PLAN.md) and [DESIGN.md](DESIGN.md)
-for context, and milestone docs (`milestone-*.md`) for detailed goals.
+Current work is listed first. The checked MVP sections below are historical
+implementation records, not a claim that the present build/tests pass.
+See [PLAN.md](PLAN.md), [DESIGN.md](DESIGN.md) and [WORKFLOW.md](WORKFLOW.md).
+
+## Active edit rounds
+
+- [x] Prepare round `001-process`: durable decisions, environment notes, WSL
+  instructions and a tested baseline-aware patch helper.
+- [ ] Ben validates/applies round `001-process` and confirms integration into
+  `main`; return the accepted source snapshot.
+- [ ] On receipt of a Linux SDK, verify compatibility and dependency availability
+  without silently changing pins. Record each validation stage separately.
+- [ ] Next code round: isolate and fix PWA cache-ownership and required-precache
+  failure handling, with executable JavaScript regression tests.
+- [ ] Then iterate opening gameplay, distinct enemy behaviour, feedback and
+  useful upgrade choices in bounded player-visible rounds.
+
+See [round logs](docs/development/rounds/) for delivery status and
+[decisions](docs/development/DECISIONS.md) for accepted versus proposed scope.
+A proposed expedition/contract redesign is not automatically approved.
+
+## Historical MVP checklist
+
+The following sections preserve the completed prototype work for reference.
 
 ## Setup ([milestone-setup.md](milestone-setup.md))
 
@@ -121,7 +143,7 @@ for context, and milestone docs (`milestone-*.md`) for detailed goals.
             in place.
       - [x] Expose an optional `debugDrawTiles` flag to outline starfield tiles.
 
-## Background Enhancements
+## Deferred: Background Enhancements
 
 - [ ] Implement `NebulaLayer` component rendered above the starfield.
       - Generate nebula textures per tile in a background isolate and cache them.
