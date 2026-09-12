@@ -35,7 +35,7 @@ tree spanning weapons and ship systems.
 - Minimise dependencies and avoid code generation.
 - Collect tunable numbers in `constants.dart` and asset paths in `assets.dart`.
 - Use composition and pass dependencies through constructors; keep singletons rare.
-- Optimise iteration by running all commands through FVM (`fvm flutter`, `fvm dart`).
+- Use repository Flutter/Dart wrappers; FVM with the same pinned SDK is optional.
 - Flutter SDK version pinned to `3.32.8` via
   [`fvm_config.json`](fvm_config.json) for consistent builds.
 - Build only the features needed for the current milestone; defer extras until
@@ -48,13 +48,16 @@ tree spanning weapons and ship systems.
 
 ## Workflow & Tooling
 
-- Run all Flutter and Dart commands through [FVM](https://fvm.app/) to use the
-  pinned SDK version from `fvm_config.json`.
-- Keep commits small and focused on `main`; branch only for larger features.
-- Before committing, format and analyse code with `fvm dart format .` and
-  `fvm dart analyze`.
-- Lint Markdown files with `npx markdownlint-cli '**/*.md'`.
-- See [PLAN.md](PLAN.md) for the full development loop.
+[WORKFLOW.md](WORKFLOW.md) is authoritative for edit rounds and handoffs. Read
+[decisions](docs/development/DECISIONS.md) and [environment notes](docs/development/ENVIRONMENT.md)
+before implementation; runtime limits and proposed gameplay changes are not
+permanent facts or accepted requirements.
+
+Use `scripts/flutterw` and `scripts/dartw` from the repo root; FVM using the same
+pinned SDK is optional. Work on a review branch targeting `main`, validate before
+merging and return the accepted source snapshot. Never describe a build or
+playtest as passed just because code was reviewed. Follow [the WSL guide](docs/development/WSL.md)
+for validation and integration commands.
 
 ## Entry Point
 
@@ -66,8 +69,7 @@ tree spanning weapons and ship systems.
   extension, and provides global text scaling via `GameTextScale`.
 - An app lifecycle observer pauses the engine and audio when the window loses
   focus.
-- Run all development commands through FVM (`fvm flutter`, `fvm dart`) to keep
-  the toolchain consistent.
+- Use the repo wrappers, or FVM with the same pinned SDK, to keep the toolchain consistent.
 
 ## Game Layers
 

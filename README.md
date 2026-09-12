@@ -126,6 +126,15 @@ milestone goals, and `networking.md` for future multiplayer plans. See
 
 ---
 
+## Development and edit-round handoffs
+
+[WORKFLOW.md](WORKFLOW.md) defines the accepted edit -> verify -> patch -> WSL/CI
+validation -> review/merge loop. Start with [working decisions](docs/development/DECISIONS.md)
+and [dated environment notes](docs/development/ENVIRONMENT.md), not a new tool audit.
+The [WSL guide](docs/development/WSL.md) includes cloning into `/home/ben/src`,
+applying a verified patch on a branch and returning accepted source.
+[Round logs](docs/development/rounds/) record scope and validation status.
+
 ## Asset Setup
 
 The repository includes placeholder sprites for players, enemies and asteroids.
@@ -147,9 +156,12 @@ Remember to update `assets_manifest.json` and credit any third-party assets in
 
 ## Flutter Tooling
 
-Run `./setup.sh` (Unix) or `.\\setup.ps1` (PowerShell) after cloning to
-download the pinned Flutter SDK into `.tooling/flutter`. Wrapper scripts in
-`scripts/` use this SDK automatically:
+From the repository root, the wrappers below bootstrap the pinned Flutter SDK
+into `.tooling/flutter`. See the [WSL guide](docs/development/WSL.md) for explicit
+steps. `setup.sh` also has container-specific side effects; do not run it with
+`sudo` in your WSL home. PowerShell setup remains available via `setup.ps1`.
+
+Wrapper scripts in `scripts/` use this SDK automatically:
 
 - Unix shells: `scripts/flutterw`, `scripts/dartw`
 - PowerShell: `scripts\\flutterw.ps1`, `scripts\\dartw.ps1`
