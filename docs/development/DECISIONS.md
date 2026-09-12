@@ -1,88 +1,132 @@
 # Working decisions
 
-Recorded and updated 12 September 2026. These decisions capture round
-`001-process` and Ben's subsequent delegation of publication and SDK upgrade.
-They are durable agreements, unlike runtime observations in
-[ENVIRONMENT.md](ENVIRONMENT.md). Update this record when decisions change.
+Updated 12 September 2026 after Ben supplied the independent review.
+These are durable working decisions; runtime observations belong in
+[ENVIRONMENT.md](ENVIRONMENT.md). [PLAN.md](../../PLAN.md) owns the product
+roadmap, [DESIGN.md](../../DESIGN.md) the intended behaviour and
+[TASKS.md](../../TASKS.md) the queue. The rationale and evidence are in
+[round 002](rounds/002-review-plan.md).
 
-## Accepted: implement, do not only advise
+## D1: implement and publish, not only advise
 
-Ben delegates bounded implementation rounds to the assistant: source editing,
-asset creation/integration, tests, reviews and usable patch delivery. The
-assistant can select details and advance the agreed queue without repeated
-confirmation. Ben retains product ownership and may override decisions;
-remote publication of completed rounds is also delegated to the assistant.
-The process round changes documentation and the handoff helper only.
+Ben delegates bounded source/asset/test/documentation implementation to the
+assistant and authorizes publication to `main`. The assistant chooses details
+without repeatedly asking permission; Ben retains product ownership and can
+redirect work. Use a normal non-forced update when permitted. When a PR is
+required, create and merge it through available tools, respecting checks and
+reviews. Never weaken protection, force history or overwrite concurrent work.
+Verify the actual published result before claiming success.
 
-## Accepted: assistant publishes to main
+The accepted repository is `benhook1013/space-game`. Ben's WSL clone is
+`/home/ben/src/space-game`; his usual task is pull and playtest, not applying
+patches and operating PRs. Work happens during active tasks, not autonomously
+between messages. Round 001 reached `main` at
+`6b93b7d551bd11e995c71a1620b2b587a471cfe8`; its initial unmerged handoff language
+is historical, not current publication status.
 
-Ben explicitly requested automatic publication by the assistant instead of
-requiring him to apply each round and operate a feature-branch/PR workflow.
-The source of truth remains `benhook1013/space-game`, targeting `main`.
-Ben's WSL clone is `/home/ben/src/space-game`; after publication he normally
-only needs to pull and playtest. This supersedes the initial manual-integration
-default in the Round 001 handoff and older WSL/product-document instructions.
+## D2: do not give Ben unnecessary downloads
 
-Use a normal non-forced update when permitted. If the repository requires a PR,
-the assistant should create and merge it through the connector and respect
-required checks/reviews. Do not weaken protection or force-push. If publication
-is blocked, explain the exact blocker instead of claiming success. Verify the
-remote result and retain a recoverable source snapshot/patch. This delegation
-applies during active work, not autonomous work between messages.
+Routine output is a concise change/validation report and the relevant repository
+reference. Retain recovery provenance where possible but do not present optional
+diagnostic ZIPs, duplicate prompt files or recovery archives as user action.
+Use verified patch handoffs only when necessary or requested. Never ask for
+another source upload merely to confirm an assistant-published commit.
 
-A verified patch ZIP remains the fallback when remote publication is unavailable.
-Preserve provenance and exact base/result trees; recovery snapshots are not for
-blindly copying over a clone. Retrieve external changes before dependent work.
+## D3: adopt the supplied SDK in a compatibility-only round
 
-## Accepted: adopt the newer supplied SDK in a compatibility round
+Ben authorized his newer Linux SDK rather than another 3.32.8 download. Earlier
+setup reported Flutter 3.47.4 / Dart 3.13.3 launching; the support bundle has now
+been supplied, but restoration and a game build remain unverified.
 
-Ben has already downloaded a later SDK and authorized using it once supplied.
-Inspect the archive's actual version, platform and integrity before editing
-pins; do not guess a release or ask for the old 3.32.8 archive again. Linux x64
-is needed for this workspace. The prior ENVIRONMENT.md preference for a
-3.32.8 upload is superseded by this decision, not by an unverified SDK change.
+Inspect actual version/platform, archive integrity, bundle provenance and any
+lockfile changes before using them. Align FVM, pubspec, both bootstrap platforms,
+checksums, CI assumptions and affected docs; change dependencies only as required.
+Do not run an old-pin wrapper over a newer SDK as a harmless presence check.
+Until the validated compatibility round, existing pins stay unchanged. No SDK,
+package cache, build output or credentials enter source control.
 
-Keep the migration separate from gameplay. Align FVM configuration, pubspec,
-Unix/PowerShell bootstrap versions and checksums, CI assumptions and relevant
-docs; adjust dependencies and the lockfile only where compatibility requires.
-Run analysis, tests and a release build where possible, reporting missing pub
-packages/web artifacts separately from SDK installation. Until the archive is
-supplied and inspected, the existing SDK pins stay unchanged.
+## D4: harvest-first development; release format decided by a matched test
 
-## Accepted: separate design, execution and evidence
+Adopt the review's sequencing correction: improve harvesting under pressure
+before committing to an expedition. Endless play is the initial development
+baseline, not a proven preferred final format. Compare that improved game with
+one ending immediately at a cumulative ore target, holding controls, resources,
+encounters and starting profiles constant. Choose one headline mode.
 
-Keep Flutter/Flame and the lightweight offline, mobile-first mining/combat
-concept. Do not rewrite the engine or add a backend as part of this process work.
-Target complete player-facing improvements, not an ever-growing demonstration.
+This explicitly revises the previous expedition proposal. Extraction, a boss,
+three enemy roles, an 8-12-minute session, six to eight run upgrades and replacing
+permanent power are not accepted release requirements. A useful quota does not
+automatically justify the rest of that bundle. If both formats lack enjoyable
+decisions, fix the shared loop rather than expanding content.
 
-Working priority: make delivery reliable once, then address the identified PWA
-cache-safety issues in a bounded round, then focus on the opening experience,
-enemy differentiation, readable feedback and useful upgrade choices. Do not
-spend multiple rounds expanding process infrastructure without a demonstrated
-need. Keep new background systems, multiplayer, accounts and native-store work
-deferred while the core game remains unproven.
+## D5: collected ore has purpose beyond the shop
 
-## Proposed, not adopted as a specification
+Implement cumulative ore collected as the primary score alongside a spendable
+wallet. Spending changes the wallet, not earned harvest or quota progress.
+These are two measurements of the same resource, not two currencies. Credit
+collection once; mining damage, rock destruction and enemy kills do not award
+the new harvest score. Combat should create useful access or safety.
 
-A short expedition with a mining contract, extraction/final encounter and
-run-specific upgrades was suggested. An 8-12 minute session, three enemy roles,
-and particular economy targets are candidate tuning ideas, not approved product
-requirements. Changing the run format or permanent progression needs a named
-product decision, trade-offs and a small playable test, not silent implementation.
+Preserve legacy scores under their original meaning and keep the new record
+separately labeled/versioned. The intended scoring change remains unimplemented
+until its code round and migration tests pass.
 
-An initial small vector-style ship/enemy/pickup set is a suggested art workflow.
-It has not established the final visual style. Assess silhouettes at gameplay
-size and integrate assets/manifests only as part of a scoped art round.
+## D6: preserve earned progress without freezing design
 
-## Accepted: environment failures are observations, not identities
+Retain existing purchased ownership for the first gameplay milestones and test
+fresh, partial and completed profiles. No silent reset, renamed-ID crash or
+relabeling of an old score as a new score. Canonical normal rules must not inherit
+old hidden range sliders. Preserve presentation/accessibility settings; explicitly
+label balance-changing assistance/custom rules if retained.
 
-Use uploaded source when direct GitHub downloads fail. An individual connector
-fetch is not an automated filesystem download, and a local Git diff does not
-fetch a remote branch. Do not repeatedly retry known failing network/bootstrap
-paths without changed conditions. A Linux SDK upload is grounds for a targeted
-SDK check; it does not itself prove dependency availability or browser access.
+The review's preference for the existing six upgrades is provisional, not proof
+that they provide replayability. Keep ownership compatible, but allow deliberate
+rebalancing or a justified later redesign with a migration. Defer new horizontal
+unlocks/run-upgrade catalogues until playtesting identifies that specific need.
 
-Record PASS, FAIL and NOT RUN separately. Preserve external build and playtest
-feedback. A passing transport test or code review is never a substitute for
-running the game. The repository must retain enough context to resume without
-re-reading the chat or assuming an earlier workspace still exists.
+## D7: controls and contact consequences before harder enemies
+
+Compare stop-to-aim with movement-independent assisted aiming, initially retaining
+held firing. Give spawning actual travel direction when aim is separated. Fix
+active-player press/release/cancel rebinding and centralize accepted damage and
+protected-contact behaviour. Test continuing overlap when protection expires.
+
+Cannon destruction of rocks is a candidate meaningful trade-off only if predictable
+and controllable. It is not automatically good because it exists. Assess it with
+the aiming comparison; test autofire only if held fire adds no useful decision.
+Do not polish a long tutorial before settling these rules.
+
+## D8: small scope and bounded execution
+
+Retain Flutter/Flame, offline/mobile-first scope, one sector, cosmetic ship options,
+automatic mining and tractor collection. Start with pursuer plus charger; a third
+role or boss must earn its complexity later. Define live/pending entity budgets,
+pickup cleanup and real recovery windows before increasing density. Split the
+harvest/encounter milestone into accounting/resources and combat sub-rounds.
+
+Keep camera/background work already present. Integrate a small coherent art set
+with playable changes, inspecting silhouettes at phone size. Defer multiplayer,
+backend/accounts, cloud saves, native stores, large crafting/economy systems,
+engine/framework migration and new decorative background technology.
+
+## D9: local workspace failure is not repository failure
+
+Current local command transport fails; the cause and recovery time are unknown.
+GitHub connector access remains usable. Do not assume uploads are corrupt, all
+files are lost, or every tool is broken. Do not retry expensive extraction until
+a cheap workspace probe succeeds. Avoid repeated broad audits and duplicate
+multi-gigabyte uploads.
+
+Documentation-only edits may proceed directly through GitHub with pinned baseline,
+reviewed remote changes and verified publication. While local execution is down,
+mark local lint, link scanning, patch roundtrip and artifact creation NOT RUN;
+do not invent those results to satisfy the ordinary handoff procedure. Git retains
+the prior and new source trees; no recovery download is required from Ben.
+This is a narrow exception to the local packaging steps in WORKFLOW.md, not a
+waiver of required repository checks or executable-code validation.
+
+Complex source/SDK changes still need a healthy execution environment. Use the
+working WSL/Copilot or available CI path when local execution cannot be recovered;
+record external results against their exact source and SDK. Do not claim a healthy
+CI configuration or promise local browser access without testing it. Code written,
+tests written, tests run, release built and game playtested are separate states.

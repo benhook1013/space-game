@@ -1,118 +1,143 @@
 # Assistant workspace and toolchain notes
 
-Observed 12 September 2026 while preparing `001-process`. Read this before
-repeating setup work. These are dated observations, not permanent platform
-capabilities. Ben's WSL environment and this assistant container are different.
+Updated 12 September 2026, round `002-review-plan`. This file distinguishes
+current observations from earlier session reports. Read it before rediscovering
+setup. Ben's WSL environment and the assistant runtime are different machines.
 
-## Source baseline and recovery
+## Current status: local execution unavailable
 
-The complete source is supplied by `space-game-main.zip`, not a successful clone.
-Its archive comment names upstream commit:
+A bounded retry of a basic `bash -lc` command beginning with
+`printf 'workspace-ok\\n'` returned `TransportTimeoutError` before useful output.
+It did not inspect or extract an archive. Earlier retries also reported Python
+transport timeouts. Python was not separately re-probed for this round.
+
+The GitHub connector successfully read `main`, commit metadata, source and docs.
+The accepted baseline at this round's start was
+`6b93b7d551bd11e995c71a1620b2b587a471cfe8`, tree
+`6a7f0e6a134a474222f610bfd69c7f34697b2b15`.
+
+A transport timeout means the command interface did not return a usable result;
+it does not diagnose corrupted uploads, bad Dart source, disk exhaustion or lost
+files. The cause and recovery time are unknown. Do not promise a runtime reset
+or make new local-file claims without a successful probe.
+
+Reading sources, design review and documentation publication can continue via
+GitHub. Local extraction, code execution, builds, asset processing and browser
+playtesting cannot presently be verified. Complex code validation can use Ben's
+healthy WSL/Copilot or available CI environment instead. No routine extra upload
+or optional diagnostic download is needed from Ben.
+
+## Supplied inputs and historical SDK progress
+
+The conversation has these named uploads; local existence/integrity was not
+re-established in this round:
+
+- `space-game-main.zip`: original source at `bb907372...`, not today's full
+  accepted state after documentation publication.
+- `flutter_linux_3.47.4-stable.tar.xz.xz.001` through `.004`: all four SDK parts.
+- `space-game-offline-support.zip`: dependency/support bundle received after SDK
+  preparation. Its contents, restore script and validation claims remain unread
+  by the local runtime because of transport failure.
+- `Pasted text.txt`: independent game review, readable through attachment text
+  and file search even while local execution fails.
+
+Earlier setup reported assembling the SDK parts, extracting the archive and
+successfully launching Linux x64 Flutter 3.47.4 and Dart 3.13.3. Reported identity:
 
 ```text
-bb907372a5ba400398b7cae5db994d4593398e36
+Framework: 9584c6713b324636289d067944a46fd6b49df14b
+Engine:    06a2e2a110089dff50fe635cffd2a61e1b24fbcd
 ```
 
-Verified input SHA-256:
+That setup also reported importing 186 SDK-bundled package archives and resolving
+Flutter tooling dependencies offline. Game resolution then stopped at missing
+`auto_size_text`; Flame/audio/preferences packages were not yet available.
+These are historical execution reports, not fresh checks or a passing game build.
+Do not ask Ben to upload the SDK again merely because this runtime is unavailable.
 
-```text
-ff7afe525190199bfe1b55d7f85dcc7e14afb24ac3a1891a74d614a5f3195377
-```
+The intended support bundle contains an isolated public Pub cache, tested source
+and resolved lockfile, provenance/checksums, restoration instructions and logs,
+plus only necessary SDK-cache supplements. Those were packaging instructions,
+not a statement that the supplied ZIP has been inspected and meets them.
 
-Reconstructing all archive files with executable modes yields Git tree:
+## Targeted recovery sequence
 
-```text
-1f62779a366287bf7f13c7e120b2dd55a580f2c9
-```
+1. Make one cheap relevant workspace probe. If it still times out, stop local
+   setup rather than repeatedly retrying decompression or networking.
+2. When execution works, inspect existing directories, uploads, disk space and
+   SDK binaries without deleting or reinstalling anything. Do not assume old
+   working paths survived or that free-space observations are a storage quota.
+3. Read current `main` and compare bundle source/lockfile provenance. The support
+   source may predate documentation changes; do not replace newer accepted files.
+4. List archive entries and inspect manifest, checksums and restore script before
+   extraction/execution. Reject traversal, absolute paths and unsafe links;
+   preserve executable permissions and safe SDK links.
+5. Reuse the supplied SDK. Restore public dependencies into a dedicated cache,
+   regenerate package configuration for current paths and verify offline
+   lockfile resolution. Exclude credentials/private packages from committed data.
+6. Run analysis, tests and release build independently, recording commands,
+   source revision, SDK and failures. Browser/device/offline checks are separate.
+7. Migrate repository toolchain pins only as the scoped compatibility round;
+   publish through the repository rules after the applicable validation.
 
-There are 267 files totalling 676,576 bytes before this round. This is the source
-snapshot, not Git history, dependencies or build output. The older roughly 70 MB
-GitHub metadata figure was not a source-snapshot measurement.
+## Bootstrap and cache hazards
 
-The uploaded archive and exported notes survived between turns; the extracted
-working copy did not. It was restored again for this round. Current conventional
-paths are `/mnt/data/space-game` (working copy) and
-`/mnt/data/space-game-baseline` (untouched baseline). These paths are not a
-persistence guarantee. Local reconstructed commits have different IDs from
-upstream; compare the full tree, not fabricated history.
+At the reviewed baseline, the repository still pins Flutter 3.32.8 in `.fvmrc`,
+`fvm_config.json`, `pubspec.yaml` and bootstrap scripts. Ben authorized upgrading
+to his newer supplied SDK; no pin was changed in this documentation round.
 
-## Capability observations
+`scripts/flutterw` bootstraps before invocation and can reinstall a mismatching
+SDK. A wrapper `--version` is not a harmless offline presence check. Inspect the
+supplied binary directly until the migration aligns pins. Do not run `flutter
+upgrade`, recreate the scaffold or silently delete/relax a lockfile.
 
-| Area | Evidence/status | What to do |
-| --- | --- | --- |
-| Local files and Git | Rechecked this round: read/write, ZIP extraction, Git 2.47.3 and exact source tree reconstruction work. | Edit files and use verified binary patch handoffs. |
-| Platform/storage | Rechecked: Linux x86_64, Python 3.13.5; approximately 29.8 GiB free at inspection. | Use Linux x64 tooling; recheck disk before extracting a large SDK. Free space is not a guaranteed quota. |
-| JavaScript | Rechecked: Node 22.16.0 installed. Earlier rounds reported isolated service-worker and transport tests. | Execute current regression tests; do not relabel prior evidence as a fresh run. |
-| Flutter/Dart | Rechecked: neither on PATH; no project SDK supplied at round start. | Dart analysis, Flutter tests/build and game playtest are NOT RUN here. |
-| Direct network | Prior rounds reported DNS failures for GitHub/raw/archive and `storage.googleapis.com`. Not retried for this documentation round. | Prefer supplied archives. Try a bounded recheck only when relevant conditions change. |
-| GitHub connector | Prior rounds retrieved text and a base64 PNG. It is not callable by an ordinary local Python loop. | Useful for selective reads; a complete uploaded snapshot is the reliable baseline route. |
-| Browser | Chromium and Playwright are installed. Earlier report: Chromium launched but localhost navigation returned `ERR_BLOCKED_BY_ADMINISTRATOR`; an earlier simple check reportedly worked. | Browser access varies; do not promise a game playtest. Recheck after an actual runnable build is available. |
-| Image/audio tools | Rechecked availability: Pillow, CairoSVG, ImageMagick, Inkscape, FFmpeg. Tool availability alone is not an asset-quality check. | Produce/edit files and inspect real outputs; use image-generation tools when available for requested illustrations. |
-| Archive tools | Rechecked: unzip, tar and xz installed; no unrar/7z/unar/bsdtar on PATH. Python rarfile exists but is not proof of an available extraction backend. | Prefer the original tar.xz or raw split parts. Do not promise multipart RAR extraction. |
-| Markdown lint | No markdownlint executable or local installation found in the inspected locations. | Report full Markdown lint NOT RUN if unavailable; local link/format checks are not equivalent. |
+Earlier SDK preparation found that setting an explicit `PUB_CACHE` bypassed its
+automatic preload import. The bundled Dart's `pub cache preload` was used for
+`.pub-preload-cache/*.tar.gz`, followed by dependency resolution in
+`packages/flutter_tools`. Verify with the supplied SDK rather than assuming that
+procedure applies to every future release. Do not fake SDK cache stamps.
 
-## Flutter pins and bootstrap hazards
+Existing `setup.sh` is container-oriented and writes under `/root`; do not run it
+with sudo in Ben's home merely for project setup. SDKs, caches and generated builds
+stay outside tracked source. Verify both Unix and PowerShell version/checksum
+changes during migration; do not invent archive hashes for other platforms.
 
-The snapshot pins Flutter `3.32.8` in `.fvmrc`, `fvm_config.json`, `pubspec.yaml`
-and bootstrap scripts. Keep those values unchanged in this round. Dependency
-resolution against the supplied lockfile has not been established here; a
-matching SDK version is not a claim that all package constraints are compatible.
+## Historical source and capability observations
 
-Use repo wrappers from the repository root in an online, working environment.
-`scripts/flutterw` sources the bootstrap before every invocation. The bootstrap
-can download/reinstall the SDK if the installed version is missing or does not
-match. It also invokes SDK configuration commands. A wrapper `--version` call
-is therefore not a harmless offline presence check.
+The original source ZIP was previously reconstructed as 267 files totaling
+676,576 bytes, tree `1f62779a366287bf7f13c7e120b2dd55a580f2c9`.
+Its recorded SHA-256 was
+`ff7afe525190199bfe1b55d7f85dcc7e14afb24ac3a1891a74d614a5f3195377`.
+It contained a source snapshot, not Git history. Earlier roughly 70 MB GitHub
+metadata was not a measurement of this source tree.
 
-`setup.sh` is container-oriented: it writes hints under `/root` and falls back
-from enforced-lockfile resolution to ordinary `pub get`. Do not run it with
-`sudo` in Ben's WSL home. Use the explicit wrapper steps in [WSL.md](WSL.md).
-These existing scripts are documented, not changed or certified by this round.
-Review any lockfile changes rather than silently accepting them.
+Historical working paths were `/mnt/data/space-game` and
+`/mnt/data/space-game-baseline`. An extracted working copy disappeared between
+sessions previously while the uploaded ZIP remained. Neither attachment retention
+nor filesystem persistence across future sessions is guaranteed. Never label a
+reconstructed local commit as upstream history; verify source trees/provenance.
 
-## Receiving a Linux SDK
+Earlier successful local checks reported Git 2.47.3, Python 3.13.5, Node 22.16.0,
+Linux x86_64 and about 29.8 GiB free at that time. Pillow, CairoSVG, ImageMagick,
+Inkscape, FFmpeg, tar, xz and unzip were present. No usable RAR backend was verified.
+These observations do not override the current command-transport failure.
 
-Prefer the original **Linux x64 Flutter 3.32.8 stable** archive, not a Windows
-Flutter installation. Keep its original name and supply a SHA-256 checksum.
-It can be split without recompression in WSL:
+Earlier direct downloads failed DNS for GitHub/raw/archive,
+`storage.googleapis.com` and pub.dev. GitHub connector text/base64 file reads and
+Git object/PR publication worked independently of the terminal network. An
+ordinary workspace Python script cannot invoke that connector as a download loop.
 
-```bash
-# Run beside the already-downloaded official Linux archive.
-sha256sum flutter_linux_3.32.8-stable.tar.xz > flutter-sdk.sha256
-split -b 500M -d -a 3 flutter_linux_3.32.8-stable.tar.xz flutter-sdk.part-
-```
+Chromium/Playwright previously launched, but localhost navigation was also
+reported blocked (`ERR_BLOCKED_BY_ADMINISTRATOR`); an earlier simple browser check
+reportedly worked. No full game playtest is established. Recheck only after a
+runnable build and healthy runtime exist. Full Markdown lint was previously
+unavailable; in this round all local checks are NOT RUN due to transport failure.
 
-Send all `flutter-sdk.part-000`, `001`, etc. plus the checksum file. Here, join
-parts in numeric order, verify the checksum and inspect the archive before
-extracting it into `.tooling/flutter`. Do not concatenate multipart RAR volumes
-as though they were raw split parts; RAR needs a compatible extractor and all
-volumes. SDK archives stay outside Git and outside source handoffs.
+## Reporting and resumption
 
-The SDK may still require web engine artifacts and pub packages. When network
-access is unavailable, a compatible pre-cached Linux SDK plus a separately
-supplied pub cache may be necessary. In an online environment, the relevant
-preparation is `flutter precache --web` followed by project dependency resolution
-with the existing lockfile. Run the pinned SDK directly or via reviewed wrappers;
-record which. Prefer archives preserving symlinks, executability and SDK metadata.
-Inspect caches for unrelated private packages/credentials before uploading.
-
-On receipt: verify platform/version and checksum, inspect paths, restore
-permissions, then try version -> offline dependency resolution -> analysis ->
-tests -> release build. Record each stage independently. `pub get --offline`
-only resolves from available cache; do not assume it fills missing dependencies.
-Do not auto-upgrade the SDK or delete existing tooling on an inspection failure.
-
-## Resume without another tool audit
-
-Check repository status and the round baseline first. Read these observations
-and the latest round log. Probe only the capability needed for the next step.
-For example, inspect a supplied SDK binary directly rather than triggering a
-network bootstrap through `flutterw`. Update this file when a capability's
-status actually changes, with date, command and error/result. Keep full logs in
-the handoff; mark inaccessible historical reports as historical evidence.
-
-## References
-
-- [Flutter SDK archive by platform/version](https://docs.flutter.dev/install/archive)
-- [Flutter CLI and precache](https://docs.flutter.dev/reference/flutter-cli)
-- [Dart pub get: cache, offline and lockfile](https://dart.dev/tools/pub/cmd/pub-get)
+Read decisions and the latest round log. Probe only the next required capability,
+not the whole suite. Separate current test output, earlier reports, code inspection
+and playtest hypotheses. No game-build pass follows from a launched SDK, no
+playtest follows from browser launch and no cache integrity follows from upload
+receipt. Record exact remote publication or the exact blocker; do not ask for
+another archive merely to confirm the assistant's own remote commit.

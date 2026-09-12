@@ -1,233 +1,201 @@
-# 🎮 Design Overview
+# Space Miner design
 
-This document summarises the current architecture and design goals for Space
-Miner. See [PLAN.md](PLAN.md) for the authoritative roadmap. Folder overviews
-live in [lib/README.md](lib/README.md), [assets/README.md](assets/README.md),
-[web/README.md](web/README.md) and [test/README.md](test/README.md).
-Design notes for the central helper files are in
-[lib/main.md](lib/main.md), [lib/assets.md](lib/assets.md),
-[lib/constants.md](lib/constants.md), [lib/log.md](lib/log.md) and
-[lib/theme/game_theme.dart](lib/theme/game_theme.dart).
-Modules such as `space_game`, components, overlays and services have dedicated
-docs in their respective subfolders, and shared utilities live under
-[lib/util](lib/util).
-Milestone goals are detailed in [milestone-setup.md](milestone-setup.md),
-[milestone-core-loop.md](milestone-core-loop.md) and
-[milestone-polish.md](milestone-polish.md), with the day-to-day backlog in
-[TASKS.md](TASKS.md). Future multiplayer ideas live in
-[networking.md](networking.md). Detailed module docs live under
-[lib/game](lib/game/README.md), [lib/components](lib/components/README.md),
-[lib/ui](lib/ui/README.md) and [lib/services](lib/services/README.md).
+Updated 12 September 2026. [PLAN.md](PLAN.md) owns scope and sequencing;
+[TASKS.md](TASKS.md) tracks implementation. This document separates the inspected
+prototype from intended changes. No gameplay change is implemented by this
+planning round.
 
-## Game Concept
+## Current implementation and evidence
 
-Space Miner focuses on hunting asteroids for mineral pickups while timed enemy
-groups add bursts of combat. The ship mounts an auto-firing mining laser that
-locks onto nearby rocks and a primary cannon that automatically targets the
-closest enemy. A blue Tractor Aura around the ship pulls in nearby pickups.
-Minerals gathered during play will later fund a wide upgrade
-tree spanning weapons and ship systems.
+The review baseline is commit
+`6b93b7d551bd11e995c71a1620b2b587a471cfe8`.
+Useful module references are [game](lib/game/README.md),
+[components](lib/components/README.md), [UI](lib/ui/README.md),
+[services](lib/services/README.md), [assets](assets/README.md) and
+[tests](test/README.md). Older module prose may describe intent; source and actual
+execution take precedence for claims about current behaviour.
 
-## Design Principles
+`SpaceGame` uses Flame components and delegates to lifecycle, flow, input,
+overlay, targeting, scoring, upgrade and other helpers. Flutter overlays and
+ValueNotifiers connect the interface to game state. Retain that lightweight
+composition. Keep constants and asset paths centralized, movement time-based,
+and game-state changes separate from rendering.
 
-- Keep the codebase small and understandable for a solo developer.
-- Prefer built-in Flutter and Flame features over custom frameworks.
-- Minimise dependencies and avoid code generation.
-- Collect tunable numbers in `constants.dart` and asset paths in `assets.dart`.
-- Use composition and pass dependencies through constructors; keep singletons rare.
-- Use repository Flutter/Dart wrappers; FVM with the same pinned SDK is optional.
-- Flutter SDK version pinned to `3.32.8` via
-  [`fvm_config.json`](fvm_config.json) for consistent builds.
-- Build only the features needed for the current milestone; defer extras until
-  they are actually required.
-- Favour readability and quick iteration over micro-optimisation.
-- Use simple state handling (plain classes or `ValueNotifier`s) instead of heavy
-  patterns like BLoC or Redux.
-- Provide a small `log()` helper wrapping `debugPrint` so logs can be silenced
-  in release builds.
+The following source observations inform the redesign, not a claim of a
+completed playtest:
 
-## Workflow & Tooling
+- `PlayerInputBehavior._processInput` normalizes nonzero input and sets facing
+  from movement. `shoot` uses current facing. `AutoAimBehavior.update` stops
+  assisting while the player moves; firing requires held input.
+- The spawners derive ahead-of-player placement from `player.angle`, which is
+  unsuitable as travel direction if weapon aim becomes independent.
+- `ControlManager._buildFireButton` binds press, release and cancellation;
+  `LifecycleManager.onStart` rebinds only press and release on replacement.
+- `BulletComponent.onCollisionStart` destroys an asteroid through `destroy`,
+  without mineral drops. `AsteroidComponent.takeDamage` produces ore and awards
+  the old score before collection; `destroy` also awards the old asteroid score.
+- `MineralComponent` moves toward the player within tractor range but has no
+  lifetime or offscreen-cleanup policy in that component. Pool reuse alone is
+  not an active-count or memory bound.
+- Existing purchases persist while the mineral wallet resets each run. Normal
+  gameplay currently consumes persisted range settings. Damage flashing is not
+  a post-hit immunity gate in the previously inspected damage path.
 
-[WORKFLOW.md](WORKFLOW.md) is authoritative for edit rounds and handoffs. Read
-[decisions](docs/development/DECISIONS.md) and [environment notes](docs/development/ENVIRONMENT.md)
-before implementation; runtime limits and proposed gameplay changes are not
-permanent facts or accepted requirements.
+See [the review record](docs/development/rounds/002-review-plan.md) for provenance
+and what remains unverified. Dominant strategies, touch faults, pacing and
+resource growth require executable tests, not just source inspection.
 
-Use `scripts/flutterw` and `scripts/dartw` from the repo root; FVM using the same
-pinned SDK is optional. Work on a review branch targeting `main`, validate before
-merging and return the accepted source snapshot. Never describe a build or
-playtest as passed just because code was reviewed. Follow [the WSL guide](docs/development/WSL.md)
-for validation and integration commands.
+## Intended controls
 
-## Entry Point
+Keep automatic mining. Compare stop-to-aim with movement-independent assisted
+weapon aiming, initially with held firing in both. Do not impose twin sticks or
+autofire before assessing input burden and deliberate cease-fire opportunities.
+Test whether analogue joystick magnitude improves fine positioning; do not
+confuse keyboard diagonal normalization with necessarily desirable touch input.
 
-- `main.dart` starts the Flutter app using the Flutter SDK pinned via FVM (3.32.8).
-- It wraps `SpaceGame` in a `GameWidget`, ensures the PWA manifest loads and
-- preloads assets through `Assets.load()` before play.
-- It initialises `StorageService`, `AudioService` and `SettingsService`, applies
-  a static dark `ColorScheme` with extra hues from the `GameColors` theme
-  extension, and provides global text scaling via `GameTextScale`.
-- An app lifecycle observer pauses the engine and audio when the window loses
-  focus.
-- Use the repo wrappers, or FVM with the same pinned SDK, to keep the toolchain consistent.
+If aim is decoupled, represent actual movement/travel independently from gun
+facing. Spawn placement and navigation must use movement, not whichever target
+the cannon selects. Define the stationary fallback explicitly. Weapon visuals,
+projectile origins and targeting feedback must match the chosen aim.
 
-## Game Layers
+Use one binding path for press/release/cancel when the active player changes.
+Clear held inputs on restart, pause/focus loss and relevant overlay transitions.
+Test touch cancellation and keyboard release across each transition.
 
-- `main.dart` boots the app using `GameWidget`, which hosts `SpaceGame` and
-  exposes an `overlays` map for menus and the HUD.
-- `SpaceGame` extends `FlameGame`, managing world and scene setup while
-  scheduling the game loop tick.
-- It owns small system classes for input, physics/collisions, entity spawners
-  and scoring. Hooks for resource mining, inventory, networking and save/load
-  will slot in later milestones.
-- A lightweight `GameEventBus` broadcasts component spawn and remove events so
-  systems can react without direct references.
-- `PoolManager` reuses bullets, enemies, minerals and asteroids and keeps a
-  spatial grid of asteroids for efficient proximity queries.
-- Flutter overlays handle menus and the HUD so UI stays outside the game loop.
-- A shared `GameText` widget standardises overlay text styling and listens for
-  global text scale changes.
-- A `GameState` enum tracks **menu → playing → paused → game over** transitions.
-- `SpaceGame` exposes `ValueNotifier`s for score, minerals, health and high
-  score so overlays can react without touching the game loop.
-- Asset paths live in a central `assets.dart` registry and tunable numbers live
-  in `constants.dart` to avoid magic strings or numbers.
+Cannon destruction of ore is an existing rule to evaluate, not a sacred design
+pillar. Keep it only if the player can predict and intentionally manage the
+firing line. If it mostly feels like assisted aiming confiscates resources,
+change it. If holding fire is always correct after that, test autofire rather
+than retaining a pointless held button. Experimental alternatives should be
+small controlled previews/tests, not permanent public tuning infrastructure.
 
-## Components
+## Intended damage and contact contract
 
-- Player, enemy, asteroid and bullet components live under `lib/components/`.
-- Components mix in `HasGameReference<SpaceGame>` when they need game context.
-- The `SpawnRemoveEmitter` mixin fires events to the `GameEventBus` whenever a
-  component is added or removed, enabling pooling and targeting helpers.
-- Use simple hit boxes (`CircleHitbox`, `RectangleHitbox`) and
-  `HasCollisionDetection`.
-- An `EnemySpawner` system releases groups of enemies at timed intervals.
-- Mining asteroids with the laser awards mineral pickups each time.
-- The player mounts two weapons: an auto-firing mining laser that targets
-  asteroids in range and a primary cannon that locks onto the nearest enemy.
-- Bullets, asteroids and enemies use small object pools to limit garbage
-  collection, and unit tests verify pooled instances are reused.
-- The player loses health on collision with enemies or asteroids; the game ends
-  when health is depleted.
-- Shooting enforces a brief cooldown so the player cannot spam bullets.
-- Give components deterministic IDs for future multiplayer sync and update
-  movement using `dt` to stay frame-rate independent.
+Centralize hit acceptance. Only an accepted hit changes health, starts protection
+and produces accepted-hit feedback. Define separate handling for contacts while
+protected, outside play or after death. An immunity check added after unconditional
+obstacle removal would permit free ramming; move consequences behind the policy.
 
-## Services
+Protected contact must not automatically delete enemies or asteroids. Specify
+separation/overlap behaviour and check continuing overlap when protection expires:
+a start-only collision callback must not create permanent safe overlap. Verify
+clustered contacts, protection timing, pause/resume, simultaneous death events
+and restart reset. The initial protection duration is a tuning parameter, not
+an established balance fact.
 
-- Small helpers for cross-cutting concerns live under `lib/services/`.
-- `audio_service.dart` wraps `flame_audio`, exposing a mute toggle and master
-  volume so audio can dim when the game is paused.
-- `storage_service.dart` uses `shared_preferences` to persist the local
-  high score and settings.
-- `score_service.dart` tracks score, minerals and health values.
-- `overlay_service.dart` shows and hides the Flutter overlays.
-- `settings_service.dart` holds tweakable UI and text scale values and gameplay
-  range multipliers.
-- `targeting_service.dart` assists auto-aim queries.
-- `upgrade_service.dart` manages purchasing upgrades with minerals, persists
-  them via `StorageService` and exposes a `ValueListenable` for bought upgrade
-  ids.
-- Add services only when needed to keep the project lightweight.
+## Intended ore accounting and records
 
-## State and Data
+Use one resource with two measurements:
 
-- Tunable numbers live in `constants.dart`.
-- Use immutable data objects and pass dependencies via constructors.
-- Local save data will use `shared_preferences` in the MVP.
-- State is kept lightweight using plain classes or `ValueNotifier`s.
-- Track a mineral currency for mined resources and persist purchased upgrades.
+```text
+Collect a pickup once:
+  wallet += pickup.value
+  collectedThisRun += pickup.value
 
-## Upgrades
+Buy an upgrade:
+  wallet -= upgrade.cost
 
-- Minerals earned from asteroids fund upgrades such as faster cannon fire,
-  quicker mining pulses, extended targeting and Tractor Aura ranges, engine
-  tuning for higher speed and a Shield Booster that slowly regenerates
-  health without bloating the core loop.
-- `UpgradeService` tracks available upgrades and purchases using minerals.
+Primary run score, or experimental quota progress:
+  collectedThisRun
+```
 
-## Game State Flow
+Mining, shooting a rock or killing an enemy must not increase the new harvest
+score. Combat can create access to ore and appear in a separate results statistic.
+Do not count generic wallet adjustments as harvest: purchasing is not negative
+collection, and debug grants are not earned score. Make pickup consumption
+idempotent across collision/removal events and disallow negative balances.
 
-- Play centres on searching for asteroids to mine while surviving periodic enemy
-  waves.
-- The game starts in a menu overlay that also exposes a mute toggle.
-- Players can choose between multiple ship sprites from the menu, and the
-  selection persists via `StorageService`.
-- `SpaceGame` transitions to `playing` when the user taps start.
-- Players can pause the game from the HUD or with the Escape or `P` key,
-  showing a centered `PAUSED` label with a hint to press `Esc` or `P` to
-  resume while gameplay halts.
-- During play the HUD provides score, minerals, health, a minimap toggle, range
-  rings toggle, pause and mute controls. The minimap displays the player's
-  heading along with nearby asteroids, enemies and mineral pickups.
-- On player death, a game over overlay appears with restart, menu and mute buttons.
-- A help overlay lists controls and can be toggled with the `H` key, pausing the
-  game when opened mid-run. `Esc` also closes it without triggering pause.
-- An upgrades overlay opens with the `U` key or HUD button and pauses gameplay
-  while letting players buy basic upgrades that persist between sessions.
-- A settings overlay opens with the `O` key or HUD button and provides sliders
-  for master volume, HUD, minimap, text, joystick, targeting, Tractor Aura and
-  mining ranges, starfield tile size and includes a reset button.
-- A `GameState` enum tracks the current phase.
+Both counters reset for a new run; spending does not reverse collected progress.
+A quota, when experimentally enabled, completes once when cumulative collection
+reaches its target. Handle success explicitly rather than simulating player death.
+If death and the target occur in the same simulation step, choose, document and
+test one deterministic outcome instead of granting both results.
 
-## Input
+Keep the existing high score under its existing key as a legacy record. A harvest
+score needs a separately versioned/labeled record; old kill/mining scores must not
+be silently relabeled or numerically compared with it. Preserve purchased IDs,
+selected ship and presentation preferences. Tolerate unknown saved IDs and test
+failed storage writes. A save migration is explicit and tested, not a reset of
+preferences to hide incompatible data.
 
-- On-screen joystick and fire button mirror keyboard controls (WASD + Space).
-- Input handling stays isolated from rendering for easier testing.
-- `N` toggles a minimap overlay with a player-direction arrow for navigation.
-- `B` or a HUD button toggles range rings showing targeting, Tractor Aura and
-  mining radii.
-- `H` toggles a help overlay for quick reference, and `Esc` closes it when
-  visible.
-- `O` opens the settings overlay for runtime tweaks.
-- `Q` returns to the menu when pressed during pause or game over.
+## Progression and normal rules
 
-## Rendering & Camera
+Retain the six owned upgrades during the first implementation milestones.
+Their existence is evidence of implemented progression, not proven motivation or
+replayability. Test fresh, partially upgraded and fully upgraded fixtures.
+Preservation of earned ownership does not prohibit deliberate, documented
+rebalancing with regression tests; a larger redesign needs a migration decision.
 
-- The world extends beyond the initial viewport and has no fixed bounds. A
-  `CameraComponent` tracks the player without clamping while content streams in
-  around them.
-- Entities that move far outside a cleanup radius despawn via an
-  `OffscreenCleanup` mixin. Asteroid and enemy spawners place new objects ahead
-  of the player's current heading using this same radius so action stays in
-  front of the ship.
-- A deterministic multi-layer world-space starfield generates stars per chunk
-  using Poisson-disk sampling seeded by chunk coordinates. Low-frequency Simplex
-  noise modulates density to create clusters and voids. Layers apply parallax
-  factors and gentle alpha twinkling. Stars follow a weighted size/brightness
-  distribution with optional subtle colour jitter. Each chunk pre-renders to a
-  cached `Picture` translated by `-playerPosition`, dropping tiles outside a
-  small margin around the camera so memory stays bounded. Tile size is
-  adjustable via the settings overlay. The player flies over a static backdrop
-  while circles draw faint-to-bright. A `debugDrawTiles` switch outlines tile
-  boundaries when debug mode (`F1`) is active for troubleshooting.
-- Optional nebula or distant galaxy layers may overlay this starfield to add
-  ambience.
-  - `NebulaLayer` reuses the starfield's tile worker to generate noise-based
-    sprites and expose brightness/density sliders.
-  - `GalaxyLayer` draws a single bitmap with subtle parallax and optional
-    tint.
-  - Settings toggles control visibility, overlays hide when debug mode is
-    disabled, and each component can land independently.
+Use canonical balance values for normal play before applying earned upgrades.
+Removing sliders from the UI is insufficient if stat getters still read the old
+saved tuning values. Keep volume, text/UI scale and readability/accessibility
+controls. If balance-changing assist/custom rules are retained, label their use
+and keep their results distinct; do not silently treat them as normal records.
+Do not add a competitive backend or an elaborate anti-cheat system.
 
-## Assets
+No new horizontal-unlock catalogue or per-run upgrade tree is presumed. If the
+completed profile lacks worthwhile decisions, first distinguish control, resource,
+encounter and progression problems. New build choices require real opportunity
+costs and must not collapse into one universally optimal purchase order.
 
-- Art, audio and fonts live under `assets/` with subfolders for images,
-  audio and fonts.
-- Gameplay code references assets through a central `assets.dart` registry;
-  no hard-coded file paths.
-- A versioned `assets_manifest.json` tracks files for each release to help with
-  caching and PWA updates (see `assets_manifest.md`).
-- See [ASSET_GUIDE.md](ASSET_GUIDE.md) for sourcing guidelines and
-  [ASSET_CREDITS.md](ASSET_CREDITS.md) for attribution.
+## Resource fields and collection
 
-## PWA & Platform
+Seed a small nearby field at the start. Use deliberately understandable sparse
+and rich patches to test routing and exposure before increasing procedural variety.
+Mining at range and collecting closer to a rock should create choices without
+compulsory stationary waiting. Partial harvesting and leaving/returning for drops
+are candidate behaviours to preserve where they are understandable.
 
-- Web-only Flutter app managed through FVM (`fvm flutter` commands).
-- `web/manifest.json` and the service worker enable installable offline play.
+Test base and upgraded ship speed against tractor pull speed, collection range
+and pickup collision behaviour. Faster flight need not collect everything
+automatically, but must not make the upgrade feel broken without explanation.
+Do not change several ranges and speeds at once and then call the outcome a
+control-scheme experiment.
 
-## Milestones
+## Encounters and bounded simulation
 
-- See [milestone-setup.md](milestone-setup.md),
-  [milestone-core-loop.md](milestone-core-loop.md) and
-  [milestone-polish.md](milestone-polish.md) for upcoming work.
+Start with a pursuer and a telegraphed charger. A charger must visibly commit to
+a direction and offer a recoverable miss, not secretly retarget during an attack
+that was presented as committed. Test distinct player responses before adding a
+ranged enemy or boss. Stop presenting a large one-hit sprite as meaningful boss
+content; retaining its artwork does not require retaining that role.
+
+Pressure/recovery scheduling must account for existing threats. A pause in
+spawning is not recovery if accumulated pursuers still deny every resource route.
+Use viewport-aware warnings and time-to-contact on phone and desktop rather than
+blindly retaining a world-unit spawn radius. Define a bounded long-tail difficulty
+policy rather than requiring unavoidable hits or limitless health inflation.
+
+Before adding density, set budgets for live and pending enemies, rocks, bullets
+and pickups. Do not save skipped spawns in a hidden debt that creates a later
+burst. Define age/distance cleanup with enough margin for intentional return
+routes; do not silently delete nearby valuable pickups just to satisfy a cap.
+Test removal notifications, pooled-object reset, spatial-grid membership and
+repeat restarts. Record active counts over an extended session on actual devices.
+
+## State, rendering and assets
+
+Extend existing lifecycle/state and overlay paths. Reset score, input, protection,
+encounter phase and entity membership consistently. Ensure pause also freezes
+warnings, cooldowns and intended timers. No new ECS, general simulation engine,
+network layer or content framework is needed for these milestones.
+
+Keep the existing camera, minimap and starfield. Improve player/enemy silhouettes,
+weapon direction, pickup readability and hit/collection feedback at actual phone
+size. Integrate art with the asset registry and manifests; respect
+[ASSET_GUIDE.md](ASSET_GUIDE.md) and [ASSET_CREDITS.md](ASSET_CREDITS.md).
+An illustrated or vector-style sample is a test of readability, not the final
+style by decree. Add expensive effects only after measuring the release build.
+
+## PWA and validation
+
+Target a release web artifact at the intended `/space-game/` base path. Repair
+custom-cache ownership and critical precache failure behaviour; preserve a working
+offline version when an update fails. Tie published output to validated source.
+Test actual offline startup and update transitions, not just a mocked worker.
+
+Technical invariants belong in unit/component/widget/browser tests. Control
+quality, readable threats, replay and preferred ending require playtests on
+keyboard and real touch devices. Use controlled layouts and restored profiles;
+a seeded spawner alone does not make all game randomness deterministic.
+Record limitations and failures, not just successful examples.
