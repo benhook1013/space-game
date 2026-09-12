@@ -1,157 +1,126 @@
-# ✅ Task List
+# Active implementation queue
 
-Current work is listed first. The checked MVP sections below are historical
-implementation records, not a claim that the present build/tests pass.
-See [PLAN.md](PLAN.md), [DESIGN.md](DESIGN.md) and [WORKFLOW.md](WORKFLOW.md).
+Updated 12 September 2026. [PLAN.md](PLAN.md) defines the reviewed direction;
+[DESIGN.md](DESIGN.md) specifies intended contracts. A checked item records
+completed work, not blanket validation of the game. Historical prototype
+checklists remain in `milestone-*.md` and Git history.
 
-## Active edit rounds
+## Completed and received
 
-- [x] Prepare round `001-process`: durable decisions, environment notes, WSL
-  instructions and a tested baseline-aware patch helper.
-- [ ] Ben validates/applies round `001-process` and confirms integration into
-  `main`; return the accepted source snapshot.
-- [ ] On receipt of a Linux SDK, verify compatibility and dependency availability
-  without silently changing pins. Record each validation stage separately.
-- [ ] Next code round: isolate and fix PWA cache-ownership and required-precache
-  failure handling, with executable JavaScript regression tests.
-- [ ] Then iterate opening gameplay, distinct enemy behaviour, feedback and
-  useful upgrade choices in bounded player-visible rounds.
+- [x] Round 001 process/helper work and delegated publication reached `main`
+  through PR #716 at `6b93b7d551bd11e995c71a1620b2b587a471cfe8`.
+- [x] Receive Ben's independent adversarial review and record the implementing
+  assistant's decisions in round `002-review-plan`.
+- [x] Receive split SDK uploads and `space-game-offline-support.zip`. Receipt
+  does not mean the dependency bundle has been restored or validated.
 
-See [round logs](docs/development/rounds/) for delivery status and
-[decisions](docs/development/DECISIONS.md) for accepted versus proposed scope.
-A proposed expedition/contract redesign is not automatically approved.
+## Current execution blocker
 
-## Historical MVP checklist
+A bounded local command retry returned `TransportTimeoutError`. The GitHub
+connector still reads the accepted repository. See
+[ENVIRONMENT.md](docs/development/ENVIRONMENT.md) for historical SDK progress,
+known paths and the limited fallback. Do not request duplicate large uploads
+or repeat a broad tool audit. Documentation can proceed through the connector;
+code needing execution uses a healthy local/WSL/CI environment.
 
-The following sections preserve the completed prototype work for reference.
+## T0: SDK compatibility and executable baseline
 
-## Setup ([milestone-setup.md](milestone-setup.md))
+- [ ] Inspect the support ZIP paths, manifest, payload checksums, restore script,
+  source revision, lockfile diff and supplementary SDK cache before execution.
+- [ ] Restore public packages into an isolated cache using the supplied exact
+  Linux SDK. Regenerate machine-specific package configuration.
+- [ ] Establish offline lockfile resolution, analysis, tests and release build
+  independently. Record pre-existing source failures and missing artifacts.
+- [ ] Migrate all SDK pins, Unix/PowerShell bootstrap versions/checksums and CI
+  assumptions together; change dependencies only for demonstrated compatibility.
+- [ ] Publish a validated compatibility-only change through repository rules.
+  Do not put SDKs, caches, generated builds or credentials into Git.
 
-- [x] Install FVM and fetch the pinned Flutter SDK (version `3.32.8`).
-- [x] Run `fvm flutter doctor` to verify the environment.
-- [x] Scaffold the Flutter project (`fvm flutter create .`) if not already.
-- [x] Enable web support (`fvm flutter config --enable-web`).
-- [x] Add Flame, `flame_audio` and `shared_preferences` to `pubspec.yaml`.
-- [x] Run `fvm flutter pub get` to install dependencies.
-- [x] Create placeholder `assets.dart` and `constants.dart` to centralise asset
-  paths and tunable values.
-- [x] Add a tiny `log.dart` helper that wraps `debugPrint`.
-- [x] Commit generated folders (`lib/`, `web/`, etc.).
-- [x] Set up GitHub Actions workflow for lint, test and web deploy.
-- [x] Document placeholder assets and credits.
-- [x] Create `assets_manifest.json` to list bundled assets for caching
-  (see `assets_manifest.md`).
+## T1: release and cache safety
 
-## Core Loop ([milestone-core-loop.md](milestone-core-loop.md))
+- [ ] Restrict obsolete-cache deletion to this application/deployment namespace.
+- [ ] Make missing critical precache resources fail the update rather than
+  accept an incomplete shell. Preserve the working offline version.
+- [ ] Add executable JavaScript regressions and actual offline/update checks.
+- [ ] Replace debug publication with a release build and validate the exact
+  source/artifact being published. Keep changes small and separate from gameplay.
 
-- [x] Player ship moves with joystick or keyboard.
-- [x] Ship can shoot and destroy a basic enemy type.
-- [x] Random asteroids spawn and can be mined for score.
-- [x] Destroying enemies awards score.
-- [x] Game states: menu → playing → game over with restart.
+## G1: controls, protected contacts and immediate resources
 
-## Polish ([milestone-polish.md](milestone-polish.md))
+Prerequisite: executable baseline; controlled normal rules and profile fixtures.
 
-- [x] Deterministic world-space starfield renders behind gameplay.
-- [x] Implement `audio_service.dart` wrapping `flame_audio` with a
-      mute toggle.
-- [x] Implement `storage_service.dart` using `shared_preferences`
-      to persist the local high score.
-- [x] Simple HUD and menus layered with Flutter overlays.
+- [ ] Isolate normal gameplay values from previously persisted range tuning;
+  retain presentation/accessibility settings and test an old tuned profile.
+- [ ] Define accepted/rejected contact consequences and visible post-hit
+  protection. Test simultaneous hits, ongoing overlap and pause/restart reset.
+- [ ] Rebind press, release and cancellation consistently to the active player.
+- [ ] Use actual travel direction for placement before changing aiming behaviour.
+- [ ] Seed a small nearby mining field and compare stop-to-aim with independent
+  assisted aim while holding the remaining encounter rules constant.
+- [ ] Test touch magnitude/fine control, cancellation after restart, and a
+  valuable rock in the firing line. Record the selected input/resource rule.
 
-## PWA
+Acceptance: keyboard and touch play are understandable; firing stops on
+release/cancel; protection does not clear hazards for free; the experiment
+selects controls rather than assuming a genre-standard answer.
 
-- [x] Add `web/manifest.json` and placeholder icons for installable PWA.
-- [x] Review service worker caching strategy and add custom `sw.js` for
-      cache-first asset handling.
+Exclude quota, new progression, extra threats, final art and scripted tutorial.
 
-## Testing
+## G2a: harvest accounting and resource choices
 
-- [x] Add unit tests for storage and audio services.
-- [x] Add unit tests verifying bullet, asteroid and enemy pooling reuse.
-- [x] Add unit test ensuring help overlay toggles pause state.
+Prerequisite: G1 controls and contact policy selected and tested.
 
-## Optimisation
+- [ ] Add idempotent pickup collection that credits wallet and cumulative ore;
+  purchases debit only the wallet. Reset both counters for each new run.
+- [ ] Make collected ore the primary run score and preserve the old high score
+  separately. Test unknown purchased IDs and storage-write failures.
+- [ ] Retain purchased ownership and build fresh/partial/complete test profiles.
+- [ ] Arrange understandable sparse/easier and rich/exposed resource patches.
+- [ ] Define live/pending entity budgets and predictable pickup cleanup before
+  increasing density. Test extended sessions and returning for abandoned drops.
 
-- [x] Add bullet, asteroid and enemy object pools to reduce allocations.
+Acceptance: uncollected drops and cannon rock destruction give no harvest score;
+buying never reverses earned harvest; records and ownership survive migration.
 
-## Enhancements
+## G2b: pressure and distinct responses
 
-- [x] Pause overlay with resume and menu options, toggled via HUD and Escape or
-      `P` key.
-- [x] Game over overlay offers menu option to return to the title screen.
-- [x] Player health tracked and shown in HUD; game over when depleted.
-- [x] Mute toggle available on menu, HUD, pause and game over overlays.
-- [x] Keyboard shortcut `M` toggles mute.
-- [x] Keyboard shortcut `P` pauses or resumes the game.
-- [x] Keyboard shortcut `O` opens the settings overlay.
-- [x] Keyboard shortcuts: `Enter` starts or restarts from the menu or game over;
-      `R` restarts during play, pause or game over.
-- [x] Keyboard shortcut `Q` returns to the menu from pause or game over.
-- [x] Help overlay lists controls and can be toggled with a button or the `H` key;
-      `Esc` also closes it.
-- [x] HUD displays current score, minerals and health.
-- [x] Limit player fire rate with a brief cooldown.
-- [x] Keyboard shortcut `F1` toggles debug overlays and outlines starfield tiles.
-- [x] Audio volume lowers when the game is paused.
-- [x] Menu includes button to reset the high score.
-- [x] Menu allows choosing between multiple ship sprites and persists the selection.
-- [x] Upgrades overlay accessible via HUD button or the `U` key where purchases
-      persist across sessions.
-- [x] HUD button or `B` key toggles range rings for targeting, Tractor Aura and mining.
-- [x] Settings overlay with master volume slider and sliders for HUD, minimap,
-      text, joystick, targeting, Tractor Aura and mining ranges, starfield tile
-      size, plus reset button, accessible via HUD button or `O` key.
+Prerequisite: G2a accounting and bounded resource simulation.
 
-- [x] Persist purchased upgrades across sessions using `StorageService`.
-- [x] Engine Tuning upgrade increases player movement speed.
-- [x] Shield Booster upgrade slowly regenerates player health.
+- [ ] Add a telegraphed charger alongside the pursuer, including commitment,
+  recovery, pooled-state reset and phone-size cues.
+- [ ] Alternate pressure and meaningful recovery while considering live threats;
+  use visible-area/time-to-contact fairness and no queued spawn debt.
+- [ ] Compare stationary farming, fixed-direction kiting, ignoring enemies and
+  active clearing/collection on fresh and completed profiles.
+- [ ] Record whether players make routing/collection decisions, not just survive
+  input friction. Repair the shared loop if repetitive low-risk farming wins.
 
-## Next Steps
+Acceptance: the two threats cause different responses and ore routes carry
+understandable trade-offs. Legitimate avoidance is not automatically an exploit.
 
-- [x] Spawn enemy groups on a timer.
-- [x] Add a mining laser that automatically targets and fires at nearby
-      asteroids.
-- [x] Drop mineral pickups from asteroids and track the player's total.
-- [x] Pull nearby pickups toward the player with a Tractor Aura.
-- [x] Auto-aim the primary weapon at the closest enemy when stationary.
-- [x] Refine auto-aim targeting behaviour for smoother updates.
-- [x] Design a broad upgrade system where minerals purchase new weapon and ship
-      upgrades.
-- [x] Implement upgrade effects and apply them to gameplay systems.
-- [x] Expand the game world beyond the current single-screen map.
-- [x] Attach a `CameraComponent` that follows the player with no fixed bounds.
-- [x] Spawn asteroids and enemies just ahead of the player and despawn those
-      far behind.
-- [x] Add a minimap or other navigation aid for exploring the larger world.
-- [x] Replace the player-following parallax starfield with a deterministic
-      world-space starfield:
-      - [x] Generate stars per chunk using Poisson-disk sampling seeded by chunk
-            coordinates.
-      - [x] Modulate spawn density with low-frequency Simplex noise to create
-            clusters.
-      - [x] Assign weighted radius/brightness (≈80% tiny, 19% small, 1% medium)
-            and optional colour jitter.
-        - [x] Pre-render stars per chunk into a cached `Picture`, drawing with
-            a translation of `-playerPosition` so the player moves over a static
-            backdrop.
-      - [x] Sort stars by radius so faint ones render first for smoother
-            blending.
-      - [x] Prune cached starfield tiles outside a small margin so memory
-            remains bounded.
-      - [x] Remove the old parallax starfield once the deterministic version is
-            in place.
-      - [x] Expose an optional `debugDrawTiles` flag to outline starfield tiles.
+Exclude a third role, boss, extraction, run-upgrade tree and new currencies.
 
-## Deferred: Background Enhancements
+## G3: choose and finish one release mode
 
-- [ ] Implement `NebulaLayer` component rendered above the starfield.
-      - Generate nebula textures per tile in a background isolate and cache them.
-      - Expose brightness and density controls.
-      - Hide when debug mode is off.
-- [ ] Implement `GalaxyLayer` component with a distant bitmap and subtle parallax.
-      - Load via the `Assets` registry and draw behind gameplay.
-      - Support tint/alpha adjustments and randomised orientation.
-- [ ] Expose settings toggles and sliders for these overlays.
-      - Changes should rebuild layers and persist via `SettingsService`.
-      - Ensure overlays hide when debug mode is disabled.
+Prerequisite: the shared harvesting loop passes the G2 playtests.
+
+- [ ] Compare endless play with the same game ending at cumulative ore quota.
+  Use matched layouts/profiles; define success and simultaneous-death policy.
+- [ ] Record whether completion adds purpose or interrupts enjoyable play.
+  Choose one default and remove comparison-only code; return to G2 if both fail.
+- [ ] Finish concise opening guidance, coherent integrated artwork, readable
+  feedback/results, personal records and fast reliable retry.
+- [ ] Complete real keyboard/touch, fresh/completed profile, focus/pause/restart,
+  long-session and release-PWA/offline/update checks; record remaining blockers.
+
+Acceptance: unfamiliar players understand the goal and can explain a choice and
+another approach to try. Fully upgraded play remains worthwhile. Tests/builds,
+performance observations and enjoyment evidence are reported separately.
+
+## Deferred, not silently scheduled
+
+Extraction, boss, third enemy, fixed 8-12-minute sessions, broad run upgrades,
+horizontal unlocks, additional currencies, galaxy/station/crafting systems,
+multiplayer, accounts, cloud saves, native stores and new background technology.
+Preserving saves does not forbid justified tuning; changing progression requires
+an explicit decision and migration rather than silent loss of earned progress.

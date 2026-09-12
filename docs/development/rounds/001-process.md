@@ -1,14 +1,16 @@
 # Round 001: process and durable workspace knowledge
 
-Date: 12 September 2026. Status: authored for handoff; Ben's WSL integration and
-merge to `main` are not yet confirmed. This log is not proof of remote status.
+Date: 12 September 2026. Initially authored for manual handoff; subsequently
+published to `main` through PR #716 at commit
+`6b93b7d551bd11e995c71a1620b2b587a471cfe8`. That publication and its tree were
+rechecked through GitHub during round `002-review-plan`.
 
 ## Baseline
 
 Uploaded `space-game-main.zip`, upstream revision
 `bb907372a5ba400398b7cae5db994d4593398e36`, reconstructed tree
 `1f62779a366287bf7f13c7e120b2dd55a580f2c9`. The archive has no Git history.
-Full input and result metadata are in the delivery's `BASE.json`.
+Full input and result metadata were included in the original delivery's BASE.json.
 
 ## Outcome
 
@@ -18,25 +20,31 @@ guide, README, plan and design docs. Put current rounds ahead of the historical
 MVP checklist. Added a dependency-free patch verifier/applier with regression
 tests; it checks the complete baseline and result rather than only patch hunks.
 
+Ben applied and pushed the feature branch. He then delegated routine publication
+to the assistant. A direct non-forced update was rejected by the PR requirement;
+the assistant created and merged PR #716 without weakening protection. It also
+recorded permission to adopt Ben's newer SDK in a separate compatibility round.
+Routine manual patch application is no longer Ben's expected workflow.
+
 ## Exclusions
 
 No Dart/gameplay, sprites/audio, save format, dependency versions, lockfile,
-Flutter bootstrap or deployment/service-worker behaviour changes. No SDK upload
-has been processed yet. No remote commit, push or merge was performed.
+Flutter bootstrap or deployment/service-worker behaviour changes. SDK preparation
+occurred later and is recorded in the current environment notes, not as a result
+of this original process round.
 
-## Validation and next step
+## Historical validation
 
-Executed here: all 14 helper regression tests passed; Python 3.9 syntax checks,
-15 Bash documentation blocks, 12 relative links in six new Markdown files and
-staged whitespace checks passed. Offline Markdown lint could not start because
-`markdownlint-cli` was not cached (`ENOTCACHED`); this is NOT RUN, not a lint pass.
+Reported during original preparation: all 14 helper regression tests passed;
+Python 3.9 syntax checks, 15 Bash documentation blocks, 12 relative links in six
+new Markdown files and staged whitespace checks passed. Offline Markdown lint
+could not start because markdownlint-cli was not cached (ENOTCACHED), so full
+lint was NOT RUN. Independent patch roundtrip and source/mode checks were recorded
+in the original validation handoff. The helper tests were reported passing again
+before publication, with the remote tree matching the reviewed local tree.
 
-The accompanying `VALIDATION.md` records the actual independent patch roundtrip
-and full source/mode comparisons. Dart/Flutter analysis, tests, builds and
-game/browser playtests remain NOT RUN in this workspace.
-
-Ben applies and verifies this handoff on a review branch, merges to `main` and
-returns accepted source. A supplied Linux SDK can then trigger a targeted
-compatibility check; otherwise the next code round is bounded PWA cache safety
-with executable JavaScript regression tests. Gameplay/art rounds follow, without
-silently adopting the proposed expedition redesign.
+These are historical results, not checks rerun during the later workspace outage.
+Dart/Flutter analysis, tests, builds and game playtests were not established by
+this process round. See [round 002](002-review-plan.md) and the active
+[queue](../../../TASKS.md) rather than following the obsolete manual-integration
+next steps from the initial handoff.
