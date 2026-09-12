@@ -1,7 +1,8 @@
 # Working decisions
 
-Recorded 12 September 2026. These decisions capture the conversation that led to
-round `001-process`. They are durable agreements, unlike runtime observations in
+Recorded and updated 12 September 2026. These decisions capture round
+`001-process` and Ben's subsequent delegation of publication and SDK upgrade.
+They are durable agreements, unlike runtime observations in
 [ENVIRONMENT.md](ENVIRONMENT.md). Update this record when decisions change.
 
 ## Accepted: implement, do not only advise
@@ -9,20 +10,44 @@ round `001-process`. They are durable agreements, unlike runtime observations in
 Ben delegates bounded implementation rounds to the assistant: source editing,
 asset creation/integration, tests, reviews and usable patch delivery. The
 assistant can select details and advance the agreed queue without repeated
-confirmation. Ben retains product ownership, acceptance and remote publication.
-This round changes process documentation and the handoff helper only.
+confirmation. Ben retains product ownership and may override decisions;
+remote publication of completed rounds is also delegated to the assistant.
+The process round changes documentation and the handoff helper only.
 
-## Accepted: local work, patch handoff, WSL acceptance
+## Accepted: assistant publishes to main
 
-The source of truth remains `benhook1013/space-game`, with accepted changes
-integrated into `main`. Ben's WSL source root is `/home/ben/src`; the clone is
-`/home/ben/src/space-game`. Work on a review branch and merge through the
-repository's normal rules. Do not assume direct pushes to `main` are allowed.
+Ben explicitly requested automatic publication by the assistant instead of
+requiring him to apply each round and operate a feature-branch/PR workflow.
+The source of truth remains `benhook1013/space-game`, targeting `main`.
+Ben's WSL clone is `/home/ben/src/space-game`; after publication he normally
+only needs to pull and playtest. This supersedes the initial manual-integration
+default in the Round 001 handoff and older WSL/product-document instructions.
 
-The assistant delivers a numbered ZIP containing an incremental binary Git
-patch, complete result snapshot, provenance, checks and instructions. The result
-snapshot is for recovery, not for copying over a repository. Accept only an exact
-base tree by default, and return fresh source after integration changes.
+Use a normal non-forced update when permitted. If the repository requires a PR,
+the assistant should create and merge it through the connector and respect
+required checks/reviews. Do not weaken protection or force-push. If publication
+is blocked, explain the exact blocker instead of claiming success. Verify the
+remote result and retain a recoverable source snapshot/patch. This delegation
+applies during active work, not autonomous work between messages.
+
+A verified patch ZIP remains the fallback when remote publication is unavailable.
+Preserve provenance and exact base/result trees; recovery snapshots are not for
+blindly copying over a clone. Retrieve external changes before dependent work.
+
+## Accepted: adopt the newer supplied SDK in a compatibility round
+
+Ben has already downloaded a later SDK and authorized using it once supplied.
+Inspect the archive's actual version, platform and integrity before editing
+pins; do not guess a release or ask for the old 3.32.8 archive again. Linux x64
+is needed for this workspace. The prior ENVIRONMENT.md preference for a
+3.32.8 upload is superseded by this decision, not by an unverified SDK change.
+
+Keep the migration separate from gameplay. Align FVM configuration, pubspec,
+Unix/PowerShell bootstrap versions and checksums, CI assumptions and relevant
+docs; adjust dependencies and the lockfile only where compatibility requires.
+Run analysis, tests and a release build where possible, reporting missing pub
+packages/web artifacts separately from SDK installation. Until the archive is
+supplied and inspected, the existing SDK pins stay unchanged.
 
 ## Accepted: separate design, execution and evidence
 

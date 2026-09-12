@@ -29,10 +29,22 @@ outcome and exclusions, preserve unrelated behaviour, and explain any material
 change of direction. A proposal is not an approved requirement: changing the
 endless game to an expedition/contract game remains a separate product decision.
 
-Do not publish, force-push, change repository protection, or merge remotely as a
-side effect of preparing a handoff. Ben applies/reviews the patch in WSL or has
-his coding agent integrate it. Use a review branch targeting `main` by default;
-respect any required checks. Do not overlap authors in the same files.
+Ben explicitly delegates remote publication of completed rounds to the
+assistant (updated 12 September 2026). Prefer a normal, non-forced update to
+`main`. When branch protection requires a pull request, the assistant should
+create and merge it using the connected tools, subject to required checks,
+rather than ask Ben to perform routine integration. Do not disable protections,
+force-push or overwrite concurrent edits. Read the current remote head, use
+expected-head checks when supported, and verify the resulting remote commit.
+
+Publish only during the active task; this is not a background automation.
+If access, required reviews or checks block publication, report the exact
+blocker and provide the smallest fallback step or a verified patch. Do not
+claim a push or merge succeeded before verifying it. Ben retains product
+ownership, can override changes, and supplies device-playtest feedback.
+Manual integration instructions elsewhere are fallback procedures, not a
+requirement to hand every completed round back to Ben. Do not overlap authors
+in the same files.
 
 ## Round lifecycle
 
@@ -47,8 +59,11 @@ respect any required checks. Do not overlap authors in the same files.
 5. Build an incremental binary patch and a complete source-only recovery ZIP.
    Apply the patch to an independent clean copy of the base, then verify the
    resulting Git tree matches the intended source. Check reverse application too.
-6. Deliver the handoff. Ben validates in WSL/CI and playtests on real devices.
-   Receive accepted source plus results before starting a dependent round.
+6. Publish the completed round to `main` through available tools and the
+   repository's rules; verify its commit and tree. Deliver recovery files and
+   validation results. Use patch handoff only when publication is blocked.
+   Start dependent work from the verified published result, including any
+   external fixes; Ben provides WSL/CI results and real-device playtest feedback.
 
 Round IDs are `001-process`, `002-pwa-safety`, etc. A replacement is explicitly
 labelled, for example `002-pwa-safety-r2`, with the same declared base. Do not
@@ -118,6 +133,14 @@ it in a scoped compatibility round. Inspect status again after validation.
 Use an explicitly supplied SDK's direct binaries only when wrappers would
 bootstrap unnecessarily; record that deviation and the SDK version.
 
+Ben has authorized adopting his newer SDK upload in a separate compatibility
+round. Do not guess its version or require a download of the old pin. Inspect
+platform/version and archive integrity first. Then align FVM, pubspec,
+Unix/PowerShell bootstrap versions, checksums, CI assumptions and affected docs;
+update dependencies and the lockfile only as needed for compatibility. Report
+analysis, tests and release build independently. The upload may still lack pub
+packages or web artifacts. Until that round, existing pins remain unchanged.
+
 ## Creating a handoff
 
 No custom build framework is required. Commit the intended local result first
@@ -150,10 +173,13 @@ Never claim the round is merged until Ben or the remote repository confirms it.
 
 ## Return loop and resumption
 
-Ben returns the accepted commit, fresh committed source ZIP, validation output
-and focused playtest observations. Additional Codex fixes must be in that source;
-a narrative summary does not transfer files. `git archive HEAD` excludes
-uncommitted/untracked changes. Keep build artifacts separate.
+After assistant publication, Ben normally only needs to pull `main` and
+playtest. Do not request another upload merely to confirm the assistant's own
+verified remote commit. If Ben or Codex changes source outside this workspace,
+read the updated remote files or request a fresh committed source ZIP plus the
+commit ID, validation output and focused playtest observations. A narrative
+summary does not transfer fixes. `git archive HEAD` excludes uncommitted and
+untracked changes. Keep build artifacts separate.
 
 Filesystem persistence is not guaranteed. On resumption, inspect the uploaded
 archives and restore from the newest accepted one, preserving paths, bytes and
